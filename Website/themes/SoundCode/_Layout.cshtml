@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@using Microsoft.Ajax.Utilities
+<!doctype html>
 <html lang="en-us">
 <head prefix="og: http://ogp.me/ns#">
     <meta charset="utf-8" />
@@ -86,9 +87,13 @@
             
              <section>
                 <h3>Tags</h3>
-                <ul>
-                    <li>NAudio</li>
-                </ul>
+                 <ul>
+                     @foreach (var tag in Blog.GetPosts().SelectMany(c => c.Categories).GroupBy(c => c))
+                     {
+                         var cat = tag.Key;
+                         <li><a href="~/category/@HttpUtility.UrlEncode(cat.ToLowerInvariant())">@cat (@tag.Count())</a></li>
+                     }
+                 </ul>
             </section>
 
         </aside>
