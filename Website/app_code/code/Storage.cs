@@ -22,6 +22,7 @@ public static class Storage
         return new List<Post>();
     }
 
+    // Can this be done async?
     public static void Save(Post post)
     {
         string file = Path.Combine(_folder, post.ID + ".xml");
@@ -59,6 +60,7 @@ public static class Storage
                     new XElement("date", comment.PubDate.ToString("yyyy-MM-dd HH:m:ss")),
                     new XElement("content", comment.Content),
                     new XAttribute("isAdmin", comment.IsAdmin),
+                    new XAttribute("isApproved", comment.IsApproved),
                     new XAttribute("id", comment.ID)
                 ));
         }
@@ -89,7 +91,8 @@ public static class Storage
 
         List<Post> list = new List<Post>();
 
-        foreach (string file in Directory.GetFiles(_folder, "*.xml", SearchOption.TopDirectoryOnly))
+        // Can this be done in parallel to speed it up?
+        foreach (string file in Directory.EnumerateFiles(_folder, "*.xml", SearchOption.TopDirectoryOnly))
         {
             XElement doc = XElement.Load(file);
 
@@ -150,6 +153,7 @@ public static class Storage
                 Ip = ReadValue(node, "ip"),
                 UserAgent = ReadValue(node, "userAgent"),
                 IsAdmin = bool.Parse(ReadAttribute(node, "isAdmin", "false")),
+                IsApproved = bool.Parse(ReadAttribute(node, "isApproved", "true")),
                 Content = ReadValue(node, "content").Replace("\n", "<br />"),
                 PubDate = DateTime.Parse(ReadValue(node, "date", "2000-01-01")),
             };

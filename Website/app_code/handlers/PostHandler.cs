@@ -9,7 +9,7 @@ public class PostHandler : IHttpHandler
 {
     public void ProcessRequest(HttpContext context)
     {
-        if (!context.User.Identity.IsAuthenticated)
+        if (!context.User.Identity.IsAuthenticated || Blog.MatchesUniqueId(context))
             throw new HttpException(403, "No access");
 
         string mode = context.Request.QueryString["mode"];

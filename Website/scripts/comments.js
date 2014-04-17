@@ -30,7 +30,6 @@
         var ajaxRequest = AsynObject.getAjaxRequest(callback);
         ajaxRequest.open("POST", url, true);
         ajaxRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        ajaxRequest.setRequestHeader("Connection", "close");
         ajaxRequest.send(objectToUrl(data));
     };
 
@@ -147,9 +146,27 @@
             }, {
                 mode: "delete",
                 postId: postId,
-                commentId: commentId
+                commentId: commentId,
+                token: document.querySelector("[data-token]").getAttribute("data-token")
             });
         }
+    }
+
+    function approveComment(commentId, element) {
+
+        AsynObject.postAjax(endpoint, function (state, status) {
+            if (state === 4 && status === 200) {                
+                element.remove();
+                return;
+            } else if (status !== 200) {
+                alert("Something went wrong. Please try again");
+            }
+        }, {
+            mode: "approve",
+            postId: postId,
+            commentId: commentId,
+            token: document.querySelector("[data-token]").getAttribute("data-token")
+        });
     }
 
     function saveComment(name, email, website, content, callback) {
@@ -180,7 +197,7 @@
                 return;
             } else if (status !== 200) {
                 addClass(elemStatus, "alert-danger");
-                elemStatus.innerText = data.statusText;
+                elemStatus.innerText = "Unable to add comment";
                 callback(false);
             }
         }, {
@@ -189,7 +206,8 @@
             name: name,
             email: email,
             website: website,
-            content: content
+            content: content,
+            token: document.querySelector("[data-token]").getAttribute("data-token"),
         });
 
     }
@@ -230,6 +248,10 @@
             if (hasClass(tag, "deletecomment")) {
                 var comment = getParentsByAttribute(tag, "itemprop", "comment")[0];
                 deleteComment(comment.getAttribute("data-id"), comment);
+            }
+            if (hasClass(tag, "approvecomment")) {
+                var comment = getParentsByAttribute(tag, "itemprop", "comment")[0];
+                approveComment(comment.getAttribute("data-id"), tag);
             }
         });
 
