@@ -22,27 +22,16 @@ namespace BloggerImporter
                 // use agility pack
                 var doc = new HtmlDocument();
                 doc.LoadHtml(post.Content);
-                try
+                if (doc.DocumentNode == null)
+                    throw new InvalidDataException("null document node");
+
+                var nodes = doc.DocumentNode.SelectNodes("//img");
+                if (nodes != null)
                 {
-                    if (doc.DocumentNode == null)
-                        throw new InvalidDataException("null document node");
-
-                    var images = doc.DocumentNode.SelectNodes("//img")
-                        .Select(img => img.GetAttributeValue("src", "?")).ToList();
-
+                    var images = nodes.Select(img => img.GetAttributeValue("src", "?")).ToList();
                     imageCount += images.Count;
-                    //images.Dump("PostImages");
-
                 }
-                catch (ArgumentNullException ne) // seems to throw this if no images present
-                {
-                    if (post.Content.Contains("<img"))
-                        Console.WriteLine("PROBLEM: {0}", post.Content);
-                }
-                //.Count().Dump();
-                //.Select(n => n.GetAttributeValue("src", "?")).Dump();
-                //.Dump();
-                //.Select(img => img.GetAttributeValue("src", "?")).ToList().Dump();
+                //images.Dump("PostImages");
             }
             Console.WriteLine("{0} images found", imageCount);
             // TODO: fix-up references to my blog
