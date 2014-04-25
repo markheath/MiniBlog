@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
@@ -22,7 +24,7 @@ namespace BloggerImporter
             }
             
             var posts = AtomFeedImporter.ImportFromFile(bloggerImportFile);
-            int imageCount = 0;
+            bool updated = false;
             foreach (var post in posts)
             {
                 // use agility pack
@@ -31,30 +33,46 @@ namespace BloggerImporter
                 if (doc.DocumentNode == null)
                     throw new InvalidDataException("null document node");
 
-                var nodes = doc.DocumentNode.SelectNodes("//img");
-                if (nodes != null)
+                var imageNodes = doc.DocumentNode.SelectNodes("//img");
+                if (imageNodes != null)
                 {
-                    var postImageNumber = 0;
-                    foreach (var img in nodes)
-                    {
-                        postImageNumber++;
-                        var imageSource = img.GetAttributeValue("src", "?");
-                        imageCount++;
-                        var extension = VirtualPathUtility.GetExtension(new Uri(imageSource).GetLeftPart(UriPartial.Path));
-                        var newFileName = post.GetSlug() + "-" + postImageNumber + extension;
+                    updated = true;
+                    ProcessImageNodes(imageNodes, post);
+                }
 
-                        Console.WriteLine("Downloading {0} to {1}", imageSource, newFileName);
-                        
-                        // DownloadImage(imageSource, Path.Combine(postsPath, "files", newFileName));
-                        img.SetAttributeValue("src", "/posts/files/" + newFileName);
+                var links = doc.DocumentNode.SelectNodes("//a");
+                if (links != null)
+                {
+                    foreach (var linkNode in links)
+                    {
+                        var hrefAttribute = linkNode.Attributes["href"];
+                        if (hrefAttribute != null)
+                        {
+                            var href = new Uri(hrefAttribute.Value); //new Uri(linkNode.GetAttributeValue("href", "?"));
+                            var authority = href.GetLeftPart(UriPartial.Authority);
+                            if (authority.Contains("mark-dot-net.blogspot"))
+                            {
+                                var newLink = "/posts/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
+
+                                Console.WriteLine("Link to {0} fixing to {1}", href, newLink);
+                                hrefAttribute.Value = newLink;
+                                updated = true;
+                            }
+                        }
                     }
                 }
-                
+
                 //images.Dump("PostImages");
                 // TODO: update post content
+                if (updated)
+                {
+                    var sb = new StringBuilder();
+                    doc.Save(new StringWriter(sb));
+                    post.Content = sb.ToString();
+                    Console.WriteLine(post.Content);
+                }
             }
-            Console.WriteLine("{0} images found", imageCount);
-            // TODO: fix-up references to my blog
+
 
             var author = "Mark Heath";
             var dateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -91,6 +109,23 @@ namespace BloggerImporter
             Console.ReadKey();
         }
 
+        private static void ProcessImageNodes(IEnumerable<HtmlNode> imageNodes, AtomPost post)
+        {
+            var postImageNumber = 0;
+            foreach (var img in imageNodes)
+            {
+                postImageNumber++;
+                var imageSource = img.GetAttributeValue("src", "?");
+                var extension = VirtualPathUtility.GetExtension(new Uri(imageSource).GetLeftPart(UriPartial.Path));
+                var newFileName = post.GetSlug() + "-" + postImageNumber + extension;
+
+                Console.WriteLine("Downloading {0} to {1}", imageSource, newFileName);
+
+                // DownloadImage(imageSource, Path.Combine(postsPath, "files", newFileName));
+                img.SetAttributeValue("src", "/posts/files/" + newFileName);
+            }
+        }
+
         private static void DownloadImage(string url, string outputPath)
         {
             var request = WebRequest.Create(url);
@@ -113,12 +148,18 @@ namespace BloggerImporter
         
     }
 
-    static class ExtensionMethods
+    static class Utils
     {
         private static readonly Regex slugRegex = new Regex(@"/\d\d/(.*)\.html");
+
+        public static string GetSlugFromUrl(string url)
+        {
+            return slugRegex.Match(url).Groups[1].Value;
+        }
+
         public static string GetSlug(this AtomPost post)
         {
-            return slugRegex.Match(post.PublishUrl).Groups[1].Value;
+            return GetSlugFromUrl(post.PublishUrl);
         }
     }
 }
