@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -44,17 +45,16 @@ namespace BloggerImporter
 
             var posts = (from e in root.Descendants(atom + "entry")
                         where e.Elements(atom + "category").Any(x => x.Attribute("term").Value == "http://schemas.google.com/blogger/2008/kind#post")
-                        select new
+                        select new AtomPost
                         {
                             BloggerId = e.Element(atom + "id").Value,
                             Title = e.Element(atom + "title").Value,
-                            Published = Convert.ToDateTime(e.Element(atom + "published").Value).ToUniversalTime(),
-                            Updated = Convert.ToDateTime(e.Element(atom + "updated").Value),
+                            Published = DateTime.Parse(e.Element(atom + "published").Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+                            Updated = DateTime.Parse(e.Element(atom + "updated").Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
                             Content = e.Element(atom + "content").Value,
-                            // blogger categories are more like tags
-                            Tags = from t in e.Elements(atom + "category")
+                            Categories = (from t in e.Elements(atom + "category")
                                    where t.Attribute("scheme").Value == "http://www.blogger.com/atom/ns#"
-                                   select t.Attribute("term").Value,
+                                   select t.Attribute("term").Value).ToList(),
                             IsDraft = e.Elements(app + "control").SelectMany(control => control.Elements(app + "draft").Select(draft => draft.Value)).Any(isDraft => isDraft == "yes"),
                             RepliesUrl = e.Elements(atom + "link")
                                            .Where(x => x.Attribute("rel").Value == "replies" &&
@@ -74,12 +74,12 @@ namespace BloggerImporter
             var comments = root.Descendants(atom + "entry")
                      .Where(e => e.Elements(atom + "category").Any(x => x.Attribute("term")
                          .Value == "http://schemas.google.com/blogger/2008/kind#comment"))
-                     .Select(e => new
+                     .Select(e => new AtomComment()
                      {
                          BloggerId = e.Element(atom + "id").Value,
                          Title = e.Element(atom + "title").Value,
-                         Published = Convert.ToDateTime(e.Element(atom + "published").Value).ToUniversalTime(),
-                         Updated = Convert.ToDateTime(e.Element(atom + "updated").Value),
+                         Published = DateTime.Parse(e.Element(atom + "published").Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+                         Updated = DateTime.Parse(e.Element(atom + "updated").Value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
                          Content = e.Element(atom + "content").Value,
                          AuthorName = e.Element(atom + "author").Elements(atom + "name").Select(x => x.Value).FirstOrDefault(),
                          AuthorUrl = e.Element(atom + "author").Elements(atom + "uri").Select(x => x.Value).FirstOrDefault(),
@@ -167,7 +167,7 @@ namespace BloggerImporter
                     new XElement("content", post.Content),
                     new XElement("ispublished", post.IsDraft ? "false" : "true"),
                     new XElement("categories",
-                        post.Tags.Select(t => new XElement("category", t))),
+                        post.Categories.Select(t => new XElement("category", t))),
                     new XElement("comments",
                         comments.Where(c => c.InReplyTo == post.BloggerId)
                         .Select(c => new XElement("comment",
@@ -185,6 +185,8 @@ namespace BloggerImporter
                 Console.WriteLine(x.ToString());
                 break;
             }
+            Console.ReadKey();
         }
+        
     }
 }
