@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AtomComment.cs" />
+    <Compile Include="AtomFeedImporter.cs" />
     <Compile Include="AtomPost.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

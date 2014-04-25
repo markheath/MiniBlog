@@ -14,5 +14,6 @@ namespace BloggerImporter
         public bool IsDraft { get; set; }
         public string RepliesUrl { get; set; }
         public string PublishUrl { get; set; }
+        public List<AtomComment> Comments { get; set; }
     }
 }
