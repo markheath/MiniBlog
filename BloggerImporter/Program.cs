@@ -15,7 +15,7 @@ namespace BloggerImporter
     {
         static void Main(string[] args)
         {
-            var bloggerImportFile = @"C:\Users\mheath\Dropbox\soundcode-blog-04-25-2014.xml";
+            var bloggerImportFile = @"C:\Users\mheath\Dropbox\soundcode-blog-05-22-2014.xml";
             // var bloggerImportFile = @"c:\users\mark\downloads\sound-code-02-16-2014.xml";
             var postsPath = Path.GetFullPath(@"..\..\..\Website\posts");
             if (!Directory.Exists(postsPath))
@@ -37,7 +37,7 @@ namespace BloggerImporter
                 if (imageNodes != null)
                 {
                     updated = true;
-                    ProcessImageNodes(imageNodes, post);
+                    ProcessImageNodes(imageNodes, post, postsPath);
                 }
 
                 var links = doc.DocumentNode.SelectNodes("//a");
@@ -52,7 +52,7 @@ namespace BloggerImporter
                             var authority = href.GetLeftPart(UriPartial.Authority);
                             if (authority.Contains("mark-dot-net.blogspot"))
                             {
-                                var newLink = "/posts/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
+                                var newLink = "/post/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
 
                                 Console.WriteLine("Link to {0} fixing to {1}", href, newLink);
                                 hrefAttribute.Value = newLink;
@@ -69,7 +69,7 @@ namespace BloggerImporter
                     var sb = new StringBuilder();
                     doc.Save(new StringWriter(sb));
                     post.Content = sb.ToString();
-                    Console.WriteLine(post.Content);
+                    //Console.WriteLine(post.Content);
                 }
             }
 
@@ -79,7 +79,7 @@ namespace BloggerImporter
             
             foreach (var post in posts)
             {
-                var x = new XElement("post",
+                var postXml = new XElement("post",
                     new XElement("title", post.Title),
                     new XElement("slug", post.GetSlug()),
                     new XElement("author", author),
@@ -103,13 +103,18 @@ namespace BloggerImporter
                               new XElement("date", c.Published.ToString(dateFormat)),
                               new XElement("content", c.Content)))
                         ));
-                Console.WriteLine(x.ToString());
-                break;
+                //Console.WriteLine(x.ToString());
+                //break;
+
+                var fileName = String.Format("{0}-{1}.xml", post.Published.ToString("yyyy-MM-dd"), post.GetSlug());
+                File.WriteAllText(Path.Combine(postsPath, fileName), postXml.ToString());
+
             }
+            Console.WriteLine("Finished importing, press any key...");
             Console.ReadKey();
         }
 
-        private static void ProcessImageNodes(IEnumerable<HtmlNode> imageNodes, AtomPost post)
+        private static void ProcessImageNodes(IEnumerable<HtmlNode> imageNodes, AtomPost post, string postsPath)
         {
             var postImageNumber = 0;
             foreach (var img in imageNodes)
@@ -121,12 +126,26 @@ namespace BloggerImporter
 
                 Console.WriteLine("Downloading {0} to {1}", imageSource, newFileName);
 
-                // DownloadImage(imageSource, Path.Combine(postsPath, "files", newFileName));
+                DownloadImage(imageSource, Path.Combine(postsPath, "files", newFileName));
                 img.SetAttributeValue("src", "/posts/files/" + newFileName);
             }
         }
 
         private static void DownloadImage(string url, string outputPath)
+        {
+            try
+            {
+                PerformImageDownload(url, outputPath);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error downloading image [{0}]", url);
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private static void PerformImageDownload(string url, string outputPath)
         {
             var request = WebRequest.Create(url);
             using (var response = request.GetResponse())
@@ -136,16 +155,16 @@ namespace BloggerImporter
                 // Download the file
                 using (var file = File.OpenWrite(outputPath))
                 {
-                    // Remark: if the file is very big read it in chunks
-                    // to avoid loading it into memory
-                    var buffer = new byte[response.ContentLength];
-                    var read = stream.Read(buffer, 0, buffer.Length);
-                    file.Write(buffer, 0, read);
+                    var buffer = new byte[1024];
+                    int bytesRead;
+                    do
+                    {
+                        bytesRead = stream.Read(buffer, 0, buffer.Length);
+                        file.Write(buffer, 0, bytesRead);
+                    } while (bytesRead > 0);
                 }
             }
-            
         }
-        
     }
 
     static class Utils
