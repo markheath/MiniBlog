@@ -1,0 +1,139 @@
+<post>
+  <title>WaveBuffer - Casting Byte Arrays to Float Arrays</title>
+  <slug>wavebuffer-casting-byte-arrays-to-float</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-22 20:35:00</pubDate>
+  <lastModified>2010-10-05 13:30:04</lastModified>
+  <content>&lt;p&gt;A while ago on my blog I wrote about a C# language feature that I wanted - &lt;a href="/post/wanted-language-feature-reinterpret"&gt;reinterpret casts between arrays of structs&lt;/a&gt;. One reason this would be so useful to me is that I want to improve the design of my open source audio library &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;, and create an &lt;strong&gt;IWaveProvider &lt;/strong&gt;interface that allows people to output their audio data in whatever format is most convenient for them. Audio is sometimes in 16 bit integer format, sometimes in 32 bit floating point format, and sometimes in compressed blocks of bytes (other common scenarios include 24 bit integers and 64 bit double precision floating point audio). &lt;/p&gt; 
+
+&lt;p&gt;In the world of C/C++, this isn't a problem. The &lt;strong&gt;Read&lt;/strong&gt; method of IWaveProvider simply needs to take a void pointer that can be cast to a byte, short or float pointer as appropriate. In .NET things are not nearly so simple. True, there are 'unsafe' pointers in C#, but using them immediately excludes developers from other .NET languages such as VB.NET from using the framework. Also, when reading or writing data from files in .NET, you must work with the System.IO.Stream class that expects reads and writes to provide byte arrays, requiring a manual copy from the pointer to an array.&lt;/p&gt;  
+
+&lt;p&gt;My initial idea was to simply provide a variety of Read functions for IWaveProvider, and provide helper functions in an abstract base class that would allow users just to implement the one Read method whose signature best fitted their needs: &lt;/p&gt; 
+
+&lt;pre class="brush: csharp"&gt;interface IWaveProvider 
+{
+   int Read(byte[] buffer, int byteCount);
+   int Read(short[] buffer, int sampleCount);
+   int Read(float[] buffer, int sampleCount);
+   ...&lt;/pre&gt;
+
+&lt;p&gt;However, a new contributor to the NAudio project, Alexandre Mutel, has come up with an ingenious solution thanks to a brilliant piece of lateral thinking. Suppose we define a &lt;strong&gt;WaveBuffer&lt;/strong&gt; class that uses an explicit structure layout:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;[StructLayout(LayoutKind.Explicit, Pack=2)]
+public class WaveBuffer : IWaveBuffer
+{
+   [FieldOffset(0)]
+   public int numberOfBytes;
+   [FieldOffset(4)]
+   private byte[] byteBuffer;
+   [FieldOffset(4)]
+   private float[] floatBuffer;
+   [FieldOffset(4)]
+   private short[] shortBuffer;
+   ...&lt;/pre&gt;
+
+&lt;p&gt;This class has some interesting capabilities. You can set &lt;strong&gt;byteBuffer &lt;/strong&gt;to point to a new byte array, but then access it using &lt;strong&gt;floatBuffer&lt;/strong&gt;. Sounds dangerous? Well it compiles, and initial tests show that it works just fine. It is true that using the floatBuffer accessor will let you write beyond the end of available space, but so long as you never write more than the requested number of samples to the buffer, you are safe. This structure even survives garbage collections without any issues.&lt;/p&gt;
+
+&lt;p&gt;This allows us to simplify our &lt;strong&gt;IWaveProvider&lt;/strong&gt; interface dramatically:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;interface IWaveProvider
+{
+   int Read(IWaveBuffer buffer);
+   ...&lt;/pre&gt;
+
+&lt;p&gt;Implementers of the Read method then have a choice of which buffer they write into. If they simply want to write samples (whether 16 bit integers or 32 bit floats) that is fine, but equally if it is easier to provide their data as a byte array (for example when reading from a WAV file), then that can be done. The WaveBuffer trick effectively gives us the casting feature we need.&lt;/p&gt;
+
+&lt;p&gt;Sounds too good to be true? Well there are some potential concerns. This approach could be described as a bit of a &amp;quot;hack&amp;quot;. Do we know for sure that in a future version of the .NET framework it will still work (or even compile)? Does it work with 64 bit Windows? Could there be a garbage collection scenario we have not yet encountered that would cause us pr oblems? Would people object to using a hack like this right at the core of the NAudio framework?&lt;/p&gt;
+
+&lt;p&gt;The solution to these concerns is fairly simple. We will use an interface, &lt;strong&gt;IWaveBuffer &lt;/strong&gt;instead of using WaveBuffer itself. This allows us to create an alternative implementation if ever we find that WaveBuffer has any issues. &lt;/p&gt;
+
+&lt;p&gt;So the plan is that NAudio will be migrating to use IWaveProvider and IWaveBuffer in the future (not for version 1.2, but probably appearing in the following version), but if anyone can think of any problems with using the proposed WaveBuffer class, I would be interested to hear them.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="7ba9df51-a4d1-4389-be96-454028dbc9dc">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-11-30 21:13:00</date>
+      <content>At least in C# Express Edition this does not work.&lt;BR/&gt;I just tried it in the following manner:&lt;BR/&gt;&lt;BR/&gt;  [StructLayout(LayoutKind.Explicit, Pack=2)]&lt;BR/&gt;  public struct TGridModelDataBlock&lt;BR/&gt;  {&lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private byte[] byteData;&lt;BR/&gt;&lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private int[,] intData;&lt;BR/&gt;    &lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private float[,] floatData;&lt;BR/&gt;&lt;BR/&gt;    public TGridModelDataBlock(uint cbBlocksize)&lt;BR/&gt;    {&lt;BR/&gt;      Debug.Assert(cbBlocksize == GriddedElevationModel.cbGridBlockSize);&lt;BR/&gt;&lt;BR/&gt;      intData   = null;&lt;BR/&gt;      floatData = null;&lt;BR/&gt;      byteData  = new byte[cbBlocksize];&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public int[,] IntData&lt;BR/&gt;    {&lt;BR/&gt;      get&lt;BR/&gt;      {&lt;BR/&gt;        return intData;&lt;BR/&gt;      }&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public float[,] FloatData&lt;BR/&gt;    {&lt;BR/&gt;      get&lt;BR/&gt;      {&lt;BR/&gt;        return floatData;&lt;BR/&gt;      }&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public bool Read(BinaryReader reader)&lt;BR/&gt;    {&lt;BR/&gt;      try&lt;BR/&gt;      {&lt;BR/&gt;        reader.Read(byteData, 0, byteData.Length);&lt;BR/&gt;        &lt;BR/&gt;        return true;&lt;BR/&gt;      }&lt;BR/&gt;      catch(Exception)&lt;BR/&gt;      {&lt;BR/&gt;      }&lt;BR/&gt;      &lt;BR/&gt;      return false;&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public bool Write(BinaryWriter writer)&lt;BR/&gt;    {&lt;BR/&gt;      try&lt;BR/&gt;      {&lt;BR/&gt;        writer.Write(byteData, 0, byteData.Length);&lt;BR/&gt;        &lt;BR/&gt;        return true;&lt;BR/&gt;      }&lt;BR/&gt;      catch(Exception)&lt;BR/&gt;      {&lt;BR/&gt;      }&lt;BR/&gt;      &lt;BR/&gt;      return false;&lt;BR/&gt;    }&lt;BR/&gt;  }&lt;BR/&gt;&lt;BR/&gt;and when I try to access the&lt;BR/&gt;float data, I get an exception.&lt;BR/&gt;&lt;BR/&gt;I am trying to overlay a &lt;BR/&gt;matrix of 4-byte signed&lt;BR/&gt;intergers with an array&lt;BR/&gt;of 4-byte floats without&lt;BR/&gt;using a fixed buffer and&lt;BR/&gt;so far I have failed...&lt;BR/&gt;&lt;BR/&gt;In C/C++ this easy of course ;-)&lt;BR/&gt;&lt;BR/&gt;Kinds regards,&lt;BR/&gt;&lt;BR/&gt;Jeroen Posch&lt;BR/&gt;jeroen.posch@hetnet.nl</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0f983766-3cf3-4f65-b103-5a3fbedd3fac">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-30 21:20:00</date>
+      <content>I suspect it is your use of multi-dimensional arrays that is causing the problem. We just use single dimensional arrays.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3720b518-7b09-4f5a-8189-ffdf44762051">
+      <author>Q</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02404558641825312767</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-07 21:54:11</date>
+      <content>Just curious, why &amp;quot;Pack=2&amp;quot;?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9b26241c-673a-402c-b15b-a6ca3bbe4af3">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-07 22:23:33</date>
+      <content>I think it is just that when you do a StructLayout.Explicit, it is a good idea to specify the pack, so you know it will do the same thing every time. I can&amp;#39;t remember that there was a specific problem that this setting solved. We want to know that each array will reside in exactly the same place.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8e2dc455-37b1-4085-97e3-19c9b220b00b">
+      <author>Q</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02404558641825312767</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-07 23:10:06</date>
+      <content>That&amp;#39;s cool, I understand the value of setting the Packing in general, just didn&amp;#39;t know why you chose &amp;quot;2&amp;quot; in particular.  I&amp;#39;ve tried it with &amp;quot;1&amp;quot; and it seems to work just as well.  Just curious so that I could avoid any problems that I may not have yet seen.&lt;br /&gt;&lt;br /&gt;Very cool idea though.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b6743fc5-ce90-483f-9858-36a177b3e1fa">
+      <author>Rob Westgeest</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10209125927294659332</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 08:08:36</date>
+      <content>I like the idea a lot however: this code does not work for me. &lt;br /&gt;&lt;br /&gt;public interface ISampleBuffer&lt;br /&gt;{&lt;br /&gt;    byte[] Bytes { get; set; }&lt;br /&gt;    float[] Floats { get; set; }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;[StructLayout(LayoutKind.Explicit, Pack=2)]&lt;br /&gt;public struct SampleBuffer : ISampleBuffer&lt;br /&gt;{&lt;br /&gt;    [FieldOffset(0)]&lt;br /&gt;    private float[] floatBuffer;&lt;br /&gt;    [FieldOffset(0)]&lt;br /&gt;    private byte[] byteBuffer;&lt;br /&gt;    public byte[] Bytes { get { return byteBuffer; } set { byteBuffer = value; } }&lt;br /&gt;    public float[] Floats { get { return floatBuffer; } set { floatBuffer = value; } }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;For some reason &amp;#39;Bytes&amp;#39; is shown as a float[] in the debugger and (quite consistently) the following test throws an exception in the call to BitConverter.ToSingle():&lt;br /&gt;&lt;br /&gt;[Test]&lt;br /&gt;public void CastAFloatArrayToByteArray()&lt;br /&gt;{&lt;br /&gt;    ISampleBuffer buffer = new SampleBuffer();&lt;br /&gt;    buffer.Floats = new float[] { 1.3f, -3.999f };&lt;br /&gt;    Assert.AreEqual(1.3f, BitConverter.ToSingle(buffer.Bytes, 0));&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;failed: System.ArgumentException : Destination array is not long enough to copy all the items in the collection. Check array index and length.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7bff7d84-79e0-4244-abf9-79d524902635">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 09:29:27</date>
+      <content>Hi Rob,&lt;br /&gt;your problem is because you initialised the float first, making it think that they byte array has only two elements (this is just a weird side-effect of this hack). Initialise the byte array to a blank array of 8 elements. Then write over the float values. Then your test should pass:&lt;br /&gt;&lt;br /&gt;ISampleBuffer buffer = new SampleBuffer();&lt;br /&gt;buffer.Bytes = new byte[8];&lt;br /&gt;buffer.Floats[0] = 1.3f;&lt;br /&gt;buffer.Floats[1] = -3.999f;&lt;br /&gt;Assert.AreEqual(1.3f, BitConverter.ToSingle(buffer.Bytes, 0));</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f4f024a7-cf3f-4ebc-9f94-94eb3e2de8fa">
+      <author>Rob Westgeest</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10209125927294659332</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 10:09:08</date>
+      <content>It does!.. You&amp;#39;re a genius Mark,&lt;br /&gt;&lt;br /&gt;I am not sure it solves my problem though. This, works provided that I copy my float values one by one to my pre allocated buffer. &lt;br /&gt;&lt;br /&gt;The problem I am trying to solve is: I have a buffer of float (sample data) and i want to write it to a stream as fast as possible. I suspect that one by one is not the fastest way to do that and kind of hoped that your neat little trick would enable me to just assign the float array and get it&amp;#39;s the byte[] representation.&lt;br /&gt;&lt;br /&gt;Would the only advantage of this approach be that I don&amp;#39;t need pinning?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="419fcf1a-1913-4cd7-bf14-a631660343b5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 10:13:58</date>
+      <content>Hi Rob,&lt;br /&gt;if the creation of the float array is out of your control then you might be out of luck.&lt;br /&gt;Yes, the lack of need for pinning is a good advantage of this approach.&lt;br /&gt;You might be able to experiment with the unchecked keyword if all you need to do is read out of the byte buffer - you can safely go past what .NET thinks is the end of the buffer</content>
+    </comment>
+  </comments>
+</post>

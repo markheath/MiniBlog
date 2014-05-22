@@ -1,0 +1,70 @@
+<post>
+  <title>Who Cares About Audio?</title>
+  <slug>who-cares-about-audio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-03 20:36:00</pubDate>
+  <lastModified>2008-06-30 15:15:10</lastModified>
+  <content>&lt;p&gt;Excuse me while I rant a little about audio. Why is there so much progress in the world of computer graphics, while audio is pushed to one side as a secondary concern?  &lt;/p&gt;&lt;p&gt;&lt;strong&gt;Hardware&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;I bought my first ever laptop computer last month. I've been very pleased with it. It has 3GB RAM, a 2.2GHz dual core processor and a 320GB HDD. The graphics are a very competent NVidia 8600 chipset with 256Mb RAM. Pretty much everything about it is great. Except the audio. The speakers are atrociously tinny and have no frequency response at all below about 200Hz. The soundcard drivers for Vista are appalling. You can't connect the outputs to a PA system while the power supply is plugged in because they pick up too much noise. Why oh why do top of the range (OK middle of the range) laptops have audio components worth less than £5 in total?&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Vista&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;The headline audio feature in Vista was a switch to a 32-bit mixing engine. The shocker was that XP was still mixing in 16 bit. The ability to adjust volumes from different applications is kind of nice, but is missing a crucial feature - the ability to mute the sound coming from other logged in user's applications. Very annoying if your children left themselves logged into the &lt;a href="http://www.bbc.co.uk/cbeebies/"&gt;CBeebies&lt;/a&gt; website.&lt;/p&gt;&lt;p&gt;The transition to Vista has been painful for a lot of people, but surely no one more than users of pro audio. If you are using your computer with a pro soundcard, whether USB, FireWire or internal, chances were it didn't have drivers until a full &lt;em&gt;year &lt;/em&gt;after Vista's official release. And the current state of drivers is still dismal, with most still in beta, latencies much worse than the XP drivers, and no sign whatsoever of 64 bit drivers on the horizon (with the refreshing exception of &lt;a href="http://www.edirol.com/"&gt;Edirol&lt;/a&gt;). &lt;/p&gt;&lt;p&gt;The much heralded &lt;a href="http://msdn2.microsoft.com/en-us/library/aa474703.aspx"&gt;WaveRT&lt;/a&gt; driver model has &lt;a href="http://www.gearwire.com/ni-vista-announcement-nowavert.html"&gt;not been adopted&lt;/a&gt; by any of the major pro audio card manufacturers and all the promise behind &lt;a href="http://msdn2.microsoft.com/en-us/library/ms679162(VS.85).aspx"&gt;WASAPI&lt;/a&gt; and &lt;a href="http://msdn2.microsoft.com/en-us/library/ms684247(VS.85).aspx"&gt;MMCSS&lt;/a&gt; has not been realised. Some FireWire interfaces are being sold off on the cheap, presumably because they don't and never will support Vista (e.g. &lt;a href="http://www.tascam.com/details;8,14,104.html"&gt;Tascam FireOne&lt;/a&gt;, &lt;a href="http://www.mackie.com/products/satellite/index.html"&gt;Mackie Onyx Satelite&lt;/a&gt;). Vista is turning out to be a bad OS for a &lt;a href="http://en.wikipedia.org/wiki/Digital_audio_workstation"&gt;DAW&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;.NET Framework&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;When the .NET 1.0 framework came out, I was disappointed that it included no audio APIs. I set about writing my own .NET audio library (&lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;), and experienced a lot of pain getting interop working with the WaveOut windows APIs. I fully expected that Microsoft would rectify this omission in the next version of .NET. After all, Java had some low-level audio classes in the javax.audio namespace even back then. However, .NET 1.1 came out and all we got was a rudimentary play a WAV file control. Nothing that couldn't be done with a simple wrapper around the PlaySound API.&lt;/p&gt;&lt;p&gt;So I waited for .NET 2.0. But nothing new for audio there. Or in 3.0. Or in 3.5. And the open source community hasn't exactly done anything much. NAudio has picked up no traction whatsoever, and over the last seven years, I have only come across a handful of similar projects (a few wrappers of unmanaged audio libraries here and there, and a couple of articles on CodeProject). &lt;/p&gt;&lt;p&gt;I find it astonishing that Microsoft are happy to leave vast swathes of the Windows API without any managed way of accessing it. It was perhaps understandable that they couldn't wrap the entire API when .NET 1.0 came out due to the sheer size of the task, but that most of the new APIs for Vista have no managed wrappers doesn't make any sense to me. Wrapping WASAPI will not be a trivial task, as as such it seems destined not to be used in .NET for the forseeable future. And though the WaveOut APIs may have been superceded, the MIDI and ACM APIs are still Windows only way of accessing MIDI devices and compression codecs.&lt;/p&gt;&lt;p&gt;Also disappointing is the fact that the managed DirectSound wrapper project &lt;a href="http://www.thezbuffer.com/articles/304.aspx"&gt;has effectively been abandoned&lt;/a&gt; with no planned support for any .NET 2.0 wrapper assemblies. The March 2008 DirectX SDK still contains .NET 1.1 wrappers that trigger LoaderLock Managed Debugging Assistants when you try to use them in Visual Studio. All that we have on offer now is the XNA framework, which is solely focused on the game market, and therefore lacks the flexibilities needed for a lot of streaming low-level audio scenarios.&lt;/p&gt;&lt;p&gt;As for the de-facto standards of pro-audio, ASIO and VST, there seem now to be one or two small projects emerging to provide .NET wrappers. How cool would it be to create a VST plugin that allowed you to code in any language (VB, C#, IronRuby, IronPython) and compile it on the fly. OK, the garbage collection nature of .NET means that you will not be using it at super low latencies, but nonetheless, some very creative applications could be created. Yet at the moment, all the development time has to be put into getting the wrappers working, rather than on writing the end products.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Silverlight&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Finally, what about Silverlight? The good news is that it supports MP3 and WMA. For most people that would be enough. But again, why does .NET offer us a stream-based audio API which we could directly manipulate samples before they were sent to the soundcard (i.e. a PCM WAV stream)? This would open up the way for all kinds of cool applications. Check out &lt;a href="http://www.hobnox.com/audiotool-startpage.1046.html"&gt;this astonishing Flash plugin&lt;/a&gt; for an idea of what would be possible. (interestingly, Flash developers are petitioning for more &lt;a href="http://www.make-some-noise.info/"&gt;audio functionality&lt;/a&gt;, and they are already enjoying far more freedom than Silverlight offers). Microsoft, how about beating Adobe to the punch on this one?&lt;/p&gt;&lt;p&gt;Even the excellent &lt;a href="http://silverlight.live.com/"&gt;Silverlight Streaming &lt;/a&gt;service is video-centric. You can include audio files as part of an application, but unlike video, you can't upload audio separately, effectively ruling out the possibility of just updating one audio file for an application that used many files.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Why is it that audio is so low on people's priorities? Year on year we see great progression in video cards, cool 3D rendering technologies like WPF, and Silverlight can do rotating translucent videos with just a couple of lines of XAML. But if you simply want to add some EQ to an audio stream, be prepared to write mountains of code, and tear your hair out debugging the exceptions when the garbage collector moves something that should have stayed where it was.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Windows Vista</category>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b907379a-ea14-46e9-a522-ac1918f1bfe1">
+      <author>obiwanjacobi</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/01951957163189273412</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-08 07:32:00</date>
+      <content>I hear you. I'm a bit into midi and the only managed VST project I know of is Noise. But its bean nonactive for quite some time now.&lt;BR/&gt;http://gforge.public.thoughtworks.org/projects/noise/&lt;BR/&gt;&lt;BR/&gt;I once did a quick tour on the VST SDK and came up with a design for it (some parts I would do different now ;-).&lt;BR/&gt;http://obiwanjacobi.blogspot.com/2007/09/redesigning-steinberg-vst-sdk.html&lt;BR/&gt;&lt;BR/&gt;Anyway, I am thinking of doing a VST.NET project (someday) - I still have to analyze if the  functionality I want to build will fit in VST. &lt;BR/&gt;&lt;BR/&gt;Perhaps we could join forces?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2503adf4-2065-4f3e-818d-18a3a6a1aa95">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-04-09 15:09:00</date>
+      <content>I have created many audio projects for managed code, I just choose not to share them with everyone. I have a completely managed audio codec for low bandwidth speech and I also have wrappers to the waveIn/waveOut APIs (not painful at all) plus a whole load of other managed classes for FFT, DSP etc.&lt;BR/&gt;&lt;BR/&gt;Complaining that Microsoft haven't given you everything on a platter is not what a dynamic programmer would do - they would go ahead and develop these things    ;)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4281f22c-3542-4a88-b3ef-5b33aeb27f0a">
+      <author>h3-r3</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00281414866324502512</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-13 13:47:00</date>
+      <content>Here is my PortAudio wrapper:&lt;BR/&gt;http://code.google.com/p/portaudiosharp/&lt;BR/&gt;:)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8c04bb76-8c1a-4d90-ac5e-eb47657e1b71">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-13 13:57:00</date>
+      <content>obiwanjacobi - I had a go at doing a managed VST wrapper a while ago, but it is a lot of work. I also have looked at the Noise project. It may be easiest to do a VST interop layer in managed C++.&lt;BR/&gt;&lt;BR/&gt;anonymous - I have actually implemented a lot more .NET audio code than just what I have shared in NAudio, including some voice compression codecs, variable playback speed and AGC codecs. So I'm not moaning that it is not already "on a plate". But come on, games developers don't want to write their own 3D rendering engine, but simply get on with what is specific to their application. I don't think that it is unreasonable to wish for the same for audio. As for pain with WaveOut wrappers, this has mainly been due to driver issues as my code has been deployed on thousands of machines worldwide, and some of them will randomly hang in calls waveOutReset.&lt;BR/&gt;&lt;BR/&gt;h3-r3 - I came across your wrapper for PortAudio a while ago and it looks very promising. I need to find some time to really try it out properly.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d92c5d67-0c2c-436a-b52b-4a1ea1703b0d">
+      <author>Ian Jones</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-05-13 10:18:00</date>
+      <content>I would have at least expected equivalent functionality to the Java sound API in the .Net framework.  What would be really nice for me is to be able to modify PCM streams on the fly and pass them to Silverlight.&lt;BR/&gt;&lt;BR/&gt;All I want is to do some interpolation, some simple effects and mixing (a la JMod).  I want to code it in C# and I want it to run in a browser (ok, I want a Silverlight JMod!).&lt;BR/&gt;&lt;BR/&gt;The problem with MS here is that they are going for the sales pitch (look, you can play streamed video in a rotating cube in just 5 lines of code!).  This impresses the kids who salivate over the idea of creating the next YouPube or something.  The rest of us?  I dunno.  We just have to wait and see...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1d4286b5-042c-4e96-886d-829e78167d07">
+      <author>Ben Althauser</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.diblab.com</website>
+      <ip />
+      <userAgent />
+      <date>2009-05-11 08:46:00</date>
+      <content>I see two fronts here.  The fact of the matter is that consolidated libraries built into a programming architecture makes a hell of a lot of sense, and saves some typing, but on the other hand, it gives the people releasing the development platform the ability to use what *they* want (mainly microsoft is the culprit here).  &lt;br /&gt;&lt;br /&gt;Take CodeBlocks and wxWidgets for example.  Arguing that extending interface control and accessibility somehow ruins coding is nonsense.  Without a decent GUI, programs are stupid and useless unless you want to feel smart, special, and concieted.&lt;br /&gt;&lt;br /&gt;On the sound end, microsoft is completely retarded.  I've always had to rely on constantly updating ASIO drivers anyways.  I never moved to Vista anyways.  I'd rather be running Windows 3.1.  Damn that's a good lisence plate.</content>
+    </comment>
+  </comments>
+</post>

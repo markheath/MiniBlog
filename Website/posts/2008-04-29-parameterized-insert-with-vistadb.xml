@@ -1,0 +1,57 @@
+<post>
+  <title>Parameterized INSERT with VistaDB</title>
+  <slug>parameterized-insert-with-vistadb</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-29 18:36:00</pubDate>
+  <lastModified>2010-10-05 11:42:42</lastModified>
+  <content>&lt;p&gt;I'm continuing learning &lt;a href="http://www.asp.net/mvc/"&gt;ASP.NET MVC&lt;/a&gt; by writing a very simple blog application using &lt;a href="http://www.vistadb.net/"&gt;VistaDB&lt;/a&gt; as a backend, and basing my architecture loosely on &lt;a href="http://blog.wekeroad.com/mvc-storefront/"&gt;Rob Conery's MVC Storefront screencasts&lt;/a&gt;. Today it was time to insert new posts into the database, and although it turned out to be fairly straightforward, I thought I would share the code anyway, as my first few attempts failed. The code shows how to add parameters and how to get the ID of the newly inserted row.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;public void CreatePost(Post post)
+{
+    using (VistaDBConnection connection = new VistaDBConnection(connectionString))
+    {
+        connection.Open();
+        string sql = "INSERT INTO Posts (BlogId, Title, Body, " + 
+            "AuthorName, PublishedDate, LastModifiedDate, PublishState, " +
+            "Slug) VALUES (@BlogId,@Title,@Body,@AuthorName," +
+            "@PublishedDate,@LastModified,@PublishState,@Slug)";
+        using (VistaDBCommand command = new VistaDBCommand(sql, connection))
+        {
+            command.Parameters.Add("@BlogId",post.BlogId);
+            command.Parameters.Add("@Title",post.Title);
+            command.Parameters.Add("@Body", post.Body);
+            command.Parameters.Add("@AuthorName", post.Author);
+            command.Parameters.Add("@PublishedDate", post.Published);
+            command.Parameters.Add("@LastModified", post.LastModified);
+            command.Parameters.Add("@PublishState", post.Status);
+            command.Parameters.Add("@Slug", post.Slug);
+            
+            int rowsAffected = command.ExecuteNonQuery();
+            if (rowsAffected != 1)
+            {
+                throw new InvalidOperationException("Failed to add post");
+            }
+        }
+        using (VistaDBCommand command = new VistaDBCommand("SELECT @@IDENTITY", connection))
+        {
+            post.Id = (int)command.ExecuteScalar();                
+        }
+    }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>VistaDB</category>
+    <category>SQL</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="463ee45b-739c-446b-aa71-fbce9b73c414">
+      <author>VistaDB</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17874136060685679574</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-02 04:55:00</date>
+      <content>Nicely done.  Code looks good and is a good best practice example of how to position your using statements to make the code cleaner and simpler at the same time.</content>
+    </comment>
+  </comments>
+</post>

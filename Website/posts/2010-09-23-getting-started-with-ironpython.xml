@@ -1,0 +1,106 @@
+<post>
+  <title>Getting Started With IronPython</title>
+  <slug>getting-started-with-ironpython</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-23 07:39:00</pubDate>
+  <lastModified>2010-09-23 07:39:00</lastModified>
+  <content>&lt;p&gt;My first experience of Python was not a good one. I was working on a project to automate the testing of some telecoms equipment. This meant calling a lot of COM objects, which, back in 2003 at least, Python was not very good at. Also, the rudimentary Windows IDE available for Python at the time had a very annoying habit of mixing tabs and spaces, which meant that the indentation level you saw was not necessarily the indentation level you got. The other annoyance was regularly discovering syntax errors in my error reporting code, resulting in the reason for the failure of the overnight test run being lost forever.&lt;/p&gt;  &lt;p&gt;But since Microsoft have never really offered a good scripting language for .NET, I decided to revisit Python in the form of IronPython. I’ve been slowly working my way through &lt;a href="http://www.ironpythoninaction.com/"&gt;IronPython in Action&lt;/a&gt;, and trying to get back up to speed with the syntax (this online &lt;a href="http://ironpython.net/try/"&gt;tutorial&lt;/a&gt; is very helpful).&lt;/p&gt;  &lt;p&gt;As a simple way in, I decided to solve the &lt;a href="http://katas.softwarecraftsmanship.org/?p=168"&gt;“codebreaker” kata&lt;/a&gt; (basically the &lt;a href="http://en.wikipedia.org/wiki/Mastermind_%28board_game%29"&gt;Mastermind game&lt;/a&gt;). Here are a few of the rudimentary issues I hit along the way.&lt;/p&gt;  &lt;p&gt;First, get yourself a command prompt in the folder you are writing your .py file. The windows shortcut to the IronPython console will put you in the wrong place. If IronPython is not already in your path, enter:&lt;/p&gt;  &lt;pre class="brush: plain;"&gt;set path=%PATH%;&amp;quot;c:\Program Files\IronPython 2.7\&amp;quot; &lt;/pre&gt;
+
+&lt;p&gt;This will allow you to type either &lt;strong&gt;ipy&lt;/strong&gt; to get the IronPython console, or &lt;strong&gt;ipy filename.py&lt;/strong&gt; to run your script directly.&lt;/p&gt;
+
+&lt;p&gt;Second, IronPython 2.7 Alpha 1 seems to have a &lt;a href="http://ironpython.codeplex.com/workitem/28709"&gt;bug&lt;/a&gt; calling &lt;strong&gt;import unittest&lt;/strong&gt;. This means that you can’t make use of the built-in unit test support that Python has. I had to switch to normal Python to carry on (although I suspect IronPython 2.6 would have worked too).&lt;/p&gt;
+
+&lt;p&gt;Third, the unit test support in Python sadly doesn’t support the equivalent to NUnit’s [TestCase] attribute, meaning that parameterized unit tests aren’t supported (without writing some very clever code). There is a &lt;a href="http://bugs.python.org/issue7897"&gt;feature request&lt;/a&gt; filed against Python for this. For the time being I made use of a list of tuples to store my test data.&lt;/p&gt;
+
+&lt;p&gt;Fourth, there seems to be no &lt;strong&gt;find&lt;/strong&gt; method for a list (although there is on string). You can use &lt;strong&gt;index&lt;/strong&gt; but it will throw an exception if the item is not found.&lt;/p&gt;
+
+&lt;p&gt;In case you are interested in my (very sub-optimal) solution, the code follows. Without a doubt there are better ways to do this in Python. Please feel free to offer suggestions for improvement in the comments below.&lt;/p&gt;
+
+&lt;pre class="brush: py;"&gt;import unittest
+
+class CodeBreakerTest(unittest.TestCase):
+    testcases = (
+        ('xxxx',''),
+        ('bxxx','m'),
+        ('xbxx','m'),
+        ('xxyx','m'),
+        ('xxxb','m'),
+        ('ybxx','mm'),
+        ('xxrb','mm'),
+        ('ybrx','mmm'),
+        ('ybrg','mmmm'),
+        ('bbxx','m'),
+        ('rxxx','p'),
+        ('xgxx','p'),
+        ('xxbx','p'),
+        ('xxxy','p'),
+        ('rgxx','pp'),
+        ('rgbx','ppp'),
+        ('rgby','pppp'),
+        ('rbxx','pm'),
+        ('rgyx','ppm'),
+        ('rbgy','ppmm') )
+    
+    def testAll(self):
+        marker = Marker('rgby')
+        for guess, answer in self.testcases:
+            print 'Testing &amp;quot;' + guess + '&amp;quot;, expecting &amp;quot;' + answer + '&amp;quot;'
+            mark = marker.Mark(guess)
+            self.assertEquals(answer, mark)
+            
+    def test2(self):
+        marker = Marker('rggg')
+        guess = 'rgyy'
+        answer = 'pp'
+        mark = marker.Mark(guess)
+        self.assertEquals(answer, mark)
+        
+    def test3(self):
+        marker = Marker('rgxx')
+        guess = 'rggg'
+        answer = 'pp'
+        mark = marker.Mark(guess)
+        self.assertEquals(answer, mark)
+
+class Marker(object):
+    def __init__(self, secret):
+        self.secret = secret
+        
+    def Mark(self, guess):
+        perfect = self.PerfectMatch(guess)
+        wrongPos = self.WrongPositionMatch(guess)
+        wrongPos = wrongPos[len(perfect):]
+        return perfect + wrongPos
+    
+    def PerfectMatch(self, guess):
+        answer = ''
+        for i in range(len(guess)):
+            if self.secret[i] == guess[i]:
+                answer += 'p'
+        return answer
+    
+    def WrongPositionMatch(self, guess):
+        answer = ''
+        secretList = [x for x in self.secret]
+        for c in guess:
+            index = self.Find(secretList,c)
+            if index != -1:
+                answer += 'm'
+                secretList[index] = []
+        return answer
+
+    def Find(self, list, search):
+        for i in range(len(list)):
+            if (list[i] == search):
+                return i
+        return -1
+
+if __name__ == '__main__':
+    unittest.main()&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>IronPython</category>
+    <category>Python</category>
+  </categories>
+  <comments />
+</post>

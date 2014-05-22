@@ -1,0 +1,31 @@
+<post>
+  <title>Finding Prime Factors in F#</title>
+  <slug>finding-prime-factors-in-f</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-11-03 22:30:00</pubDate>
+  <lastModified>2013-11-03 22:36:45</lastModified>
+  <content>&lt;p&gt;After having seen a few presentations on F# over the last few months, I’ve been looking for some really simple problems to get me started, and this &lt;a href="http://codegolf.stackexchange.com/questions/667/find-prime-factors"&gt;code golf&lt;/a&gt; question inspired me to see if I could factorize a number in F#. I started off by doing it in C#, taking the same approach as the answers on the code golf site (which are optimised for code brevity, not performance):&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var n = 502978;
+for (var i = 2; i &amp;lt;= n; i++)
+{
+    while (n%i &amp;lt; 1)
+    {
+        Console.WriteLine(i);
+        n /= i;
+    }
+}
+&lt;/pre&gt;&lt;p&gt;Obviously it would be possible to try to simply port this directly to F#, but it felt wrong to do so, because there are two mutable variables in this approach (&lt;strong&gt;i&lt;/strong&gt; and &lt;strong&gt;n&lt;/strong&gt;). I started wondering if there was a more functional way to do this working entirely with immutable types. &lt;/p&gt;&lt;p&gt;The algorithm we have starts by testing if 2 is a factor of n. If it is, it divides n by 2 and tries again. Once we’ve divided out all the factors of 2, we increment the test number and repeat the process. Eventually we get down to to the final factor when i equals n.&lt;/p&gt;&lt;p&gt;So the F# approach I came up with, uses a recursive function. We pass in the number to be factorised, the potential factor to test (so we start with 2), and an (immutable) list of factors found so far, which starts off as an empty list. Whenever we find a factor, we create a new immutable list with the old factors as a tail, and call ourselves again. This means n doesn’t have to be mutable – we simply pass in n divided by the factor we just found. Here’s the F# code:&lt;/p&gt;&lt;pre class="brush: text;"&gt;let rec f n x a = 
+    if x = n then
+        x::a
+    elif n % x = 0 then 
+        f (n/x) x (x::a)
+    else
+        f n (x+1) a
+let factorise n = f n 2 []
+let factors = factorise 502978
+&lt;/pre&gt;&lt;p&gt;The main challenge to get this working was figuring out where I needed to put brackets (and remembering not to use commas between arguments). You’ll also notice I created a &lt;strong&gt;factorise&lt;/strong&gt; function, saving me passing in the initial values of 2 and an empty list. This is one of F#’s real strengths, making it easy to combine functions like this.&lt;/p&gt;&lt;p&gt;Obviously there are performance improvements that could be made to this, and I would also like at some point to work out how to make a non-recursive version of this that still uses immutable values. But at least I now have my first working F# “program”, so I’m a little better prepared for the forthcoming &lt;a href="http://www.meetup.com/DeveloperSouthCoast/events/139199452/"&gt;F# Tutorial night&lt;/a&gt; with &lt;a href="http://trelford.com/blog/"&gt;Phil Trelford&lt;/a&gt; at devsouthcoast.&lt;/p&gt;&lt;p&gt;If you’re an F# guru, feel free to tell me in the comments how I ought to have solved this.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>F#</category>
+  </categories>
+  <comments />
+</post>

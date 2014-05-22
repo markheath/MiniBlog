@@ -1,0 +1,92 @@
+<post>
+  <title>InvokeRequired for WPF</title>
+  <slug>invokerequired-for-wpf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-16 17:31:00</pubDate>
+  <lastModified>2010-10-04 17:21:42</lastModified>
+  <content>&lt;p&gt;Those of you who develop multi-threaded Windows Forms client applications will be well aware of the &lt;strong&gt;Control.InvokeRequired&lt;/strong&gt;&amp;#160; method needed every time you access a control from a thread other than the one on which it was created. Code such as the lines seen below, which seemed so arcane when you first encountered them, have now been committed to memory:&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;void finder_FoundFile(object sender, FoundFileEventArgs e)
+{
+   if (this.InvokeRequired)
+   {
+      this.BeginInvoke(new EventHandler&amp;lt;FoundFileEventArgs&amp;gt;(finder_FoundFile), new object[] { sender, e });
+   }
+   else
+   {
+      listBoxFiles.Items.Add(e.File);
+   }
+}&lt;/pre&gt;
+
+&lt;p&gt;But what about the brave new world of WPF? Will we have to write the same code, or will WPF controls let us set their properties from any thread? Sadly not. We have to do a similar trick, this time using the &lt;strong&gt;Dispatcher&lt;/strong&gt; object to invoke the method call on the correct thread:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;void finder_FileFound(object sender, FileFoundEventArgs e)
+{
+    if (listBoxFiles.Dispatcher.Thread == Thread.CurrentThread)
+    {
+        listBoxFiles.Items.Add(e.File);
+    }
+    else
+    {
+        listBoxFiles.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal,
+            new EventHandler&amp;lt;FileFoundEventArgs&amp;gt;(finder_FileFound), sender, new object[] { e } );
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;In fact, its even worse than for Windows Forms, as the thread signature for &lt;strong&gt;Dispatcher.BeginInvoke&lt;/strong&gt; is even more perplexing than the one for &lt;strong&gt;Control.BeginInvoke&lt;/strong&gt;. You not only have to specify a priority, but also you have to split your parameters up into &amp;quot;first parameter&amp;quot; and &amp;quot;array of all other parameters&amp;quot;. Very odd.&lt;/p&gt;
+
+&lt;p&gt;But what about data binding in WPF? Surely that would be the easy way round this mess. Bind the list box to an observable collection, and let your background thread change the collection. Unfortunately, the same problem awaits you. As soon as you add something to the observable collection an &lt;strong&gt;InvalidOperationException&lt;/strong&gt; fires warning you that you are not on the correct &lt;strong&gt;Dispatcher&lt;/strong&gt; thread.&lt;/p&gt;
+
+&lt;p&gt;Does that rule out all hope of databinding in a multi-threaded context? Thankfully not, as I discovered a &lt;a href="http://www.beacosta.com/blog/?p=34"&gt;helpful article from Beatriz Costa&lt;/a&gt; explaining a way to make an observable collection that performs the context switch for you. Its not exactly ideal, but at least it will get you up and running. Apparently MS are considering improving the situation for the next drop of WPF.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="d334c3ca-372b-4223-97ac-38add8e2cf63">
+      <author>Lieven Maes</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17157749087614079164</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-24 09:03:00</date>
+      <content>Hi Mark,&lt;BR/&gt;&lt;BR/&gt;Thank you very much for this information. I'm a beginning C# programmer and I'm trying to get some sensors (they communicate through serial port) to trigger some cool graphic animations in wpf.&lt;BR/&gt;&lt;BR/&gt;The first thing I wanted to do was to get the sensordata in a constantly updating textbox in a xaml form. I couldn't understand why the invoke method didn't work as it did in a normal form, but know I do!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="566ac09c-e833-4b22-b0f3-0b256e9b9572">
+      <author>Ade</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-08-26 11:41:00</date>
+      <content>I know you wrote this ages ago, but you don't actually need to create an object array when the method signature specifies &lt;I&gt;params object[]&lt;/I&gt;.  You can just pass a list of objects.  I have no idea why they felt the need to create two method definitions when they could have just defined &lt;B&gt;BeginInvoke(DispatcherPriority, Delegate, params object[])&lt;/B&gt;, but who am I to argue?&lt;BR/&gt;&lt;BR/&gt;See &lt;A HREF="http://msdn.microsoft.com/en-us/library/w5zay9db.aspx" REL="nofollow"&gt;http://msdn.microsoft.com/en-us/library/w5zay9db.aspx&lt;/A&gt; for details.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="36a51132-ac93-4ae4-9379-3ba121143911">
+      <author>Steve Westbrook</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-07-12 14:33:48</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;You can actually use Dispatcher.CheckAccess() as a direct equivalent of InvokeRequired.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d3329adb-72b3-4f02-a17b-0ce7f40ecb07">
+      <author>amivenus</author>
+      <email>noreply@blogger.com</email>
+      <website>http://amivenus.wordpress.com/</website>
+      <ip />
+      <userAgent />
+      <date>2010-09-01 11:59:53</date>
+      <content>Thanks for this, it helped.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9acd297b-e899-4178-ba00-6194cfa0b6fe">
+      <author>Alan Macdonald</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10758187297770358183</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-04 15:30:03</date>
+      <content>Just to expand on what Steve Westbrook said, CheckAccess works  but it doesn&amp;#39;t show up on intellisense because the EditorBrowsable attribute for some reason has been set to never.  See http://social.msdn.microsoft.com/forums/en-US/wpf/thread/360540eb-d756-4434-86f9-a3449f05eb55</content>
+    </comment>
+  </comments>
+</post>

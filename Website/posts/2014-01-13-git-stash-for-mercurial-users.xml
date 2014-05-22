@@ -1,0 +1,31 @@
+<post>
+  <title>Git Stash for Mercurial Users</title>
+  <slug>git-stash-for-mercurial-users</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-01-13 19:06:00</pubDate>
+  <lastModified>2014-01-14 11:11:53</lastModified>
+  <content>&lt;p&gt;One of the really nice features of git is the &lt;a href="https://www.kernel.org/pub/software/scm/git/docs/git-stash.html"&gt;stash command&lt;/a&gt;. It allows you to put some work in progress to the side and get back to a clean working directory, without needing to make an actual commit of half-finished code.&lt;/p&gt; &lt;p&gt;Mercurial doesn’t come with a stash command, but it does have an extension called &lt;a href="http://mercurial.selenic.com/wiki/ShelveExtension"&gt;shelve&lt;/a&gt; which does the same thing.&lt;/p&gt; &lt;h3&gt;Enabling the Shelve Extension&lt;/h3&gt; &lt;p&gt;To turn it on, you need the following lines in your mercurial.ini file (or to enable it in just a single repository, add them to .hg/hgrc):&lt;/p&gt;&lt;pre class="brush: plain;"&gt;[extensions]
+shelve =
+&lt;/pre&gt;
+&lt;p&gt;Or if you are using &lt;a href="http://tortoisehg.bitbucket.org/"&gt;TortoiseHg&lt;/a&gt;, you can easily enable the extension in the settings dialog.&lt;/p&gt;
+&lt;h3&gt;Shelving your Changes&lt;/h3&gt;
+&lt;p&gt;Shelving is extremely straightforward. Simply type:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg shelve
+&lt;/pre&gt;
+&lt;p&gt;or you can name your shelveset:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg shelve --name “some name”
+&lt;/pre&gt;
+&lt;p&gt;Note that shelving only shelves things currently staged for commit, so if you’ve added new files, then do a &lt;strong&gt;hg add &lt;/strong&gt;to make sure they are included in the shelveset.&lt;/p&gt;
+&lt;p&gt;Now you have a clean working folder, allowing you to work on a different task and make a commit.&lt;/p&gt;
+&lt;h3&gt;Unshelving&lt;/h3&gt;
+&lt;p&gt;Unshelving is really simple. If you have just one shelveset, then all you need to type is:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg unshelve
+&lt;/pre&gt;
+&lt;p&gt;If you have more than one shelveset then you can use the name you gave it:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg unshelve --name “some name”
+&lt;/pre&gt;
+&lt;p&gt;Note that this will actually perform a merge if necessary (you modified the same files in the meantime). No commit will happen when you do an unshelve; it simply gets you back to where you were, with the same pending changes.&lt;/p&gt;
+&lt;p&gt;As you can see, this extension is really simple to use, and very useful to have at your disposal if you need to make a quick context switch, or if you start doing some work that turns out to be more complicated than you thought.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,116 @@
+<post>
+  <title>ASIO Recording in NAudio</title>
+  <slug>asio-recording-in-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-12 18:20:00</pubDate>
+  <lastModified>2012-09-12 18:20:00</lastModified>
+  <content>&lt;p&gt;It’s been a long time coming, but I’ve finally checked in support for ASIO recording in &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;. It’s not actually too difficult to implement, but the main problem has been finding the time for it, and how best to present the feature within the NAudio API. I decided in the end to just do the simplest thing that works. This means simply extending the &lt;strong&gt;AsioOut &lt;/strong&gt;class to allow you to optionally record at the same time as playing with NAudio.&lt;/p&gt; &lt;p&gt;To initiate ASIO Recording, there is a new &lt;strong&gt;InitRecordAndPlayback&lt;/strong&gt; method, which allows you to specify how many channels to record. If you are only recording, and not playing back as well, then you need to tell it what sample rate you would prefer in a third parameter (leaving the input IWaveProvider null).&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;this.asioOut.InitRecordAndPlayback(null, recordChannelCount, 44100);
+&lt;/pre&gt;
+&lt;p&gt;I’ve also added an &lt;strong&gt;InputChannelOffset&lt;/strong&gt; property, which means you can skip over some of the input channels to select just the input you want. Obviously in the future it would be better to let you pick explicitly which inputs you want to record from. &lt;/p&gt;
+&lt;p&gt;To start recording (and playback), you simply call the &lt;strong&gt;Play&lt;/strong&gt; method, and you must explicitly stop recording yourself. You are alerted of new audio available via the &lt;strong&gt;AudioAvailable &lt;/strong&gt;event. This gives you an &lt;strong&gt;AudioAvailableEventArgs&lt;/strong&gt; which gives you direct access to the ASIO driver’s record buffers for maximum performance, along with &lt;strong&gt;AsioSampleType&lt;/strong&gt; which tells you what format the audio is in:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class AsioAudioAvailableEventArgs : EventArgs
+{
+
+    /// &amp;lt;summary&amp;gt;
+    /// Pointer to a buffer per input channel
+    /// &amp;lt;/summary&amp;gt;
+    public IntPtr[] InputBuffers { get; private set; }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Number of samples in each buffer
+    /// &amp;lt;/summary&amp;gt;
+    public int SamplesPerBuffer { get; private set; }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Audio format within each buffer
+    /// Most commonly this will be one of, Int32LSB, Int16LSB, Int24LSB or Float32LSB
+    /// &amp;lt;/summary&amp;gt;
+    public AsioSampleType AsioSampleType { get; private set; }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Converts all the recorded audio into a buffer of 32 bit floating point samples, interleaved by channel
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;returns&amp;gt;The samples as 32 bit floating point, interleaved&amp;lt;/returns&amp;gt;
+    public float[] GetAsInterleavedSamples() ...
+}
+&lt;/pre&gt;
+&lt;p&gt;The &lt;strong&gt;GetAsInterleavedSamples&lt;/strong&gt; is a helper method to make working with the recorded audio easier. It creates a &lt;strong&gt;float &lt;/strong&gt;array, and reads the recorded samples into that, converting from 16 or 24 bit if necessary (only the most common ASIO sample types are supported). This saves you from having to write your own unsafe C# code if you are not comfortable with that. Remember that this callback is happening from within the ASIO driver itself, so you must return as quickly as possible. If you crash while in this callback you could find your ASIO driver fails and you may need to reboot your computer to recover the audio device.&lt;/p&gt;
+&lt;p&gt;I’ve updated the NAudioDemo application to include a simple demonstration of ASIO recording in action, so if you can, test it out with your soundcard and let me know how you get on. I am aware that the public interface for this feature is a bit of a hack, but time does not permit me at the moment to polish it further. Hopefully a future version of NAudio will feature an improved ASIO API, but for NAudio 1.6 there will at least be a way to do recording with ASIO.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b72e5d90-8998-4038-8485-7384a22e2c48">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-12-07 04:12:06</date>
+      <content>Hi Mark, Im using ASIO for recording and was wondering if I could access the buffer at anytime, not waiting for the AudioAvailable event to trigger. Thanks in advance.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7a664aec-7c15-4487-bacb-455b64860d79">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-07 09:31:38</date>
+      <content>I wouldn&amp;#39;t recommend doing that. I guess you could try it and see what happens, but you risk playing garbled audio or even crashing your soundcard driver.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bae1aa85-0164-4b27-ba00-311aa6721448">
+      <author>Hima P</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13803056408299207262</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-24 15:14:46</date>
+      <content>very nice code........</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0f8b17d1-5d8f-4045-91ef-2bdc5d218113">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-02-26 18:55:44</date>
+      <content>Hey Mark. This is Carl Franklin from .NET Rocks (www.dotnetrocks.com). I&amp;#39;m also an audio engineer. Here&amp;#39;s my studio (www.pwop.com).&lt;br /&gt;&lt;br /&gt;I&amp;#39;m trying to make a routing app for ASIO. I want to be able to route an input to an output.&lt;br /&gt;&lt;br /&gt;I see that I might be able to do this by recording data from one input and sending it to an output. &lt;br /&gt;&lt;br /&gt;Do you have any samples of that?&lt;br /&gt;&lt;br /&gt;Carl&lt;br /&gt;carl@franklins.net</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9d7510c2-a349-44aa-944c-0493755ad1ea">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-02-26 19:17:11</date>
+      <content>hey Carl, great to hear from you. I&amp;#39;m a long-time listener to .NET rocks. I dabble a bit in home studio recording myself, so getting ASIO up and running with NAudio is something I&amp;#39;ve wanted for ages. &lt;br /&gt;&lt;br /&gt;The awkward thing about ASIO and NAudio is that an ASIO device presents itself in a very different way to most other Windows audio devices. Other devices appear as playback and record devices that you open separately. So my approach with them is to put the audio received into a BufferedWaveProvider and then let the output device play from that. &lt;br /&gt;&lt;br /&gt;However, ASIO has a much more elegant model which is well suited for low latency recording situations. You basically get one callback in which you get to examine the record buffers and write to the output buffers. It has not been easy to shoehorn the separate In and Out devices approach of NAudio to support this. However, that approach still ought to work, and with the aid of the MultiplexingWaveProvider, you ought to be able to handle patching from any input to output.&lt;br /&gt;&lt;br /&gt;A different way to tackle your problem would be to take a copy of the AsioOut code and modify it slightly. Then, in the driver_BufferUpdate callback, instead of raising the audioAvailable event and reading from waveStream, just copy directly from the relevant inputChannel to outputChannel. The bit depth of samples will be the same in both so it keeps things nice and simple. I&amp;#39;d also zero out the channels you weren&amp;#39;t using just to be on the safe side.&lt;br /&gt;&lt;br /&gt;I&amp;#39;m afraid I haven&amp;#39;t got a demo of this, but if I can find some free time maybe I&amp;#39;ll have a go at it. I&amp;#39;ve only very recently got my first audio interface with more than two outputs (Focusrite 2i4), so I can finally test this properly myself.&lt;br /&gt;&lt;br /&gt;On the performance front, the killer is the .NET garbage collector. You have to hope that it doesn&amp;#39;t kick in during a callback. With ASIO you often run at super low latencies (&amp;lt;10ms), and the garbage collector can cause a callback to be missed, meaning you&amp;#39;d hear a glitch in the audio output.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1188afd7-0964-4b24-a12e-d505ac813e1f">
+      <author>Haddan Mohamed Riadh</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/15055230917262011882</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-02 10:24:40</date>
+      <content>Hi Mark i&amp;#39;m wondering if i can use ASIO to record from a live radio for a precise periods of time and save it as an MP3 format. </content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f6309c2e-5d1d-4cb8-bc2f-19f8b8386fa1">
+      <author>Haddan Mohamed Riadh</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/15055230917262011882</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-02 10:26:17</date>
+      <content>Hi Mark i&amp;#39;m wondering if i can use ASIO to record from a live radio for a precise periods of time and save it as an MP3 format.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d00fe5c6-eae9-495d-ae71-5ba9b4f5cf66">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-05 13:45:34</date>
+      <content>what do you mean by live radio? ASIO is for use with professional soundcards, and you are typically recording via one of the analogue inputs rather than say from internet radio.</content>
+    </comment>
+  </comments>
+</post>

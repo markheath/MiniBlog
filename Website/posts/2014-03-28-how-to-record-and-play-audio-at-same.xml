@@ -1,0 +1,98 @@
+<post>
+  <title>How to record and play audio at the same time with NAudio</title>
+  <slug>how-to-record-and-play-audio-at-same</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-03-28 17:06:00</pubDate>
+  <lastModified>2014-03-28 17:06:12</lastModified>
+  <content>&lt;p&gt;Quite often I get questions from people who would like to play audio that they are receiving over the network, or recording from the microphone, but also want to save that audio to WAV at the same time. This is actually quite easy to achieve, so long as you think in terms of a “signal chain” (which is something I talk about a lot in my &lt;a href="http://pluralsight.com/training/Courses/TableOfContents/digital-audio-fundamentals"&gt;audio&lt;/a&gt; &lt;a href="http://pluralsight.com/training/Courses/TableOfContents/audio-programming-naudio"&gt;courses&lt;/a&gt; on Pluralsight).&lt;/p&gt; &lt;p&gt;Basically, the usual strategy I recommend for playing audio that you receive over the network or from the microphone is to put it into a &lt;strong&gt;BufferedWaveProvider&lt;/strong&gt;.&lt;strong&gt; &lt;/strong&gt;You fill it with (PCM) audio as it becomes available, and then in its Read method, it returns the audio, or silence if the buffer is empty.&lt;/p&gt; &lt;p&gt;Normally, you’d pass the BufferedWaveProvider directly to the IWavePlayer device (such as WaveOut, but to implement save to WAV, we’ll first wrap it in a new signal chain component that we’ll create for this purpose. We’ll call it “&lt;strong&gt;SavingWaveProvider&lt;/strong&gt;” and it will implement IWaveProvider. In it’s Read method, it will read from it’s source wave provider (the BufferedWaveProvider) in our case, and write to a WAV file before we pass it on.&lt;/p&gt; &lt;p&gt;We’ll dispose the WaveFileWriter if we read 0 bytes from the source wave provider, which should normally indicate we have reached the end of playback. But we also make the whole class Disposable, since BufferedWaveProvider is set up to always return the number of bytes we asked for in Read, so it will never reach the end itself.&lt;/p&gt; &lt;p&gt;Here’s the code for SavingWaveProvider:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class SavingWaveProvider : IWaveProvider, IDisposable
+{
+    private readonly IWaveProvider sourceWaveProvider;
+    private readonly WaveFileWriter writer;
+    private bool isWriterDisposed;
+
+    public SavingWaveProvider(IWaveProvider sourceWaveProvider, string wavFilePath)
+    {
+        this.sourceWaveProvider = sourceWaveProvider;
+        writer = new WaveFileWriter(wavFilePath, sourceWaveProvider.WaveFormat);
+    }
+
+    public int Read(byte[] buffer, int offset, int count)
+    {
+        var read = sourceWaveProvider.Read(buffer, offset, count);
+        if (count &amp;gt; 0 &amp;amp;&amp;amp; !isWriterDisposed)
+        {
+            writer.Write(buffer, offset, read);
+        }
+        if (count == 0)
+        {
+            Dispose(); // auto-dispose in case users forget
+        }
+        return read;
+    }
+
+    public WaveFormat WaveFormat { get { return sourceWaveProvider.WaveFormat; } }
+
+    public void Dispose()
+    {
+        if (!isWriterDisposed)
+        {
+            isWriterDisposed = true;
+            writer.Dispose();
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;And here’s how you use it to both play and save audio at the same time (note this is very simplified WPF app with two buttons and no checks that you don’t press Start twice in a row etc). The key is that we pass the BufferedWaveProvider into the constructor of the SavingWaveProvider, and then pass that to waveOut.Init. Then all we need to do is make sure we dispose SavingWaveProvider so that the WAV file header gets written correctly:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public partial class MainWindow : Window
+{
+    private WaveIn recorder;
+    private BufferedWaveProvider bufferedWaveProvider;
+    private SavingWaveProvider savingWaveProvider;
+    private WaveOut player;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
+
+    private void OnStartRecordingClick(object sender, RoutedEventArgs e)
+    {
+        // set up the recorder
+        recorder = new WaveIn();
+        recorder.DataAvailable += RecorderOnDataAvailable;
+
+        // set up our signal chain
+        bufferedWaveProvider = new BufferedWaveProvider(recorder.WaveFormat);
+        savingWaveProvider = new SavingWaveProvider(bufferedWaveProvider, "temp.wav");
+
+        // set up playback
+        player = new WaveOut();
+        player.Init(savingWaveProvider);
+
+        // begin playback &amp;amp; record
+        player.Play();
+        recorder.StartRecording();
+    }
+
+    private void RecorderOnDataAvailable(object sender, WaveInEventArgs waveInEventArgs)
+    {
+        bufferedWaveProvider.AddSamples(waveInEventArgs.Buffer,0, waveInEventArgs.BytesRecorded);
+    }
+
+    private void OnStopRecordingClick(object sender, RoutedEventArgs e)
+    {
+        // stop recording
+        recorder.StopRecording();
+        // stop playback
+        player.Stop();
+        // finalise the WAV file
+        savingWaveProvider.Dispose();
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;This technique isn’t only for saving audio that you record or receive over the network. It’s also a great way to get a copy of the audio you just played, which is very handy when you want to troubleshoot audio issues and want to get a copy of the exact audio that was sent to the soundcard. You can even insert many of these at different places in your signal chain, to hear what the audio sounded like earlier in the signal chain.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments />
+</post>

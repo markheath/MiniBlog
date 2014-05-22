@@ -1,0 +1,65 @@
+<post>
+  <title>Test-Resistant Code #4–Third Party Frameworks</title>
+  <slug>test-resistant-code-4third-party</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-06-30 23:28:00</pubDate>
+  <lastModified>2011-06-30 23:28:00</lastModified>
+  <content>&lt;p&gt;This one might seem like a repeat of my &lt;a href="/post/test-resistant-code-and-battle-for-tdd"&gt;first post&lt;/a&gt; in this series, where I talked about dependencies being the biggest barrier to unit testing, and the challenge of creating abstraction layers for everything just to make things testable. However, even if we manage to isolate our third party framework entirely behind an abstraction layer, it still doesn’t eliminate a few conundrums when it comes to actually testing what we have done. I’ll just focus on two example scenarios:&lt;/p&gt; &lt;h3&gt;Magic Invocations&lt;/h3&gt; &lt;p&gt;Writing code that consumes a third party API can be one of the most difficult developer experiences. You write the code you think &lt;em&gt;ought &lt;/em&gt;to work, based on the somewhat unreliable documentation, and it fails with some bizarre error. You then spend the next few days trying every possible combination of parameters, ordering of method calls, and scouring the web for any help you can get. Eventually you stumble across the “magic invocation” – the perfect combination of method calls and parameters that makes it work. You might have no clue why, but you are just relieved to be finally done with this part of the development experience, and ready to move onto something else.&lt;/p&gt; &lt;p&gt;As an example, consider this code I wrote once that attempts to find set the recording level for a given sound card input. It’s pretty hacky stuff, with a different codepath for different versions of Windows. It “works on my machine”, but I’m sure there are some systems on which it does the wrong thing.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private void TryGetVolumeControl()
+{
+    int waveInDeviceNumber = waveIn.DeviceNumber;
+    if (Environment.OSVersion.Version.Major &amp;gt;= 6) // Vista and over
+    {
+        var mixerLine = waveIn.GetMixerLine();
+        //new MixerLine((IntPtr)waveInDeviceNumber, 0, MixerFlags.WaveIn);
+        foreach (var control in mixerLine.Controls)
+        {
+            if (control.ControlType == MixerControlType.Volume)
+            {
+                this.volumeControl = control as UnsignedMixerControl;
+                MicrophoneLevel = desiredVolume;
+                break;
+            }
+        }
+    }
+    else
+    {
+        var mixer = new Mixer(waveInDeviceNumber);
+        foreach (var destination in mixer.Destinations)
+        {
+            if (destination.ComponentType == MixerLineComponentType.DestinationWaveIn)
+            {
+                foreach (var source in destination.Sources)
+                {
+                    if (source.ComponentType == MixerLineComponentType.SourceMicrophone)
+                    {
+                        foreach (var control in source.Controls)
+                        {
+                            if (control.ControlType == MixerControlType.Volume)
+                            {
+                                volumeControl = control as UnsignedMixerControl;
+                                MicrophoneLevel = desiredVolume;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Having finally made this wretched thing work, does it matter whether I have any “unit tests” for it or not? I could write an “integration test” for this code which actually opens an audio device for recording and attempts to set the microphone level. But to know whether it worked or not would not be automatically verifiable. You would have to manually examine the recorded audio to see if the volume had been adjusted.&lt;/p&gt;
+&lt;p&gt;What about real “unit tests”? Is it possible to unit test this? Well in one sense, yes. I could wrap an abstraction layer around all the third party framework calls and the operating system version checking. Then I could test that my foreach loops are indeed picking out the “mixer control” I think they should in both cases, and that the desired level was set on that control.&lt;/p&gt;
+&lt;p&gt;But supposing I did write that unit test. What would it prove? It would prove little more than my code does what it does. It doesn’t prove that it does the right thing. The best it can do is demonstrate that the behaviour that I know “works on my machine”, is still working. In other words I could create mocks that return data that mimics my own soundcard’s controls and ensure that the algorithm always picks the same mixer control for that particular test case.&lt;/p&gt;
+&lt;p&gt;However, I this that this sort of testing fails the cost-benefit analysis. It requires a lot of abstraction layers to be created just for the purpose of creating a test that has dubious value. Tests should verify that requirements are being met, not check up on &lt;em&gt;how &lt;/em&gt;they are implemented.&lt;/p&gt;
+&lt;h3&gt;Writing Plugins&lt;/h3&gt;
+&lt;p&gt;Another common scenario is when you are writing code that will be called by a third party framework – as a plugin of sorts. In this case, you are often inheriting from a base class. The public interface has already been decided for you, for better or worse. Also, depending on the framework, you may not be entirely sure what the possible inputs to your overridden functions might be, or in what order they might be called.&lt;/p&gt;
+&lt;p&gt;The approach I tend to take here is to put as little code in the derived class as possible. Instead it calls out into my own, more testable classes. This works quite well, and leaves you with the choice of how much effort you want to go to to test the derived plugin class itself, which may be best left to a proper integration test with the real system.&lt;/p&gt;
+&lt;p&gt;One place this approach doesn’t work well for me is with my own framework, NAudio. In NAudio, you often create small classes that inherit from IWaveProvider or WaveStream. These return audio out of a Read method in a byte array, which is great for the soundcard, but not at all friendly for writing unit tests against. I could again move my logic out into a separate, testable class, but this doubles my number of classes and reduces performance (which is a very important consideration in streaming audio). Add to that that audio effects and processors tend to be hard to automatically verify, and I wonder whether this is another case where the effort to write &lt;em&gt;everything&lt;/em&gt; in a strictly TDD manner doesn’t really pay off.&lt;/p&gt;
+&lt;p&gt;Anyway, I’m nearly at the end of this series now. Just one more form of test-resistant code left to discuss, before I move on to share some ideas I’ve had on how to better automate the testing of some of this code.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>unit testing</category>
+    <category>TDD</category>
+  </categories>
+  <comments />
+</post>

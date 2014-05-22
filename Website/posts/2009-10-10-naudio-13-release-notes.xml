@@ -1,0 +1,537 @@
+<post>
+  <title>NAudio 1.3 Release Notes</title>
+  <slug>naudio-13-release-notes</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-10-10 18:33:00</pubDate>
+  <lastModified>2009-10-10 18:33:58</lastModified>
+  <content>&lt;p&gt;It has been well over a year since I last released a version of &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt;, and since then there have been loads of new features and bugfixes added, so I have decided it is time for a new drop. Another reason for releasing now is that NAudio has been getting a lot more attention recently, mainly due to &lt;a href="http://www.stackoverflow.com"&gt;StackOverflow&lt;/a&gt; (and even got &lt;a href="http://channel9.msdn.com/shows/This+Week+On+Channel+9/TWC9-Office-Engineering-Zune-HD-app-NET-Audio-Recorder/"&gt;a mention on This Week on Channel 9&lt;/a&gt;). &lt;/p&gt;  &lt;p&gt;As always, head to CodePlex to &lt;a href="http://naudio.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=34249"&gt;download the latest source code and binaries&lt;/a&gt;.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;What’s New?&lt;/strong&gt;&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;&lt;strong&gt;WaveOut &lt;/strong&gt;has a new&lt;strong&gt;&amp;#160;&lt;/strong&gt;constructor (this is breaking change), which allows three options for waveOut callbacks. This is because there is no “one size fits all” solution, but if you are creating WaveOut on the GUI thread of a Winforms or WPF application, then the default constructor should work just fine. WaveOut also allows better flexibility over controlling the number of buffers and desired latency. &lt;/li&gt;    &lt;li&gt;&lt;strong&gt;Mp3FileReader &lt;/strong&gt;and &lt;strong&gt;WaveFileReader &lt;/strong&gt;can have a stream as input, and &lt;strong&gt;WaveFileWriter &lt;/strong&gt;can write to a stream. These features are useful to those wanting to stream data over networks.&lt;/li&gt;    &lt;li&gt;The new &lt;strong&gt;IWaveProvider &lt;/strong&gt;interface is like a lightweight WaveStream. It doesn’t support repositioning or length and current position reporting, making the implementation of synthesizers much simpler. The IWavePlayer interface takes an IWaveProvider rather than WaveStream. WaveStream implements IWaveProvider, so existing code continues to work just fine.&lt;/li&gt;    &lt;li&gt;Added in &lt;strong&gt;LoopStream&lt;/strong&gt;, &lt;strong&gt;WaveProvider32 &lt;/strong&gt;and &lt;strong&gt;WaveProvider16 &lt;/strong&gt;helper classes. Expect more to be built upon these in the future.&lt;/li&gt;    &lt;li&gt;I have also started using the &lt;strong&gt;WaveBuffer &lt;/strong&gt;class. This &lt;a href="/post/wavebuffer-casting-byte-arrays-to-float"&gt;clever idea&lt;/a&gt; from Alexandre Mutel allows us to trick the .NET type system into letting us cast from byte[] to float[] or short[]. This improves performance by eliminating unnecessary copying and converting of data.&lt;/li&gt;    &lt;li&gt;There have been many bugfixes including better support for VBR MP3 file playback. &lt;/li&gt;    &lt;li&gt;The &lt;strong&gt;mixer API &lt;/strong&gt;has had a lot of bugs fixed and improvements, though differences between Vista and XP continue to prove frustrating. &lt;/li&gt;    &lt;li&gt;The demo project (&lt;strong&gt;NAudioDemo&lt;/strong&gt;) has been improved and includes audio wave-form drawing sample code. &lt;/li&gt;    &lt;li&gt;There is now a WPF demo as well (&lt;strong&gt;NAudioWpfDemo&lt;/strong&gt;), which also shows how to draw wave-forms in WPF, and even includes some preliminary FFT drawing code.&lt;/li&gt;    &lt;li&gt;The &lt;strong&gt;WaveIn&lt;/strong&gt; support has been updated and enhanced. WaveInStream is now obsolete.&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;WASAPI audio capture &lt;/strong&gt;is now supported.&lt;/li&gt;    &lt;li&gt;NAudio should now work correctly on &lt;strong&gt;x64 &lt;/strong&gt;operating systems (accomplished this by setting Visual Studio to compile for x86).&lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;As usual, I welcome any feedback on this release. Do let me know if you use NAudio to build anything cool.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="8147fb41-501e-4bc4-87bf-c62c9b66583a">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 20:42:44</date>
+      <content>I guess there is a problem in dsp/BiQuadFilter.cs Transform():&lt;br /&gt;            for(int n = 0; n &amp;lt; inBuffer.Length; n++)&lt;br /&gt;            {&lt;br /&gt;                y[n] = (float) (&lt;br /&gt;                    (b0/a0)*x[n] + (b1/a0)*x[n-1] + (b2/a0)*x[n-2]&lt;br /&gt;                    - (a1/a0)*y[n-1] - (a2/a0)*y[n-2]);&lt;br /&gt;            }&lt;br /&gt;&lt;br /&gt;Index out of boudaries.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6861c13e-bdcf-4fc0-b773-80f998d10dbf">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 20:51:23</date>
+      <content>hi n20 - I think you&amp;#39;re the first person to use that function in about 6 years. I&amp;#39;m hoping to integrate a much better effects framework I did for the Skype Voice Changer project in the next version of NAudio</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2051656f-23c0-4dcb-9815-cb583307a582">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 21:06:19</date>
+      <content>Thanks for replay,&lt;br /&gt;I need simple low latency spectrum visualization just for 3-6 bands. So I guess several BiQuadFilters is the best choice.&lt;br /&gt;It`s sad that I failed utilise this nice nubble from NAudio.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="053f9e0d-4ec6-4b5c-8f55-6f8b22d22a36">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 22:27:28</date>
+      <content>Seems it works since initial n value I changed from 0 to 2. Low pass filter seems to be working, maybe later I`ll check outputs quality.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3499b165-a48c-444f-b88e-676d5d8e2595">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 22:29:14</date>
+      <content>cool, let me know how you get on. I think the original algorithm came from musicdsp.org</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7dbef93d-9552-41fb-9c01-48f4e0bdd3e1">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 10:41:01</date>
+      <content>Congratulations with this new release!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9599bd5f-b18f-42eb-85e0-6ec08229b264">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 14:16:24</date>
+      <content>Hi Mark,&lt;br /&gt;Today I tried FFT function from NAudio, works fine. Seems simplier resort for my task than using BiQuadFilter.&lt;br /&gt;&lt;br /&gt;I have another problm with selecting input device. WaveIn.DeviceCount shows only one input device however in windows Record Control panel i can pick from several(Mic, line-in etc). Maybe is any resort from selecting from own application? (running on XP)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dfdb5984-0b7e-4781-9e85-47740dfcc3b6">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 14:19:13</date>
+      <content>n2o, this is where it can get a bit confusing. The number of input sources your soundcard can support is not the same as the number of devices. In other words, you have a single input device, which can provide audio from a number of sources. It is possible to use the mixer API from NAudio to select which source you actually want to record from, although this can be a frustrating process.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a4540e94-9f98-48b0-9f88-0ea460385b5b">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 17:39:28</date>
+      <content>One more obscurity about waveIn recording channels, how it works in mono mode, record only left or right or averages samples from both?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6d62d099-a286-4b83-b665-fd6d933d079d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 17:42:05</date>
+      <content>n2o, that is entirely dependent on your sound card driver. I would guess left channel only, but I don&amp;#39;t know for sure. Some inputs really are mono already, such as those on pro audio cards.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="04cba9b3-ca23-4908-97ba-ae8bf9c5dfd5">
+      <author>box86rowh</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12026479846659191455</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-11 22:19:51</date>
+      <content>Hey Mark, &lt;br /&gt;Looks like some amazing work you&amp;#39;ve got into NAudio.&lt;br /&gt;&lt;br /&gt;I am looking at your re-sampler project example and wondering if there is a simple way to use a similar set of commands to loop through a wave file&amp;#39;s samples and tweak the volume before writing out to a new file.  I would like to not just reset the volume level on the entire file, but have a minute control over the volume at any given moment in the audio so I can fade in and out throughout the file and whatnot.&lt;br /&gt;Thanks for any input!&lt;br /&gt;Jason</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0e40b207-8ea4-44f7-be9d-5ce3bdcd76c2">
+      <author>@lx - Alexandre MUTEL</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05096938106073079832</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-13 11:29:42</date>
+      <content>Hi Mark, cool to see that NAudio is constantly being improved!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7ee7cf86-4a53-4d3b-b2f9-06cc3a8ad3f8">
+      <author>Justin</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04990950798441689467</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-14 16:08:51</date>
+      <content>Is there anyway of converting wma file into a MuLaw wav format</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="53d57d43-8648-45b2-8e8d-898ac45b983f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-22 16:00:54</date>
+      <content>hi Justin,&lt;br /&gt;I&amp;#39;m afraid NAudio doesn&amp;#39;t decode WMA at the moment</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4cc6e528-9220-44dc-8684-2aaa9a93d2b0">
+      <author>victorantos</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13381559655146631192</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-25 11:16:09</date>
+      <content>I noticed the IAudioSessionManager2 is not yet implemented in your code.&lt;br /&gt;&lt;br /&gt;Can you please advise me what tools you are using to get method signatures generated?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="779f09e8-47d5-4a38-908d-fed5622623ec">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-25 21:40:52</date>
+      <content>hi victorantos,&lt;br /&gt;&lt;br /&gt;the core audio code was not generated using tools but simply by examining the Windows SDK header files and trial and error. It is a slow process, and after a while I discovered that Ray Molenkamp had already done a lot of the work, so much of what is used in NAudio I have taken from his work.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="88a8b523-9890-4af9-9972-745ad2ef0379">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 10:16:16</date>
+      <content>Hi Jason,&lt;br /&gt;yes this is possible with NAudio, but will require a bit of custom code. I&amp;#39;m hoping to blog about how to do this in the future.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="02521a84-9186-4620-b8f6-5b448894185c">
+      <author>Alex Kintner</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-03 16:46:51</date>
+      <content>Mark, &lt;br /&gt;NAudio looks pretty cool. I&amp;#39;m looking for a replacement for DirectSound now that MS has deprecated it. My app uses most of the DirectSound API. Is there an API manual or programmers guide for NAudio? I didn&amp;#39;t see a manual on CodePlex. Thanks.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1f47fb0f-a4ae-449d-b8ff-fbf4fc75e862">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-03 16:49:11</date>
+      <content>Hi Alex,&lt;br /&gt;the only documentation is what is on this blog (also Sebastien Gray has blogged a bit about NAudio). The best way in is to look at the source code for the NAudioDemo application.&lt;br /&gt;&lt;br /&gt;Mark</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e429e7f4-63e3-4354-bde8-f7d0c3d44bf9">
+      <author>Alex Kintner</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-03 18:22:24</date>
+      <content>Ok, thanks Mark. I&amp;#39;ll check out the source code.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a51f492b-346f-4144-bd81-3a90ff529330">
+      <author>Andrey</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17802458106431280139</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-11 10:56:22</date>
+      <content>Can i use your library to play an online radio streaming in MP3/WMA/OGG formats?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a5f5c481-806b-4081-930d-ba6b2fe33981">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-11 10:57:45</date>
+      <content>I&amp;#39;m afraid we don&amp;#39;t have ogg and wma playback support yet. We might get mp3 support in there in the future</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="826d90d6-6453-4af8-8ce6-2a8038becc8e">
+      <author>Paul</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-21 17:46:20</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Reading the release notes, I came accross this:&lt;br /&gt;&lt;br /&gt;&amp;quot;Mp3FileReader and WaveFileReader can have a stream as input, and WaveFileWriter can write to a stream. These features are useful to those wanting to stream data over networks.&amp;quot;&lt;br /&gt;&lt;br /&gt;Are there any examples of how to have WaveFileWriter write to a stream? This would make NAudio the missing link in my project. Any help here would be greatly appreciated.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3cea831e-c45a-4875-bc34-74a6f8fdd90b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-23 10:27:03</date>
+      <content>Hi Paul,&lt;br /&gt;WaveFileWriter does have a constructor that takes a stream. However, it does need to be repositionable, as Wave Files store the length of the data at the beginning, making a Wave file stream less flexible than it might otherwise be</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1ca9ff14-ef97-4bb9-bbc7-29f2d8982c37">
+      <author>CD</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-25 18:28:17</date>
+      <content>Mark,&lt;br /&gt;&lt;br /&gt;Just want to say a big thanks for all your hard work on NAudio, have found it an incredibly useful tool. One question - now that WaveInStream is obsolete in favour of WaveIn, is it possible to change the default input device? Is there a WaveIn equivalent to WaveInStream(int deviceNumber ... ...) where deviceNumber is the mixer I wish to use? &lt;br /&gt;&lt;br /&gt;Just to be clear, I am not asking how to change between e.g. Stereo Mix and Microphone sources (know how to do that via the Mixer API). But I have multiple WaveIn devices and want to choose between them.&lt;br /&gt;&lt;br /&gt;Thanks in advance&lt;br /&gt;&lt;br /&gt;CD</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dbaf60b1-3585-40d4-8a4a-667fcc4b2913">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-25 19:10:16</date>
+      <content>Hi CD,&lt;br /&gt;glad you&amp;#39;re finding it useful. simply set the DeviceNumber property on WaveIn before you call StartRecording</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bdb14c71-ec2c-4bb8-8b27-ec733bb49c71">
+      <author>CD</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-25 19:54:04</date>
+      <content>So simple, thanks.&lt;br /&gt;&lt;br /&gt;One feature I have been toying with is the use of loopback capture (basically recording directly from the speakers, thus getting round soundcards that don&amp;#39;t have e.g. Stereo Mix or the like). Have had some success thanks to a couple of links on Codeplex (most notably &lt;br /&gt;http://naudio.codeplex.com/Thread/View.aspx?ThreadId=75005)&lt;br /&gt;. However, this solution seems limited in C# because the GC seems to be unable to cope if there is any silence at all in the audio (basically it does record audio, but the recorded clip skips and jumps all the time). I saw a suggestion here of how to fix it - &lt;br /&gt;&lt;br /&gt;http://blogs.msdn.com/matthew_van_eerde/archive/2008/12/10/sample-playing-silence-via-wasapi-event-driven-pull-mode.aspx&lt;br /&gt;&lt;br /&gt;but my C++ interop skills are nowhere near good enough. Wondered if you had any other ideas of how to solve this? Would love to see this feature in the future if you are looking for ways to improve an already excellent library.&lt;br /&gt;&lt;br /&gt;Thanks once again&lt;br /&gt;&lt;br /&gt;CD</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9dfd2e2a-73ca-4c60-bf75-d7129fe8e192">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-02 16:35:00</date>
+      <content>hi mark,&lt;br /&gt;&lt;br /&gt;first of all thanks for this wonderful library, its really useful. secondly im currently working on my final year project and i need a real time live audio input so that i can save it to an array. how is the best way to implement this using the NAudio library?&lt;br /&gt;&lt;br /&gt;thanks tristan</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cff6a4b5-c014-456d-825e-ccaa937b3ebc">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-02 16:36:26</date>
+      <content>hi tristan, check out my &lt;a href="http://voicerecorder.codeplex.com/" rel="nofollow"&gt;voice recorder sample application&lt;/a&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c0c97ec2-b82d-41df-aaa1-f847a36f18dc">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-02 18:05:52</date>
+      <content>thanks for the quick replay&lt;br /&gt;&lt;br /&gt;i managed to do the first tutorial on sound recording and saving the file to .wav, know i dont want to save the recorded file as .wav, but i want to save the data to an array. know im using this part of the code:&lt;br /&gt;&lt;br /&gt;void waveIn_DataAvailable(object sender, WaveInEventArgs e)&lt;br /&gt;        {&lt;br /&gt;            byte[] buffer = e.Buffer;&lt;br /&gt;            int bytesRecorded = e.BytesRecorded;&lt;br /&gt;            WriteToFile(buffer, bytesRecorded);&lt;br /&gt;&lt;br /&gt;will the recorded audio be sent to array e.buffer?&lt;br /&gt;&lt;br /&gt;thanks tristan</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c23edba0-eb8b-4e3f-b067-a8d592f5037d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-02 18:09:57</date>
+      <content>hi tristan,&lt;br /&gt;yes e.Buffer contains the recorded audio. Just copy it into your own buffer (will need to be bug enough, and make sure you don&amp;#39;t write over the top of what you read the previous time)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4c56d7b6-58ba-426e-baa6-29e178790f00">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-03 14:23:16</date>
+      <content>hi mark,&lt;br /&gt;i just need to create a button which allows me to record from a line in from the pc sound card and save the contains into a buffer...any help? i already tried but im a newbie and i got no idea what im doing&lt;br /&gt;&lt;br /&gt;thanks tristan</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6f7279ee-54e8-4a70-b501-08e8e7ef6c46">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-04 11:19:45</date>
+      <content>hi Tristan,&lt;br /&gt;you should look at my &lt;a href="http://voicerecorder.codeplex.com" rel="nofollow"&gt;.NET voice recorder&lt;/a&gt; project which does exactly this.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="437337ea-c45f-4247-86ce-ae33bbfa1f80">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-20 18:32:50</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Excellent project, professionally done. &lt;br /&gt;&lt;br /&gt;NAudio 1.3 has problems playing an MP3 file where the MP3Header does not immediately follow the ID3Tags.&lt;br /&gt;&lt;br /&gt;The MP3Header must be scanned after all known headers/tags have been found.&lt;br /&gt;           // try for a header&lt;br /&gt;            long headerStartPosition = input.Position;&lt;br /&gt;            byte[] headerBytes = reader.ReadBytes(4);&lt;br /&gt;&lt;br /&gt;            // Added -jam to play wrapped mp3 files via RIFF&lt;br /&gt;            headerBytes = CheckForRiff(input, reader, headerBytes);&lt;br /&gt;&lt;br /&gt;            bool bHeaderFound = false;&lt;br /&gt;&lt;br /&gt;            long readsToTry = 4000;&lt;br /&gt;            if (readsToTry &amp;gt; input.Length)&lt;br /&gt;                readsToTry = input.Length;&lt;br /&gt;&lt;br /&gt;            while (bHeaderFound == false &amp;amp;&amp;amp; readsToTry &amp;gt; 0)&lt;br /&gt;            {&lt;br /&gt;&lt;br /&gt;                if ((headerBytes[0] == 0xFF) &amp;amp;&amp;amp; ((headerBytes[1] &amp;amp; 0xE0) == 0xE0))&lt;br /&gt;                {&lt;br /&gt;                    bHeaderFound = DecodeMpegHeader(headerBytes);&lt;br /&gt;                }&lt;br /&gt;&lt;br /&gt;                if(bHeaderFound == false)&lt;br /&gt;                {&lt;br /&gt;                    --readsToTry;&lt;br /&gt;                    headerBytes[0] = headerBytes[1];&lt;br /&gt;                    headerBytes[1] = headerBytes[2];&lt;br /&gt;                    headerBytes[2] = headerBytes[3];&lt;br /&gt;                    headerBytes[3] = reader.ReadByte();&lt;br /&gt;                }&lt;br /&gt;            }&lt;br /&gt;&lt;br /&gt;            if (!bHeaderFound)&lt;br /&gt;            {&lt;br /&gt;                input.Position = headerStartPosition;&lt;br /&gt;                throw new FormatException(&amp;quot;Not a recognised MP3 block&amp;quot;);&lt;br /&gt;            }&lt;br /&gt;&lt;br /&gt;Ron Nelson</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="71f120fa-9db2-4574-b515-f68f24c1caea">
+      <author>SeanR</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-17 15:01:11</date>
+      <content>Hi Mark, firstly great library! I&amp;#39;m planning to use it in a &amp;#39;batch mode&amp;#39; to create individual amplitude sample sets for a large mp3 library. I notice that your demo MeteringStream class does exactly what I need, but in realtime as it intercepts the stream en route to the WavePlayer. Do you have any example code showing simple consumption of the WaveStream with creation of volume samples - I&amp;#39;m getting confused by the multi channel aspects and index += 4; nature of the stream&amp;#39;s low level format.&lt;br /&gt;&lt;br /&gt;Again, thanks for a great library!&lt;br /&gt;&lt;br /&gt;regards&lt;br /&gt;&lt;br /&gt;SeanR</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="df07d38c-bd1d-4787-8872-fa21401911b5">
+      <author>Icanusewindowspaint</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-19 20:25:12</date>
+      <content>Hi Mark - Tom, Sarah, Dan and Jennie here. We think that the key issue is the low latency spectrum visualisation algorithm. Really what you want to do is improve your C++ interop skills to be honest. See you in the morning!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="55f066ef-e8d7-421a-bcdd-604c111c47b3">
+      <author>dehghan</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16383612300638742996</website>
+      <ip />
+      <userAgent />
+      <date>2010-02-19 21:33:29</date>
+      <content>Great job, but I have a question. I searched all your blog and NAudio Discussion threads but found nothing. &lt;br /&gt;I have a GSM file (recorded by asterisk), how can I play it with NAudio?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="78a82b5d-258b-472a-bb72-28b2e16fa803">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-02-22 11:40:02</date>
+      <content>@dehghan NAudio can read WAV files and use ACM codecs to decompress them. Is a GSM file a custom file format, or is it inside a WAV file? If so, you may be able to use the WaveFormatConversionStream to convert it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c36affb2-5d2a-411f-bb31-7107c7332b93">
+      <author>Maud &amp;amp; Lennart</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14864029774384857969</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-02 20:35:17</date>
+      <content>Hi Mark,&lt;br /&gt;just like CD mentioned above,&lt;br /&gt;I&amp;#39;d like to be able to use loopback-capturing to capture any sound output from the soundcard.&lt;br /&gt;&lt;br /&gt;Lots of machines / drivers do not support &amp;quot;Record from stereomix&amp;quot;,&lt;br /&gt;so loopback is the only option in those cases.&lt;br /&gt;&lt;br /&gt;What would be the correct way to do loopback recording with NAudio ?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="45c0c3cf-841b-4ae1-a3b9-b07d2a9854fb">
+      <author>Frostman</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00624338665696875333</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-16 13:23:58</date>
+      <content>Hi!&lt;br /&gt;&lt;br /&gt;First of all insanely great stuff!!&lt;br /&gt;Can you tell me how could i default to 89db volume all mp3 that i play ?&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;Alen</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dbd75009-26d5-4a07-a625-04d8a62c51c1">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-05-21 02:48:04</date>
+      <content>Hi Mark, Can you make YouTube Videos demonstrating how to youse NAudio?&lt;br /&gt;Can you upgrade the code to use all the new features of .Net 4.0? C# 4.0?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="afede290-1af8-499e-b75c-7988d2bd64a7">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-05-21 03:06:26</date>
+      <content>how can I use Speex Codec With NAudio Over the internet?&lt;br /&gt;&lt;br /&gt;So I will record audio from mic then send it to player over the internet?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="edc18d70-77a3-4210-af2c-ce3a47f08aa0">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-05-21 03:08:18</date>
+      <content>can you explain NAudio internals and how stuff works in it? for beginners?&lt;br /&gt;&lt;br /&gt;What is a wave file, and what does it consist of, etc.. and how to does NAudio work? If you can make an introduction to NAudio in YouTube it will be good. with demos.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="23d30f5b-7935-454a-838a-edbdf53ccece">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-05-21 10:37:20</date>
+      <content>hi anonoymous, there are several articles about NAudio on this blog that you should read. Also, see the NAudio codeplex page for links to other tutorials as well as sample projects.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a6cf4c45-a496-4d28-bda7-bff7d54f7784">
+      <author>yousuf hasan</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-07-11 17:05:02</date>
+      <content>I have developed a sound capturing winform application using NAudio 1.3&lt;br /&gt; on c#. The idea is to capture streaming songs through sound card. It is&lt;br /&gt;working perfectly fine on windows xp.&lt;br /&gt;But On vista and windows7 machine if there is no sound driver installed  it also take mic voice with it&lt;br /&gt;which is a big issue(i have checked it on dell laptop and if i mute the microphone than it does not capture any sound&lt;br /&gt; )i just want  to capture streaming song sound .NAudio 1.3 uses WASAPI audio capture for windows vista and 7.I need to solve this&lt;br /&gt;issue urgently.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="aeed0eeb-c954-41f3-aedb-b93e55749559">
+      <author />
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09210470597401703891</website>
+      <ip />
+      <userAgent />
+      <date>2010-09-09 13:35:40</date>
+      <content>Hi Mark,&lt;br /&gt;   I have downloaded the Naudio.dll (1.3). but when i try to play .mp3 file it gives &amp;quot;Not a recognised mp3 Block.&amp;quot;. Please Provide me the new version of Naudio.dll so i can play mp3 files.&lt;br /&gt;&lt;br /&gt;Thanks &lt;br /&gt;Umesh(umesh.prajapati@tatvasoft.com)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f413caee-53dd-4b9b-8f44-692c57260430">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-10-07 21:17:33</date>
+      <content>Hi Mark, your work is really amazing! I would like to ask you a question ... Is there any possibility to translate the source code to vb.net 2008? I have no knowledge they in c # and I would work together to debug and optimize code, and collaborate with the project. I&amp;#39;m working on a radio automation software. Alejandro (alenet444@hotmail.com)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6718d7a3-861c-494a-bc5f-c4dab3594e72">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-12 19:04:31</date>
+      <content>hi Alejandro,&lt;br /&gt;I&amp;#39;m afraid I won&amp;#39;t be porting NAudio to VB.NET. It is quite usable as a library from within VB.NET if you require though. &lt;br /&gt;&lt;br /&gt;If you want to try your hand at learning C# you will find that it is not too difficult if you know VB.NET</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="40284df4-99a4-41f7-a9b7-6aa1f02b923b">
+      <author />
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09210470597401703891</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-20 13:57:35</date>
+      <content>Hi Mark,&lt;br /&gt;I have downloaded the Naudio.dll (1.3). but when i try to play .mp3 file it gives &amp;quot;Not a recognised mp3 Block.&amp;quot;. Please Provide me the new version of Naudio.dll so i can play mp3 files.&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;Umesh(umesh.prajapati@tatvasoft.com)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="93405786-09dc-4be7-9708-79a5ee531d47">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-20 13:58:49</date>
+      <content>hi Umesh, &lt;br /&gt;&lt;br /&gt;go to the source code tab on CodePlex and download the latest NAudio source code. I have checked in some improvements to MP3 file reading recently that might fix your issue.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ba0254a8-5c9e-4231-8be6-6705c3a447e6">
+      <author>Aaron de Windt</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03417199238789149404</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-21 16:54:37</date>
+      <content>I am trying to get the pitch of a sound using the fft function. I created an array with the intensity of each frequency and I can get the index of the pitch. Now my problem is. How can I convert this index to a frequency.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="367df62c-3a9d-4463-9183-fc494e53ba36">
+      <author>Tor</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-12-10 10:12:54</date>
+      <content>Hi Mark, I&amp;#39;m developing a voip application and would like to use NAudio with Wasapi for low latency. However I need to do sample rate conversion. Do you have any recommendations? Can I use the resampler in Speex for real time conversion?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="521bbf3f-ff38-4c5b-b5a0-a47f6912532b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-12-10 14:31:40</date>
+      <content>hi Tor,&lt;br /&gt;NAudio has two options for Resampling:&lt;br /&gt;the DmoResamplerStream&lt;br /&gt;or the WaveFormatConversionStream (uses ACM)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cff25067-7813-4b2d-96a8-04267139ac7a">
+      <author>nastaran</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06087223692992786077</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-02 11:56:40</date>
+      <content>hi I just need a simple code to use naudio so that I can play a music and then by the track bar I can change the volume</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d3e3f3c4-c274-49ab-92e2-767115a54d78">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-02 11:57:35</date>
+      <content>@nastaran - look at the NAudioDemo project in the source code</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="63661695-b119-451a-bdbb-562bee0e3483">
+      <author>detect peaks</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-02-08 07:57:00</date>
+      <content>does anyone know a way to detect for example the highest 10 peaks? I have implemented FFT Radix2. &lt;br /&gt;I am using an amplitude threshold but in most cases the amplitude threshold is too high and it doesn&amp;#39;t detect all peaks.From what I see in excel, after recording peaks, they decrease in time.&lt;br /&gt;  Does anyone know another way to detect the highest 10, 11 peaks( or peaks)?&lt;br /&gt;&lt;br /&gt;Need help...PLSS</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e437869d-d8c2-465e-8e81-bafe36eb3ec4">
+      <author>Lex Tserenjav</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-04-20 18:11:16</date>
+      <content>I downloaded your library from the official site. http://naudio.codeplex.com/releases/view/34249&lt;br /&gt;&lt;br /&gt;But I couldn`t find any BufferedWaveProvider. This is not even in the source code. Can you check please?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e50bfedb-21ed-4c91-a5c5-a151d7e9e21c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-04-21 12:44:23</date>
+      <content>@Lex, BufferedWaveProvider is new in NAudio 1.4</content>
+    </comment>
+  </comments>
+</post>

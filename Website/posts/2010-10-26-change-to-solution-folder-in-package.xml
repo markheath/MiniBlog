@@ -1,0 +1,57 @@
+<post>
+  <title>Change to Solution Folder in Package Manager Console</title>
+  <slug>change-to-solution-folder-in-package</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-26 07:50:00</pubDate>
+  <lastModified>2011-07-03 15:45:45</lastModified>
+  <content>&lt;p&gt;When you install &lt;a href="http://nupack.codeplex.com/"&gt;nupack&lt;/a&gt; (which seems likely to be renamed nuget in the near future), you get a new dockable Visual Studio 2010 window called the Package Manager Console which allows you to run nupack commands right from within VS2010.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/change-to-solution-folder-in-package-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="nuget-console" border="0" alt="nuget-console" src="/posts/files/change-to-solution-folder-in-package-1.png" width="615" height="185"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The great thing about this window is that it can be used for more than just nupack commands. It is a fully working &lt;a href="http://technet.microsoft.com/en-gb/scriptcenter/powershell.aspx"&gt;PowerShell&lt;/a&gt; window and all the commands on your path are also available. For example, I use &lt;a href="http://mercurial.selenic.com/"&gt;Mercurial&lt;/a&gt; on a number of my applications, so it allows me to input commands such as &lt;strong&gt;hg add&lt;/strong&gt; or &lt;strong&gt;hg commit &lt;/strong&gt;directly within the console window.&lt;/p&gt; &lt;p&gt;There was just one slight snag, and that is that the current working directory of the Package Manager Console seems to default to your user account:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; pwd
+Path
+----
+C:\Users\Mark
+&lt;/pre&gt;
+&lt;p&gt;So, despite knowing virtually nothing about PowerShell, I set about working out how I could automate this process. The first thing I discovered was that you can query PowerShell for all the variables that are available using the &lt;strong&gt;Get-Variable&lt;/strong&gt; command. This will show the names and current values of all variables.&lt;/p&gt;
+&lt;p&gt;Sadly, there seemed to be none containing the path of the loaded solution, but asking a &lt;a href="http://stackoverflow.com/questions/4017479/using-the-nupack-package-manager-console-to-set-working-folder-to-solution-folder/4018240"&gt;question on StackOverflow&lt;/a&gt; pointed me in the right direction. There is a variable called &lt;strong&gt;$dte&lt;/strong&gt; which is a COM object allowing automation of the VS development environment. We can ask this for the path of the loaded solution:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; $dte.Solution.FileName
+C:\Users\Mark\Code\TestApp\TestApp.sln
+&lt;/pre&gt;
+&lt;p&gt;We now need to find a way to strip off the filename to get the folder. You can list all available PowerShell commands with by typing &lt;strong&gt;Get-Command&lt;/strong&gt;. Eventually after some searching on Google I found a way to strip the filename off this path:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; Split-Path -parent $dte.Solution.FileName
+C:\Users\Mark\Code\TestApp
+&lt;/pre&gt;
+&lt;p&gt;To change to this folder you take this string and pipe it into the &lt;strong&gt;cd &lt;/strong&gt;command as follows:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; Split-Path -parent $dte.Solution.FileName | cd
+PM&amp;gt; pwd
+
+Path
+----
+C:\Users\Mark\Code\TestApp&lt;/pre&gt;
+&lt;p&gt;Mission almost accomplished, but that is a rather cumbersome command to remember. I wanted to make a PowerShell command immediately available to me. This requires editing my PowerShell user profile. The path to this is found in the &lt;strong&gt;$profile&lt;/strong&gt; variable:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; $profile
+C:\Users\Mark\Documents\WindowsPowerShell\NuPack_profile.ps1
+&lt;/pre&gt;
+&lt;p&gt;This file didn’t actually exist (nor did the WindowsPowerShell folder), so I had to create a blank one. Then, I added my snippet of script into a function:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/change-to-solution-folder-in-package-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="nuget-powershell" border="0" alt="nuget-powershell" src="/posts/files/change-to-solution-folder-in-package-2.png" width="491" height="158"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Having done that, you need to reload Visual Studio, and after loading a solution, you can type &lt;strong&gt;solutionFolder &lt;/strong&gt;to navigate to the solution folder:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; solutionFolder
+PM&amp;gt; pwd
+
+Path
+----
+C:\Users\Mark\Code\TestApp&lt;/pre&gt;
+&lt;p&gt;And that's it. Now I can run my Mercurial commands from within the Package Manager Console:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;PM&amp;gt; hg status
+M UnitTests\UnitTests.csproj
+? UnitTests\Thread.cs
+&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>nupack</category>
+    <category>NuGet</category>
+    <category>PowerShell</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="67408d41-d7dd-4318-9a5c-9bc2b03d81b8">
+      <author>rtpHarry</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-09 09:39:59</date>
+      <content>Good exploring!</content>
+    </comment>
+  </comments>
+</post>

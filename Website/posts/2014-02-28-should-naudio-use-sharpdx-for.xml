@@ -1,0 +1,42 @@
+<post>
+  <title>Should NAudio use SharpDX for MediaFoundation support?</title>
+  <slug>should-naudio-use-sharpdx-for</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-02-28 19:08:00</pubDate>
+  <lastModified>2014-02-28 19:08:17</lastModified>
+  <content>&lt;p&gt;In &lt;a href="/post/naudio-17-release-notes"&gt;NAudio 1.7&lt;/a&gt; I introduced Media Foundation support into NAudio. The main classes are MediaFoundationReader, MediaFoundationEncoder, MediaFoundationResampler and MediaFoundationTransform. Those four classes actually cover the bulk of what most people would want to do with Media Foundation, but they required a huge amount of interop, and there are still a few areas yet to complete which are proving rather tricky.&lt;/p&gt; &lt;p&gt;But I noticed a while ago that &lt;a href="http://www.sharpdx.org/"&gt;SharpDX&lt;/a&gt; has actually already got the vast majority of Media Foundation interop made available in its &lt;a href="http://www.sharpdx.org/documentation/api/n-sharpdx-mediafoundation"&gt;SharpDX.MediaFoundation&lt;/a&gt; assembly. It got me thinking, what if NAudio simply relied on the work done in SharpDX rather than creating its own interop wrappers? There are several advantages and disadvantages to taking this approach.&lt;/p&gt; &lt;h3&gt;Advantages...&lt;/h3&gt; &lt;p&gt;&lt;strong&gt;Completeness&lt;br&gt;&lt;/strong&gt;A large part of SharpDX is auto-generated, which means that it contains pretty much every interface, every API call, every enumeration, and every Guid you could ever need. By contrast, the NAudio wrappers are done by hand, so there are a number of bits missing. In particular SharpDX has done the hard work of implementing the reading and encoding from standard .NET streams which is something I've really wanted to add to NAudio but it has proved very complicated to implement. SharpDX also includes interop wrappers that allow access to the "presentation attributes" which would be a nice enhancement.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Cross-Threading&lt;/strong&gt;&lt;br&gt;SharpDX uses a fancy post-compile trick which allows COM objects created on one thread to be used on another. NAudio needs something like this, as the current workaround I use is a bit of a hack (basically recreate the MF source reader on the new thread). However, I will confess to not fully understanding how the SharpDX technique works, which is why I haven’t yet borrowed the technique for NAudio.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Closing&lt;/strong&gt;&lt;br&gt;SharpDX has a really nice approach to creating wrappers for COM objects, which makes them disposable objects. By contrast I simply have been trying to call Marshal.ReleaseComObject in all the right places in NAudio. I try to hide this as much as possible from users of NAudio, but there are places where it does leak out leaving the potential for a memory leak.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Collaboration&lt;/strong&gt;&lt;br&gt;I always find it slightly depressing that so many open source projects decide to compete rather than collaborate with each other. If we spent less time re-inventing the wheel and more time building upon what others have already created, I’m sure we could make some amazing software.&lt;/p&gt; &lt;p&gt;So I could just decide to let SharpDX do what it does well (wrap COM-based Windows APIs), and then NAudio could focus on providing helpful ways to construct your audio graph (which for me is the interesting bit). What's more, if NAudio used SharpDX, it could result in enhancements being submitted to SharpDX (&lt;a href="https://github.com/sharpdx/SharpDX/pulls/markheath?direction=desc&amp;amp;page=1&amp;amp;sort=created&amp;amp;state=closed"&gt;I've already made a few contributions as part of my experimentation&lt;/a&gt;).&lt;/p&gt; &lt;h3&gt;Disadvantages...&lt;/h3&gt; &lt;p&gt;So there’s a lot in favour of using SharpDX, but there are some disadvantages that need to be weighed up.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Dependencies&lt;/strong&gt;&lt;br&gt;We'd need to make NAudio depend on two additional DLLs – SharpDX.dll and SharpDX.MediaFoundation.dll. As well as increasing the overall size of the dependencies, this could also cause some namespace confusion as NAudio and SharpDX both have classes with the same name (WaveFormat is a prime example). There would also be potential for versioning conflicts if NAudio was introduced into a project that was using a different version of SharpDX.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Control&lt;/strong&gt;&lt;br&gt;By depending on an external library like SharpDX, we'd lose a measure control over all the interop. Currently NAudio's interop is hand-crafted to be exactly how I want it. But with SharpDX, I'd need to submit pull-requests for all the tweaks I want. I'd also be dependent on the release schedule of SharpDX - a new version of NAudio would need to depend on an official release of SharpDX, not a special build. Having said that, Alexandre Mutel has been quick to accept my pull requests so far and there isn’t a pressing need for any more to be made.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Nearly There?&lt;/strong&gt;&lt;br&gt;It may be that I'm not that far off at all. If I get read and write from a stream working, and can solve the threading issue, then the main motivation for building on SharpDX would disappear. But I can't really tell how close I am to getting it all working just how I want it.&lt;/p&gt; &lt;h3&gt;&lt;strong&gt;Trying it Out&lt;/strong&gt;&lt;/h3&gt; &lt;p&gt;The good news is that I can trial all of this without needing to change NAudio at all. I've made a new library that depends on NAudio and SharpDX, and offers alternative implementations of NAudio's four Media Foundation classes. I've called them SharpMediaFoundationReader, SharpMediaFoundationEncoder, SharpMediaFoundationResampler and SharpMediaFoundationTransform. It’s called &lt;a href="https://github.com/markheath/NAudio.SharpMediaFoundation"&gt;NAudio.SharpMediaFoundation&lt;/a&gt; and it’s on GitHub.&lt;/p&gt; &lt;p&gt;Once a version of SharpDX is released containing my customisations, I can release this as its own NuGet package, then that would allow people who want/need the features SharpDX can offer to take advantage of it without any disruption to the existing NAudio library. So maybe I can have the best of both worlds.&lt;/p&gt; &lt;p&gt;Do let me know if you have any feedback on this approach to MediaFoundation. I’ll announce on my blog when an official release of NAudio.SharpMediaFoundation is available.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>Media Foundation</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="1a476644-41fd-4be3-869e-32db290e8b3b">
+      <author>Lucian Wischik</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blogs.msdn.com/lucian</website>
+      <ip />
+      <userAgent />
+      <date>2014-04-09 15:29:37</date>
+      <content>How did this work out?&lt;br /&gt;&lt;br /&gt;I&amp;#39;m curious, does sharpdx have any additional dependencies that naudio doesn&amp;#39;t? Eg. would this move prevent naudio working on PhoneSilverlight or some other platforms?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5fdfdacd-987c-4ac6-becc-901c26f25ed3">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2014-04-09 15:36:31</date>
+      <content>no that I know of. You can in fact use my alternative implementation alongside NAudio, so I may go with that solution. &lt;br /&gt;&lt;br /&gt;I&amp;#39;m hoping to look at getting a version of NAudio for windows phone, maybe when 8.1 comes out as that opens the door to more shared code</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="27bfb6fa-754b-487f-b9ec-9f37abaf0f96">
+      <author>Jon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09721536267629821809</website>
+      <ip />
+      <userAgent />
+      <date>2014-04-11 23:34:20</date>
+      <content>I know this is not what the audio library is for, but any chance you know of a CoreAudio set that is based on SharpDx?  It didn&amp;#39;t look like it was part of the main set of functionality.</content>
+    </comment>
+  </comments>
+</post>

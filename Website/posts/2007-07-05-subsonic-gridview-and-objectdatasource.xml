@@ -1,0 +1,64 @@
+<post>
+  <title>SubSonic GridView and ObjectDataSource</title>
+  <slug>subsonic-gridview-and-objectdatasource</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-07-05 14:55:00</pubDate>
+  <lastModified>2010-10-04 17:08:48</lastModified>
+  <content>&lt;p&gt;I have been experimenting with using &lt;a href="http://subsonicproject.com/"&gt;SubSonic&lt;/a&gt; to convert my commentaries web page from PHP to ASP.NET. This is a very simple web page allows you to look at a list of books, sort them and filter them - nothing complicated. And Subsonic offers an automatic DAL layer which requires you simply to point it at your database and let it create the classes for you. &lt;p&gt;So one of the first tasks I approached was to work out how to get a &lt;strong&gt;asp:GridView&lt;/strong&gt; to work with my SubSonic data objects. My first approach was to do it in code, with the following code in my Page_Load event:
+
+&lt;pre class="brush: csharp"&gt;CommentaryController c = new CommentaryController();
+CommentaryCollection cc = c.FetchAll();            
+gridCommentaries.DataSource = cc;
+gridCommentaries.DataBind();&lt;/pre&gt;
+
+&lt;p&gt;This worked nicely, but I wanted to know if there was a better way using the &lt;strong&gt;asp:ObjectDataSource&lt;/strong&gt;. The SubSonic documentation is still a little sparse in this area, but I eventually worked out the syntax. You use the auto-generated "Controller" object that SubSonic has made for your table:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;asp:ObjectDataSource ID="odsCommentaries" runat="server" 
+TypeName="CommentariesDB.CommentaryController"
+SelectMethod="FetchAll" /&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;Simple when you know how! Now you just need to set the &lt;strong&gt;DataSourceID&lt;/strong&gt; of the grid. Paging can be also turned on, but sorting doesn't. I'll perhaps post again when I have gone a bit deeper.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET</category>
+    <category>SubSonic</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="cc866063-aeeb-465f-a043-db4fa4dbcae8">
+      <author>Robert</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10956634230991860058</website>
+      <ip />
+      <userAgent />
+      <date>2007-12-30 14:05:00</date>
+      <content>Hi Mark, Xmas is traditionally my learning time, I got started with asp.net thanks to VWD Express in Xmas 2005 and this year I'm desperate to find a way thru the DAL/BLL, ORM, Table adapter, classes maze and just downloaded SubSonic. I have my gridview paging, editing and deleting thanks to SubSonic controller classes and objectdatasource but not sorting and wondered if you found a solution to sorting with SubSonic? The other thing I'm working on is simple joins as I use lookup tables with int key and text lookup value and like to show the text value in a label control in item template but show a dropdown list in edit template so I need to join my main table to lookup tables. How do you do that in SubSonic?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1f3e7f20-9de9-4944-a899-ffea6e35a1fc">
+      <author>Matt</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00476442760334476087</website>
+      <ip />
+      <userAgent />
+      <date>2008-03-10 20:56:00</date>
+      <content>Could you explain your code a little more, specifically TypeName="CommentariesDB.CommentaryController"&lt;BR/&gt;SubSonic uses the connectionstring to connect to the DB so what does the syntax of TypeName point to? I hope I haven't been to vague.&lt;BR/&gt;Thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="38680d74-bfe9-4f23-a8a0-812f23cb2b1c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-03-11 07:15:00</date>
+      <content>Hi Matt,&lt;BR/&gt;CommentariesDB.CommentaryController is one of the automatically generated objects that SubSonic creates for you. CommenantariesDB is the namespace and CommentaryController is the type name. It has a FetchAll member function that the object data source can use to get all its data.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9f82de32-e484-49c1-ad72-afd90f9b9ce6">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-04-01 11:24:00</date>
+      <content>salut j'ai le même problème de tri est ce que vous avez trouvez une solution , merci</content>
+    </comment>
+  </comments>
+</post>

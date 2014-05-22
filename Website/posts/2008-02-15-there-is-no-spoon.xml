@@ -1,0 +1,37 @@
+<post>
+  <title>There is no Spoon</title>
+  <slug>there-is-no-spoon</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-02-15 14:13:00</pubDate>
+  <lastModified>2011-07-03 09:27:18</lastModified>
+  <content>&lt;p&gt;And now since I'm in the mood for writing some XAML, here's something really silly. My 2 year old son always throws his spoon in the bin along with his empty yoghurt pot, which has meant we are regularly buying more spoons. So here is a really useful XAML "No Spoons" sign for the bin. I 'designed' the spoon icon in Blend, and then used a transform group to get it into the right place.&lt;/p&gt; &lt;p&gt;Here's the code:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&amp;gt;
+  &amp;lt;Canvas Canvas.Left="20" Canvas.Top="20"&amp;gt;
+    &amp;lt;Rectangle Width="180" Height="200" Fill="White" RadiusX="5" RadiusY="5" /&amp;gt;      
+    &amp;lt;Canvas&amp;gt;      
+      &amp;lt;Path Fill="#FF000000" Stroke="#FF000000" Data="M438.66803,130.33333 C421.33499,120.1762 422.00165,96.176278 422.00165,96.176278 427.00179,58.843133 452.66745,63.333794 460.00086,94.666778 461.00102,116.50951 455.41396,118.92027 446.00105,130.00013 L450.41981,208.7423 C446.16375,210.81869 441.91328,210.84422 437.66793,209 z" StrokeThickness="2"/&amp;gt;      
+      &amp;lt;Canvas.RenderTransform&amp;gt;      
+      &amp;lt;TransformGroup&amp;gt;      
+      &amp;lt;TranslateTransform X="-350" Y="-60" /&amp;gt;      
+      &amp;lt;RotateTransform Angle="-45" CenterX="100" CenterY="100" /&amp;gt;      
+      &amp;lt;ScaleTransform ScaleX="0.75" ScaleY="0.75" /&amp;gt;      
+      &amp;lt;TranslateTransform X="25" Y="15" /&amp;gt;      
+      &amp;lt;/TransformGroup&amp;gt;      
+      &amp;lt;/Canvas.RenderTransform&amp;gt;      
+      &amp;lt;/Canvas&amp;gt; 
+      &amp;lt;Canvas Canvas.Left="10" Canvas.Top="10"&amp;gt;     
+      &amp;lt;Ellipse Height="150" Width="150" Stroke="Red" StrokeThickness="15" /&amp;gt;      
+      &amp;lt;Line StrokeThickness="15" Stroke="Red" X1="25" Y1="125" X2="125" Y2="25" /&amp;gt;      
+    &amp;lt;/Canvas&amp;gt; 
+    &amp;lt;TextBlock Canvas.Top="160" Canvas.Left="30" Text="No Spoons" FontFamily="Arial Black" Foreground="Black" FontSize="20"  /&amp;gt;     
+  &amp;lt;/Canvas&amp;gt;      
+&amp;lt;/Canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;And here's what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/there-is-no-spoon-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/there-is-no-spoon-1.png" width="177" height="187"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,105 @@
+<post>
+  <title>Binding Combo Boxes in WPF with MVVM</title>
+  <slug>binding-combo-boxes-in-wpf-with-mvvm</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-03-27 10:26:00</pubDate>
+  <lastModified>2010-09-24 15:50:30</lastModified>
+  <content>&lt;p&gt;I was recently creating a simple WPF application and was trying to use the MVVM pattern. In this pattern, all the controls on your form are data bound to properties on your “View Model” class. While there are lots of examples of how to do this with Text boxes, List boxes, and even master-detail views, it seems that examples for binding Combo boxes are a little thin on the ground.&lt;/p&gt;  &lt;p&gt;What I wanted to do was bind the items in the &lt;strong&gt;ComboBox&lt;/strong&gt; to a list in my &lt;strong&gt;ViewModel&lt;/strong&gt; and to track the currently selected item. I found that there does not seem to be one “official” way of doing this. One approach bound both the &lt;strong&gt;ItemsSource&lt;/strong&gt; and the &lt;strong&gt;SelectedValue &lt;/strong&gt;properties of the Combo box to corresponding properties on &lt;strong&gt;ViewModel&lt;/strong&gt;. The approach I went with uses a &lt;strong&gt;&lt;a href="http://msdn.microsoft.com/en-us/library/system.windows.data.collectionview.aspx"&gt;CollectionView&lt;/a&gt; &lt;/strong&gt;which is a class included with .NET that encapsulates a list and the concept of a current item as well as supporting the &lt;strong&gt;INotifyPropertyChanged &lt;/strong&gt;interface.&lt;/p&gt;  &lt;p&gt;So here is the XAML first. I set the &lt;strong&gt;IsSychronizedWithCurrentItem &lt;/strong&gt;to true to allow us to track the current item on the &lt;strong&gt;ItemsSource&lt;/strong&gt;.&lt;/p&gt;  
+
+&lt;pre class="brush: xml;"&gt;&amp;lt;ComboBox ItemsSource=&amp;quot;{Binding Path=Queries}&amp;quot;                 
+          IsSynchronizedWithCurrentItem=&amp;quot;True&amp;quot;
+          DisplayMemberPath=&amp;quot;Name&amp;quot; /&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;The code in the &lt;strong&gt;ViewModel&lt;/strong&gt; first creates the List, and then creates a &lt;strong&gt;CollectionView&lt;/strong&gt; based on that list. This allows us to set the &lt;strong&gt;CurrentItem&lt;/strong&gt; from the &lt;strong&gt;ViewModel&lt;/strong&gt; as well as get notified whenever the &lt;strong&gt;CurrentItem&lt;/strong&gt; changes.&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public MainWindowViewModel()
+{
+    IList&amp;lt;Query&amp;gt; availableQueries = new List&amp;lt;Query&amp;gt;();
+    // fill the list...
+
+    Queries = new CollectionView(availableQueries);
+    Queries.MoveCurrentTo(availableQueries[0]);
+    Queries.CurrentChanged += new EventHandler(queries_CurrentChanged);
+}
+
+public CollectionView Queries { get; private set; }
+
+void queries_CurrentChanged(object sender, EventArgs e)
+{
+    Query currentQuery = (Query)Queries.CurrentItem;
+}&lt;/pre&gt;
+
+&lt;p&gt;I’m not sure yet whether using &lt;strong&gt;CollectionView &lt;/strong&gt;is a better approach than the alternatives I have seen which bind the &lt;strong&gt;SelectedValue &lt;/strong&gt;or &lt;strong&gt;SelectedItem &lt;/strong&gt;property. I would be interested to hear in the comments if you think either approach has benefits over the other. One consideration is that Silverlight doesn’t seem to support &lt;strong&gt;CollectionView &lt;/strong&gt;at the moment.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Data Binding</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="2911a892-5c88-4fa7-9d5d-5ba6af9f564b">
+      <author>Michael Schlegel</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-06 20:53:02</date>
+      <content>Even if some month were gone since you published your article it provides exactly what I was looking for. To answer your question: from my point of view your suggestion is almost an imperative if one applies the MVVM pattern on comboboxes. Thanks a lot!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5956d606-784c-48f4-ad24-2e4fda9cebc5">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-04 14:16:05</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Great posts,&lt;br /&gt;&lt;br /&gt;I read your post about MVVM ListBox filtering, what i´m looking for is something in between. &lt;br /&gt;&lt;br /&gt;If i for instance have an application with a number of Combo boxes bound with a CollectionView and i want the selected item in one of them to affect a filter in another ComboBox. &lt;br /&gt;&lt;br /&gt;How would you go about doing that? I´ve added a filter by just using myCollectionView.Filter = methodname, in the CurrentChanged eventhandler of the CollectionView. It runs the filter method allright but the View wont update even with myCollectionView.Refresh(). &lt;br /&gt;&lt;br /&gt;Any thoughts on this? Do i need to use a ObeservableCollection instead of CollectionView?&lt;br /&gt;&lt;br /&gt;I really liked CollectionView approach so would be nice i could stick to that.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="779d1cc1-9b7e-4e9c-b5ff-cdc0b79b6d98">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-02-05 14:18:16</date>
+      <content>hmm, not sure anonymous, I haven&amp;#39;t done much WPF recently. You should ask on StackOverflow</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e03b60ca-f10f-4885-a0eb-7915989addca">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-08 13:05:59</date>
+      <content>Thanks for answering atleast :)&lt;br /&gt;&lt;br /&gt;Got it working with this approach : http://www.wpftutorial.net/DataViews.html&lt;br /&gt;&lt;br /&gt;Very simular to your post..</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1f4ab014-4dbb-42f3-8600-2517c93b0273">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-06-09 12:10:32</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;good idea, but what is to do, when&lt;br /&gt;you want validate with &amp;#39;DataErrorValidationRule&amp;#39;, i.e. you have to set ValidateOnDataError=True&amp;#39; in your XAML?&lt;br /&gt;&lt;br /&gt;Felix</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="573bc979-030e-440b-882c-4b57e46d6405">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-09 13:30:07</date>
+      <content>@Anonymous, I&amp;#39;d recommend asking that on StackOverflow. I haven&amp;#39;t done much with Data Validation in WPF</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ee5a459e-1a83-4c54-ada2-1f91db4010a0">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-04-17 07:42:44</date>
+      <content>Oh my god!!  Thank you so much.  I love it, worked perfectly and now I can use this method in other areas where I guess I was probably hacking away to get it to work like this... so simple.</content>
+    </comment>
+  </comments>
+</post>

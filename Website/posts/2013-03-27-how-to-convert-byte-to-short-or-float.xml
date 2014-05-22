@@ -1,0 +1,122 @@
+<post>
+  <title>How to convert byte[] to short[] or float[] arrays in C#</title>
+  <slug>how-to-convert-byte-to-short-or-float</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-03-27 14:12:00</pubDate>
+  <lastModified>2013-03-27 14:12:03</lastModified>
+  <content>&lt;p&gt;One of the challenges that frequently arises when writing audio code in C# is that you get a byte array containing raw audio that would be better presented as a short (Int16) array, or a float (Single) array. (There are other formats too – some audio is 32 bit int, some is 64 bit floating point, and then there is the ever-annoying 24 bit audio). In C/C++ the solution is simple, cast the address of the byte array to a short * or a float * and access each sample directly.&lt;/p&gt; &lt;p&gt;Unfortunately, in .NET casting byte arrays into another type is not allowed:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = new byte[1000];
+short[] samples = (short[])buffer; // compile error!
+&lt;/pre&gt;
+&lt;p&gt;This means that, for example, in &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;, when the WaveIn class returns a byte[] in its DataAvailable event, you usually need to convert it manually into 16 bit samples (assuming you are recording 16 bit audio). There are several ways of doing this. I’ll run through five approaches, and finish up with some performance measurements.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BitConverter.ToInt16&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Perhaps the simplest conceptually is to use the &lt;a href="http://msdn.microsoft.com/en-gb/library/system.bitconverter.aspx"&gt;System.BitConverter&lt;/a&gt; class. This allows you to convert a pair of bytes at any position in a byte array into an Int16. To do this you call BitConverter.ToInt16. Here’s how you read through each sample in a 16 buffer:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = ...;
+for(int n = 0; n &amp;lt; buffer.Length; n+=2)
+{
+   short sample = BitConverter.ToInt16(buffer, n);
+}
+&lt;/pre&gt;
+&lt;p&gt;For byte arrays containing IEEE float audio, the principle is similar, except you call BitConverter.ToSingle. 24 bit audio can be dealt with by copying three bytes into a temporary four byte array and using ToInt32. &lt;/p&gt;
+&lt;p&gt;BitConverter also includes a &lt;a href="http://msdn.microsoft.com/en-us/library/system.bitconverter.getbytes.aspx"&gt;GetBytes&lt;/a&gt; method to do the reverse conversion, but you must then manually copy the return of that method into your buffer.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bit Manipulation&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Those who are more comfortable with bit manipulation may prefer to use bit shift and or to convert each pair of bytes into a sample:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = ...;
+for (int n = 0; n &amp;lt; buffer.Length; n+=2)
+{
+   short sample = (short)(buffer[n] | buffer[n+1] &amp;lt;&amp;lt; 8);
+}
+&lt;/pre&gt;
+&lt;p&gt;This technique can be extended for 32 bit integers, and is very useful for 24 bit, where none of the other techniques work very well. However, for IEEE float, it is a bit more tricky, and one of the other techniques should be preferred.&lt;/p&gt;
+&lt;p&gt;For the reverse conversion, you need to write more bit manipulation code.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Buffer.BlockCopy&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Another option is to copy the whole buffer into an array of the correct type. &lt;a href="http://msdn.microsoft.com/en-us/library/system.buffer.blockcopy.aspx"&gt;Buffer.BlockCopy&lt;/a&gt; can be used for this purpose:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = ...;
+short[] samples = new short[buffer.Length];
+Buffer.BlockCopy(buffer,0,samples,0,buffer.Length);
+&lt;/pre&gt;
+&lt;p&gt;Now the samples array contains the samples in easy to access form. If you are using this technique, try to reuse the samples buffer to avoid making extra work for the garbage collector.&lt;/p&gt;
+&lt;p&gt;For the reverse conversion, you can do another Buffer.BlockCopy.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;WaveBuffer&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;One cool trick NAudio has up its sleeve (thanks to Alexandre Mutel) is the “WaveBuffer” class. This uses the StructLayout=LayoutKind.Explicit attribute to effectively create a union of a byte[], a short[], an int[] and a float[]. This allows you to “trick” C# into letting you access a byte array as though it was a short array. You can read more about how this works &lt;a href="/post/wavebuffer-casting-byte-arrays-to-float"&gt;here&lt;/a&gt;. If you’re worried about its stability, NAudio has been successfully using it with no issues for many years. (The only gotcha is that you probably shouldn’t pass it into anything that uses reflection, as underneath, .NET knows that it is still a byte[], even if it has been passed as a float[]. So for example don’t use it with Array.Copy or Array.Clear). WaveBuffer can allocate its own backing memory, or bind to an existing byte array, as shown here:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = ...;
+var waveBuffer = new WaveBuffer(buffer);
+// now you can access the samples using waveBuffer.ShortBuffer, e.g.:
+var sample = waveBuffer.ShortBuffer[sampleIndex];
+&lt;/pre&gt;
+&lt;p&gt;This technique works just fine with IEEE float, accessed through the FloatBuffer property. It doesn’t help with 24 bit audio though.&lt;/p&gt;
+&lt;p&gt;One big advantage is that no reverse conversion is needed. Just write into the ShortBuffer, and the modified samples are already in the byte[].&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Unsafe Code&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally, there is a way in C# that you can work with pointers as though you were using C++. This requires that you set your project assembly to allow “unsafe” code. "Unsafe” means that you could corrupt memory if you are not careful, but so long as you stay in bounds, there is nothing unsafe at all about this technique. Unsafe code must be in an &lt;a href="http://msdn.microsoft.com/en-gb/library/chfa2zb8%28v=vs.110%29.aspx"&gt;unsafe context&lt;/a&gt; – so you can use an unsafe block, or mark your method as unsafe.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] buffer = ...;
+unsafe 
+{
+    fixed (byte* pBuffer = buffer)
+    {
+        short* pSample = (short*)buffer;
+        // now we can access samples via pSample e.g.:
+        var sample = pSample[sampleIndex];
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;This technique can easily be used for IEEE float as well. It also can be used with 24 bit if you use int pointers and then bit manipulation to blank out the fourth byte.&lt;/p&gt;
+&lt;p&gt;As with WaveBuffer, there is no need for reverse conversion. You can use the pointer to write sample values directly into the memory for your byte array.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Performance&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So which of these methods performs the best? I had my suspicions, but as always, the best way to optimize code is to measure it. I set up a &lt;a href="https://github.com/markheath/ByteToShortTest"&gt;simple test application&lt;/a&gt; which went through a four minute MP3 file, converting it to WAV and finding the peak sample values over periods of a few hundred milliseconds at a time. This is the type of code you would use for waveform drawing. I measured how long each one took to go through a whole file (I excluded the time taken to read and decode MP3). I was careful to write code that avoided creating work for the garbage collector.&lt;/p&gt;
+&lt;p&gt;Each technique was quite consistent in its timings:&lt;/p&gt;
+&lt;table cellspacing="0" cellpadding="2" width="400" border="0"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;Debug Build&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;Release Build&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;BitConverter&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;263,265,264&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;166,167,167&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;Bit Manipulation&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;254,243,250&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;104,104,103&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;Buffer.BlockCopy&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;205,206,204&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;104,103,103&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;WaveBuffer&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;239.264.263&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;97,97,97&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td valign="top" width="133"&gt;Unsafe&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;173.172.162&lt;/td&gt;
+&lt;td valign="top" width="133"&gt;98,98,98&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;As can be seen, BitConverter is the slowest approach, and should probably be avoided. Buffer.BlockCopy was the biggest surprise for me&amp;nbsp; - the additional copy was so quick that it paid for iteself very quickly. WaveBuffer was surprisingly slow in debug build – but very good in Release build. It is especially impressive given that it doesn’t need to pin its buffers like the unsafe code does, so it may well be the quickest possible technique in the long-run as it doesn’t hinder the garbage collector from compacting memory. As expected the unsafe code gave very fast performance. The other takeaway is that you really should be using Release build if you are doing audio processing.&lt;/p&gt;
+&lt;p&gt;Anyone know an even faster way? Let me know in the comments.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="285eecbf-5555-4318-b629-78849804e5dd">
+      <author>javO</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09545564898993057954</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-29 19:58:18</date>
+      <content>Nice post. Is there any way for the WaveBuffer aproach to work with a 32bit sample?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e9bd80e5-aec8-44b6-a50e-3a4ad4374a44">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-29 20:06:29</date>
+      <content>@javO, yes, WaveBuffer deals with int and float, both of which are 32 bit</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="96194c90-e8e3-4882-b96b-07a822b0d3f3">
+      <author>Riley L</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-12-22 03:45:25</date>
+      <content>This was super useful, thanks for the post!</content>
+    </comment>
+  </comments>
+</post>

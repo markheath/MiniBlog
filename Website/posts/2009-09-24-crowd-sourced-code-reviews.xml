@@ -1,0 +1,53 @@
+<post>
+  <title>Crowd-Sourced Code Reviews</title>
+  <slug>crowd-sourced-code-reviews</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-24 12:53:00</pubDate>
+  <lastModified>2010-09-23 14:40:36</lastModified>
+  <content>In a &lt;a href="/post/asserting-events-with-nunit"&gt;post yesterday&lt;/a&gt;, I bemoaned the lack of a clean syntax in &lt;a href="http://www.nunit.org/index.php" target="_blank"&gt;NUnit&lt;/a&gt; for testing whether events fired from an object under test, and set to work at writing my own helper methods. I posted on the &lt;a href="http://groups.google.com/group/nunit-discuss/browse_thread/thread/c623820a59a6974"&gt;NUnit discussion group&lt;/a&gt;, to see whether there was a better way. And there was. A really obvious way. Here’s how my tests could have been written without the need for an Assert.Raises function, or for any code outside the test method:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;[Test]
+public void TestRaisesClosedEvent_Improved()
+{
+    Blah blah = new Blah();
+    EventArgs savedEventArgs = null;
+    blah.Closed += (sender, args) =&amp;gt; savedEventArgs = args;
+    blah.RaiseClosed(1);
+    Assert.IsNotNull(savedEventArgs);
+}
+
+[Test]
+public void TestCanCheckRaisesMany_Improved()
+{
+    Blah blah = new Blah();
+    var savedEvents = new List&amp;lt;openedeventargs&amp;gt;();
+    blah.Opened += (sender, args) =&amp;gt; savedEvents.Add(args);
+    blah.RaiseOpened(5);
+    Assert.AreEqual(5, savedEvents.Count);
+    Assert.AreEqual("Message 3", savedEvents[2].Message);
+}&lt;/pre&gt;
+Of course, I was kicking myself for missing such an obvious solution, but it left me pondering how often this happens without me realising it.&lt;br&gt;
+Earlier today &lt;a href="http://twitter.com/ClintRutkas/status/4330627449"&gt;Clint Rutkas tweeted&lt;/a&gt;:&lt;br&gt;
+&lt;blockquote&gt;
+i feel like i'm doing such bad things in WPF right now&lt;/blockquote&gt;
+… and I know exactly how he feels. In a couple of WPF applications I am working on, I am trying to use the MVVM pattern. It often ends up with me writing code that might be a really cool piece of lateral thinking, or it might be a pointlessly overcomplicated hack. For an example, here’s an&amp;nbsp; &lt;a href="http://learninggames.codeplex.com/SourceControl/changeset/view/28393#661240"&gt;attached dependency property&lt;/a&gt; (usage &lt;a href="http://learninggames.codeplex.com/SourceControl/changeset/view/28393#661286"&gt;here&lt;/a&gt;) I created to let me bind to Storyboard completed events. &lt;br&gt;
+What I need is another person to look over my shoulder and tell me whether I am missing the obvious, unaware of an API, or ignorant of a best practice. But all too often, that person doesn’t exist.&lt;br&gt;
+In a commercial environment, hopefully there is at least some kind of provision for &lt;b&gt;code reviews &lt;/b&gt;to take place, or maybe even &lt;b&gt;pair programming&lt;/b&gt;. But what about the lone programmer working on open source projects? &lt;br&gt;
+Maybe we need some way to &lt;b&gt;“crowd-source” code reviews&lt;/b&gt;. Some way of getting lots of eyes on your source code, even if it is only for a couple of minutes, and an easy way of getting hold of that feedback. A bit like &lt;a href="http://fivesecondtest.com/"&gt;fivesecondtest&lt;/a&gt; but where you help out an open source developer by code reviewing a changeset. I’ve asked for this as &lt;a href="http://codeplex.codeplex.com/WorkItem/View.aspx?WorkItemId=24715"&gt;a feature on CodePlex&lt;/a&gt;. &lt;br&gt;
+What do you think? Could it work? How do you make sure you’re not missing the obvious in the code you write?</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Code Reviews</category>
+    <category>NUnit</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="31dd2c49-afc6-4c8a-85fe-ca51733e1e2c">
+      <author>mtk97</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06682969820246088969</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-25 06:39:23</date>
+      <content>A &amp;quot;Crowd-sourced&amp;quot; code review is a good idea. Could also be used for other kinds of reviews. Should be combined with a point systems as in some community forums.</content>
+    </comment>
+  </comments>
+</post>

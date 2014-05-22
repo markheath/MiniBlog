@@ -1,0 +1,134 @@
+<post>
+  <title>Creating a Piano Roll Control in WPF</title>
+  <slug>creating-piano-roll-control-in-wpf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-06 07:34:00</pubDate>
+  <lastModified>2011-07-03 08:56:32</lastModified>
+  <content>&lt;p&gt;Those who work with MIDI data will know the importance of the "Piano Roll" view. This is a view that on the Y-axis shows the notes on a keyboard, while the X-axis represents time. The MIDI notes are then displayed as rectangles, which allows for a very intuitive editing experience. Here's a picture of the Piano Roll view in Cakewalk &lt;a href="http://www.cakewalk.com/Products/SONAR/English/New/default.asp"&gt;SONAR&lt;/a&gt;:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-control-in-wpf-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="sonar-piano-roll" border="0" alt="SONAR Piano Roll" src="/posts/files/creating-piano-roll-control-in-wpf-1.png" width="555" height="242"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Now obviously, this type of view has many more uses. It can be used for any categorised display of time-based data, whether that be audio recordings or train timetables or any number of things.&lt;/p&gt; &lt;p&gt;Writing this type of "time-line" based view as a Windows Forms control is no mean feat, but the power of WPF means that we can get a basic piano roll control up and running with minimal effort.&lt;/p&gt; &lt;p&gt;We start by creating a WPF User Control that will be the main display area for our note data:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;UserControl x:Class="TestApp.PianoRoll"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Height="300" Width="300"&amp;gt;
+    &amp;lt;Canvas x:Name="NoteCanvas" /&amp;gt;           
+&amp;lt;/UserControl&amp;gt;&lt;/pre&gt;
+&lt;p&gt;All we have done so far is added a &lt;strong&gt;Canvas&lt;/strong&gt; element called &lt;strong&gt;NoteCanvas&lt;/strong&gt;. In the code behind for our PianoRoll control we are going to create a property that allows us to set the MIDI events we want to display. I am going to use my &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; library to load the MIDI events from a standard MIDI file:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;public partial class PianoRoll : UserControl
+{
+    MidiEventCollection midiEvents;
+    double xScale = 1.0 / 10;
+    double yScale = 15;
+
+    public MidiEventCollection MidiEvents
+    {
+        get
+        {
+            return midiEvents;
+        }
+        set
+        {
+            // a quarter note is 20 units wide
+            xScale = (20.0 / value.DeltaTicksPerQuarterNote);
+            midiEvents = value;
+            NoteCanvas.Children.Clear();
+
+            long lastPosition = 0;
+            for (int track = 0; track &amp;lt; midiEvents.Tracks; track++)
+            {
+                foreach (MidiEvent midiEvent in value[track])
+                {
+                    if (midiEvent.CommandCode == MidiCommandCode.NoteOn)
+                    {
+                        NoteOnEvent noteOn = (NoteOnEvent)midiEvent;
+                        if (noteOn.OffEvent != null)
+                        {
+                            Rectangle rectangle = MakeNoteRectangle(noteOn.NoteNumber, noteOn.AbsoluteTime, noteOn.NoteLength, noteOn.Channel);
+                            NoteCanvas.Children.Add(rectangle);
+                            lastPosition = Math.Max(lastPosition, noteOn.AbsoluteTime + noteOn.NoteLength);
+                        }
+                    }
+                }
+            }
+            this.Width = lastPosition * xScale;
+            this.Height = 128 * yScale;
+        }
+    }&lt;/pre&gt;
+&lt;p&gt;What is happening here is that when the &lt;strong&gt;MidiEvents &lt;/strong&gt;property is passed a new &lt;strong&gt;MidiEventCollection&lt;/strong&gt;, it clears everything from the canvas, and then goes through each "track", and for each NoteOnEvent that has a corresponding NoteOffEvent (which should be all of them but some MIDI files are badly formed), it creates a rectangle and adds it to the canvas.&lt;/p&gt;
+&lt;p&gt;The final thing that happens is the size of the UserControl (not the Canvas itself, which is quite happy to draw outside its own bounds) is adjusted to be big enough to display the entire MIDI file.&lt;/p&gt;
+&lt;p&gt;Here's the code that creates the Rectangle for a note. Each note has a height of 15 units, and its width is simply its length in MIDI ticks. However, I have used a horizontal scale factor to make the rectangle a more sensible size (making one quarter note 20 units wide):&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private Rectangle MakeNoteRectangle(int noteNumber, long startTime, int duration, int channel)
+{
+    Rectangle rect = new Rectangle();
+    if (channel == 10)
+    {
+        rect.Stroke = new SolidColorBrush(Colors.DarkGreen);
+        rect.Fill = new SolidColorBrush(Colors.LightGreen);
+        duration = midiEvents.DeltaTicksPerQuarterNote / 4;
+    }
+    else
+    {
+        rect.Stroke = new SolidColorBrush(Colors.DarkBlue);
+        rect.Fill = new SolidColorBrush(Colors.LightBlue);
+    }
+    rect.Width = (double)duration * xScale;
+    rect.Height = yScale;
+    rect.SetValue(Canvas.TopProperty, (double)(127-noteNumber) * yScale);
+    rect.SetValue(Canvas.LeftProperty, (double)startTime * xScale);
+    return rect;
+}&lt;/pre&gt;
+&lt;p&gt;You will also notice that I have coloured notes differently on channel 10 (which by MIDI convention is for drums), and have normalised their lengths, as MIDI drum devices ignore note length and play the whole drum sample every time a NoteOn is triggered. &lt;/p&gt;
+&lt;p&gt;The Y position of each note is governed by the noteNumber, and we have reversed it so the low note numbers are at the bottom.&lt;/p&gt;
+&lt;p&gt;So now we have a very rudimentary Piano Roll display, we need to sort out scrollbars for it. For now, I have just put my piano roll control inside a scroll viewer. This gives a very simple way to let us scroll around. It is also the reason why we needed to resize our PianoRoll User Control when we added new events to it.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ScrollViewer Margin="0,30,0,0" Name="scrollViewer1" Background="AliceBlue" 
+              HorizontalScrollBarVisibility="Auto" 
+              VerticalScrollBarVisibility="Auto"&amp;gt;
+    &amp;lt;me:PianoRoll x:Name="PianoRollControl" Background="Tan" 
+        Width="Auto" Height="Auto"/&amp;gt;
+&amp;lt;/ScrollViewer&amp;gt;&lt;/pre&gt;
+&lt;p&gt;And that is all there is to it. The final piece is to write some code to load a MIDI file into our piano control when the user clicks a button and selects a file:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void button1_Click(object sender, RoutedEventArgs e)
+{
+    OpenFileDialog openFileDialog = new OpenFileDialog();
+    openFileDialog.Filter = "MIDI Files (*.mid)|*.mid|All Files (*.*)|*.*";
+    openFileDialog.FilterIndex = 1;
+    if (openFileDialog.ShowDialog().Value)
+    {
+        MidiFile midiFile = new MidiFile(openFileDialog.FileName);
+        this.PianoRollControl.MidiEvents = midiFile.Events;
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Now we can load any MIDI file in and see all the notes displayed in Piano Roll style:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-control-in-wpf-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-piano-roll-part-1" border="0" alt="wpf-piano-roll-part-1" src="/posts/files/creating-piano-roll-control-in-wpf-2.png" width="371" height="385"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Obviously there is still a way to go before this is a fully featured PianoRoll control. We need to add horizontal zooming (which is nice and easy thanks to the power of WPF RenderTransforms). We also need to add grid-lines, which again are very easy to do by adding another canvas for gridlines to our PianoRoll control. And of course the view of the piano on the left-hand side needs to be added, along with any capabilities for selecting and editing notes. &lt;/p&gt;
+&lt;p&gt;There may also be some slightly more clever ways of approaching this problem, perhaps using data-binding and making a custom layout control. And there may be performance issues to do with the number of items in the control, although I tested with several thousand without any noticeable problems.&lt;/p&gt;
+&lt;p&gt;But hopefully this post has shown just how easy it is to get started with this kind of rich user interface in WPF (or Silverlight), and perhaps I'll post again when I have enhanced the functionality of my Piano Roll control in the future.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="6cc0f820-fe32-4549-973a-bd71882b2a97">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-02-18 15:39:00</date>
+      <content>the source code would have been nice.&lt;BR/&gt;I kind a new at wpf, so I have trouble implementing your sample.&lt;BR/&gt;&lt;BR/&gt;Thanks.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8c4853d8-20e2-445d-9070-7f01b356753b">
+      <author>Andrew</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03212646054546793283</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-12 02:27:44</date>
+      <content>Yeah, this was difficult to follow for several reasons:&lt;br /&gt;1. I&amp;#39;m trying to use FMOD and not NAudio (so I had to closely study what parts to leave out and what parts to leave in).&lt;br /&gt;2. I was trying to make this piano roll *in addition* to my form, NOT by starting out as a WPF project.&lt;br /&gt;3. In the second XAML coding listed in this tutorial, the &amp;quot;    &lt;br /&gt;&amp;quot; is very confusing... Basically, this is what you want to do:&lt;br /&gt;  - Add a new item (WPF User Control) to your *form* project&lt;br /&gt;  - Change the XAML coding to this: &amp;quot;&lt;br /&gt;  &lt;br /&gt;    &lt;br /&gt;    &lt;br /&gt;  &lt;br /&gt;&amp;quot;&lt;br /&gt;  - Go to your form&amp;#39;s design, scroll all the way up in the *Toolbox* window, and insert a &amp;quot;Piano_Roll&amp;quot; (or whatever you called it) onto the form where you would like the piano roll to be&lt;br /&gt;  - Everything after that is self-explanatory.&lt;br /&gt;&lt;br /&gt;Good luck! =)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bd046409-7a84-4481-980f-75597789c97b">
+      <author>makoto314</author>
+      <email>noreply@blogger.com</email>
+      <website>http://makoto314.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2012-07-03 13:18:06</date>
+      <content>hi, thanks for the tutorial. the pianoroll is well explained. however, the wpf part, which is not  this tutorial is quite tricky for people used to forms. i have trouble piecing these code fragments, which code goes where... even getting the dialogresult.ok to work. i think it would be helpful if the csharp project can be downloaded. so we can study and enjoy a working example, instead figure out how to make it work in the first place.</content>
+    </comment>
+  </comments>
+</post>

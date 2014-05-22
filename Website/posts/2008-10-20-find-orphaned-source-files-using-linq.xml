@@ -1,0 +1,82 @@
+<post>
+  <title>Find Orphaned Source Files Using LINQ</title>
+  <slug>find-orphaned-source-files-using-linq</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-20 12:44:00</pubDate>
+  <lastModified>2010-10-05 13:48:11</lastModified>
+  <content>&lt;p&gt;On a project I am working on there is a growing number of files that are in Source Control but are not actually referenced by any .csproj files. I decided to write a quick and dirty command line program to find these files, and at the same time learn a bit of LINQ to XML.&lt;/p&gt;  &lt;p&gt;During the course of my development, I ran into a couple of tricky issues. First was how to combine &lt;a href="http://stackoverflow.com/questions/214772/how-can-i-combine-this-code-into-one-or-two-linq-queries"&gt;some foreach loops into a LINQ statement&lt;/a&gt;, and second was to construct the &lt;a href="http://stackoverflow.com/questions/215361/regex-for-strings-ending-in-cs-but-not-in-gcs"&gt;regex for source file matching&lt;/a&gt;. Both I guess I could have solved myself with a bit of time reading books, but I decided to throw them out onto &lt;a href="http://stackoverflow.com/"&gt;Stack Overflow&lt;/a&gt;. Both were answered within a couple of minutes of asking. I have to say this site is incredible, and rather than treating it as a last resort for questions I have reached the end of my resources on, I am now thinking of it more like a super-knowledgeable co-worker who you can just ask a quick question and get a pointer in the right direction.&lt;/p&gt;  &lt;p&gt;Here's the final code. I'm sure it could easily be turned into one nested LINQ query and improved on a little, but it does what I need. Feel free to suggest refactorings and enhancements in the comments.&lt;/p&gt;  &lt;pre class="brush: csharp"&gt;using System.Text;
+using System.IO;
+using System.Xml.Linq;
+using System.Text.RegularExpressions;
+
+namespace SolutionChecker
+{
+    public class Program
+    {
+        public const string SourceFilePattern = @"(?&amp;lt;!\.g)\.cs$";
+
+        static void Main(string[] args)
+        {
+            string path = (args.Length &amp;gt; 0) ? args[0] : GetWorkingFolder();
+            Regex regex = new Regex(SourceFilePattern);
+            var allSourceFiles = from file in Directory.GetFiles(path, "*.cs", SearchOption.AllDirectories)
+                                 where regex.IsMatch(file)
+                                 select file;
+            var projects = Directory.GetFiles(path, "*.csproj", SearchOption.AllDirectories);
+            var activeSourceFiles = FindCSharpFiles(projects);
+            var orphans = from sourceFile in allSourceFiles                          
+                          where !activeSourceFiles.Contains(sourceFile)
+                          select sourceFile;
+            int count = 0;
+            foreach (var orphan in orphans)
+            {
+                Console.WriteLine(orphan);
+                count++;
+            }
+            Console.WriteLine("Found {0} orphans",count);
+        }
+
+        static string GetWorkingFolder()
+        {
+            return Path.GetDirectoryName(typeof(Program).Assembly.CodeBase.Replace("file:///", String.Empty));
+        }
+
+        static IEnumerable&amp;lt;string&amp;gt; FindCSharpFiles(IEnumerable&amp;lt;string&amp;gt; projectPaths)
+        {
+            string xmlNamespace = "{http://schemas.microsoft.com/developer/msbuild/2003}";
+            
+            return from projectPath in projectPaths
+                   let xml = XDocument.Load(projectPath)
+                   let dir = Path.GetDirectoryName(projectPath)
+                   from c in xml.Descendants(xmlNamespace + "Compile")
+                   let inc = c.Attribute("Include").Value
+                   where inc.EndsWith(".cs")
+                   select Path.Combine(dir, c.Attribute("Include").Value);
+        }
+    }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>LINQ</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="3d473b1f-f229-452d-8e09-1242b02811f0">
+      <author>Joel</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00114208437559916422</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-13 18:35:58</date>
+      <content>Using a Hashset as the result of FindCSharpFiles() provides a significant speed improvement. Our 1000+ file project is analyzed much much faster.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9a592dfb-4175-4278-bc7d-2e05805b69d3">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-13 18:49:21</date>
+      <content>thanks for the tip Joel. I haven&amp;#39;t really got into the hashset class as our project is on .NET 2.0 still. Looks like its a useful class.</content>
+    </comment>
+  </comments>
+</post>

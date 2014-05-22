@@ -1,0 +1,71 @@
+<post>
+  <title>Basic Button Templating in XAML in Silverlight 2 Beta 2</title>
+  <slug>basic-button-templating-in-xaml-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-09 07:14:00</pubDate>
+  <lastModified>2011-07-03 08:24:18</lastModified>
+  <content>&lt;p&gt;There has been lots of buzz about the new control templating mechanism introduced with Silverlight 2 beta 2. It looks like the main driver behind this is allowing you to template controls using Expression Blend. Scott Guthrie covers this in depth in &lt;a href="http://weblogs.asp.net/scottgu/archive/2008/06/06/silverlight-2-beta2-released.aspx"&gt;this post&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;However, I always like to know exactly what is going on with my XAML, and I needed to style a button for my &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt; game, so I decided to see how hard it would be.&lt;/p&gt; &lt;p&gt;As usual, the best place to start is by looking in MSDN at the &lt;a href="http://msdn.microsoft.com/en-us/library/cc278075(VS.95).aspx"&gt;existing templates&lt;/a&gt; for the controls. Although these are often bewilderingly long chunks of XAML, most of the time, you can throw large portions of it away.&lt;/p&gt; &lt;p&gt;For example, my button only needs two visual states - normal and mouse over. I am just going to darken the background slightly when the mouse is over the button:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/basic-button-templating-in-xaml-in-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="silverlight-basic-button-templating" border="0" alt="silverlight-basic-button-templating" src="/posts/files/basic-button-templating-in-xaml-in-1.png" width="112" height="96"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;I decided to put my style in the App.xaml file in the &lt;strong&gt;&amp;lt;Application.Resources&amp;gt;&lt;/strong&gt; section. To start with, I just customised the font. Notice I have also added in a vsm namespace for use with the Visual State Manager later.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style 
+    xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+    TargetType="Button"
+    x:Key="NewGameButtonStyle"&amp;gt;
+    &amp;lt;Setter Property="FontFamily" Value="teen bold.ttf#Teen" /&amp;gt;
+    &amp;lt;Setter Property="FontSize" Value="18" /&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The next task is to put a Template into the Style and design the basic layout of our button. Although this looks like a lot of code, all it is is a &lt;strong&gt;Grid &lt;/strong&gt;which contains a &lt;strong&gt;Border &lt;/strong&gt;which contains a &lt;strong&gt;ContentPresenter&lt;/strong&gt;. We could actually leave off most the ContentPresenter's properties, as our button does not need that level of customisation (we are only using it in one place). The Border brushes are set using named SolidColorBrush objects so we can animate them later if we wish.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Setter Property="Template"&amp;gt;
+    &amp;lt;Setter.Value&amp;gt;
+        &amp;lt;ControlTemplate TargetType="Button"&amp;gt;
+            &amp;lt;Grid&amp;gt;
+                &amp;lt;Border BorderThickness="2" 
+                        CornerRadius="4"
+                        Padding="3"                                    
+                        &amp;gt;
+                    &amp;lt;Border.Background&amp;gt;
+                        &amp;lt;SolidColorBrush x:Name="ButtonBackgroundBrush" Color="AliceBlue"/&amp;gt;
+                    &amp;lt;/Border.Background&amp;gt;
+                    &amp;lt;Border.BorderBrush&amp;gt;
+                        &amp;lt;SolidColorBrush x:Name="ButtonBorderBrush" Color="Black"/&amp;gt;
+                    &amp;lt;/Border.BorderBrush&amp;gt;
+                    &amp;lt;ContentPresenter
+                      Content="{TemplateBinding Content}"
+                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                      Padding="{TemplateBinding Padding}"
+                      TextAlignment="{TemplateBinding TextAlignment}"
+                      TextDecorations="{TemplateBinding TextDecorations}"
+                      TextWrapping="{TemplateBinding TextWrapping}"
+                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                      Margin="4,2" /&amp;gt;
+                &amp;lt;/Border&amp;gt;
+            &amp;lt;/Grid&amp;gt;
+        &amp;lt;/ControlTemplate&amp;gt;
+    &amp;lt;/Setter.Value&amp;gt;
+&amp;lt;/Setter&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Now the final task is to use the new &lt;strong&gt;VisualStateManager &lt;/strong&gt;to tell our control what we want to happen on MouseOver. We will define one &lt;strong&gt;VisualStateGroup&lt;/strong&gt; - the "&lt;strong&gt;CommonStates&lt;/strong&gt;" group, which will contain two &lt;strong&gt;VisualStates&lt;/strong&gt; and two &lt;strong&gt;VisualTransitions&lt;/strong&gt;. The first VisualState is the &lt;strong&gt;Normal&lt;/strong&gt; state, for which we don't need to do anything. The second VisualState is the &lt;strong&gt;MouseOver&lt;/strong&gt; state, which contains a StoryBoard that animates the colour of the button's background. Notice that the duration is zero. This is a little confusing, but the duration will actually be set by the VisualTransitions. The VisualTransitions simply let us set the length of time over which we will change to the &lt;strong&gt;VisualStates&lt;/strong&gt;. Here's our VisualStateGroups, which we have put inside the Grid XAML element:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;vsm:VisualStateManager.VisualStateGroups&amp;gt;
+    &amp;lt;vsm:VisualStateGroup x:Name="CommonStates"&amp;gt;
+
+        &amp;lt;vsm:VisualStateGroup.Transitions&amp;gt;
+            &amp;lt;vsm:VisualTransition To="MouseOver" Duration="0:0:0.2" /&amp;gt;
+            &amp;lt;vsm:VisualTransition To="Normal" Duration="0:0:0.2" /&amp;gt;
+        &amp;lt;/vsm:VisualStateGroup.Transitions&amp;gt;
+
+        &amp;lt;vsm:VisualState x:Name="Normal" /&amp;gt;
+        &amp;lt;vsm:VisualState x:Name="MouseOver"&amp;gt;
+            &amp;lt;Storyboard&amp;gt;
+                &amp;lt;ColorAnimation 
+                Storyboard.TargetName="ButtonBackgroundBrush"
+                Storyboard.TargetProperty="Color"
+                To="#C0C0C0"
+                Duration="0" /&amp;gt;
+            &amp;lt;/Storyboard&amp;gt;
+        &amp;lt;/vsm:VisualState&amp;gt;
+    &amp;lt;/vsm:VisualStateGroup&amp;gt;
+&amp;lt;/vsm:VisualStateManager.VisualStateGroups&amp;gt;&lt;/pre&gt;
+&lt;p&gt;So templating controls is still perfectly possible in XAML, if you don't mind writing lots of it, but I guess that the intention now is for it all to be done in &lt;a href="http://www.microsoft.com/expression/products/Overview.aspx?key=blend"&gt;Expression Blend&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I'm hoping to find time over the next few weeks to update my series on &lt;a href="/post/styling-listbox-in-silverlight-part-1"&gt;styling a listbox&lt;/a&gt; to work with the new beta 2 templating model.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

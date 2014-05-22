@@ -1,0 +1,170 @@
+<post>
+  <title>How to use Azure Blob Storage with Azure Web Sites and MVC 4</title>
+  <slug>how-to-use-azure-blob-storage-with</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-11-06 21:32:00</pubDate>
+  <lastModified>2012-11-06 21:32:39</lastModified>
+  <content>&lt;p&gt;I have been building a website recently using Azure Web Site hosting and ASP.NET MVC 4. As someone who doesn’t usually do web development, there has been a lot of new stuff for me to learn. I wanted to allow website users to upload images, and store them in Azure. Azure blob storage is perfect for this, but I discovered that a lot of the tutorials assume you are using Azure “web roles” instead of Azure web sites, meaning that a lot of the instructions aren’t applicable. So this is my guide to how I got it working with Azure web sites.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Step 1 – Set up an Azure Storage Account&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;This is quite straightforward in the Azure portal. Just create up a storage account. You do need to provide an account name. Each storage account can have many “containers” so you can share the same storage account between several sites if you want.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Step 2 – Install the Azure SDK&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;This is done using the &lt;a href="http://www.microsoft.com/web/downloads/platform.aspx"&gt;Web Platform Installer&lt;/a&gt;. I installed the 1.8 version for VS 2012.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Step 3 – Setup the Azure Storage Emulator&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;It seems that with Azure web role projects, you can configure Visual Studio to auto-launch the Azure Storage emulator, but I don’t think that option is available for regular ASP.NET MVC projects hosted on Azure web sites. The emulator is &lt;strong&gt;csrun.exe&lt;/strong&gt; and it took some tracking down as Microsoft seem to &lt;a href="http://msdn.microsoft.com/en-gb/library/windowsazure/gg433001.aspx"&gt;move it with every version of the SDK&lt;/a&gt;. It needs to be run with the &lt;strong&gt;/devstore&lt;/strong&gt; comand line parameter:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;C:\Program Files\Microsoft SDKs\Windows Azure\Emulator\csrun.exe /devstore
+&lt;/pre&gt;
+&lt;p&gt;To make life easy for me, I added an option to my External Tools list in Visual Studio so I could quickly launch it. Once it starts up, a new icon appears in the system tray, giving you access to the UI, which shows you what ports it is running on: 
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;a href="/posts/files/how-to-use-azure-blob-storage-with-1.png"&gt;&lt;img title="image" style="border-left-width: 0px; border-right-width: 0px; background-image: none; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" alt="image" src="/posts/files/how-to-use-azure-blob-storage-with-1.png" width="607" height="210"&gt;&lt;/a&gt; 
+&lt;p&gt;&lt;strong&gt;Step 4 – Set up a Development Connection String&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;While we are in development, we want to use the emulator, and this requires a connection string. Again, most tutorials assume you are using an “Azure Web Role”, but for ASP.NET MVC sites, we need to go directly to our web.config and enter a new connection string ourselves. The connection string required is fairly simple:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;connectionStrings&amp;gt;
+  &amp;lt;add name="StorageConnection" connectionString="UseDevelopmentStorage=true"/&amp;gt;
+&amp;lt;/connectionStrings&amp;gt;
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 5 – Upload an image in ASP.NET MVC 4&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This is probably very basic stuff to most web developers, but it took me a while to find a good tutorial. This is how to make a basic form in Razor syntax to let the user select and upload a file:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;@using (Html.BeginForm("ImageUpload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
+    &amp;lt;div&amp;gt;Please select an image to upload&amp;lt;/div&amp;gt;
+    &amp;lt;input name="image" type="file"&amp;gt;
+    &amp;lt;input type="submit" value="Upload Image" /&amp;gt;
+}
+&lt;/pre&gt;
+&lt;p&gt;And now in my AdminController’s ImageUpload method, I can access details of the uploaded file using the Request.Files accessor which returns an instance of HttpPostedFileBase :&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;[HttpPost]
+public ActionResult ImageUpload()
+{
+    string path = @"D:\Temp\";
+
+    var image = Request.Files["image"];
+    if (image == null)
+    {
+        ViewBag.UploadMessage = "Failed to upload image";
+    }
+    else
+    {
+        ViewBag.UploadMessage = String.Format("Got image {0} of type {1} and size {2}",
+            image.FileName, image.ContentType, image.ContentLength);
+        // TODO: actually save the image to Azure blob storage
+    }
+    return View();
+}
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 6 – Add Azure references&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Now we need to add a project reference to &lt;strong&gt;Microsoft.WindowsAzure.StorageClient&lt;/strong&gt;, which gives us access to the Microsoft.WindowsAzure and Microsoft.WindowsAzure.StorageClient namespaces. 
+&lt;p&gt;&lt;strong&gt;Step 7 – Connect to Cloud Storage Account&lt;/strong&gt; 
+&lt;p&gt;Most tutorials will tell you to connect to your storage account by simply passing in the name of the connection string:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var storageAccount = CloudStorageAccount.FromConfigurationSetting("StorageConnection");
+&lt;/pre&gt;
+&lt;p&gt;However, because we are using an Azure web site and not a Web Role, this throws an exception ("SetConfigurationSettingPublisher needs to be called before FromConfigurationSetting can be used"). There are a few ways to fix this, but I think the simplest is to call Parse, and pass in your connection string directly:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var storageAccount = CloudStorageAccount.Parse(
+    ConfigurationManager.ConnectionStrings["StorageConnection"].ConnectionString);
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 8 – Create a Container&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Our storage account can have many “containers”, so we need to provide a container name. For this example, I’ll call it “productimages” and give it public access.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;blobStorage = storageAccount.CreateCloudBlobClient();
+CloudBlobContainer container = blobStorage.GetContainerReference("productimages");
+if (container.CreateIfNotExist())
+{
+    // configure container for public access
+    var permissions = container.GetPermissions();
+    permissions.PublicAccess = BlobContainerPublicAccessType.Container;
+    container.SetPermissions(permissions);
+}
+&lt;/pre&gt;
+&lt;p&gt;The name you select for your container actually has to be a valid DSN name (no capital letters, no spaces), or you’ll get a strange “&lt;a href="http://learningbyfailing.com/2009/12/storageclientexception-one-of-the-request-inputs-is-out-of-range/"&gt;One of the request inputs is out of range&lt;/a&gt;” error.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: the code I used as the basis for this part (the Introduction to Cloud Services lab from the &lt;a href="http://www.microsoft.com/en-gb/download/details.aspx?id=8396"&gt;Windows Azure Training Kit&lt;/a&gt;) holds the CloudBlobClient as a static variable, and has the code to initialise the container in a lock. I don’t know if this is to avoid a race condition of trying to create the container twice, or if creating a CloudBlobClient is expensive and should only be done once if possible. Other accesses to CloudBlobClient are not done within the lock, so it appears to be threadsafe.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 9 – Save the image to a blob&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally we are ready to actually save our image. We need to give it a unique name, for which we will use a Guid, followed by the original extension, but you can use whatever naming strategy you like. Including the container name in the blob name here saves us an extra call to blobStorage.GetContainer. As well as naming it, we must set its ContentType (also available on our HttpPostedFileBase) and upload the data which HttpPostedFileBase makes available as a stream.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;string uniqueBlobName = string.Format("productimages/image_{0}{1}", Guid.NewGuid().ToString(), Path.GetExtension(image.FileName));
+CloudBlockBlob blob = blobStorage.GetBlockBlobReference(uniqueBlobName);
+blob.Properties.ContentType = image.ContentType;
+blob.UploadFromStream(image.InputStream);
+&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;Note: One slightly confusing choice you must make is whether to create &lt;/em&gt;&lt;a href="http://msdn.microsoft.com/en-gb/library/windowsazure/ee691964.aspx"&gt;&lt;em&gt;a block blob or a page blob&lt;/em&gt;&lt;/a&gt;&lt;em&gt;. Page blobs seem to be targeted at blobs that you need random access read or write (maybe video files for example), which we don’t need for serving images, so block blob seems the best choice.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 10 – Finding the blob Uri&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Now our image is in blob storage, but where is it? We can find out after creating it, with a call to blob.Uri:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;blob.Uri.ToString();
+&lt;/pre&gt;
+&lt;p&gt;In our Azure storage emulator environment, this returns something like:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;http://127.0.0.1:10000/devstoreaccount1/productimages/image_ab16e2d7-5cec-40c9-8683-e3b9650776b3.jpg
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 11 – Querying the container contents&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;How can we keep track of what we have put into the container? From within Visual Studio, in the &lt;strong&gt;Server Explorer &lt;/strong&gt;tool window, there should be a node for &lt;strong&gt;Windows Azure Storage&lt;/strong&gt;, which lets you see what containers and blobs are on the emulator. You can also delete blobs from there if you don’t want to do it in code. &lt;/p&gt;
+&lt;p&gt;The Azure portal has similar capabilities allowing you to manage your blob containers, view their contents, and delete blobs.&lt;/p&gt;
+&lt;p&gt;If you want to query all the blobs in your container from code, all you need is the following:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var imagesContainer = blobStorage.GetContainerReference("productimages");
+var blobs = imagesContainer.ListBlobs();
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 12 – Create the Real Connection String&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So far we’ve done everything against the storage emulator. Now we need to actually connect to our Azure storage. For this we need a real connection string, which looks like this:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;DefaultEndpointsProtocol=https;AccountName=YourAccountName;AccountKey=YourAccountKey
+
+&lt;/pre&gt;
+&lt;p&gt;The account name is the one you entered in the first step, when you created your Azure storage account. The account key is available in the Azure Portal, by clicking the “Manage Keys” link at the bottom. If you are wondering why there are two keys, and which to use, it is simply so you can &lt;a href="http://blogs.msdn.com/b/jennifer/archive/2010/03/02/why-do-you-need-a-primary-and-a-secondary-access-key-for-windows-azure-storage.aspx"&gt;change your keys without downtime&lt;/a&gt;, so you can use either.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: most examples show DefaultEndpointsProtocol as https, which as far as I can tell, simply means that by default the Uri it returns starts with https. This doesn’t stop you getting at the same image with http. You can change this value in your connection string at any time according to your preference.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 13 – Create a Release Web.config transform&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;To make sure our live site is running against our Azure storage account, we’ll need to create a web.config transform as the Web Deploy wizard doesn’t seem to know about Azure storage accounts and so can’t offer to do this automatically like it can with SQL connection strings.&lt;/p&gt;
+&lt;p&gt;Here’s my transform in Web.Release.config:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;connectionStrings&amp;gt;
+  &amp;lt;add name="StorageConnection"
+    connectionString="DefaultEndpointsProtocol=https;AccountName=YourAccountName;AccountKey=YourAccountKey"
+    xdt:Transform="SetAttributes" xdt:Locator="Match(name)"/&amp;gt;
+&amp;lt;/connectionStrings&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 14 – Link Your Storage Account to Your Web Site&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally, in the Azure portal, we need to ensure that our web site is allowed to access our storage account. Go to your websites, select “Links” and add a link you your Storage Account, which will set up the necessary firewall permissions. &lt;/p&gt;
+&lt;p&gt;Now you're ready to deploy your site and use Azure blob storage with an Azure Web Site.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET MVC</category>
+    <category>Azure</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="28bf1762-fccf-4360-a729-ea33afcf0c1c">
+      <author>Paul Apostolos</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.allpaul.com</website>
+      <ip />
+      <userAgent />
+      <date>2013-02-22 04:09:27</date>
+      <content>Great write up. Really easy to follow and I&amp;#39;m up and running in no time. I was prototyping a new website feature to allow users to upload files and I wanted to host it on Azure websites just to demo it to a client. But, uploading files to Azure websites was a bit of a black hole to me. Seriously, your article was perfect...Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="da7dbfd4-b070-46af-83b8-a84026b50378">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-02-22 07:33:27</date>
+      <content>thanks Paul, this is one of those &amp;quot;note to self&amp;quot; posts - wanted to be sure I&amp;#39;d remember what I&amp;#39;d done.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="485fabad-d9c0-4bef-9500-ec38f6e56308">
+      <author>Mark Gray</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17261651841965260460</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-20 08:39:55</date>
+      <content>Thanks for this &amp;#39;note to self&amp;#39;, it helped me out because I forgot to set permissions on my container to public. Now I can stop repeatedly banging my head against the wall.&lt;br /&gt;&lt;br /&gt;Good job mate.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="69d7d825-c8a6-42cf-89db-38562711e921">
+      <author>Mark Gray</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17261651841965260460</website>
+      <ip />
+      <userAgent />
+      <date>2013-04-20 08:40:37</date>
+      <content>Thanks for this &amp;#39;note to self&amp;#39;, it helped me out because I forgot to set permissions on my container to public. Now I can stop repeatedly banging my head against the wall.&lt;br /&gt;&lt;br /&gt;Good job mate.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c3bdac43-33a4-4fd2-a2a2-b1f3b9a9292c">
+      <author>Joel</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04677525833787422528</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-08 02:05:25</date>
+      <content>This is just what I was looking for, thanks. </content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="754973c2-cafc-457a-a3ec-ed9b6940e078">
+      <author>Naveed Ahmad</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.naveedcs.com</website>
+      <ip />
+      <userAgent />
+      <date>2013-08-23 16:47:45</date>
+      <content>Very good to find your blog i am going to follow it, very nice article</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="433af49f-8d00-41be-b7a6-94d98d10d14d">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2014-04-05 15:35:36</date>
+      <content>Thank you for the post.  I have a TFS project that was an MVC EF site converted to Azure.  I couldn&amp;#39;t actually get it to run on my Visual Studio 2013 development environment.  I can tell by your examples that the previous developer did what you did.  My problem however is that we are moving the website and database off Azure and quite frankly it isn&amp;#39;t going well and I believe it&amp;#39;s due to blob storage and local development emulators.  Anyhow your post is helping me greatly in reverse engineering the solution to non-Azure.  Why get off azure you may ask.  We are on free trial&amp;#39;s for everything except a backup database.  The bill for that was 256 for one month.  Once the bills for everything else starts kicking in Microsoft will own our business.  </content>
+    </comment>
+  </comments>
+</post>

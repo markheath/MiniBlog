@@ -1,0 +1,215 @@
+<post>
+  <title>Reactive Extensions Observables Versus Regular .NET Events Part 1</title>
+  <slug>reactive-extensions-observables-versus</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-04-23 08:29:00</pubDate>
+  <lastModified>2014-04-23 11:41:23</lastModified>
+  <content>&lt;p&gt;Since it’s original release, .NET has provided it’s own support for raising events and subscribing to them. This is essentially an implementation of the “&lt;a href="http://en.wikipedia.org/wiki/Observer_pattern"&gt;Observer pattern&lt;/a&gt;”, and for the most part works well, although the way it was implemented was less than ideal. &lt;/p&gt; &lt;p&gt;The shortcomings include the need to copy the event handler to a temporary variable before raising it to avoid a nasty (but rare) race condition, not being able to pass events as objects (resulting in hacky workarounds in mocking and unit testing frameworks to deal with them), and the rather cumbersome standard event handler function signature, which has the “sender” object as the first parameter (requiring you to cast it to the concrete type you already know it is if you want to make use of it), and the arguments property needing to derive from a rather pointless EventArgs base class. &lt;/p&gt; &lt;p&gt;But there is another option, which doesn’t require you to create your own custom implementation of the observer pattern, and that is to make use of the &lt;a href="http://msdn.microsoft.com/en-us/data/gg577609.aspx"&gt;Reactive Extensions (Rx) framework&lt;/a&gt;. This has been around for some time now, but perhaps hasn’t gained the attention it deserves. Rx essentially provides a much more powerful way of working with events.&lt;/p&gt; &lt;p&gt;In this post I’ll show how you can take .NET code that both raises and consumes regular .NET events and convert it to using Rx. And I plan to follow up with a future post that looks at the benefits of making this transition.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Raising .NET Events &lt;/strong&gt;&lt;/p&gt; &lt;p&gt;First, let’s look at how you raise events the standard .NET way. This simple demo class has a &lt;strong&gt;Start &lt;/strong&gt;method that kicks off a background task. It raises two types of event – &lt;strong&gt;Progress &lt;/strong&gt;events, and a &lt;strong&gt;Finished &lt;/strong&gt;event when it’s done which can contain an exception if something went wrong.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class EventDemo
+{
+    public event EventHandler&amp;lt;ProgressEventArgs&amp;gt; Progress;
+    public event EventHandler&amp;lt;FinishedEventArgs&amp;gt; Finished;
+
+    protected virtual void OnFinished(FinishedEventArgs e)
+    {
+        var handler = Finished;
+        if (handler != null) handler(this, e);
+    }
+
+    protected virtual void OnProgress(ProgressEventArgs e)
+    {
+        var handler = Progress;
+        if (handler != null) handler(this, e);
+    }
+
+    public void Start()
+    {
+        Task.Run((Action)DoStuff);
+    }
+
+    private void DoStuff()
+    {
+        try
+        {
+            foreach (var n in Enumerable.Range(1, 10))
+            {
+                Thread.Sleep(1000);
+                OnProgress(new ProgressEventArgs(n));
+            }
+            OnFinished(new FinishedEventArgs());
+        }
+        catch (Exception exception)
+        {
+            OnFinished(new FinishedEventArgs(exception));
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;You can see here that we’ve created a couple of helper functions (OnFinished and OnProgress) to avoid the race condition issue. We also needed to create a couple of event argument classes:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class ProgressEventArgs : EventArgs
+{
+    public ProgressEventArgs(int progress)
+    {
+        Progress = progress;
+    }
+
+    public int Progress { get; private set; }
+}
+
+class FinishedEventArgs : EventArgs
+{
+    public FinishedEventArgs(Exception exception = null)
+    {
+        Exception = exception;
+    }
+
+    public Exception Exception { get; private set; }
+}
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Subscribing to .NET events&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;To subscribe to the events raised by this class, we simply use the += operator and give it either the name of the event handler method or a lambda function to run. Here we use the first technique, since it makes unsubscribing easier if we need to do that later.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class EventConsumer
+{
+    private readonly EventDemo eventDemo;
+    public EventConsumer()
+    {
+        eventDemo = new EventDemo();
+        eventDemo.Progress += OnProgress;
+        eventDemo.Finished += EventDemoOnFinished;
+        eventDemo.Start();
+    }
+
+    private void EventDemoOnFinished(object sender, FinishedEventArgs finishedEventArgs)
+    {
+        Console.WriteLine("Finished {0}", finishedEventArgs.Exception == null ? "success" : finishedEventArgs.Exception.Message);
+    }
+
+    private void OnProgress(object sender, ProgressEventArgs progressEventArgs)
+    {
+        Console.WriteLine("Progress {0}", progressEventArgs.Progress);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Raising Rx Events&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Now let’s have a look at how we might implement the same thing, but using Reactive Extensions instead. We might be tempted to think that the Rx version of our class should mirror as closely as possible the .NET version, so we’d add two IObservable properties, which were the equivalent of the Progress and Finished events. The easy way to create IObservables is to make instances of the Rx &lt;strong&gt;Subject &lt;/strong&gt;class , and the “events” can be fired by calling the &lt;strong&gt;OnNext &lt;/strong&gt;method on the subject. The event argument can be any object – there is no need to make it inherit from EventArgs.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class ObservableDemoNaive
+    {
+        private readonly Subject&amp;lt;Progress&amp;gt; progressSubject;
+        private readonly Subject&amp;lt;Finished&amp;gt; finishedSubject;
+
+        public ObservableDemoNaive()
+        {
+            progressSubject = new Subject&amp;lt;Progress&amp;gt;();
+            finishedSubject = new Subject&amp;lt;Finished&amp;gt;();
+        }
+
+        public IObservable&amp;lt;Progress&amp;gt; Progress { get { return progressSubject; } }
+
+        public IObservable&amp;lt;Finished&amp;gt; Finished { get { return finishedSubject; } }
+
+        public void Start()
+        {
+            Task.Run(() =&amp;gt; DoStuff());
+        }
+
+        private void DoStuff()
+        {
+            try
+            {
+                foreach (var n in Enumerable.Range(1, 10))
+                {
+                    Thread.Sleep(1000);
+                    progressSubject.OnNext(new Progress(n));
+                }
+                finishedSubject.OnNext(new Finished());
+            }
+            catch (Exception exception)
+            {
+                finishedSubject.OnNext(new Finished() { Exception = exception});
+            }
+        }
+    }
+&lt;/pre&gt;
+&lt;p&gt;Whilst this works,&amp;nbsp; it isn’t a particularly good example of using Reactive Extensions. For starters, the &lt;strong&gt;Finished &lt;/strong&gt;event is trying to solve a problem that Rx already solves for us. An observable can tell us when it is completed, as well as when it has errored. So we can simplify this to work with a single Observable:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;
+class ObservableDemoBetter
+{
+    private readonly Subject&amp;lt;Progress&amp;gt; progressSubject;
+
+    public ObservableDemoBetter
+    {
+        progressSubject = new Subject&amp;lt;Progress&amp;gt;();
+    }
+
+    public IObservable&amp;lt;Progress&amp;gt; Progress { get { return progressSubject; } }
+
+    public void Start()
+    {
+        Task.Run(() =&amp;gt; DoStuff());
+    }
+
+    private void DoStuff()
+    {
+        try
+        {
+            foreach (var n in Enumerable.Range(1, 10))
+            {
+                Thread.Sleep(1000);
+                progressSubject.OnNext(new Progress(n));
+            }
+            progressSubject.OnCompleted();
+        }
+        catch (Exception exception)
+        {
+            progressSubject.OnError(exception);
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Note that the &lt;strong&gt;OnCompleted&lt;/strong&gt; method of the &lt;strong&gt;Subject &lt;/strong&gt;class doesn’t take any parameters. So if your original FinishedEventArgs contained additional data, a different way of passing it back would be needed.&lt;/p&gt;
+&lt;p&gt;However, in making this change, we’ve actually modified the behaviour. An observable sequence can only complete once, so if you were to call Start twice, you’d not see any results after the first sequence finished. In fact, this probably highlights a design flaw in our original class – if two operations are going on simultaneously, you have no idea which one the Progress and Finished events relate to.&lt;/p&gt;
+&lt;p&gt;This can be solved by making our Start method return the IObservable stream of progress events for the particular operation that was started:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class ObservableDemo
+{
+    public IObservable&amp;lt;Progress&amp;gt; Start()
+    {
+        var subject = new Subject&amp;lt;Progress&amp;gt;();
+        Task.Run(() =&amp;gt; DoStuff(subject));
+        return subject;
+    }
+
+    private void DoStuff(Subject&amp;lt;Progress&amp;gt; subject)
+    {
+        try
+        {
+            foreach (var n in Enumerable.Range(1, 10))
+            {
+                Thread.Sleep(1000);
+                subject.OnNext(new Progress(n));
+            }
+            subject.OnCompleted();
+        }
+        catch (Exception exception)
+        {
+            subject.OnError(exception);
+        }
+        finally
+        {
+            subject.Dispose();
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Now we have a much cleaner, simpler interface, and there can be no confusion about which background task is raising the events if we call Start twice.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Subscribing to Rx Events&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Subscribing to Rx events is nice and simple. You can provide an action that is called for each event, and optionally for when it completes successfully or with an error as shown here:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var observable = eventDemo.Start();
+observable.Subscribe(
+    p =&amp;gt; Console.WriteLine("Progress {0}", p.Value),
+    e =&amp;gt; Console.WriteLine("Error {0}", e.Message),
+    () =&amp;gt; Console.WriteLine("Finished success"));
+&lt;/pre&gt;
+&lt;p&gt;As can be seen, the Rx versions of both the event producer and consumer code are slightly more succinct than the equivalent regular .NET event code.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The Story So Far&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So far we’ve seen that it is fairly straightforward to switch from .NET events to Rx Observables, but you may want to consider changing how you work with them to fit more nicely with the way Rx works. In the next post we’ll look at other benefits that Observables bring to the table such as better unsubscribing, and the ability to manipulate and filter the events with a LINQ-style syntax, as well as seeing how to turn existing .NET events into Observables.&lt;/p&gt;
+&lt;p&gt;If you want to play with Reactive Extensions yourself, the easy way is to simply add the &lt;a href="http://www.nuget.org/packages/Rx-Main"&gt;NuGet package&lt;/a&gt; to your project.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Observer Pattern</category>
+    <category>Reactive Extensions</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,14 @@
+<post>
+  <title>Styling a ListBox in Silverlight 2</title>
+  <slug>styling-listbox-in-silverlight-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-14 22:31:00</pubDate>
+  <lastModified>2011-07-03 07:57:39</lastModified>
+  <content>&lt;p&gt;Back in April, I started a series of posts here on how to completely customise the style of a ListBox in Silverlight 2 beta 1, including the scroll-bar styles. That was followed by a rather painful update to Silverlight 2 beta 2 (see &lt;a href="/post/styling-listbox-with-silverlight-2-beta"&gt;Part 1&lt;/a&gt;, &lt;a href="/post/styling-listbox-with-silverlight-2-beta_21"&gt;Part 2&lt;/a&gt;, &lt;a href="/post/styling-listbox-with-silverlight-2-beta"&gt;Part 3&lt;/a&gt;). Now that Silverlight 2 has officially shipped, the code required one last update. Thankfully the changes were not so great this time. A few deprecated properties needed to be removed from the XAML, and some &lt;strong&gt;Duration&lt;/strong&gt; attributes needed to be changed to &lt;strong&gt;GeneratedDuration&lt;/strong&gt;, but that was about it.&lt;/p&gt; &lt;p&gt;There is some good news. From initial inspection it looks like the scroll-bar bug, where you saw a stretched horizontal scroll-bar behind your vertical scroll-bar has finally been fixed. And first impressions of the XAML preview in Visual Studio are good - you can actually see what it looks like without having to run the project.&lt;/p&gt; &lt;p&gt;What it hasn't fixed is my appalling colour selections and graphical design skills. I might take the time to work a bit more on the appearance of this thing now that I can be sure the syntax isn't going to change yet again.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-2-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="listbox-silverlight-2" border="0" alt="Fully Styled Listbox in Silverlight 2" src="/posts/files/styling-listbox-in-silverlight-2-1.png" width="173" height="174"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;I've uploaded my example project which can be opened in Visual Studio 2008 (with Silverlight Tools) or in Expression Blend 2 SP1. Download it &lt;a href="http://bitbucket.org/markheath/silverlightlistboxstyle/src"&gt;here&lt;/a&gt;.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

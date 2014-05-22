@@ -1,0 +1,33 @@
+<post>
+  <title>Refactoring Windows Forms</title>
+  <slug>refactoring-windows-forms</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-01-22 16:32:00</pubDate>
+  <lastModified>2008-01-22 16:32:13</lastModified>
+  <content>&lt;p&gt;I have been attempting to refactor some Windows Forms classes that contain hundreds of controls and have thousands of lines of code behind. What I would like to do is to group a load of controls together and make a new UserControl that contains them. The only trouble is, there seems no easy way to do this. None of the refactoring tools seem support it, and if you were to simply try to cut and paste the controls using the Windows Forms designer you would end up losing all your event handlers and potentially messing up the relative positioning of all your controls (lots of docking and anchoring is going on). &lt;/p&gt;  &lt;p&gt;My approach in the end was to make a complete copy of the entire class in question and delete parts from it. Then I have spent two whole days trying to reduce the compiler error count to zero (I'm down to just 19 now from 387). Even so I now have a whole bunch of event handlers that need to be hooked up and a horrible feeling that my new panel will not quite work exactly like the old one did.&lt;/p&gt;  &lt;p&gt;So what's the point of this post? Well just to say, wouldn't it be nice if one of the .NET refactoring tool companies would implement this? Allow you to select a bunch of GUI components on a form to move to a new UserControl, expose the appropriate properties and events, and hook up the old code to access the new control. Obviously you would want to perform more refactoring after doing this, to clean up the interface to your new UserControl, but it would be an invaluable tool in managing Windows Forms projects that have got out of control.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Refactoring</category>
+    <category>Windows Forms</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="7e93ef5e-ed63-4470-95e7-a106f778a065">
+      <author>Jax</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-01-23 13:59:00</date>
+      <content>Heh, that's one of the reasons I hook events up in code as opposed to the designer.&lt;BR/&gt;Designer has a habit of burning you later.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e6b40874-addc-44b3-9604-de9d5a43dcf9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-01-24 13:29:00</date>
+      <content>yes, unfortunately I wasn't involved in the original development of the components in question.&lt;BR/&gt;&lt;BR/&gt;in fact, I gave up yesterday as the "refactoring" was turning into a "rewrite" and I couldn't afford to take the risk of breaking everything</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,24 @@
+<post>
+  <title>Orcas Beta 1 - Not ready for the Prime time</title>
+  <slug>orcas-beta-1-not-ready-for-prime-time</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-05 21:16:00</pubDate>
+  <lastModified>2008-06-30 15:13:41</lastModified>
+  <content>I've had Visual Studio Orcas Beta 1 installed on a Virtual PC for a while now, and have mainly been using it to do some Silverlight 1.1 development. For the most part it has worked OK, although I've had a few niggles with it:
+&lt;ul&gt;&lt;li&gt;Doesn't let me step through JavaScript (despite turning on Script debugging in IE)&lt;/li&gt;&lt;li&gt;Insists on covering up part of the code with a toolbar window whenever I run in debug mode.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;But today I tried to develop a WPF application in it, instead of simply using Visual Studio 2005 with the .NET 3.0 extensions. The experience was painful. The designer regularly threw exceptions, and Visual Studio itself crashed a few times. &lt;/p&gt;&lt;p&gt;More concerningly, the WPF designer itself seems very lacking in the basic functionality we have come to expect with Windows Forms. I am very enthusiastic about WPF, but if I am to persuade anyone at my work that using it would be a good idea, we need a &lt;em&gt;much &lt;/em&gt;better experience for those who just want to create a Window and add controls and event handlers if they are to be tempted away from plain old Windows Forms.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;You have to continually ask the designer to show you just XAML - it defaults to a split view with not enough space to see either the layout or XAML&lt;/li&gt;&lt;li&gt;Double-clicking a button in the designer doesn't add a handler&lt;/li&gt;&lt;li&gt;You can't choose font settings in a nice dialog - you just have to know what you can enter into FontFamily&lt;/li&gt;&lt;li&gt;You can't ctrl-click and drag to copy a control&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;So unfortunately, Orcas Beta 1 is very much a beta, and still a long way from being a release candidate. Hopefully there will be a beta 2 before too long, with a much enhanced WPF designer, and built-in Silverlight support.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Visual Studio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="d3010ff3-e84a-4590-8775-09a4c721276d">
+      <author>David</author>
+      <email>noreply@blogger.com</email>
+      <website>www.commongenius.com</website>
+      <ip />
+      <userAgent />
+      <date>2007-11-28 20:21:00</date>
+      <content>Sadly, the final RTM of Visual Studio 2008 did not significantly improve the situation, except that it crashes (a little) less. I didn't think I could be more underwhelmed by an IDE release than I was by VS 2005; looks like I was wrong.</content>
+    </comment>
+  </comments>
+</post>

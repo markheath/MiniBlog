@@ -1,0 +1,35 @@
+<post>
+  <title>Checking MIME type for cross domain Silverlight hosting</title>
+  <slug>checking-mime-type-for-cross-domain</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-15 13:39:00</pubDate>
+  <lastModified>2010-09-23 15:20:22</lastModified>
+  <content>&lt;p&gt;I recently ran into some problems trying to embed a Silverlight application in a web page hosted on another server. It seems that to do so, you must have your MIME type for .xap files correctly configured (should be &lt;strong&gt;application/x-silverlight-app&lt;/strong&gt;). Interestingly, this is not required if you are hosting the .xap file in a web page on the same domain.&lt;/p&gt;  &lt;p&gt;Unfortunately for me, my shared Linux hosting provider allows no way of configuring or even viewing the MIME types. After searching in vain for a utility that would let me have a look and see what MIME type a given URL was returning, I wrote my own test function. It turns out to be possible in just two lines of code – create a WebRequest, and examine the ContentType of the WebResponse.&lt;/p&gt;  
+&lt;pre class="brush: csharp;"&gt;[TestFixture]
+public class MimeTypeChecker
+{
+    [Test]
+    public void CheckSilverlightMimeTypeIsCorrect()
+    {
+        string mimeType = GetMimeType(&amp;quot;http://www.mydomain.com/mysilverlightapp.xap&amp;quot;);
+        Assert.AreEqual(&amp;quot;application/x-silverlight-app&amp;quot;, mimeType);
+    }
+
+    public string GetMimeType(string url)
+    {
+        WebRequest request = WebRequest.Create(url);
+        WebResponse response = request.GetResponse();
+        return response.ContentType;
+    }
+}&lt;/pre&gt; 
+&lt;p&gt;&lt;b&gt;Update:&lt;/b&gt; If your .xap file is hosted on an Apache server on Linux, you can set up the MIME types correctly by creating a &lt;b&gt;.htaccess&lt;/b&gt; file. This can be put in the root of your hosting space, or just in the folder containing the .xap file. It only needs the .xap registration, but the example I show below configures xaml and xbap as well:&lt;/p&gt;
+
+&lt;pre class="brush: plain;"&gt;AddType application/x-silverlight-app .xap
+AddType application/xaml+xml .xaml
+AddType application/x-ms-xbap .xbap&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

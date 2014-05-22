@@ -1,0 +1,114 @@
+<post>
+  <title>OpenID in ASP.NET</title>
+  <slug>openid-in-aspnet</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-21 12:58:00</pubDate>
+  <lastModified>2010-10-04 12:43:38</lastModified>
+  <content>&lt;p&gt;I found a helpful &lt;a href="http://cs.nerdbank.net/blogs/jmpinline/archive/2007/01/06/ASP.NET-drop_2D00_in-control-to-enable-OpenID-logins-for-your-site.aspx"&gt;ASP.NET OpenID control&lt;/a&gt; that lets you implement an OpenID login on your website. The instructions are a little weak so I thought I'd post a quick how-to here.&lt;/p&gt; &lt;p&gt;First you need to &lt;a href="http://cs.nerdbank.net/files/folders/nbtools/entry2891.aspx"&gt;download the binaries&lt;/a&gt; and copy them into the bin folder of your web application.&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Boo.Lang.dll (because JanRain is written in Boo)&lt;/li&gt; &lt;li&gt;JanRain.dll (an OpenID library for .NET)&lt;/li&gt; &lt;li&gt;Mono.Security.dll&lt;/li&gt; &lt;li&gt;NerdBank.Tools.dll (contains the ASP.NET control)&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;Then you simply register the assembly at the top of your aspx page:&lt;/p&gt; 
+
+&lt;pre class="brush: xml"&gt;&amp;lt;%@ Register Assembly=&amp;quot;NerdBank.Tools&amp;quot; Namespace=&amp;quot;NerdBank.Tools.WebControls&amp;quot; TagPrefix=&amp;quot;nb&amp;quot; %&amp;gt; &lt;/pre&gt;
+
+&lt;p&gt;And then insert the control:
+
+&lt;pre class="brush: xml"&gt;&amp;lt;nb:OpenIdLogin ID=&amp;quot;openIdLogin&amp;quot; runat=&amp;quot;server&amp;quot; 
+        RequestEmail=&amp;quot;Request&amp;quot; RequestTimeZone=&amp;quot;Request&amp;quot; RequestNickname=&amp;quot;Request&amp;quot; 
+        PolicyUrl=&amp;quot;http://mysite.com/PrivacyPolicy.aspx&amp;quot; /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here I have requested the email, timezone and nickname. I could also say &lt;strong&gt;Require&lt;/strong&gt; for these if I absolutely must have them. You should also provide a privacy policy URL, or else the user will be warned that it is missing.&lt;/p&gt;
+&lt;p&gt;The control itself provides a &lt;strong&gt;Register &lt;/strong&gt;link that is customizable, allowing users to sign up with an Open ID provider such as &lt;a href="http://www.myopenid.com"&gt;www.myopenid.com&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When you login, if you have entered a valid OpenID URL, you will go to your OpenID provider who will ask for your password if necessary, confirm whether you want to allow that site to log you in once, always or never, and ask you what persona you want to use.&lt;/p&gt;
+&lt;p&gt;On a successful login, you can retrieve the OpenID URL as well as anything from the persona that has been made available. Here's some sample code-behind.&lt;/p&gt;
+&lt;pre class="brush: csharp"&gt;protected void Page_Load(object sender, EventArgs e)
+{
+    Uri openIdUri = Session[&amp;quot;OpenIdUri&amp;quot;] as Uri;
+    if (openIdUri == null)
+    {
+        openIdLogin.LoggedIn += new EventHandler&amp;lt;NerdBank.Tools.WebControls.OpenIdTextBox.OpenIdEventArgs&amp;gt;(openIdLogin_LoggedIn);
+        openIdLogin.Visible = true;
+    }
+    else
+    {
+        openIdLogin.Visible = false;
+        Response.Write(&amp;quot;Welcome &amp;quot; + openIdUri.ToString() + &amp;quot;&amp;lt;br /&amp;gt;&amp;quot;);
+        Response.Write(&amp;quot;Email: &amp;quot; + Session[&amp;quot;openIdEmail&amp;quot;] + &amp;quot;&amp;lt;br/&amp;gt;&amp;quot;);
+        Response.Write(&amp;quot;Nickname: &amp;quot; + Session[&amp;quot;openIdNickname&amp;quot;] + &amp;quot;&amp;lt;br/&amp;gt;&amp;quot;);
+        Response.Write(&amp;quot;TimeZone: &amp;quot; + Session[&amp;quot;openIdTimeZone&amp;quot;] + &amp;quot;&amp;lt;br/&amp;gt;&amp;quot;);            
+    }
+}
+
+void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBox.OpenIdEventArgs e)
+{
+    Session[&amp;quot;OpenIdUri&amp;quot;] = e.OpenIdUri;
+    Session[&amp;quot;OpenIdEmail&amp;quot;] = e.ProfileFields.Email;
+    Session[&amp;quot;OpenIdNickname&amp;quot;] = e.ProfileFields.Nickname;
+    Session[&amp;quot;OpenIdTimeZone&amp;quot;] = e.ProfileFields.TimeZone;
+}&lt;/pre&gt;
+
+&lt;p&gt;As you can see, it is pretty simple. I still need to work out how I am then going to integrate the OpenID login with my own site login database. The control itself also has a few limitations. In particular, entering an invalid URL causes an unhandled exception. It also doesn't give you an event for login failure (although there is a "logging in" event which I am not sure what it is for).&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="533f8516-38ec-4236-9dc7-42d52a6e45d5">
+      <author>Andrew</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13632400519774640095</website>
+      <ip />
+      <userAgent />
+      <date>2007-07-11 06:39:00</date>
+      <content>Thanks for your explanatory post.  I'm sorry my instructions weren't that good, but I see you've made up for that.  &lt;BR/&gt;&lt;BR/&gt;The LoggingIn event gives your site a chance to reject a particular URL &lt;I&gt;before&lt;/I&gt; the user is redirected to his OpenID provider.  You might do this if you only allowed, say, a given set of administrators with known OpenIDs to log into your site.&lt;BR/&gt;&lt;BR/&gt;The unhandled exception isn't good.  There should be a validation control to handle that, but I'll have to check.&lt;BR/&gt;&lt;BR/&gt;In the meantime, you and your readers should know that the NerdBank.Tools version of my ASP.NET OpenID control is now deprecated.  The controls were merged into the &lt;A HREF="http://code.google.com/p/dotnetopenid" REL="nofollow"&gt;dotnetopenid project&lt;/A&gt; and have been worked on there.  You should give that library a try and see if you find it better.  I welcome comments. Just post to the &lt;A HREF="http://groups.google.com/group/dotnetopenid" REL="nofollow"&gt;dotnetopenid Google Group&lt;/A&gt;.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1dc08867-bd80-4ea4-a1d0-ccf365b5ac87">
+      <author>aaballboy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10470452782370431525</website>
+      <ip />
+      <userAgent />
+      <date>2008-02-08 14:00:00</date>
+      <content>hi~ Mark!&lt;BR/&gt;I can't download dll from the url.&lt;BR/&gt;Do u know where I can find these dll?&lt;BR/&gt;Thank you!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5886589d-58dc-4d55-94e2-a5c87d7c8e99">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-02-08 14:49:00</date>
+      <content>hi aaballboy,&lt;BR/&gt;have you tried from the google project link? ...&lt;BR/&gt;http://code.google.com/p/dotnetopenid/</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dccfc349-12aa-47f8-86a5-055625fdebbd">
+      <author>aaballboy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10470452782370431525</website>
+      <ip />
+      <userAgent />
+      <date>2008-02-14 07:45:00</date>
+      <content>Thanks for ur reply!&lt;BR/&gt;I have found dll.&lt;BR/&gt;But now I have another problem.&lt;BR/&gt;where can I download source code?&lt;BR/&gt;Because I can't change the OpenID control.&lt;BR/&gt;For example,I want to change the OpenID provider from myopenid to yahoo.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ffeb0e03-e182-4deb-af8b-1f0ab614aaf5">
+      <author>Andrew</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13632400519774640095</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-06 05:22:00</date>
+      <content>aaballboy,&lt;BR/&gt;The source code is also available from the googlecode site that Mark pointed out.  But FWIW, you don't need the source to change the OpenId Provider that is suggested in the OpenIdLogin control.  You can change that through a property on the control itself.  Much easier.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="048cb470-fa07-4f7d-8833-18978366d5b5">
+      <author>judekblog</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02230430409636198387</website>
+      <ip />
+      <userAgent />
+      <date>2009-01-25 21:05:00</date>
+      <content>Thanks your code works great. But now I am trying to break it down indivigual users and allow only certain users in. For example, what would I set my xxx to in allow users="xxx"  in the web.config file?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7391828b-a886-49b8-9c44-6f546d8160f6">
+      <author>Andrew</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13632400519774640095</website>
+      <ip />
+      <userAgent />
+      <date>2009-01-25 21:13:00</date>
+      <content>judekblog,&lt;BR/&gt;&lt;BR/&gt;Rather than using your web.config file to list the individual users allowed to log in, if the purpose is to whitelist who is allowed to log in at all then inside your openIdLogin_LoggedIn handler you should check e.ClaimedIdentifier and if it isn't on your whitelist, set e.Cancel = true, and display a message to the user saying that they're not allowed to log in.</content>
+    </comment>
+  </comments>
+</post>

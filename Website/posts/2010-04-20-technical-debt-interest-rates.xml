@@ -1,0 +1,32 @@
+<post>
+  <title>Technical Debt Interest Rates</title>
+  <slug>technical-debt-interest-rates</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-04-20 22:20:00</pubDate>
+  <lastModified>2010-04-20 22:20:35</lastModified>
+  <content>&lt;p&gt;I’ve been thinking a lot about “technical debt” recently. The metaphor is a helpful one – every poor design decision, every compromise, every quick and dirty hack results in technical debt which must be repaid at some point in the future.&lt;/p&gt;  &lt;p&gt;Or must it? The reality is that some technical debt, possibly quite a large percentage of it, never actually incurs substantial repayments. This is quite different from real-world financial debt, which must always eventually be paid in full.&lt;/p&gt;  &lt;p&gt;Consider the following example. You rush to get feature X out the door. A customer is paying big money for it, and you end up making all sorts of compromises to get it done in time. The code is a mess, a maintenance nightmare. You dread the day when you have to revisit it to make a tweak or add another feature. But that day never comes. For whatever reason, no support cases come in, no enhancements are requested. Maybe the customer never used it at all. What has happened is that you have effectively been let off your debt. Ironically, the decision to do it the “quick way” rather than the “right way” turned out to be a smart move.&lt;/p&gt;  &lt;p&gt;At the opposite end of the spectrum there is that code change you rushed in to meet a relatively unimportant milestone. You knew at the time it wasn’t quite the best way, but it worked, and that’s all that really matters, right? The trouble comes when on top of that rather shaky foundation is built layer upon layer of new code, all inheriting its inherent weaknesses and design flaws. Maybe at first the interest rate on that debt is quite low – it doesn’t slow you down too much. But several years later, once it is far too late to go back on the original decision, you begin paying dearly for the technical debt you introduced.&lt;/p&gt;  &lt;p&gt;The basic trouble is, when you introduce technical debt you typically have no idea what interest rate you are borrowing at. If you are lucky, its 0% – and your shortcut won’t cost you a penny. In fact, it could save the company time and money. In other cases it will be a modest 5-10%. Future development is slowed down a little by your past indiscretions, but not by much. But sometimes you take out a debt whose interest rate is astronomical (or more commonly, starts out small but grows rapidly). It is not uncommon for it to reach to levels above 500%. In other words, new development is taking five times longer than it ought to simply because of the mess that the codebase is in.&lt;/p&gt;  &lt;p&gt;I think technical debt is inevitable. Developers, let alone management, simply do not have the foresight to see the full future implications of all their decisions. But the moment you detect that you are building heavily on top of code that contains technical debt, alarm bells should be ringing. Address it early or it will be too late.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Technical Debt</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0a0b914d-3dd2-4bd4-8db6-6e6946f92d25">
+      <author>Thomas  Eyde</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16024593954167949907</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-21 14:45:08</date>
+      <content>The problem is, when the technical debt grows high enough, nothing is &amp;quot;quick&amp;quot; any more. So even quick and dirty solutions is delivered later than necessary.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f0e9507d-28f8-486e-86cb-2bd9c83c14b7">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-21 14:51:12</date>
+      <content>You&amp;#39;re certainly right there Thomas. The trick is to catch it early.</content>
+    </comment>
+  </comments>
+</post>

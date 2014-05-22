@@ -1,0 +1,418 @@
+<post>
+  <title>Model View View-Model (MVVM) in Silverlight</title>
+  <slug>model-view-view-model-mvvm-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-11-08 21:40:00</pubDate>
+  <lastModified>2011-07-03 07:54:15</lastModified>
+  <content>&lt;p&gt;I watched an &lt;a href="http://blog.lab49.com/archives/2650"&gt;excellent screencast by Jason Dolinger&lt;/a&gt; recently, showing how to implement the Model View View-Model pattern in WPF. A lot of the documentation on the MVVM pattern seems unnecessarily complicated, but Jason's demonstration explains it very clearly.&lt;/p&gt; &lt;p&gt;The basic idea of MVVM is that we would like to use data binding to connect our &lt;strong&gt;View&lt;/strong&gt; to our &lt;strong&gt;Model&lt;/strong&gt;, but data binding is often tricky because our model doesn't have the right properties. So we create a &lt;strong&gt;View Model&lt;/strong&gt; that is perfectly set up to have just the right properties for our View to bind to, and gets its actual data from the Model.&lt;/p&gt; &lt;p&gt;To try the technique out I decided to refactor a small piece of a Silverlight game I have written, called &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt;, which is a port of the old QBasic Nibbles game, keeping the graphics fairly similar. At the top of the screen there is a scoreboard, whose role it is to keep track of the scores, number of lives, level, speed etc. This is the piece I will attempt to modify to use MVVM.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/model-view-view-model-mvvm-in-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="silverlight-mvvm" border="0" alt="SilverNibbles Scoreboard" src="/posts/files/model-view-view-model-mvvm-in-1.png" width="604" height="92"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Let's have a look at the original code-behind for the &lt;strong&gt;Scoreboard&lt;/strong&gt; user control. As you can see, there is a not lot going on here. Whenever a property on the &lt;strong&gt;Scoreboard&lt;/strong&gt; is set, the appropriate changes are made to the graphical components. This is very similar to the typical code that would be written for a Windows Forms user control.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+
+namespace SilverNibbles
+{
+    public partial class Scoreboard : UserControl
+    {
+        private int players;
+        private int level;
+        private int speed;
+        private int jakeScore;
+        private int sammyScore;
+
+        public Scoreboard()
+        {
+            InitializeComponent();
+        }
+
+        public int Players
+        {
+            get 
+            {
+                return players; 
+            }
+            set 
+            {
+                players = value;
+                jakeLives.Visibility = players == 2 ? Visibility.Visible : Visibility.Collapsed;
+                jakeScoreLabel.Visibility = players == 2 ? Visibility.Visible : Visibility.Collapsed;
+                jakeScoreTextBlock.Visibility = players == 2 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                return level;
+            }
+            set
+            {
+                level = value;
+                levelTextBlock.Text = value.ToString();
+            }
+        }
+
+        public int Speed
+        {
+            get
+            {
+                return speed;
+            }
+            set
+            {
+                speed = value;
+                speedTextBlock.Text = value.ToString();
+            }
+        }
+
+        public int SammyScore
+        {
+            get
+            {
+                return sammyScore;
+            }
+            set
+            {
+                sammyScore = value;
+                sammyScoreTextBlock.Text = value.ToString();
+            }
+        }
+
+        public int JakeScore
+        {
+            get
+            {
+                return jakeScore;
+            }
+            set
+            {
+                jakeScore = value;
+                jakeScoreTextBlock.Text = value.ToString();
+            }
+        }
+
+        public int JakeLives
+        {
+            get
+            {
+                return jakeLives.Lives;
+            }
+            set
+            {
+                jakeLives.Lives = value;
+            }
+        }
+
+        public int SammyLives
+        {
+            get
+            {
+                return sammyLives.Lives;
+            }
+            set
+            {
+                sammyLives.Lives = value;
+            }
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Instead of having all these properties, the &lt;strong&gt;Scoreboard&lt;/strong&gt; will become a very simple view. Now the code-behind of &lt;strong&gt;Scoreboard&lt;/strong&gt; is completely minimalised:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;namespace SilverNibbles
+{
+    public partial class Scoreboard : UserControl
+    {
+        public Scoreboard()
+        {
+            InitializeComponent();
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Now it is the job of whoever creates Scoreboard to give it a &lt;strong&gt;ScoreboardViewModel&lt;/strong&gt; as its &lt;strong&gt;DataContext&lt;/strong&gt;. It doesn't even have to be a &lt;strong&gt;ScoreboardViewModel &lt;/strong&gt;either, so long as it has the appropriate properties. This means that a graphic designer could use an XML file instead to create dummy data to help while designing the appearance. Here's my code elsewhere in the project that sets up the data context of the &lt;strong&gt;Scoreboard&lt;/strong&gt; with its View Model.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;scoreData = new ScoreboardViewModel();
+scoreboard.DataContext = scoreData;&lt;/pre&gt;
+&lt;p&gt;Now I simply modify the &lt;strong&gt;scoreData &lt;/strong&gt;object's properties, and the Scoreboard will update its view automatically.&lt;/p&gt;
+&lt;p&gt;What has changed in the Scoreboard user control's XAML? Well first, it has Binding statements for every property that gets its value from the view model. I was also able to remove all the x:Name attributes from the markup, which is a sign that MVVM has been done right. I also needed to make my Lives property on my &lt;strong&gt;LivesControl&lt;/strong&gt; user control into a dependency property to allow it to accept the binding syntax as a value.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;UserControl x:Class="SilverNibbles.Scoreboard"
+    xmlns="http://schemas.microsoft.com/client/2007" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:sn="clr-namespace:SilverNibbles"
+     &amp;gt;
+    &amp;lt;Grid x:Name="LayoutRoot" Background="LightYellow" ShowGridLines="False"&amp;gt;
+        &amp;lt;Grid.RowDefinitions&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+            &amp;lt;/Grid.RowDefinitions&amp;gt;
+        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+            &amp;lt;ColumnDefinition Width="20*" /&amp;gt;
+            &amp;lt;ColumnDefinition Width="35*" /&amp;gt;
+            &amp;lt;ColumnDefinition Width="25*" /&amp;gt;
+            &amp;lt;ColumnDefinition Width="10*" /&amp;gt;
+        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+        
+        &amp;lt;!-- row 0 --&amp;gt;
+        &amp;lt;TextBlock 
+            Grid.Row="0" 
+            Grid.Column="0"
+            Text="High Score" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen" /&amp;gt;
+        &amp;lt;TextBlock 
+            Grid.Row="0" 
+            Grid.Column="1"
+            Margin="5,0,5,0"
+            Text="{Binding Record}" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen" /&amp;gt;
+        
+        &amp;lt;TextBlock 
+            Grid.Column="2" 
+            Text="Level" 
+            HorizontalAlignment="Right" 
+            Margin="5,0,5,0"
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen" /&amp;gt;
+        &amp;lt;TextBlock 
+            Grid.Column="3" 
+            Margin="5,0,5,0"
+            Text="{Binding Level}" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen" /&amp;gt;
+                
+        &amp;lt;!-- row 1 --&amp;gt;        
+        &amp;lt;TextBlock 
+            Grid.Row="1"
+            Text="Sammy" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen" /&amp;gt;
+       &amp;lt;sn:LivesControl
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+           Fill="{StaticResource SammyBrush}"
+           Lives="{Binding SammyLives}"
+             /&amp;gt;        
+       &amp;lt;TextBlock 
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5,0,5,0"
+            Text="{Binding SammyScore}" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen"
+            /&amp;gt;
+        
+       &amp;lt;TextBlock 
+           Grid.Row="1" 
+           Grid.Column="2" 
+            Text="Speed" 
+            HorizontalAlignment="Right" 
+            Margin="5,0,5,0"
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen"
+           /&amp;gt;
+        &amp;lt;TextBlock 
+            Grid.Row="1"
+            Grid.Column="3" 
+            Margin="5,0,5,0"
+            Text="{Binding Speed}" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen"
+            /&amp;gt;
+        
+        &amp;lt;!-- row 2 --&amp;gt;
+        &amp;lt;TextBlock 
+            Grid.Row="2"
+            Grid.Column="0"
+            Text="Jake" 
+            FontSize="18"
+            FontFamily="teen bold.ttf#Teen"
+            Visibility="{Binding JakeVisible}"            
+            /&amp;gt;
+        &amp;lt;sn:LivesControl
+            Grid.Row="2"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            Fill="{StaticResource JakeBrush}"
+            Visibility="{Binding JakeVisible}"
+            Lives="{Binding JakeLives}"
+             /&amp;gt;
+       &amp;lt;TextBlock 
+            Grid.Row="2"
+            Grid.Column="1"
+            FontSize="18"
+            Margin="5,0,5,0"
+            Text="{Binding JakeScore}" 
+            FontFamily="teen bold.ttf#Teen"
+            Visibility="{Binding JakeVisible}"
+           /&amp;gt;
+    &amp;lt;/Grid&amp;gt;
+&amp;lt;/UserControl&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what my &lt;strong&gt;ScoreboardViewModel&lt;/strong&gt; looks like. The main thing to notice is that I have implemented the &lt;strong&gt;INotifyPropertyChanged&lt;/strong&gt; interface. I rather lazily raise the changed event every time the setter is called irrespective of whether the value really changed. Notice also I have created a &lt;strong&gt;JakeVisible&lt;/strong&gt; property. This highlights how the View Model can be used to create properties that are exactly what the View needs.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;namespace SilverNibbles
+{
+    public class ScoreboardViewModel : INotifyPropertyChanged
+    {
+        private int players;
+        private int level;
+        private int speed;
+        private int jakeScore;
+        private int sammyScore;
+
+        public int Players
+        {
+            get
+            {
+                return players;
+            }
+            set
+            {
+                players = value;
+                RaisePropertyChanged("Players");
+                RaisePropertyChanged("JakeVisible");
+            }
+        }
+
+        public Visibility JakeVisible
+        {
+            get
+            {
+                return players == 2 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                return level;
+            }
+            set
+            {
+                level = value;
+                RaisePropertyChanged("Level");
+            }
+        }
+
+        public int Speed
+        {
+            get
+            {
+                return speed;
+            }
+            set
+            {
+                speed = value;
+                RaisePropertyChanged("Speed");
+            }
+        }
+
+        public int SammyScore
+        {
+            get
+            {
+                return sammyScore;
+            }
+            set
+            {
+                sammyScore = value;
+                RaisePropertyChanged("SammyScore");
+            }
+        }
+
+        public int JakeScore
+        {
+            get
+            {
+                return jakeScore;
+            }
+            set
+            {
+                jakeScore = value;
+                RaisePropertyChanged("JakeScore");
+            }
+        }
+
+        int jakeLives;
+        int sammyLives;
+
+        public int JakeLives
+        {
+            get
+            {
+                return jakeLives;
+            }
+            set
+            {
+                jakeLives = value;
+                RaisePropertyChanged("JakeLives");
+            }
+        }
+
+        public int SammyLives
+        {
+            get
+            {
+                return sammyLives;
+            }
+            set
+            {
+                sammyLives = value;
+                RaisePropertyChanged("SammyLives");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;I think there are alternatives to using &lt;strong&gt;INotifyPropertyChanged &lt;/strong&gt;such as creating dependency properties or inheriting from &lt;strong&gt;DependencyObject&lt;/strong&gt;. I don't know what the advantages or disadvantages of taking that approach would be. That is something for a future investigation.&lt;/p&gt;
+&lt;p&gt;There are lots of other parts of the SilverNibbles application that could be refactored to use this pattern, but that is also a task for another day. View the &lt;a href="http://www.codeplex.com/nibbles"&gt;code at CodePlex&lt;/a&gt;, and &lt;a href="http://nibbles.codeplex.com/"&gt;play SilverNibbles here&lt;/a&gt;.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+    <category>Data Binding</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="3fcb1fca-e242-4507-a1fa-58da7cfb4b0c">
+      <author>DFELK</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18414549451193816329</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-14 15:15:00</date>
+      <content>I do agree, the explanations of MVVM are overly complicated for no reason. Its a very very simple pattern when you get down to it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a9c8ec4e-f538-4ca9-ba8a-b38a6288320a">
+      <author>vfdvgf</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00659026086148563221</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-08 04:45:04</date>
+      <content>This comment has been removed by a blog administrator.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="206a546d-53bb-4d5c-af7a-46d3fc8626e3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-22 12:35:19</date>
+      <content>I have read many articles about MVVM, written systems incorporating it, and fully agree that to make it a code reviewable pattern that x:name should not be needed in the view or used in the code behind.&lt;br /&gt;&lt;br /&gt;AlaskanRogue</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0cd6d580-4653-4be0-8286-0ca6b479c570">
+      <author>nandarsync</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09121208476001470593</website>
+      <ip />
+      <userAgent />
+      <date>2010-06-08 07:58:14</date>
+      <content>A nice post to make the concept simply understandable rather explaining this and that and making things complex. Thanks Mark.NET.</content>
+    </comment>
+  </comments>
+</post>

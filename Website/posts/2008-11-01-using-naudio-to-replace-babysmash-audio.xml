@@ -1,0 +1,260 @@
+<post>
+  <title>Using NAudio to Replace the BabySmash Audio Stack</title>
+  <slug>using-naudio-to-replace-babysmash-audio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-11-01 14:36:00</pubDate>
+  <lastModified>2010-10-05 15:02:49</lastModified>
+  <content>&lt;p&gt;After adding &lt;a href="/post/midi-in-for-babysmash"&gt;MIDI in support to BabySmash&lt;/a&gt;, the next obvious step was to replace the audio playback mechanism with &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; too, which would allow better mixing of sounds, and doing cool things like controlling volume and panning of sounds. It also gives me a chance to write some more example documentation for NAudio.&lt;/p&gt;  
+
+&lt;p&gt;To be able to play from one of the embedded WAV files, we need to create a &lt;a href="/post/naudio-wave-stream-architecture"&gt;WaveStream&lt;/a&gt; derived class that can read from an embedded resource, and convert the audio into a common format ready for mixing. One problem with BabySmash is that the current embedded audio files represent a whole smorgasbord of formats:&lt;/p&gt;  
+
+&lt;table cellspacing="0" cellpadding="2" width="477" border="1"&gt;&lt;tbody&gt;     &lt;tr&gt;       &lt;td valign="top" width="244"&gt;babygigl2.wav         &lt;br&gt;scooby2.wav&lt;/td&gt;        &lt;td valign="top" width="231"&gt;MP3 11025Hz mono&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="247"&gt;babylaugh.wav         &lt;br&gt;ccgiggle.wav          &lt;br&gt;giggle.wav&lt;/td&gt;        &lt;td valign="top" width="229"&gt;PCM 11kHz mono 8 bit&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="249"&gt;EditedJackPlaysBabySmash.wav&lt;/td&gt;        &lt;td valign="top" width="228"&gt;PCM 22kHz mono 16 bit&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="250"&gt;falling.wav         &lt;br&gt;rising.wav&lt;/td&gt;        &lt;td valign="top" width="227"&gt;PCM 8kHz mono 16 bit&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="251"&gt;laughingmice.wav&lt;/td&gt;        &lt;td valign="top" width="226"&gt;PCM 11127Hz! mono 8 bit&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="252"&gt;smallbumblebee&lt;/td&gt;        &lt;td valign="top" width="226"&gt;PCM 22kHz stereo 16 bit&lt;/td&gt;     &lt;/tr&gt;   &lt;/tbody&gt;&lt;/table&gt;  
+
+&lt;p&gt;So I created &lt;strong&gt;WavResourceStream&lt;/strong&gt; whose job it was to take an embedded resource and output a 32bit IEEE floating point stereo stream at 44.1kHz. I could equally have chosen 22kHz, which would reduce the amount of data that needs to be passed around. The choice of floating point audio is important for the mixing phase, as it gives us plenty of headroom.&lt;/p&gt;  
+
+&lt;p&gt;The constructor is the most interesting part of this class. It takes the resource name, and uses a &lt;strong&gt;WaveFileReader&lt;/strong&gt; to read from that resource (n.b. the constructor for &lt;strong&gt;WaveFileReader&lt;/strong&gt; that takes a &lt;strong&gt;Stream&lt;/strong&gt; has only recently been checked in to NAudio, there were other ways of doing this in the past, but in the latest code I am trying to clean things up a bit).&lt;/p&gt;  
+
+&lt;p&gt;The next step is to convert to PCM if it is not already (there are two files whose audio is actually MP3, even though they are contained within a WAV file). The &lt;strong&gt;WaveFormatConversionStream&lt;/strong&gt; looks for an ACM codec that can perform the requested format conversion. The &lt;strong&gt;BlockAlignReductionStream&lt;/strong&gt; helps us ensure we call the ACM functions with sensible buffer sizes.&lt;/p&gt;  &lt;p&gt;The step afterwards is to get ourselves to 44100kHz. You can't mix audio unless all streams are at the same sample rate. Again we use a &lt;strong&gt;BlockAlignmentReductionStream&lt;/strong&gt; to help with the buffer sizing. Finally we go into a &lt;strong&gt;WaveChannel32&lt;/strong&gt; stream, which converts us to 32 bit floating point stereo stream, and allows us to&amp;#160; set volume and pan if required. So the audio graph depth is already potentially six streams deep. It may seem confusing at first, but once you get the hang of it, chaining WaveStreams together is quite simple.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;class WavResourceStream : WaveStream
+{
+    WaveStream sourceStream;
+
+    public WavResourceStream(string resourceName)
+    {
+        // get the namespace 
+        string strNameSpace = Assembly.GetExecutingAssembly().GetName().Name;
+
+        // get the resource into a stream
+        Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(strNameSpace + resourceName);
+        sourceStream = new WaveFileReader(stream);
+        var format = new WaveFormat(44100, 16, sourceStream.WaveFormat.Channels);
+            
+        if (sourceStream.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+        {
+            sourceStream = WaveFormatConversionStream.CreatePcmStream(sourceStream);
+            sourceStream = new BlockAlignReductionStream(sourceStream);
+        }
+        if (sourceStream.WaveFormat.SampleRate != 44100 ||
+            sourceStream.WaveFormat.BitsPerSample != 16)
+        {
+            sourceStream = new WaveFormatConversionStream(format, sourceStream);
+            sourceStream = new BlockAlignReductionStream(sourceStream);
+        }
+        
+        sourceStream = new WaveChannel32(sourceStream);            
+    }&lt;/pre&gt;
+
+&lt;p&gt;The rest of the &lt;strong&gt;WavResourceStream &lt;/strong&gt;is simply implementing the &lt;strong&gt;WaveStream &lt;/strong&gt;abstract class members by calling into the source stream we constructed:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;    public override WaveFormat WaveFormat
+    {
+        get { return sourceStream.WaveFormat; }
+    }
+
+    public override long Length
+    {
+        get { return sourceStream.Length; }
+    }
+
+    public override long Position
+    {
+        get { return sourceStream.Position; }
+        set { sourceStream.Position = value; }
+    }
+
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        return sourceStream.Read(buffer, offset, count);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (sourceStream != null)
+        {
+            sourceStream.Dispose();
+            sourceStream = null;
+        }
+        base.Dispose(disposing);
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now we need to create a mixer that can take multiple &lt;strong&gt;WavResourceStreams &lt;/strong&gt;and mix their contents together into a single stream. NAudio includes the &lt;strong&gt;WaveMixer32Stream&lt;/strong&gt;, but it is designed more for sequencer use, where you want exact sample level control over the positioning of the source streams, and also can reposition itself. BabySmash's needs are simpler - we simply want to play sounds once through. So I created a simpler &lt;strong&gt;MixerStream&lt;/strong&gt;, which may find its way in modified form into NAudio in the future.&lt;/p&gt;
+
+&lt;p&gt;The first part of the code simply allows us to add inputs to the mixer. Our mixer doesn't really care what the sample rate is as long as all inputs have the same sample rate. The &lt;strong&gt;PlayResource&lt;/strong&gt; function simply creates one of our &lt;strong&gt;WavResourceStream &lt;/strong&gt;instances and adds it to our list of inputs. Currently I have no upper limit on how many inputs can be added, but it would make sense to limit it in some way (probably by throwing away some existing inputs rather than failing to play new ones).&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public class MixerStream : WaveStream
+{
+    private List&amp;lt;WaveStream&amp;gt; inputStreams;
+    private WaveFormat waveFormat;
+    private int bytesPerSample;
+
+    public MixerStream()
+    {
+        this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+        this.bytesPerSample = 4;
+        this.inputStreams = new List&amp;lt;WaveStream&amp;gt;();
+    }
+
+    public void PlayResource(string resourceName)
+    {
+        WaveStream stream = new WavResourceStream(resourceName);
+        AddInputStream(stream);
+    }
+
+    public void AddInputStream(WaveStream waveStream)
+    {
+        if (waveStream.WaveFormat.Encoding != WaveFormatEncoding.IeeeFloat)
+            throw new ArgumentException("Must be IEEE floating point", "waveStream.WaveFormat");
+        if (waveStream.WaveFormat.BitsPerSample != 32)
+            throw new ArgumentException("Only 32 bit audio currently supported", "waveStream.WaveFormat");
+
+        if (inputStreams.Count == 0)
+        {
+            // first one - set the format
+            int sampleRate = waveStream.WaveFormat.SampleRate;
+            int channels = waveStream.WaveFormat.Channels;
+            this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
+        }
+        else
+        {
+            if (!waveStream.WaveFormat.Equals(waveFormat))
+                throw new ArgumentException("All incoming channels must have the same format", "inputStreams.WaveFormat");
+        }
+
+        lock (this)
+        {
+            this.inputStreams.Add(waveStream);
+        }
+    }&lt;/pre&gt;
+
+&lt;p&gt;The real work of &lt;strong&gt;MixerStream&lt;/strong&gt; is done in the &lt;strong&gt;Read &lt;/strong&gt;method. Here we loop through all the inputs and mix them together. We also detect when an input stream has finished playing and dispose it and remove it from our list of inputs. The mixing is performed using unsafe code so you need to set the unsafe flag on the project to get it to compile. One important note is that we always return a full empty buffer even if we have no inputs, because our &lt;strong&gt;IWavePlayer&lt;/strong&gt; expects full reads if it is to keep going.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public override int Read(byte[] buffer, int offset, int count)
+{
+    if (count % bytesPerSample != 0)
+        throw new ArgumentException("Must read an whole number of samples", "count");            
+
+    // blank the buffer
+    Array.Clear(buffer, offset, count);
+    int bytesRead = 0;
+
+    // sum the channels in
+    byte[] readBuffer = new byte[count];
+    lock (this)
+    {
+        for (int index = 0; index &amp;lt; inputStreams.Count; index++)
+        {
+            WaveStream inputStream = inputStreams[index];
+
+            int readFromThisStream = inputStream.Read(readBuffer, 0, count);
+            System.Diagnostics.Debug.Assert(readFromThisStream == count, "A mixer input stream did not provide the requested amount of data");
+            bytesRead = Math.Max(bytesRead, readFromThisStream);
+            if (readFromThisStream &amp;gt; 0)
+            {
+                Sum32BitAudio(buffer, offset, readBuffer, readFromThisStream);
+            }
+            else
+            {
+                inputStream.Dispose();
+                inputStreams.RemoveAt(index);
+                index--;
+            }
+        }
+    }
+    return count;
+}
+
+static unsafe void Sum32BitAudio(byte[] destBuffer, int offset, byte[] sourceBuffer, int bytesRead)
+{
+    fixed (byte* pDestBuffer = &amp;amp;destBuffer[offset],
+              pSourceBuffer = &amp;amp;sourceBuffer[0])
+    {
+        float* pfDestBuffer = (float*)pDestBuffer;
+        float* pfReadBuffer = (float*)pSourceBuffer;
+        int samplesRead = bytesRead / 4;
+        for (int n = 0; n &amp;lt; samplesRead; n++)
+        {
+            pfDestBuffer[n] += pfReadBuffer[n];
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;The remaining functions of the &lt;strong&gt;MixerStream&lt;/strong&gt; are quite simple. We don't need to report position or length as BabySmash simply plays a continuous stream.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public override long Length
+{
+    get { return 0; }
+}
+
+public override long Position
+{
+    get { return 0; }
+    set 
+    {
+        throw new NotImplementedException("This mixer is not repositionable");
+    }
+}
+
+public override WaveFormat WaveFormat
+{
+    get { return waveFormat; }
+}
+
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        if (inputStreams != null)
+        {
+            foreach (WaveStream inputStream in inputStreams)
+            {
+                inputStream.Dispose();
+            }
+            inputStreams = null;
+        }
+    }
+    else
+    {
+        System.Diagnostics.Debug.Assert(false, "WaveMixerStream32 was not disposed");
+    }
+    base.Dispose(disposing);
+}&lt;/pre&gt;
+
+&lt;p&gt;Finally we are ready to set up BabySmash to play its audio using &lt;strong&gt;MixerStream&lt;/strong&gt;. We add two new members to the &lt;strong&gt;Controller&lt;/strong&gt; class:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;private MixerStream mainOutputStream;
+private IWavePlayer wavePlayer;&lt;/pre&gt;
+
+&lt;p&gt;And then in the &lt;strong&gt;Controller.Launch&lt;/strong&gt; method, we create a new &lt;strong&gt;MixerStream&lt;/strong&gt;, and use &lt;strong&gt;WaveOut &lt;/strong&gt;to play it. We have chosen a read-ahead of 300 milliseconds which should mean that we don't get stuttering on a reasonably powerful modern PC. We need to pass the window handle to &lt;strong&gt;WaveOut&lt;/strong&gt; as I have found that some laptop chipsets (most notably SoundMAX) have issues with running managed code in their callback functions. We don't have to use &lt;strong&gt;WaveOut&lt;/strong&gt; if we don't want to. WASAPI works as well if you have Vista (although I found it was stuttering a bit for me). &lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+wavePlayer = new WaveOut(0, 300, windowHandle);
+//wavePlayer = new WasapiOut(AudioClientShareMode.Shared, 300);
+mainOutputStream = new MixerStream();
+wavePlayer.Init(mainOutputStream);
+wavePlayer.Play();&lt;/pre&gt;
+
+&lt;p&gt;The call to &lt;strong&gt;wavePlayer.Play&lt;/strong&gt; will mean we start making calls into the Read method of the MixerStream, but initially it will just be silence. When we are ready to make a sound, simply call the &lt;strong&gt;MixerStream.PlayResource &lt;/strong&gt;method instead of the &lt;strong&gt;PlayWavResourceYield &lt;/strong&gt;method:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;//audio.PlayWavResourceYield(".Resources.Sounds." + "rising.wav");
+mainOutputStream.PlayResource(".Resources.Sounds." + "rising.wav");&lt;/pre&gt;
+
+&lt;p&gt;So what does it sound like? Well I haven't tested it too much, but it certainly is possible to have a large number of simultaneous laughs on my PC. &amp;quot;Cacophony&amp;quot; would sum up it up pretty well. The next step of course would be to implement the &amp;quot;&lt;a href="http://babysmash.uservoice.com/pages/general/suggestions/12510"&gt;Play notes from songs on keypress&lt;/a&gt;&amp;quot; feature request. Another obvious enhancement would be to cache the converted audio so that we didn't need to continually pass the same files through ACM again and again.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="5ffc2043-49d9-436a-bd79-94371e8696b5">
+      <author>do0g</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06140631013972359108</website>
+      <ip />
+      <userAgent />
+      <date>2010-06-25 04:28:47</date>
+      <content>Very informative Mark, thanks.</content>
+    </comment>
+  </comments>
+</post>

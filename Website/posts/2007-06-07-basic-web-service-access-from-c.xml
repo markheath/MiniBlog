@@ -1,0 +1,44 @@
+<post>
+  <title>Basic Web Service Access From C#</title>
+  <slug>basic-web-service-access-from-c</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-07 14:11:00</pubDate>
+  <lastModified>2010-10-04 12:52:49</lastModified>
+  <content>&lt;p&gt;I recently wrote a small plugin for &lt;a href="http://windowslivewriter.spaces.live.com/"&gt;Windows Live Writer&lt;/a&gt;, which allowed you to enter a Bible reference, and it would either create a link to &lt;a href="http://www.biblegateway.com/"&gt;Bible Gateway&lt;/a&gt;, or insert the text in the &lt;a href="http://www.gnpcb.org/esv/"&gt;English Standard Version&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;To get the ESV text, I needed to call a web service in C#. It was the first time I had done this, and it turned out to be surprisingly simple. First I needed to construct the URL to call. This was simply a case of constructing the &lt;a href="http://www.gnpcb.org/esv/share/services/api/"&gt;ESV Web Service API documentation&lt;/a&gt;. The only slight complication is the need to add a reference to System.Web so you can call HttpUtility.UrlEncode.&lt;/p&gt;
+&lt;pre class="brush: csharp"&gt;StringBuilder url = new StringBuilder();
+url.Append(&amp;quot;http://www.gnpcb.org/esv/share/get/&amp;quot;);
+url.Append(&amp;quot;?key=IP&amp;quot;);
+url.Append(&amp;quot;&amp;amp;passage=&amp;quot;);
+url.Append(System.Web.HttpUtility.UrlEncode(reference));
+url.Append(&amp;quot;&amp;amp;action=doPassageQuery&amp;quot;);
+url.Append(&amp;quot;&amp;amp;include-passage-references=false&amp;quot;);
+url.Append(&amp;quot;&amp;amp;include-audio-reference=false&amp;quot;);
+url.Append(&amp;quot;&amp;amp;include-footnotes=false&amp;quot;);
+url.Append(&amp;quot;&amp;amp;include-subheadings=false&amp;quot;);
+url.Append(&amp;quot;&amp;amp;include-headings=false&amp;quot;);&lt;/pre&gt;
+
+&lt;p&gt;Once you have the URL with the search parameters, then you simply pass it to a web request, get its ResponseStream() and read it to the end.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;WebRequest request = WebRequest.Create(url.ToString());
+StreamReader responseStream = new StreamReader(request.GetResponse().GetResponseStream());
+String response = responseStream.ReadToEnd();
+responseStream.Close();
+return response.ToString();&lt;/pre&gt;
+&lt;p&gt;Obviously there are more complicated types of web service than this, which require construction and parsing of XML, but I was still impressed with how few lines of code were actually involved in my first web service call.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="7aa65fcd-47b6-43d3-8039-a2d5b3f4cac8">
+      <author>Robbalman</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17115537622813622461</website>
+      <ip />
+      <userAgent />
+      <date>2008-12-18 21:43:00</date>
+      <content>Thanks for the post, it was very helpful.</content>
+    </comment>
+  </comments>
+</post>

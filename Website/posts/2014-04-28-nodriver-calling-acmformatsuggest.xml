@@ -1,0 +1,22 @@
+<post>
+  <title>NoDriver calling acmFormatSuggest playing MP3s with NAudio</title>
+  <slug>nodriver-calling-acmformatsuggest</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-04-28 08:13:00</pubDate>
+  <lastModified>2014-04-28 11:13:40</lastModified>
+  <content>&lt;p&gt;One question that commonly gets asked with &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; is, “Why do I get a NoDriver calling acmFormatSuggest error when playing MP3s?” The answer is that you don’t have the ACM MP3 decoder installed. If you’re running a regular desktop version of windows from XP all the way up to 8.1, then the Fraunhofer MP3 ACM decoder is installed as standard and everything should just work.&lt;/p&gt; &lt;p&gt;But if you’re running a server version of Windows (or maybe one of the “N” versions of Windows sold in Europe), then you might be missing the codecs you need. There are various workarounds to this:&lt;/p&gt; &lt;h3&gt;Option 1: Install Desktop Experience&lt;/h3&gt; &lt;p&gt;If you are running Windows Server, make sure you install the “&lt;a href="http://technet.microsoft.com/en-us/library/cc772567.aspx"&gt;Desktop Experience&lt;/a&gt;” component of Windows. This will install all the standard codecs, for audio playback (including Media Foundation support as well). To install on Azure, &lt;a href="http://stackoverflow.com/a/11205017/7532"&gt;this script&lt;/a&gt; may be helpful.&lt;/p&gt; &lt;h3&gt;Option 2: Use the DMO MP3 Frame Decompressor&lt;/h3&gt; &lt;p&gt;The NAudio Mp3FileReader class allows you to inject an alternative MP3 frame decompressor, so you don’t need to use ACM if you don’t want to. To use the DMO MP3 frame decompressor for example, use the following code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;new Mp3FileReader(stream,wave=&amp;gt; new DmoMp3FrameDecompressor(wave));
+&lt;/pre&gt;
+&lt;h3&gt;Option 3: Use MediaFoundationReader Instead&lt;/h3&gt;
+&lt;p&gt;With NAudio 1.7, the MediaFoundationReader class was introduced, which can not only play MP3 files, but lots of other formats too. In many ways, this should now be the preferred way of playing MP3s with NAudio. You will still need the Desktop Experience installed if you’re on Windows Server though.&lt;/p&gt;
+&lt;h3&gt;Option 4: Use a fully managed MP3 Decoder&lt;/h3&gt;
+&lt;p&gt;Another option is to switch to fully managed MP3 decoder such as &lt;a href="https://nlayer.codeplex.com/"&gt;NLayer&lt;/a&gt;. This has the benefit of working on all platforms and requiring no codecs.&lt;/p&gt;
+&lt;h3&gt;Option 5: Find and install another ACM MP3 Codec&lt;/h3&gt;
+&lt;p&gt;Finally, you may be here not because you’re playing MP3, but because you tried to play a WAV file containing some codec that your system cannot find an ACM driver for. This also results in the “NoDriver calling acmFormatSuggest error”. What you need to do is search the web for an ACM codec that can decode the format you are using. Unfortunately this is not always a simple process, but unless you have a codec installed that matches the compression type of the file you’re trying to play, you won’t be able to play it.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>MP3</category>
+    <category>audio</category>
+  </categories>
+  <comments />
+</post>

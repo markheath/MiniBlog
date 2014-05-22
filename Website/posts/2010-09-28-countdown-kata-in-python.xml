@@ -1,0 +1,103 @@
+<post>
+  <title>Countdown Kata in Python</title>
+  <slug>countdown-kata-in-python</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-28 17:50:00</pubDate>
+  <lastModified>2010-09-28 17:50:14</lastModified>
+  <content>&lt;p&gt;One of my favourite programming exercises is solving the “&lt;a href="http://en.wikipedia.org/wiki/Countdown_%28game_show%29"&gt;countdown&lt;/a&gt;” numbers game. Basically, you are given a set of input numbers and have to solve the target by adding, multiplying, subtracting or dividing them (using each input number only once).&lt;/p&gt;  &lt;p&gt;As before, this isn’t an ideal solution, as I’m still getting to grips with Python. It uses recursion to find the first solution. I don’t keep track of the closest answer yet.&lt;/p&gt;  &lt;pre class="brush: py;"&gt;import unittest
+
+class SolverUnitTests(unittest.TestCase):
+    testCases = ( 
+        (0, [], True),
+        (1, [], False),
+        (1, [1], True),
+        (2, [1], False),
+        (2, [1,1], True),
+        (2, [1,7], False),
+        (3, [1,1,1], True),
+        (1, [3,2], True), # subtract
+        (1, [2,3], True),
+        (6, [2,3], True), # multiply
+        (7, [2,3], False), 
+        (4, [8,2], True), # divide
+        (4, [2,8], True), # divide
+        (4, [9,2], False), 
+        (14, [1,7,1], True), # add and multiply
+        (18, [1,7,3], True), # subtract and multiply
+        (100, [11, 1, 11, 1], True),
+        (2010, [25, 4, 2, 10, 5, 2], True),
+        (2011, [25, 4, 2, 10, 5, 2], True),
+        (2012, [25, 4, 2, 10, 5, 2], True),
+        (2013, [25, 4, 2, 10, 5, 2], True),
+        (2014, [25, 4, 2, 10, 5, 2], True),
+        (16, [2,2,2], False)
+        )
+
+    def testCanSolve(self):
+        for (target, numbers, solveable) in self.testCases:
+            print 'solving', target, 'with', numbers
+            solver = Solver(target)
+            self.assertEqual(solveable, solver.Solve(numbers))
+        
+def add(first,second):
+    answer = first + second
+    return (answer, '%d+%d=%d' % (first,second,answer))
+
+def subtract(first,second):
+    answer = first - second
+    if answer &amp;lt; 0:
+        answer = 0
+    return (answer, '%d-%d=%d'  % (first,second,answer))
+
+def multiply(first,second):
+    answer = first * second
+    if answer &amp;lt; 0:
+        answer = 0
+    return (answer, '%d*%d=%d'  % (first,second,answer))
+
+def divide(first,second):
+    if (second == 0) or ( first % second != 0):
+        answer = 0
+    else:
+        answer = first / second
+    return (answer, '%d/%d=%d'  % (first,second,answer))
+
+def pairs(list):
+    for i in range(len(list)):
+        for j in range(i+1,len(list)):
+            yield (list[i],list[j])
+
+class Solver:
+    def __init__(self, target):
+        self.target = target
+        self.operations = (add, subtract, multiply, divide)
+        
+    def Solve(self, numbers):
+        if (self.target in numbers) or (self.target == 0):
+            return True
+        return self.SolveList(numbers, '')
+    
+    def SolveList(self, numbers, solutionSoFar):
+        numbers.sort(reverse=True)
+        for (first, second) in pairs(numbers):
+            for func in self.operations:
+                (newNumber,solution) = func(first,second)
+                if newNumber == self.target:
+                    print self.target, ':', solutionSoFar + ', ' + solution
+                    return True
+                elif newNumber:
+                    newList = list(numbers)
+                    newList.remove(first)
+                    newList.remove(second)
+                    newList.append(newNumber)
+                    #print 'retry with', newList
+                    if self.SolveList(newList, solutionSoFar + ', ' + solution):
+                        return True
+        return False&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>IronPython</category>
+    <category>Python</category>
+  </categories>
+  <comments />
+</post>

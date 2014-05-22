@@ -1,0 +1,13 @@
+<post>
+  <title>LINQPad</title>
+  <slug>linqpad</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-28 14:53:00</pubDate>
+  <lastModified>2011-07-04 16:50:50</lastModified>
+  <content>&lt;p&gt;Somehow I missed this one when it was first featured on .NET Kicks, but for those of you who haven't come across it yet, this little utility is highly recommended. &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt; is a simple LINQ / SQL editing and executing environment and is great for learning LINQ. It also doubles up as a lite version of SQL management studio, allowing you to easily run your LINQ or SQL statements.&lt;/p&gt; &lt;p&gt;What's really great about it is that it comes with a load of example scripts. For those who learn by trying things themselves, this is an invaluable tool. It does for LINQ what &lt;a href="http://msdn2.microsoft.com/En-US/library/ms742398.aspx"&gt;XAMLPad&lt;/a&gt; does for WPF and &lt;a href="http://silverlight.net/samples/1.0/Silverlight-Pad/default.html"&gt;SilverlightPad&lt;/a&gt; does for Silverlight.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/linqpad-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="LINQPad" border="0" alt="LINQPad" src="/posts/files/linqpad-1.png" width="644" height="527"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;Highly recommended.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>LINQ</category>
+  </categories>
+  <comments />
+</post>

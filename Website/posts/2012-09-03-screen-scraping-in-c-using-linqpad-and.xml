@@ -1,0 +1,90 @@
+<post>
+  <title>Screen-Scraping in C# using LINQPad and HTML Agility Pack</title>
+  <slug>screen-scraping-in-c-using-linqpad-and</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-03 18:07:00</pubDate>
+  <lastModified>2012-09-04 15:48:36</lastModified>
+  <content>&lt;p&gt;I am a big fan of &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt; for prototyping small bits of code, but every now and then you find you need to reference another library. LINQPad, does allow this by editing the Query Properties and adding a reference to a dll in the GAC or at a specific path. But the new &lt;a href="http://www.linqpad.net/Beta.aspx"&gt;LINQPad beta&lt;/a&gt; release makes life even easier by allowing you to reference &lt;a href="http://nuget.org/"&gt;NuGet&lt;/a&gt; packages.&lt;/p&gt; &lt;p&gt;I recently wanted to do a simple bit of screen-scraping, to extract the results from a web page containing football scores. By examining the HTML with &lt;a href="https://getfirebug.com/"&gt;FireBug&lt;/a&gt; I was quickly able to see that each month’s fixtures were in a series of tables each with a header row and then one row per result. The HTML looked something like this:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;table class="fixtures" width="502" border="0"&amp;gt;
+&amp;lt;tbody&amp;gt;
+    &amp;lt;tr class="fixture-header"&amp;gt;
+        &amp;lt;th class="first" scope="col" colspan="6"&amp;gt;November&amp;lt;/th&amp;gt;
+        &amp;lt;th class="goals-for" title="Goals For" scope="col"&amp;gt;F&amp;lt;/th&amp;gt;
+        &amp;lt;th class="goals-against" title="Goals Against" scope="col"&amp;gt;A&amp;lt;/th&amp;gt;
+        &amp;lt;th class="tv-channel" scope="col"&amp;gt;
+        &amp;lt;th class="last" scope="col"&amp;gt; &amp;lt;/th&amp;gt;
+    &amp;lt;/tr&amp;gt;
+    &amp;lt;tr class="home"&amp;gt;
+        &amp;lt;td class="first "&amp;gt;04&amp;lt;/td&amp;gt;
+        &amp;lt;td class="month"&amp;gt; Wed &amp;lt;/td&amp;gt;
+        &amp;lt;td class="fixture-icon"&amp;gt;
+        &amp;lt;td class="competition"&amp;gt;UEFA Champions League&amp;lt;/td&amp;gt;
+        &amp;lt;td class="home-away"&amp;gt;H&amp;lt;/td&amp;gt;
+        &amp;lt;td class="bold opposition "&amp;gt;
+        &amp;lt;td class="goals-for"&amp;gt; 4 &amp;lt;/td&amp;gt;
+        &amp;lt;td class="goals-against"&amp;gt; 1 &amp;lt;/td&amp;gt;
+        &amp;lt;td class="tv-channel"&amp;gt; &amp;lt;/td&amp;gt;
+        &amp;lt;td class="menu-button" valign="middle"&amp;gt;
+    &amp;lt;/tr&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;To be able to navigate around HTML in .NET, by far the best library I have found is the &lt;a href="http://htmlagilitypack.codeplex.com/"&gt;HTML Agility Pack&lt;/a&gt;. Adding this to your LINQPad Query is very simple with the new beta. Press &lt;strong&gt;F4 &lt;/strong&gt;to bring up &lt;strong&gt;Query Properties&lt;/strong&gt;, then click &lt;strong&gt;Add NuGet&lt;/strong&gt;, find the Html Agility Pack in the list and click &lt;strong&gt;Add To Query&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Now we are ready to load the document and find all the tables with the class of “fixtures”. You can use a special XPath syntax to do this in one step:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var web = new HtmlAgilityPack.HtmlWeb();
+var doc = web.Load("http://www.arsenal.com/fixtures/fixtures-reports?season=2009-2010&amp;amp;x=11&amp;amp;y=15");
+foreach(var fixturesTable in doc.DocumentNode.SelectNodes("//table[@class='fixtures']"))
+{
+    // ...
+}
+&lt;/pre&gt;
+&lt;p&gt;Having got each fixture table, I then ignore the top row (which has a class of “fixture-header”), and use the classes on each of the table columns to pull out the information I am interested in. Finally, I use the handy &lt;strong&gt;Dump&lt;/strong&gt; extension method in LINQPad to output my information to the results window:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;foreach(var fixture in fixturesTable.SelectNodes("tr"))
+{
+    var fixtureClass = fixture.Attributes["class"];
+    // header rows have class of fixture-header
+    if(fixtureClass == null || !fixtureClass.Value.Contains("fixture-header"))
+    {
+        var day = fixture.SelectSingleNode("td[@class='first ']").InnerText.Trim();
+        var month = fixture.SelectSingleNode("td[@class='month']").InnerText.Trim();
+        var venue = fixture.SelectSingleNode("td[@class='home-away']").InnerText.Trim();
+        var oppositionNode = fixture.SelectNodes("td").FirstOrDefault(n =&amp;gt; n.Attributes["class"].Value.Contains("opposition"));
+        var opposition = oppositionNode.SelectSingleNode("a").InnerText.Trim();
+        var matchReportUrl = oppositionNode.SelectSingleNode("a").Attributes["href"].Value.Trim();
+        var goalsFor = fixture.SelectSingleNode("td[@class='goals-for']").InnerText.Trim();
+        var goalsAgainst = fixture.SelectSingleNode("td[@class='goals-against']").InnerText.Trim();
+        string.Format("{0} {1} {2} {3} {4}-{5}", day, month, venue, opposition, goalsFor, goalsAgainst).Dump();
+    }
+}&lt;/pre&gt;
+&lt;p&gt;This gives me the data I am after, and from here it is easy to convert it into any other format I want such as XML or insert it into a database (something that LINQPad also makes very easy).&lt;/p&gt;&lt;pre class="brush: plain;"&gt;04 Sun H Blackburn Rovers 6-2
+17 Sat H Birmingham City 3-1
+20 Tue A AZ Alkmaar 1-1
+25 Sun A West Ham United 2-2
+28 Wed H Liverpool 2-1
+31 Sat H Tottenham Hotspur 3-0
+04 Wed H AZ Alkmaar 4-1
+07 Sat A Wolverhampton W. 4-1&lt;/pre&gt;
+&lt;p&gt;And the really nice thing about using LINQPad for this rather than creating a Visual Studio project is that the entire thing is stored in a single compact .linq file without all the extraneous noise of sln, csproj, AssemblyInfo files etc.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NuGet</category>
+    <category>LINQPad</category>
+    <category>C#</category>
+    <category>HTML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="fd68c4cd-b580-4c4c-8948-d011b833a280">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-01-29 14:17:18</date>
+      <content>Hey, can u help me with your example? Im trying to repeat your project, but i have a problem with:&lt;br /&gt;&lt;br /&gt;ar doc = web.Load &lt;br /&gt;&lt;br /&gt;Error 1 &amp;#39;HtmlAgilityPack.HtmlWeb&amp;#39; does not contain a definition for &amp;#39;Load&amp;#39; and no extension method &amp;#39;Load&amp;#39; accepting a first argument of type &amp;#39;HtmlAgilityPack.HtmlWeb&amp;#39; could be found (are you missing a using directive or an assembly reference?)&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Can your help me with this?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="091b8687-7cab-4398-9012-be9fb0002815">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-29 14:23:10</date>
+      <content>it ought to work. Are you sure you referenced the latest HTML Agility Pack?</content>
+    </comment>
+  </comments>
+</post>

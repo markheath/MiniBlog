@@ -1,0 +1,52 @@
+<post>
+  <title>Accessing XML Data using WebMatrix</title>
+  <slug>accessing-xml-data-using-webmatrix</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-07-18 21:19:00</pubDate>
+  <lastModified>2012-07-18 21:19:59</lastModified>
+  <content>&lt;p&gt;Although I’ve been a .NET developer for around a decade, the majority of my work has not been on websites, so it is only occasionally that I get to dabble in ASP.NET. However, I do try to keep up with the new technologies by building a few small websites from time to time. Recently, I decided to try learning a bit of Azure and Razor syntax by porting the first ASP.NET site I made ages ago over to WebMatrix. I’m using the release candidate of &lt;a href="http://www.microsoft.com/web/webmatrix/"&gt;WebMatrix 2&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;The website I am porting did a very simple job. It displayed football fixtures and results from XML files I kept up to date manually. It could also keep a running total of the top scorers for the season. The main challenge in porting it was getting to grips with the Razor syntax, although how to access XML data was not something that was immediately obvious to me. Of course, it’s simple once you know how, but here’s the steps:&lt;/p&gt; &lt;p&gt;&lt;strong&gt;1. Put your XML files into App_Data&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Just copy them into the folder (create App_Data yourself if it doesn’t exist)&lt;/p&gt; &lt;p&gt;&lt;strong&gt;2. Reference the System.Xml.Linq namespace&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;This can be done at the top of your Razor cshtml file with the &lt;strong&gt;@using &lt;/strong&gt;keyword:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;@using System.Xml.Linq
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;3. Load the XDocument&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Loading the XDocument is straightforward enough, but you also need to use &lt;strong&gt;Server.MapPath&lt;/strong&gt; to get the real path to your XML file. I have a different XML file for each season, so I used the query string to specify which one, which you can get at using the &lt;strong&gt;Request&lt;/strong&gt; object:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;@{
+    var season = Request["season"] ?? "2003-2004";
+    var file = XDocument.Load(Server.MapPath(@"/App_Data/Fixtures" + season + ".xml"));
+}
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;4. Perform a Query&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;This is straightforward LINQ to XML. I used a strongly typed class called Fixture, which I put into a C# file in the &lt;strong&gt;App_Code&lt;/strong&gt; folder (you have to create this yourself).&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var fixtures = from e in file.Root.Elements()
+select new Fixture { 
+    Competition = e.Element("Competition").Value, 
+    Date = e.Element("Date").Value,
+    Venue = e.Element("Venue").Value,
+    Opponents = e.Element("Opponents").Value,
+    Result = e.Element("Result").Value,
+    For = e.Element("For").Value,
+    Against = e.Element("Against").Value,
+    Goalscorers = e.Element("Goalscorers").Value,
+};
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;5. Iterate it using foreach&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;For some reason it took me a few goes to work out how you did a foreach in Razor. It’s actually a very clean and simple syntax:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;&amp;lt;tbody&amp;gt;
+@foreach (var f in fixtures) {
+    &amp;lt;tr&amp;gt;
+        &amp;lt;td&amp;gt;@f.Competition&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Date&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Venue&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Opponents&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Result&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.For&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Against&amp;lt;/td&amp;gt;
+        &amp;lt;td&amp;gt;@f.Goalscorers&amp;lt;/td&amp;gt;
+    &amp;lt;/tr&amp;gt;
+}
+&amp;lt;/tbody&amp;gt;    
+&lt;/pre&gt;
+&lt;p&gt;And that’s it. Probably painfully obvious if you are a seasoned ASP.NET developer. I’m hoping to try deploying this to Azure as well as experiment with moving the data into an sdf file, so I might blog about how easy that is to do.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WebMatrix</category>
+    <category>ASP.NET</category>
+    <category>Razor</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,121 @@
+<post>
+  <title>Running NUnit tests on .NET 4 assemblies with MSBuild</title>
+  <slug>running-nunit-tests-on-net-4-assemblies</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-07-13 11:09:00</pubDate>
+  <lastModified>2010-07-13 11:09:52</lastModified>
+  <content>&lt;p&gt;If you want to run &lt;a href="http://www.nunit.org/index.php" target="_blank"&gt;NUnit&lt;/a&gt; tests with MSBuild, then you need to download and install the &lt;a href="http://msbuildtasks.tigris.org/"&gt;MSBuild Community tasks&lt;/a&gt;. This allows you to create a unit test target like this:&lt;/p&gt;  &lt;pre class="brush: xml;"&gt;&amp;lt;ItemGroup&amp;gt;
+  &amp;lt;TestAssembly Include=&amp;quot;ClientBin\*Tests.dll&amp;quot; /&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+&amp;lt;Target Name=&amp;quot;Test&amp;quot; DependsOnTargets=&amp;quot;Build&amp;quot;&amp;gt;
+  &amp;lt;NUnit Assemblies=&amp;quot;@(TestAssembly)&amp;quot;
+         WorkingDirectory=&amp;quot;.&amp;quot;
+         ToolPath=&amp;quot;C:\Program Files\NUnit 2.5.5\bin\net-2.0&amp;quot;
+         /&amp;gt;
+&amp;lt;/Target&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;(Most examples don’t show the need to specify a ToolPath, but I have found I need it, perhaps because it isn’t in my Path?)&lt;/p&gt;
+
+&lt;p&gt;The trouble is, if the assemblies containing the unit tests have been build with the .NET 4 framework, you will get the following error:&lt;/p&gt;
+
+&lt;pre class="brush: plain;"&gt;C:\Program Files\NUnit 2.5.5\bin\net-2.0\nunit-console.exe /nologo ClientBin\
+Nice.Inform.Client.Tests.dll
+ProcessModel: Default    DomainUsage: Single
+Execution Runtime: net-2.0
+Unhandled Exception:
+System.BadImageFormatException: Could not load file or assembly 'D:\TFS\Trial
+\Inform5\ClientBin\Client.Tests.dll' or one of its dependencies.
+This assembly is built by a runtime newer than the currently loaded runtime a
+nd cannot be loaded.
+File name: 'D:\TFS\Trial\Inform5\ClientBin\Client.Tests.dll'&lt;/pre&gt;
+
+&lt;p&gt;What is needed is to ensure that &lt;strong&gt;nunit-console.exe &lt;/strong&gt;runs against the .NET 4 framework. The way I achieved this was to make a copy of the &lt;strong&gt;net-2.0 &lt;/strong&gt;folder that comes with NUnit 2.5.5 and rename it to &lt;strong&gt;net-4.0 &lt;/strong&gt;(n.b. make sure the &lt;strong&gt;lib &lt;/strong&gt;folder comes along too as nunit-console.exe depends on its contents). Then, I edited the &lt;strong&gt;nunit-console.exe.config&lt;/strong&gt; file to have the following contents (the key bit is to add the &lt;strong&gt;supportedRuntime&lt;/strong&gt; setting):&lt;/p&gt;
+
+&lt;pre class="brush: xml;"&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt;
+&amp;lt;configuration&amp;gt;
+  &amp;lt;!-- Set the level for tracing NUnit itself --&amp;gt;
+  &amp;lt;!-- 0=Off 1=Error 2=Warning 3=Info 4=Debug --&amp;gt;
+  &amp;lt;system.diagnostics&amp;gt;
+    &amp;lt;switches&amp;gt;
+       &amp;lt;add name=&amp;quot;NTrace&amp;quot; value=&amp;quot;0&amp;quot; /&amp;gt;
+    &amp;lt;/switches&amp;gt;
+  &amp;lt;/system.diagnostics&amp;gt;
+
+  &amp;lt;startup&amp;gt;
+    &amp;lt;supportedRuntime version=&amp;quot;v4.0&amp;quot;/&amp;gt;
+  &amp;lt;/startup&amp;gt;
+
+  &amp;lt;runtime&amp;gt;
+    &amp;lt;!-- We need this so test exceptions don't crash NUnit --&amp;gt;
+    &amp;lt;legacyUnhandledExceptionPolicy enabled=&amp;quot;1&amp;quot; /&amp;gt;
+
+    &amp;lt;!-- Look for addins in the addins directory for now --&amp;gt;
+    &amp;lt;assemblyBinding xmlns=&amp;quot;urn:schemas-microsoft-com:asm.v1&amp;quot;&amp;gt;
+      &amp;lt;probing privatePath=&amp;quot;lib;addins&amp;quot;/&amp;gt;
+   &amp;lt;/assemblyBinding&amp;gt;
+  &amp;lt;/runtime&amp;gt;
+&amp;lt;/configuration&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;Now all that is needed is to update the &lt;strong&gt;ToolPath &lt;/strong&gt;in the MSBuild script to point to the new location&lt;/p&gt;
+
+&lt;pre class="brush: xml;"&gt;&amp;lt;Target Name=&amp;quot;Test&amp;quot; DependsOnTargets=&amp;quot;Build&amp;quot;&amp;gt;
+  &amp;lt;NUnit Assemblies=&amp;quot;@(TestAssembly)&amp;quot;
+        WorkingDirectory=&amp;quot;.&amp;quot;
+        ToolPath=&amp;quot;C:\Program Files\NUnit 2.5.5\bin\net-4.0&amp;quot;
+   /&amp;gt;
+&amp;lt;/Target&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;I’d be interested in hearing if there is an easier way of solving this problem though, as I don’t really want to have to require all developers to manually perform these steps on their machine.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MSBuild</category>
+    <category>NUnit</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c21b59d6-7fa2-4816-9f74-53807a97221f">
+      <author>Travis Laborde</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-07-14 11:55:14</date>
+      <content>When I faced that, I just decided to switch to the &amp;quot;exec&amp;quot; task.&lt;br /&gt;&lt;br /&gt;This allowed me to add the /framework argument easily, like so:&lt;br /&gt;&lt;br /&gt;/framework=4.0.30319</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c9312a1e-c107-4d92-b83f-4509e96464db">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-07-14 11:56:42</date>
+      <content>thanks for this suggestion Travis, will give this a try</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d0d929b5-6c36-4381-a1a4-d43aaadfa16b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-07-22 12:07:36</date>
+      <content>Hi Travis - thanks for the post.  Saved me a couple of hours.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1d966fb0-94c8-4594-b732-87cb9b636d15">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-02-23 10:29:02</date>
+      <content>Thanks It worked</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4cc8225a-2a0b-4941-9acf-10f7f1443109">
+      <author>Len Rivers</author>
+      <email>noreply@blogger.com</email>
+      <website>http://amoskramer.wordpress.com/2013/05/03/net-development-is-a-worthwhile-option-for-many-software-developers-today/</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-06 11:32:53</date>
+      <content>I&amp;#39;m using the MSBuild sprinter to run my assessments, but with the deficiency of xunit.net assistance have no way to show the outcomes.</content>
+    </comment>
+  </comments>
+</post>

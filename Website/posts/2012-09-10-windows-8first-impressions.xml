@@ -1,0 +1,41 @@
+<post>
+  <title>Windows 8–First Impressions</title>
+  <slug>windows-8first-impressions</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-10 18:23:00</pubDate>
+  <lastModified>2012-09-10 18:23:00</lastModified>
+  <content>&lt;p&gt;I thought I’d post a few first impressions having actually used a Windows 8 machine for a day after setting my laptop up to &lt;a href="/post/installing-and-booting-windows-8-rtm"&gt;boot Win 8 from VHD&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;I like the fact that you can search just by typing in the start screen, although it seems a little unintuitive, and sometimes it appears to have found nothing, when actually it has discovered some matching applications and you need to click again to actually see the matches.&lt;/p&gt; &lt;p&gt;The &lt;a href="http://www.howtogeek.com/108742/how-to-use-the-new-task-manager-in-windows-8/"&gt;new task manager&lt;/a&gt; is very cool. I’m especially pleased that you can bring a processes child windows to the front with it, which is something I used to need &lt;a href="http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx"&gt;SysInternals Process Explorer&lt;/a&gt; for. It helps you to recover applications that appear to have hung because they are showing a message box or save as dialog that is not visible. &lt;/p&gt; &lt;p&gt;I’ve only briefly played with the default applications. I like the fact that the Sports one lets you specify your favourite team. It still needs a bit of tweaking as there are confusing ‘results’ shown for future fixtures, but its a good start. The Weather application using my location to find where I am is also a nice touch. I also like that it comes with a SkyDrive app by default as well.&lt;/p&gt; &lt;p&gt;My biggest annoyance so far is that when you use Alt-tab or Windows-tab to cycle through open applications, it includes the Metro apps as well. This is a pain because you can’t close Metro apps. If you’ve clicked through a bunch of Metro apps, then they will forever clutter up your alt-tab experience.&lt;/p&gt; &lt;p&gt;The Windows Store is rather sparsely populated, and once again it was not obvious to me how to search. Hopefully it will have good search capabilities as I doubt any app I create will ever be one of the top apps in any category.&lt;/p&gt; &lt;p&gt;The lack of a start menu in desktop mode still feels weird to me, and I still would like the metro interface to be available as a floating window in desktop mode, but I’ll give myself a bit longer to see if I can learn to live with this new way of working.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Windows 8</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e9281b3b-322f-4082-a2f2-4d7e94670752">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-09-10 19:31:09</date>
+      <content>Note that booting from VHD disables hibernation and hybrid boot which noticeably speeds up boot time, so you&amp;#39;re missing one of the best features of Windows 8. To close metro apps drag the mouse from the top edge to the bottom and the app won&amp;#39;t appear in Alt-Tab anymore. To search in apps simply use the Search charm, works like this in every metro app.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fe57ec6b-111a-41e7-b7c2-b299b73e7663">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-09-10 19:37:06</date>
+      <content>thanks for the alt-tab tip Anonymous, very useful to know.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5202a827-f3a6-45eb-baf1-980c68768a3c">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-09-26 16:54:01</date>
+      <content>I also found that you can go to the very top left corener of the screen, and then right click on the app that appears and chose close (or the x - can&amp;#39;t remember). this &amp;quot;closes&amp;quot; the app properly (kinda ! )&lt;br /&gt;</content>
+    </comment>
+  </comments>
+</post>

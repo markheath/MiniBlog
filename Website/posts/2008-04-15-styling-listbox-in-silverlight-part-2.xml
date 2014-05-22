@@ -1,0 +1,312 @@
+<post>
+  <title>Styling a ListBox in Silverlight (Part 2 - Scrollbars)</title>
+  <slug>styling-listbox-in-silverlight-part-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-15 13:31:00</pubDate>
+  <lastModified>2011-07-04 17:10:55</lastModified>
+  <content>&lt;p&gt;&lt;i&gt;This post describes how to style a ListBox in Silverlight 2 beta 1. For an updated version for beta 2, please look &lt;a href="/post/styling-listbox-with-silverlight-2-beta_21"&gt;here&lt;/a&gt;.&lt;/i&gt;&lt;/p&gt; &lt;p&gt;In my &lt;a href="/post/styling-listbox-in-silverlight-part-1"&gt;first post&lt;/a&gt;, I explained how to create a very basic ListBox and ListBoxItem style that governed the appearance of a ListBox. It is still very rudimentary though, and doesn't give any visual feedback of selected items or mouse over. It also doesn't have any scrollbars.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-2-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 1" border="0" alt="Styling a ListBox step 1" src="/posts/files/styling-listbox-in-silverlight-part-2-1.png" width="178" height="171"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;Adding scrollbars is actually quite simple. All we need to do is add a ScrollViewer to our ListBox style.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Border Padding="3" Background="#E6BB8A" CornerRadius="5"&amp;gt;
+    &amp;lt;ScrollViewer x:Name="ScrollViewerElement" 
+        Padding="{TemplateBinding Padding}"&amp;gt;
+        &amp;lt;ItemsPresenter /&amp;gt;
+    &amp;lt;/ScrollViewer&amp;gt;
+&amp;lt;/Border&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Which gives us scrollbars:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-2-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 2" border="0" alt="Styling a ListBox step 2" src="/posts/files/styling-listbox-in-silverlight-part-2-2.png" width="171" height="170"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Unfortunately, as nice as the default scrollbars look, they do not fit at all with the visual theme of our ListBox. We need another style which we will base on the &lt;a href="http://msdn2.microsoft.com/en-us/library/cc278065(vs.95).aspx"&gt;default ScrollViewer style&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Unfortunately, Expression Blend seems to have a problem rendering anything using the default ScrollViewer style, so at this point I was slowed down by having to build and run my application to see the effects of any changes.&lt;/p&gt;
+&lt;p&gt;I started off by removing the one pixel border width around the whole scrollbar. Also, I hid the little grey square in the corner.&lt;/p&gt;
+&lt;p&gt;Here's the ScrollViewer template. It looks a little intimidating because I left in most of the stuff from the default ScrollViewer style. We could have got rid of a lot of it, but as we are not planning to customise this part very much, we will leave it in there.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style TargetType="ScrollViewer" x:Key="ScrollViewerStyle1"&amp;gt;
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="ScrollViewer"&amp;gt;
+                &amp;lt;Border&amp;gt;
+                    &amp;lt;Grid Background="{TemplateBinding Background}"&amp;gt;
+                        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                            &amp;lt;ColumnDefinition Width="*"/&amp;gt;
+                            &amp;lt;ColumnDefinition Width="Auto"/&amp;gt;
+                        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                        &amp;lt;Grid.RowDefinitions&amp;gt;
+                            &amp;lt;RowDefinition Height="*"/&amp;gt;
+                            &amp;lt;RowDefinition Height="Auto"/&amp;gt;
+                        &amp;lt;/Grid.RowDefinitions&amp;gt;
+                        &amp;lt;ScrollContentPresenter
+                          x:Name="ScrollContentPresenterElement"
+                          Grid.Column="0"
+                          Grid.Row="0"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Cursor="{TemplateBinding Cursor}"
+                          Background="{TemplateBinding Background}"
+                          FontFamily="{TemplateBinding FontFamily}"
+                          FontSize="{TemplateBinding FontSize}"
+                          FontStretch="{TemplateBinding FontStretch}"
+                          FontStyle="{TemplateBinding FontStyle}"
+                          FontWeight="{TemplateBinding FontWeight}"
+                          Foreground="{TemplateBinding Foreground}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          TextAlignment="{TemplateBinding TextAlignment}"
+                          TextDecorations="{TemplateBinding TextDecorations}"
+                          TextWrapping="{TemplateBinding TextWrapping}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          Margin="{TemplateBinding Padding}" /&amp;gt;
+                        &amp;lt;ScrollBar
+                          x:Name="VerticalScrollBarElement"
+                          Grid.Column="1"
+                          Grid.Row="0"
+                          Orientation="Vertical"
+                          Cursor="Arrow"
+                          Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                          ViewportSize="{TemplateBinding ViewportHeight}"
+                          Minimum="0"
+                          Maximum="{TemplateBinding ScrollableHeight}"
+                          Value="{TemplateBinding VerticalOffset}" 
+                          Width="18"/&amp;gt;
+                        &amp;lt;ScrollBar
+                          x:Name="HorizontalScrollBarElement"
+                          Grid.Column="0"
+                          Grid.Row="1"
+                          Orientation="Horizontal"
+                          Cursor="Arrow"
+                          Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                          ViewportSize="{TemplateBinding ViewportWidth}"
+                          Minimum="0"
+                          Maximum="{TemplateBinding ScrollableWidth}"
+                          Value="{TemplateBinding HorizontalOffset}" 
+                          Height="18"/&amp;gt;
+                    &amp;lt;/Grid&amp;gt;
+                &amp;lt;/Border&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;So now we need to tell our ScrollViewer to use this style.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ScrollViewer x:Name="ScrollViewerElement" 
+    Style="{StaticResource ScrollViewerStyle1}"
+    Padding="{TemplateBinding Padding}"&amp;gt;
+    &amp;lt;ItemsPresenter /&amp;gt;
+&amp;lt;/ScrollViewer&amp;gt;&lt;/pre&gt;
+&lt;p&gt;And this is what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-2-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 3" border="0" alt="Styling a ListBox step 3" src="/posts/files/styling-listbox-in-silverlight-part-2-3.png" width="174" height="172"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Kind of disappointing, huh? That's because we haven't styled the scrollbars themselves yet. Now we need to take a look at the &lt;a href="http://msdn2.microsoft.com/en-us/library/cc278076(vs.95).aspx"&gt;default scrollbar style&lt;/a&gt;. Now these really are intimidating. They contain hundreds of lines of XAML with plenty of Storyboards and gradients. Even more confusingly they contain templates within templates.&lt;/p&gt;
+&lt;p&gt;We will progress by looking at each of these sub-templates one by one. First up is HorizontalIncrementTemplate, which is the right-arrow at the end of the horizontal scrollbar. Here's the default implementation:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ControlTemplate x:Key="HorizontalIncrementTemplate"&amp;gt;
+    &amp;lt;Grid x:Name="RootElement" Background="#00000000"&amp;gt;
+        &amp;lt;Grid.Resources&amp;gt;
+            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                &amp;lt;ColorAnimation Duration="0:0:0.2" 
+                 Storyboard.TargetName="ButtonColor" 
+                 Storyboard.TargetProperty="Color" To="#FF557E9A" /&amp;gt;
+            &amp;lt;/Storyboard&amp;gt;
+            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                &amp;lt;DoubleAnimation Duration="0:0:0" 
+                 Storyboard.TargetName="ButtonVisual" 
+                 Storyboard.TargetProperty="Opacity" To=".6" /&amp;gt;
+            &amp;lt;/Storyboard&amp;gt;
+        &amp;lt;/Grid.Resources&amp;gt;
+        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+            &amp;lt;ColumnDefinition Width="30*"/&amp;gt;
+            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+        &amp;lt;Grid.RowDefinitions&amp;gt;
+            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+            &amp;lt;RowDefinition Height="50*"/&amp;gt;
+            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+        &amp;lt;/Grid.RowDefinitions&amp;gt;
+        &amp;lt;Path x:Name="ButtonVisual" 
+         Grid.Column="1" Grid.Row="1" Stretch="Fill" 
+         Data="F1 M 511.047,352.682L 511.047,342.252L 517.145,347.467L 511.047,352.682 Z "&amp;gt;
+            &amp;lt;Path.Fill&amp;gt;
+                &amp;lt;SolidColorBrush x:Name="ButtonColor" Color="#FF313131" /&amp;gt;
+            &amp;lt;/Path.Fill&amp;gt;
+        &amp;lt;/Path&amp;gt;
+        &amp;lt;Rectangle x:Name="FocusVisualElement" 
+         Grid.ColumnSpan="3" Grid.RowSpan="3"  
+         Stroke="#666666" Fill="#00000000"  
+         StrokeDashArray=".2 5" 
+         StrokeDashCap="Round" 
+         IsHitTestVisible="false" 
+         Opacity="0" /&amp;gt;
+    &amp;lt;/Grid&amp;gt;
+&amp;lt;/ControlTemplate&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Although this looks like a lot of code, all that is happening is simply a triangle is being drawn. The grid simply serves to give an appropriate margin around the triangle. The animations change the colour for mouse-over and mouse-down. There is also a focus rectangle. The actual background to the arrow is drawn by another part of the template. So for now I will leave these as they are and to move onto the "Thumb" components.&lt;/p&gt;
+&lt;p&gt;I have simplified the thumb component to be a rounded rectangle that changes colour as you hover over it. I also played with the margins to make it a little thinner.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ControlTemplate x:Key="VerticalThumbTemplate"&amp;gt;
+    &amp;lt;Grid x:Name="RootElement"&amp;gt;
+        &amp;lt;Grid.Resources&amp;gt;
+            &amp;lt;!--Colors--&amp;gt;
+            &amp;lt;Color x:Key="ThumbForegroundColor"&amp;gt;#ACAC39&amp;lt;/Color&amp;gt;
+            &amp;lt;Color x:Key="ThumbHoverColor"&amp;gt;#73AC39&amp;lt;/Color&amp;gt;
+            &amp;lt;!--Storyboards--&amp;gt;
+            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                &amp;lt;ColorAnimation Duration="0:0:0.1" 
+                                Storyboard.TargetName="ThumbForeground" 
+                                Storyboard.TargetProperty="Color" 
+                                To="{StaticResource ThumbHoverColor}" /&amp;gt;
+            &amp;lt;/Storyboard&amp;gt;
+            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                &amp;lt;DoubleAnimation Duration="0:0:0" 
+                                 Storyboard.TargetName="ThumbForeground" 
+                                 Storyboard.TargetProperty="Opacity" 
+                                 To="0" /&amp;gt;
+            &amp;lt;/Storyboard&amp;gt;
+        &amp;lt;/Grid.Resources&amp;gt;
+        &amp;lt;Grid x:Name="ThumbVisual"&amp;gt;
+            &amp;lt;Rectangle x:Name="Background" 
+                       Margin="4.5,.5,4.5,.5" 
+                       RadiusX="5" RadiusY="5" &amp;gt;
+                &amp;lt;Rectangle.Fill&amp;gt;
+                    &amp;lt;SolidColorBrush x:Name="ThumbForeground" 
+                       Color="{StaticResource ThumbForegroundColor}" /&amp;gt;
+                &amp;lt;/Rectangle.Fill&amp;gt;
+            &amp;lt;/Rectangle&amp;gt;
+        &amp;lt;/Grid&amp;gt;
+    &amp;lt;/Grid&amp;gt;
+&amp;lt;/ControlTemplate&amp;gt;&lt;/pre&gt;
+&lt;p&gt;With a similar change to the HorizontalThumbTemplate, our scrollbars are now finally beginning to change in appearance (n.b. To see the changes we have also had to modify our ScrollViewer style so that the two scrollbars it creates use the new ScrollBar style).&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-2-4.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 4" border="0" alt="Styling a ListBox step 4" src="/posts/files/styling-listbox-in-silverlight-part-2-4.png" width="171" height="167"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Finally we are ready to update the remaining parts of the ScrollBar template - HorizontalRootElement and VerticalRootElement. Both are made up of a grid containing four repeat buttons and a thumb. Two of the repeat buttons are for the increment icons, while the other two are the invisible parts either side of the thumb that you can click for a large change.&lt;/p&gt;
+&lt;p&gt;Again, the change is simply to get rid of a load of unnecessary stuff. In our case we are simply putting a thin rounded rectangle behind the thumb and invisible repeat buttons, with no background behind the small increment buttons. Here's the new HorizontalRootElement template:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;!-- Horizontal Template --&amp;gt;
+&amp;lt;Grid x:Name="HorizontalRootElement"&amp;gt;
+    &amp;lt;Grid.ColumnDefinitions&amp;gt;
+        &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+        &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+        &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+        &amp;lt;ColumnDefinition Width="*" /&amp;gt;
+        &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+    &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+
+    &amp;lt;Grid.RowDefinitions&amp;gt;
+        &amp;lt;RowDefinition /&amp;gt;
+        &amp;lt;RowDefinition /&amp;gt;
+    &amp;lt;/Grid.RowDefinitions&amp;gt;
+
+    &amp;lt;!-- Track Layer --&amp;gt;
+    &amp;lt;Rectangle Margin="0,6,0,6" Grid.RowSpan="2" Grid.Column="1" 
+        Grid.ColumnSpan="3" Fill="#FF404040" RadiusX="3" RadiusY="3" /&amp;gt;
+
+    &amp;lt;!-- Repeat Buttons + Thumb --&amp;gt;
+    &amp;lt;RepeatButton x:Name="HorizontalSmallDecreaseElement" Grid.Column="0" 
+       Grid.RowSpan="2" Width="16" IsTabStop="False" Interval="50" 
+       Template="{StaticResource HorizontalDecrementTemplate}" /&amp;gt;
+    &amp;lt;RepeatButton x:Name="HorizontalLargeDecreaseElement" Grid.Column="1" 
+       Grid.RowSpan="2" Width="0" 
+       Template="{StaticResource RepeatButtonTemplate}" 
+       Interval="50" IsTabStop="False" /&amp;gt;
+    &amp;lt;Thumb x:Name="HorizontalThumbElement" MinWidth="10" Width="20" 
+       Grid.Column="2" Grid.RowSpan="2" 
+       Template="{StaticResource HorizontalThumbTemplate}" /&amp;gt;
+    &amp;lt;RepeatButton x:Name="HorizontalLargeIncreaseElement" 
+       Grid.Column="3" Grid.RowSpan="2" 
+       Template="{StaticResource RepeatButtonTemplate}" 
+       Interval="50" IsTabStop="False" /&amp;gt;
+    &amp;lt;RepeatButton x:Name="HorizontalSmallIncreaseElement" 
+       Grid.Column="4" Grid.RowSpan="2" Width="16" IsTabStop="False" 
+       Interval="50" 
+       Template="{StaticResource HorizontalIncrementTemplate}" /&amp;gt;
+&amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-2-5.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 5" border="0" alt="Styling a ListBox step 5" src="/posts/files/styling-listbox-in-silverlight-part-2-5.png" width="171" height="174"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;The bar alongside the vertical scrollbar is actually a very stretched horizontal scrollbar. For some reason, while it successfully uncollapses the VerticalRootElement, it does not collapse the HorizontalRootElement when you create a vertical scrollbar. After much frustration I discovered that this is a &lt;a href="http://silverlight.net/forums/p/12939/42610.aspx#42610"&gt;known bug&lt;/a&gt; in the current Silverlight beta.&lt;/p&gt;
+&lt;p&gt;So finally we have completely customised scrollbars for our ListBox. Please excuse my hideous choice of colours. I am not a designer! I hope to add one further post to add the remaining two features to make our ListBox complete:&lt;/p&gt;
+&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Selected Item Rendering 
+&lt;li&gt;Mouse Over Rendering &lt;/li&gt;&lt;/li&gt;&lt;/ul&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="4eb64931-f700-48f6-b2f5-a176fdd51ff8">
+      <author>Valerie</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-05-07 23:36:00</date>
+      <content>Great tutorial, it helped me make a beautiful listbox.  I did figure out why the horizontal element was not being collapsed for vertical scrollbars, but was for horizontal...  You need to set Visibility="Collapsed" for &lt;B&gt;both&lt;/B&gt; the HorizontalRootElement and VerticalRootElement Grids in the style.  Then everything works great.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a599bb55-1691-4a61-884d-9f1ff064ea98">
+      <author>Valerie</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-05-07 23:43:00</date>
+      <content>Hrm...  seems as soon as I posted I realized that makes the horizontal scroll bar disappear (but not the vertical).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="37b3dfdb-0f5d-4332-aa2d-66e683e43d2f">
+      <author>Valerie</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-05-08 16:03:00</date>
+      <content>The only way I was able to get the horizontal scrollbar artifact to go away was to copy the entire ScrollBarStyle1 and rename the copied style, then in one of them set the HorizontalRootElement's Visibility="Collapsed" (leaving the VerticalRootElement visible) and in the other style do the opposite.  Then I tell the scrollbars in the ScrollViewerStyle which style they should use, accordingly.&lt;BR/&gt;&lt;BR/&gt;I tried to "clean up" the styles by removing some unnecessary stuff (but leaving both the horizontal and vertical parts in both styles, just emptying out the parts that weren't being used), and it was throwing nasty Null pointer errors.  &lt;BR/&gt;&lt;BR/&gt;Do you have any insight on how to remove some of the redundancy in the styles, to get around this bug and not have so much duplication?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5c8776c4-8128-4ba6-9d0f-2625aefa6124">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-08 16:12:00</date>
+      <content>Hi Valerie,&lt;BR/&gt;the scrollbar bug is annoying, but it is claimed that it will be fixed in the next beta of Silverlight, so I am just hanging on for the moment. I'm hoping we'll see another beta in the next month or so</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="812b1aa2-5cc8-46b6-957d-b29e6d61ea4a">
+      <author>Nuno Santos</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.nunosantos.net</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-29 11:43:00</date>
+      <content>Hi Mark,&lt;BR/&gt;&lt;BR/&gt;Great tutorial.&lt;BR/&gt;&lt;BR/&gt;One question. The vertical scroolbar bug. Do you have any workaround for it while the next beta is not available?&lt;BR/&gt;&lt;BR/&gt;Thx,&lt;BR/&gt;&lt;BR/&gt;Nuno</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9e203935-bc48-4f2c-bc68-65a8d6b2ebf3">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-29 11:51:00</date>
+      <content>hi nuno, the workaround would be to create two identical styles - one for the vertical scrollbar, and one for the horizontal scrollbar. Then in the vertical scrollbar template, simply remove any visible elements from the (unused) horizontal scrollbar's template.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="688cf003-f594-4728-a725-aadb55f987ad">
+      <author>Pankaj K S</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-12-24 06:49:44</date>
+      <content>Thanks!&lt;br /&gt;&lt;br /&gt;It has given me a breakthrough I was looking for to get my list box a custom scroll bar.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Thanks again!&lt;br /&gt;&lt;br /&gt;Nice Article.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="65f19786-194f-4b25-9724-591b4009658a">
+      <author>spam-dev</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.devsolution.net</website>
+      <ip />
+      <userAgent />
+      <date>2010-06-11 05:17:01</date>
+      <content>Hi Valeris, can i use in Siverlight4?&lt;br /&gt;&lt;br /&gt;thank you.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="41e403da-0d77-4deb-b6e5-c1512846e8c5">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-09-25 07:10:42</date>
+      <content>How to make the vertical scrollbar shorter than the content.&lt;br /&gt;I tried using Margin=&amp;quot;0,15,0,15&amp;quot; for the &amp;quot;VerticalRoot&amp;quot; Grid. By the side-effect is he thumb actually pushes and scrolls the bottom arrow ??</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="653e17e0-2333-4e24-a39c-c93e607c6f25">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-09-25 07:15:09</date>
+      <content>Hello, &lt;br /&gt;How to make the vertical scrollbar shorter than the content?&lt;br /&gt;I tried using Margin=&amp;quot;0,15,0,15&amp;quot; for the &amp;quot;VerticalRoot&amp;quot; Grid. But, the side-effect is that the thumb actually pushes and scrolls the bottom arrow ??&lt;br /&gt;&lt;br /&gt;-- Al&lt;br /&gt;microspec2k1@hotmail.com</content>
+    </comment>
+  </comments>
+</post>

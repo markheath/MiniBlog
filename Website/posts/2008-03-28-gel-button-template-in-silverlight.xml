@@ -1,0 +1,185 @@
+<post>
+  <title>Gel Button Template in Silverlight</title>
+  <slug>gel-button-template-in-silverlight</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-03-28 17:50:00</pubDate>
+  <lastModified>2011-07-03 09:22:05</lastModified>
+  <content>&lt;p&gt;A while ago I posted about how to get a &lt;a href="/post/xaml-gel-buttons-in-wpf-and-silverlight"&gt;gel button effect in Silverlight&lt;/a&gt;. With the advent of Silverlight 2.0 beta, it is now possible to turn this into a button template for easy reuse. What's more, it is relatively straightforward to add animations for states such as MouseOver and MouseDown.&lt;/p&gt;  &lt;p&gt;The way to go about this is to create a style in your App.xaml file (you can put the style in any XAML page, but putting it in App.Xaml makes it available everywhere in your application).&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;LinearGradientBrush x:Key="GreenGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#006700"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="#00ef00"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="RedGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#774040"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="#ef4040"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="BlueGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#404077"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="#4040ef"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="CyanGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#007777"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="#00efef"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="YellowGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#777740"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="Yellow"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="MagentaGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="#770077"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="#ef00ef"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;LinearGradientBrush x:Key="OrangeGradientBrush" StartPoint="0,0" EndPoint="0,1"&amp;gt;
+    &amp;lt;GradientStop Offset="0" Color="DarkOrange"/&amp;gt;
+    &amp;lt;GradientStop Offset="1" Color="Orange"/&amp;gt;
+&amp;lt;/LinearGradientBrush&amp;gt;
+
+&amp;lt;Style TargetType="Button" x:Key="GelButton"&amp;gt;
+    &amp;lt;Setter Property="Background" Value="{StaticResource GreenGradientBrush}" /&amp;gt;
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="Button"&amp;gt;
+                &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                    &amp;lt;Grid.Resources&amp;gt;
+                        &amp;lt;Storyboard x:Key='MouseOver State'&amp;gt;
+                            &amp;lt;DoubleAnimation Storyboard.TargetName='MainButtonScale' 
+                                Storyboard.TargetProperty='ScaleX' To='1.03' 
+                                Duration='0:0:0.05'/&amp;gt;
+                            &amp;lt;DoubleAnimation Storyboard.TargetName='MainButtonScale' 
+                                Storyboard.TargetProperty='ScaleY' To='1.03' 
+                                Duration='0:0:0.05'/&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                        &amp;lt;Storyboard x:Key='Normal State'&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                        &amp;lt;Storyboard x:Key='Pressed State'&amp;gt;
+                            &amp;lt;DoubleAnimation Storyboard.TargetName='MainButtonTranslate' 
+                                Storyboard.TargetProperty='X' To='1.0' 
+                                Duration='0:0:0.05'/&amp;gt;
+                            &amp;lt;DoubleAnimation Storyboard.TargetName='MainButtonTranslate' 
+                                Storyboard.TargetProperty='Y' To='1.0' 
+                                Duration='0:0:0.05'/&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                        &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;                                    
+                            &amp;lt;DoubleAnimation Duration="0:0:0" 
+                                Storyboard.TargetName="Disabled" 
+                                Storyboard.TargetProperty="Opacity" 
+                                To="1" /&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                    &amp;lt;/Grid.Resources&amp;gt;
+
+                    &amp;lt;!-- drop shadow - needs to be blurred for correct effect --&amp;gt;
+                    &amp;lt;Rectangle Fill="#40000000" Margin="1,1,0,0" RadiusX="6" RadiusY="6" /&amp;gt;
+
+                    &amp;lt;!-- main rect --&amp;gt;
+                    &amp;lt;Grid x:Name="mainButton"
+                          Margin="0,0,1,1"
+                          RenderTransformOrigin="0.5,0.5"&amp;gt;
+                        &amp;lt;Grid.RenderTransform&amp;gt;
+                            &amp;lt;TransformGroup&amp;gt;
+                                &amp;lt;TranslateTransform x:Name="MainButtonTranslate"
+                                                X="0.0" Y="0.0"/&amp;gt;
+                                &amp;lt;ScaleTransform 
+                                x:Name="MainButtonScale"
+                                ScaleX="1.0" ScaleY="1.0" 
+                                /&amp;gt;
+                            &amp;lt;/TransformGroup&amp;gt;
+
+                        &amp;lt;/Grid.RenderTransform&amp;gt;
+                        &amp;lt;Rectangle x:Name="mainRect" 
+                               Fill="{TemplateBinding Background}"
+                               RadiusX="6" RadiusY="6"&amp;gt;
+                        &amp;lt;/Rectangle&amp;gt;
+
+                        &amp;lt;!-- transparent rect --&amp;gt;
+                        &amp;lt;Rectangle x:Name="glowRect" Margin="1,1,1,1" RadiusX="5" RadiusY="5"&amp;gt;
+                            &amp;lt;Rectangle.Fill&amp;gt;
+                                &amp;lt;LinearGradientBrush StartPoint="0,0" EndPoint="0,1"&amp;gt;
+                                    &amp;lt;GradientStop Offset="0" Color="#DFFFFFFF"/&amp;gt;
+                                    &amp;lt;GradientStop Offset="1" Color="#00FFFFFF"/&amp;gt;
+                                &amp;lt;/LinearGradientBrush&amp;gt;
+                            &amp;lt;/Rectangle.Fill&amp;gt;
+                        &amp;lt;/Rectangle&amp;gt;
+
+                        &amp;lt;ContentPresenter HorizontalAlignment="Center"
+                             Margin="4,0,4,0"
+                             Content="{TemplateBinding Content}"
+                             VerticalAlignment="Center" /&amp;gt;
+
+                    &amp;lt;/Grid&amp;gt;
+                &amp;lt;/Grid&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;            
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, there is a lot of XAML, but it is fairly straightforward once you know what it is. First I have declared a load of LinearGradientBrushes as static resources. These give me an easy way to specify a different colour scheme for the buttons without having to create a whole new template for each one. &lt;/p&gt;
+
+&lt;p&gt;Then there is the actual style. We have two properties. The first sets a default background for us - green, but this can be overridden in XAML. The second provides the template. This consists of the visual elements required to draw our gel button, and a number of animations. &lt;/p&gt;
+
+&lt;p&gt;The template XAML itself is not really any different from that shown in my original post, but there are a few exceptions. First we are using a &amp;quot;ContentPresenter&amp;quot; to show the text or image that the button will contain. Second, we are using TemplateBinding to set properties such as Background, Foreground etc. And finally, since we are using Grids, we only need to use Margins to position things correctly, rather than specifying sizes.&lt;/p&gt;
+
+&lt;p&gt;The animations are a basic scale for mouse-over which makes the buttons larger, and a translate for pressed. Interestingly, pressing the button seems to cancel the mouse-over animation, which actually has a nice visual effect so I am OK with that. Centring the scale transform was the trickiest part. I tried for ages to get a Converter working that would use a TemplateBinding on Width and Height to divide them by two, but in the end I was helped out on the Silverlight forums with a much easier solution. Simply set the &lt;span class="attr"&gt;RenderTransformOrigin on the grid to &lt;/span&gt;&lt;span class="kwrd"&gt;&amp;quot;0.5,0.5&amp;quot; and the scale operates in the middle.&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;To create one of these buttons is trivially simple. This example uses the GelButton style and changes the Background to Blue.&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Button x:Name="test3" 
+   Margin="2" 
+   Style="{StaticResource GelButton}" 
+   Background="{StaticResource BlueGradientBrush}" 
+   Height="24" Width="100" 
+   Content="Hello World 3" /&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;There are some improvements that still need to be made before my GelButton templates are complete&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Better choice of gradient colours&lt;/li&gt;
+
+  &lt;li&gt;Implement disabled state&lt;/li&gt;
+
+  &lt;li&gt;Implement focus Rectangle &lt;/li&gt;
+
+  &lt;li&gt;Mouse-over effect should be made a little more subtle &lt;/li&gt;
+
+  &lt;li&gt;Shadow effect on the content presenter? &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here's what it looks like:&lt;/p&gt;
+
+&lt;div class="separator" style="clear: both; text-align: center;"&gt;
+&lt;a href="/posts/files/gel-button-template-in-silverlight-1.PNG" imageanchor="1" style=""&gt;&lt;img border="0" height="85" width="313" src="/posts/files/gel-button-template-in-silverlight-1.PNG"&gt;&lt;/a&gt;&lt;/div&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="9c925b68-d72d-43e2-95ba-5d01a3ad1dad">
+      <author>Keoz</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-02-21 01:26:00</date>
+      <content>Great post! thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f9b0f3f0-3d4e-4d5e-bb6c-77e75ab60998">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-03-05 13:40:00</date>
+      <content>Dear Mark,&lt;BR/&gt;I got an error at &lt;BR/&gt; ContentPresenter HorizontalAlignment="Center"                                Margin="4,0,4,0"                                   Foreground="{TemplateBinding Foreground}"                                 Content="{TemplateBinding Content}"                                  VerticalAlignment="Center" &lt;BR/&gt;&lt;BR/&gt;saying:&lt;BR/&gt;The property 'Foreground' does not exist on the type 'ContentPresenter' in the XML namespace 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'. C:\sources\silverlightsdemos\button2\button2\button1\App.xaml &lt;BR/&gt;&lt;BR/&gt;Alex</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="39678d88-5a49-4040-9efe-eb477f9e44ec">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-05 15:48:00</date>
+      <content>anonymous, this was done with Silverlight 2 beta. It needs updating to work with the final release. If I ever get round to it I'll post an update here</content>
+    </comment>
+  </comments>
+</post>

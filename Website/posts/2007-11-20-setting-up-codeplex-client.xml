@@ -1,0 +1,51 @@
+<post>
+  <title>Setting up the CodePlex Client</title>
+  <slug>setting-up-codeplex-client</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-20 09:39:00</pubDate>
+  <lastModified>2010-10-04 17:26:32</lastModified>
+  <content>&lt;p&gt;Microsoft's open source project hosting site &lt;a href="http://www.codeplex.com"&gt;CodePlex&lt;/a&gt; seems to be gaining a lot of momentum. I now have six projects hosted there (&lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;, &lt;a href="http://www.codeplex.com/midifilemapper"&gt;MIDI File Mapper&lt;/a&gt;, &lt;a href="http://www.codeplex.com/midifilesplitter"&gt;MIDI File Splitter&lt;/a&gt;, &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt;, &lt;a href="http://www.codeplex.com/asterisk"&gt;Asterisk.NET&lt;/a&gt;, &lt;a href="http://www.codeplex.com/slaudioplayer"&gt;Silverlight Audio Player&lt;/a&gt;).&lt;/p&gt;  &lt;p&gt;For source control, CodePlex offers Visual Studio Team System. The trouble with this is for those who work with the &lt;a href="http://msdn2.microsoft.com/en-gb/express/default.aspx"&gt;Visual Studio Express&lt;/a&gt; SKUs, the source control plugin is not available. The CodePlex development team have promised a &lt;a href="http://www.codeplex.com/SvnBridge"&gt;server side bridge&lt;/a&gt; allowing Subversion clients such as &lt;a href="http://tortoisesvn.tigris.org/"&gt;TortoiseSVN&lt;/a&gt; to be used, but for the time being, there is a &lt;a href="http://www.codeplex.com/CodePlexClient"&gt;CodePlex source control client&lt;/a&gt; that can be used. Here is a brief guide to getting it up and running.&lt;/p&gt;  &lt;p&gt;First, you need to download the &lt;a href="http://www.codeplex.com/CodePlexClient"&gt;CodePlex Source Control Client&lt;/a&gt; and extract the binaries (cpc.exe and tfs.exe). I saved mine to &lt;strong&gt;C:\Program Files\CodePlex Client&lt;/strong&gt;. You can also take this opportunity to customise the &lt;strong&gt;cpc.exe.config&lt;/strong&gt; file. I like to turn on the gui for status and commit dialogs:&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;add key='DefaultToGuiForCommit' value='true'/&amp;gt; 
+&amp;lt;add key='DefaultToGuiForStatus' value='true'/&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;And I make use of the differencing tool that comes with TortoiseSVN:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;add key='DiffTool' value='C:\Program Files\TortoiseSVN\bin\TortoiseMerge.exe'/&amp;gt; 
+&amp;lt;add key='DiffArgs' value='/base:{basepath} /mine:{mypath} /basename:{basename} /minename:{myname}'/&amp;gt; 
+&amp;lt;add key='MergeTool' value='C:\Program Files\TortoiseSVN\bin\TortoiseMerge.exe'/&amp;gt;
+&amp;lt;add key='MergeArgs' value='/base:{basepath} /mine:{mypath} /theirs:{theirpath} /basename:{basename} /minename:{myname} /theirsname:{theirname} /merged:{mergepath} /mergedname:{mergename}'/&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;I then create a folder to keep my CodePlex projects in (e.g. C:\Code\CodePlex). In that folder I put a batch file that sets up my environment:&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;@set PATH=%PATH%;C:\Windows\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\CodePlex Client&lt;/pre&gt;
+
+&lt;p&gt;Now I can create a desktop shortcut that opens a command window pointing to that batch file. The target looks like this:&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;%windir%\system32\cmd.exe /k &amp;quot;&amp;quot;C:\Code\CodePlex\CodePlexDevEnv.bat&amp;quot;&amp;quot;&lt;/pre&gt;
+
+&lt;p&gt;And it should be set to start in &lt;strong&gt;C:\Code\CodePlex&lt;/strong&gt; (or wherever your codeplex projects live).&lt;/p&gt;
+
+&lt;p&gt;Once you have done that, working with your codeplex projects is very simple. Create a subfolder, navigate into that subfolder, and perform a checkout on any project. It doesn't even have to be a project you are a member of - you can anonymously get. For example, here's how to get the code for the excellent &lt;a href="http://www.codeplex.com/blogengine"&gt;BlogEngine.NET&lt;/a&gt; project.&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;md blogengine
+cd blogengine
+cpc checkout blogengine&lt;/pre&gt;
+
+&lt;p&gt;To update to the latest files, simply navigate to the project folder and type&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;cpc update&lt;/pre&gt;
+
+&lt;p&gt;To see whether you have anything that needs checking in, type&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;cpc status&lt;/pre&gt;
+
+&lt;p&gt;This brings up a dialog, from which you can launch your differencing tool on files that have changed, and add unversioned files or folders to source control. When you are ready to commit your changes, then the commit command allows you to upload them with a comment.&lt;/p&gt;
+
+&lt;pre class="brush: plain"&gt;cpc commit&lt;/pre&gt;
+
+&lt;p&gt;Anyway, the command line client is definitely worth checking out if you use Codeplex, or even if you are simply interested in taking a look at the source for some projects hosted there.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments />
+</post>

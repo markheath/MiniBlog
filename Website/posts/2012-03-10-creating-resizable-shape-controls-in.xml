@@ -1,0 +1,103 @@
+<post>
+  <title>Creating Resizable Shape Controls in WPF</title>
+  <slug>creating-resizable-shape-controls-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-03-10 14:23:00</pubDate>
+  <lastModified>2012-03-10 14:23:55</lastModified>
+  <content>&lt;p&gt;In WPF, you can create a resizable shape by using the &lt;strong&gt;Path &lt;/strong&gt;control. Simply set up your shape’s path data and then set the &lt;strong&gt;Stretch&lt;/strong&gt; property to &lt;strong&gt;Fill &lt;/strong&gt;and your shape will resize itself to fit the space available. It even takes into account the stroke thickness.&lt;/p&gt; &lt;p&gt;But what if you want a shape that resizes differently? For example, you might want the corner radius of a rounded corner to stay constant, irrespective of how wide or tall you made your shape. In that case, things get quite a bit more complicated as you can’t use the &lt;strong&gt;Stretch=Fill &lt;/strong&gt;technique. &lt;/p&gt; &lt;p&gt;I’ve recently built a small open source library of useful &lt;a href="http://wpfshapes.codeplex.com/"&gt;WPF shapes&lt;/a&gt; (&lt;a href="https://nuget.org/packages/WpfShapes/"&gt;available on NuGet&lt;/a&gt;), and in this post, I’ll briefly explain how to make your own resizable WPF shape.&lt;/p&gt; &lt;h3&gt;Custom Shape Using Stretch.Fill &lt;/h3&gt; &lt;p&gt;The first and simplest example is a shape that does use Stretch.Fill. If proportional stretching is all you want, then this is the simplest way to do it. Here’s a simple Diamond (Rhombus) shape:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class Diamond : Shape
+{
+    public Diamond()
+    {
+        this.Stretch = Stretch.Fill;
+    }
+
+    protected override Geometry DefiningGeometry
+    {
+        get { return GetGeometry(); }
+    }
+
+    private Geometry GetGeometry()
+    {
+        return Geometry.Parse("M 100, 0 l 100, 100 l -100, 100 l -100, -100 Z");
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;There are only two things we needed to do. First is to set the &lt;strong&gt;Stretch &lt;/strong&gt;property to &lt;strong&gt;Fill&lt;/strong&gt; by default, saving the users of our control the need to do that in XAML. And then override the &lt;strong&gt;DefiningGeometry&lt;/strong&gt;. I like to use the XAML Path mini-language as I find it to be easy to use. Here I just draw a diamond, using “Z” to close the shape at the end. It doesn’t matter what size I draw the shape, since we are stretching to fit.&lt;/p&gt;
+&lt;h3&gt;Adding Custom Properties&lt;/h3&gt;
+&lt;p&gt;Another useful thing to be able to do is add custom properties to your Shape object. These should be dependency properties to fully benefit from the power of the WPF framework. For example, in my &lt;strong&gt;Triangle &lt;/strong&gt;shape, I added a TriangleOrientation property that allows you to select what direction your triangle is pointing in.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public enum Orientation
+{
+    N,
+    NE,
+    E,
+    SE,
+    S,
+    SW,
+    W,
+    NW
+}
+
+public Orientation TriangleOrientation
+{
+    get { return (Orientation)GetValue(TriangleOrientationProperty); }
+    set { SetValue(TriangleOrientationProperty, value); }
+}
+
+// Using a DependencyProperty as the backing store for TriangleOrientation.  This enables animation, styling, binding, etc...
+public static readonly DependencyProperty TriangleOrientationProperty =
+    DependencyProperty.Register("TriangleOrientation", typeof(Orientation), typeof(Triangle), new UIPropertyMetadata(Orientation.N, OnOrientationChanged));
+
+private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs ek)
+{
+    Triangle t = (Triangle)d;
+    t.InvalidateVisual();
+}
+&lt;/pre&gt;
+&lt;p&gt;Calling &lt;strong&gt;InvalidateVisual&lt;/strong&gt; when the &lt;strong&gt;TriangleOrientation &lt;/strong&gt;property changes causes &lt;strong&gt;DefiningGeometry&lt;/strong&gt; to be called again. Now we simply have to return the correct geometry for the selected orientation:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private Geometry GetGeometry()
+{
+    string data;
+    if (TriangleOrientation == Orientation.N)
+        data = "M 0,1 l 1,1 h -2 Z";
+    else if (TriangleOrientation == Orientation.NE)
+        data = "M 0,0 h 1 v 1 Z";
+    else if (TriangleOrientation == Orientation.E)
+        data = "M 0,0 l 1,1 l -1,1 Z";
+    else if (TriangleOrientation == Orientation.SE)
+        data = "M 1,0 v 1 h -1 Z";
+    else if (TriangleOrientation == Orientation.S)
+        data = "M 0,0 h 2 l -1,1 Z";
+    else if (TriangleOrientation == Orientation.SW)
+        data = "M 0,0 v 1 h 1 Z";
+    else if (TriangleOrientation == Orientation.W)
+        data = "M 0,1 l 1,1 v -2 Z";
+    else 
+        data = "M 0,0 h 1 l -1,1 Z";
+    return Geometry.Parse(data);
+}&lt;/pre&gt;
+&lt;h3&gt;Controlling Resize Behaviour &lt;/h3&gt;
+&lt;p&gt;As I mentioned at the start, controlling resize behaviour unfortunately is not nearly so simple. My first attempt was to use the control’s &lt;strong&gt;ActualHeight &lt;/strong&gt;and &lt;strong&gt;ActualWidth &lt;/strong&gt;property, or the &lt;strong&gt;RenderSize &lt;/strong&gt;property while I created the &lt;strong&gt;DefiningGeometry&lt;/strong&gt;. But that actually caused really strange resize behaviour with the shape growing larger as you resized the control smaller. &lt;/p&gt;
+&lt;p&gt;The trouble is caused by the fact that the parent container is asking the Shape “how much space do you need?” and the shape is asking the container “how much space have you got?”. Someone needs to make a decision what the size will be. The solution is for our Shape to say that it will take up the full amount of space it is being offered, by overriding &lt;strong&gt;MeasureOverride &lt;/strong&gt;to simply pass back the constraint we are given:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;protected override Size MeasureOverride(Size constraint)
+{
+    // we will size ourselves to fit the available space
+    return constraint;
+}
+&lt;/pre&gt;
+&lt;p&gt;Now in the Geometry method, we can examine the &lt;strong&gt;ActualWidth&lt;/strong&gt; and &lt;strong&gt;ActualHeight&lt;/strong&gt; properties and use those to know how much space we have to draw the shape in. Unfortunately, we have to take the &lt;strong&gt;StrokeThickness&lt;/strong&gt; into account ourselves, so make sure you leave a margin round the edge of at least &lt;strong&gt;StrokeThickness / 2&lt;/strong&gt; (it may even need to be more depending on your line join style and the angle of line joins). Here’s the code for my &lt;strong&gt;Label&lt;/strong&gt; control, which is a rectangle with the top left and bottom left corners cut off. It has a &lt;strong&gt;CornerWidth&lt;/strong&gt; dependency property to define the amount of corner to cut off, which stays constant however big you resize the control:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private Geometry GetGeometry()
+{
+    double cornerWidth = CornerWidth;
+    double width = ActualWidth - StrokeThickness;
+    double height = ActualHeight - StrokeThickness;
+
+    return Geometry.Parse(String.Format("M {0},{1} h {3} v {4} h -{3} l -{2},-{2} v -{5} Z", 
+        cornerWidth + StrokeThickness/2, StrokeThickness/2, cornerWidth, width-cornerWidth, height, height-(2 * cornerWidth)));
+}
+&lt;/pre&gt;
+&lt;h3&gt;Try it out&lt;/h3&gt;
+&lt;p&gt;You are welcome to try my shapes out for yourself. The code is &lt;a href="http://wpfshapes.codeplex.com"&gt;available on CodePlex&lt;/a&gt;. I welcome any contributions to the library either of new shapes, or adding some more dependency properties onto the existing shapes to allow for better customisation. The current shapes are Speech Bubble, Diamond, Rounded Sides Rectangle, Hexagon, Label, Triangle (available in several orientations) and Chevron. Here’s what the shapes in the first version look like being resized:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-resizable-shape-controls-in-1.gif"&gt;&lt;img style="display: inline" title="shapes" alt="shapes" src="/posts/files/creating-resizable-shape-controls-in-1.gif" width="652" height="410"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,66 @@
+<post>
+  <title>Using a WrapPanel with ItemsControl and ListView</title>
+  <slug>using-wrappanel-with-itemscontrol-and</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-14 18:59:00</pubDate>
+  <lastModified>2012-09-14 18:59:00</lastModified>
+  <content>&lt;p&gt;I recently needed to put some items inside a WrapPanel in WPF, which I wanted to scroll vertically if there were too many items to fit into the available space. I was undecided on whether I wanted to use an ItemsControl or a ListView (which adds selected item capabilities), and discovered that when you switch between the two containers, the technique for getting the WrapPanel working is subtly different.&lt;/p&gt; &lt;p&gt;ItemsControl is the simplest. Just set the ItemsPanelTemplate to be a WrapPanel, and then put the whole thing inside a ScrollViewer (sadly you can’t put the ScrollViewer inside the ItemsPanelTemplate):&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;ScrollViewer&amp;gt;    
+  &amp;lt;ItemsControl&amp;gt;
+    &amp;lt;ItemsControl.ItemsPanel&amp;gt;
+      &amp;lt;ItemsPanelTemplate&amp;gt;
+        &amp;lt;WrapPanel /&amp;gt;
+      &amp;lt;/ItemsPanelTemplate&amp;gt;
+    &amp;lt;/ItemsControl.ItemsPanel&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="Beige" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="PowderBlue" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF9ACD32" /&amp;gt;    
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFF6347" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF6495ED" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFFA500" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFFD700" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFF4500" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF316915" /&amp;gt;    
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF8E32A7" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFECBADC" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFE6D84F" /&amp;gt;
+  &amp;lt;/ItemsControl&amp;gt;
+&amp;lt;/ScrollViewer&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;this produces the following results:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/using-wrappanel-with-itemscontrol-and-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/using-wrappanel-with-itemscontrol-and-1.png" width="244" height="187"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;But if you switch to an ItemsView instead, you’ll find that you get a single row of items with a horizontal scrollbar while the outer ScrollViewer has nothing to do.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/using-wrappanel-with-itemscontrol-and-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/using-wrappanel-with-itemscontrol-and-2.png" width="244" height="185"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The solution is to disable the horizontal scrollbar of the ListView itself:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled"&amp;gt;
+&lt;/pre&gt;
+
+&lt;p&gt;This allows our top-level ScrollViewer to work as with the ItemsControl and we have selection capabilities as well:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/using-wrappanel-with-itemscontrol-and-3.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/using-wrappanel-with-itemscontrol-and-3.png" width="244" height="165"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The full XAML for the ListView with vertically scrolling WrapPanel is:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;ScrollViewer&amp;gt;    
+  &amp;lt;ListView ScrollViewer.HorizontalScrollBarVisibility="Disabled"&amp;gt;
+    &amp;lt;ListView.ItemsPanel&amp;gt;
+      &amp;lt;ItemsPanelTemplate&amp;gt;
+        &amp;lt;WrapPanel /&amp;gt;
+      &amp;lt;/ItemsPanelTemplate&amp;gt;
+    &amp;lt;/ListView.ItemsPanel&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="Beige" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="PowderBlue" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF9ACD32" /&amp;gt;    
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFF6347" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF6495ED" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFFA500" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFFD700" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFFF4500" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF316915" /&amp;gt;    
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FF8E32A7" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFECBADC" /&amp;gt;
+    &amp;lt;Rectangle Margin="5" Width="100" Height="100" Fill="#FFE6D84F" /&amp;gt;
+  &amp;lt;/ListView&amp;gt;
+&amp;lt;/ScrollViewer&amp;gt;
+&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments />
+</post>

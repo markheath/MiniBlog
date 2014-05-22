@@ -1,0 +1,80 @@
+<post>
+  <title>When to Review Code</title>
+  <slug>when-to-review-code</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-12-18 12:18:00</pubDate>
+  <lastModified>2013-05-17 10:48:03</lastModified>
+  <content>I am assuming I can take it for granted that most developers acknowledge the &lt;a href="http://www.codinghorror.com/blog/archives/000495.html"&gt;value of performing code reviews&lt;/a&gt;. All the companies I have worked for have had some kind of policy that states a code reviews must take place, but when the code review takes place can vary dramatically. While I was writing this post, I came across a couple of helpful Stack Overflow questions which have more insights on the when a code review should take place. (&lt;a href="http://stackoverflow.com/questions/97185/when-to-review-code-before-or-after-checkin-to-main"&gt;When to review code - before or after checkin to main&lt;/a&gt; and &lt;a href="http://stackoverflow.com/questions/42633/when-is-the-most-effective-time-to-do-code-reviews"&gt;When is the most effective time to do code reviews&lt;/a&gt;)&lt;br&gt;
+&lt;br&gt;
+I'll discuss three possible times to perform a code review:&lt;br&gt;
+&lt;br&gt;
+&lt;strong&gt;Post Check-in&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;&lt;br&gt;&lt;/strong&gt;
+I think this is the most common time for code reviews to take place. The developer checks in their code, then arranges for it to be reviewed. &lt;br&gt;
+&lt;br&gt;
+&lt;em&gt;Advantages:&lt;/em&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;The developer has actually "finished" coding, meaning that issues found really are issues as opposed to "oh yes I was going to do that later". &lt;/li&gt;
+&lt;li&gt;The developer is not held up waiting around for a reviewer - they can get their code checked in and start work on the next task. &lt;/li&gt;
+&lt;li&gt;Source Control systems typically have tools which make it very easy to highlight just the changes that have been made in a particular check-in. This is very convenient for reviewing bug fixes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;em&gt;Disadvantages:&lt;/em&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Unreviewed code can get into into main branch, increasing the chances of an inadvertent show-stopper bug. &lt;/li&gt;
+&lt;li&gt;There is potential for the review to be put on the back burner and forgotten as there is nothing being held up by it. &lt;/li&gt;
+&lt;li&gt;Management may view this feature as "complete" and thus resist allocating further time on it if the review recommends some refactoring. &lt;/li&gt;
+&lt;li&gt;The checked in code may have already gone through a manual testing cycle which is a strong disincentive to touch the code even to implement minor enhancement suggestions (as they invalidate the tests). &lt;/li&gt;
+&lt;li&gt;The developer is likely working on a new task when the code review takes place, meaning that it is no longer fresh in their mind, and (depending on the way source control is used) can easily end up mixing code review enhancements with new code for an unrelated feature in a single check-in. &lt;/li&gt;
+&lt;/ul&gt;
+It is interesting how the use of branches in source control can lessen the impact of many of the points I have made here (both advantages and disadvantages). &lt;br&gt;
+&lt;br&gt;
+&lt;strong&gt;Pre-Checkin&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;&lt;br&gt;&lt;/strong&gt;
+One company I worked for had a policy of pre-checkin code reviews. For small changes, another developer came and looked over your shoulder while you talked them through the changes, and for larger features, you emailed the code across and awaited the response.&lt;br&gt;
+&lt;br&gt;
+&lt;em&gt;Advantages&lt;/em&gt;&lt;br&gt;
+&lt;strong&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;The code is still fresh in the developer's mind as they have not yet moved on.&lt;/li&gt;
+&lt;li&gt;It is clear to the manager that we are not yet "finished" until the code review, resulting code modifications and re-testing have taken place.&lt;/li&gt;
+&lt;li&gt;The fact that the code is still checked out means that it is very easy to make changes or add TODOs right in the code during the review, which results in less suggestions getting forgotten.&lt;/li&gt;
+&lt;li&gt;The code can be checked in with a comment detailing who reviewed it - share the blame with your reviewer if it contains a show-stopper bug!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;em&gt;Disadvantages&lt;/em&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Though the code is "ready" for check-in, it may need to be merged again before the actual check-in, which can sometimes result in significant changes.&lt;/li&gt;
+&lt;li&gt;It can make it harder for the reviewer to view the changes offline.&lt;/li&gt;
+&lt;li&gt;A strict no check-in without code review policy can result in people making fewer check-ins, and batching too much up into one check-in. &lt;/li&gt;
+&lt;li&gt;Can hold up the developer from starting new work if the reviewer is not available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div&gt;
+&lt;br&gt;&lt;/div&gt;
+&lt;strong&gt;Got it working&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;&lt;br&gt;&lt;/strong&gt;
+There is one other potential time for a code review. In &lt;a href="http://blog.objectmentor.com/articles/2008/04/08/clean-code-whew"&gt;Clean Code&lt;/a&gt;, Bob Martin talks about the "separation of concerns" developers tend to employ while coding. That is, first we "make it work", and then we "make it clean". We have got the main task complete, but things like error handling, comments, removing code smells etc have yet to take place. What if a code review took place &lt;strong&gt;before the "make it clean" phase&lt;/strong&gt;? &lt;br&gt;
+&lt;br&gt;
+&lt;em&gt;Advantages&lt;/em&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;The developer does not need to feel so defensive about their code, as they have not completely finished.&lt;/li&gt;
+&lt;li&gt;Its not too late to make architectural changes, and maybe even refactor other areas of the codebase to allow the new code to "fit" better.&lt;/li&gt;
+&lt;li&gt;Because there is still time allocated to the task, it can effectively serve as a second design review, with an opportunity to make some changes to the design with the benefit of hindsight. &lt;/li&gt;
+&lt;li&gt;Could be done as a paired programming exercise, experimenting with cleaning up the code structure and writing some unit tests.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;em&gt;Disadvantages&lt;/em&gt;&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Wasting time looking at issues that were going to be fixed anyway.&lt;/li&gt;
+&lt;li&gt;May not be appropriate for small changes, and with large pieces of development, may depend heavily on whether the coder follows many small iterations of "make it work, make it clean", or a few large iterations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div&gt;
+&lt;br&gt;&lt;/div&gt;
+&lt;strong&gt;Final thoughts&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;&lt;br&gt;&lt;/strong&gt;
+There are two factors that greatly affect the choice of when to code review. The first is your use of Source Control. If individual developers and development teams are able to check work into sub-branches, before merging into the main branch, then many of the disadvantages associated with a post-checkin code review go away. In fact, you can get the best of both worlds by code reviewing after checking in to the feature branch, but before merging into the main branch.&lt;br&gt;
+&lt;br&gt;
+Second is the scope of the change. A code review of a minor feature or bugfix can happen late on in the development process as the issues found are not likely to involve major rearchitecture. But if you are developing a whole new major component of a system, failing to review all the code until the developer has "finished" invariably results in a list of suggestions that simply cannot be implemented due to time constraints.</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Code Reviews</category>
+  </categories>
+  <comments />
+</post>

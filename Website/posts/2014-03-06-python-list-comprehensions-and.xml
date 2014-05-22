@@ -1,0 +1,161 @@
+<post>
+  <title>Python List Comprehensions and Generators for C# Developers</title>
+  <slug>python-list-comprehensions-and</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-03-06 13:58:00</pubDate>
+  <lastModified>2014-03-06 14:11:10</lastModified>
+  <content>&lt;p&gt;If you’re a C# programmer and you’ve used LINQ, you’ll know how powerful it is to allow you to manipulate sequences of data in all kinds of interesting ways, without needing to write for loops. Python has similar capabilities, using what are called “list comprehensions” and “generators”. In this post, I’ll demonstrate how they work, showing them side by side with roughly equivalent C# code.&lt;/p&gt; &lt;h3&gt;List Comprehensions&lt;/h3&gt; &lt;p&gt;A list comprehension in Python allows you to create a new list from an existing list (or as we shall see later, from any “iterable”). &lt;/p&gt; &lt;p&gt;Let’s start with a simple example at the Python REPL. Here we create a list, that contains the square of each number returned by the range function (which in this case returns 0,1,2,…9)&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; [x*x for x in range(10)]
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+&lt;/pre&gt;
+&lt;p&gt;This is equivalent to a C# LINQ statement that takes a range (using Enumerable.Range), selects the square (using Select), and then turns the whole thing into a list (using ToList):&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Enumerable.Range(0, 10).Select(x =&amp;gt; x*x).ToList();
+&lt;/pre&gt;
+&lt;p&gt;Python list comprehensions also allow you to filter as you go, by inserting an “if” clause. Here, we’ll only take the squares of odd numbers:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; [x*x for x in range(10) if x%2]
+[1, 9, 25, 49, 81]
+&lt;/pre&gt;
+&lt;p&gt;This is equivalent to chaining a Where clause into our LINQ statement:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Enumerable.Range(0, 10).Where(x =&amp;gt; x%2 != 0)
+    .Select(x =&amp;gt; x*x).ToList();
+&lt;/pre&gt;
+&lt;p&gt;You can actually have two “for” clauses inside your list comprehension, so you could create some coordinates as a tuple like this:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; coords = [(x,y) for x in range(4) for y in range(4)]
+[(0, 0), (0, 1), (0, 2), (0, 3), 
+ (1, 0), (1, 1), (1, 2), (1, 3), 
+ (2, 0), (2, 1), (2, 2), (2, 3), 
+ (3, 0), (3, 1), (3, 2), (3, 3)]
+&lt;/pre&gt;
+&lt;p&gt;The same effect can be achieved using the SelectMany clause in LINQ:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Enumerable.Range(0,4).SelectMany(x =&amp;gt; Enumerable.Range(0,4)
+    .Select(y =&amp;gt; new Tuple&amp;lt;int,int&amp;gt;(x,y))).ToList();
+&lt;/pre&gt;
+&lt;p&gt;You can see that the LINQ gets a little cumbersome at this point, although you can use the alternative syntax:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;from x in Enumerable.Range(0,4)
+from y in Enumerable.Range(0,4)
+select new Tuple&amp;lt;int,int&amp;gt;(x,y)&lt;/pre&gt;
+&lt;p&gt;Here's another Python list comprehension with two for expressions, making a list of all the spaces on a chessboard&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; [x + str(y+1) for x in "ABCDEFGH" for y in range(8)]
+['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 
+ 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
+ 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 
+ 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 
+ 'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 
+ 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 
+ 'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 
+ 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8']
+&lt;/pre&gt;
+&lt;p&gt;And in C#, you'd do something like:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"ABCDEFGH".SelectMany(x =&amp;gt; Enumerable.Range(1,8)
+    .Select(y =&amp;gt; x+y.ToString())).ToList()
+&lt;/pre&gt;
+&lt;h3&gt;Dictionaries and Sets&lt;/h3&gt;
+&lt;p&gt;You don't actually have to create lists. Python lets you use a similar syntax to create a set (no duplicate elements), or a dictionary. Here we'll start with a list of fruit, then use a list comprehension to make a list of string lengths. Then we'll make a set of unique fruit lengths, and we'll finally make a dictionary keyed on fruit name, and containing the length as a value:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; fruit = [‘apples’,’oranges’,’bananas’,’pears’]
+&amp;gt;&amp;gt;&amp;gt; [len(f) for f in fruit]
+[6, 7, 7, 5]
+&amp;gt;&amp;gt;&amp;gt; {len(f) for f in fruit}
+set([5, 6, 7])
+&amp;gt;&amp;gt;&amp;gt; {f:len(f) for f in fruit}
+{‘bananas’:7, ‘oranges’:7, ‘pears’:5, ‘apples’:6} 
+&lt;/pre&gt;
+&lt;p&gt;We can create the set of unique lengths in C# by creating a HashSet, passing in our LINQ statement to its constructor. And you can use LINQ's ToDictionary extension method to make the equivalent dictionary of strings to lengths:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var fruit = new [] { "apples", "oranges", "bananas", "pears" };
+fruit.Select(f =&amp;gt; f.Length).ToList();
+new HashSet&amp;lt;int&amp;gt;(fruit.Select(f =&amp;gt; f.Length));
+fruit.ToDictionary(f =&amp;gt; f, f =&amp;gt; f.Length);
+&lt;/pre&gt;
+&lt;h3&gt;Generators&lt;/h3&gt;
+&lt;p&gt;Python generators are essentially the same concept as a C# method that returns an IEnumerable&amp;lt;T&amp;gt;. In fact, the syntax for creating them is very similar – you just need to use the yield keyword. Here’s a generator function that returns the names of my children:&lt;/p&gt;&lt;pre class="brush: py;"&gt;def generateChildren():
+    yield "Ben"
+    yield "Lily"
+    yield "Joel"
+    yield "Sam"
+    yield "Annie"
+&lt;/pre&gt;
+&lt;p&gt;And here’s the same thing in C#:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public IEnumerable&amp;lt;string&amp;gt; GenerateChildren() 
+{
+    yield return "Ben";
+    yield return "Lily";
+    yield return "Joel";
+    yield return "Sam";
+    yield return "Annie";
+}
+&lt;/pre&gt;
+&lt;p&gt;Like with C#, Python generators uses lazy evaluation. This means that they could return infinite sequences. And it also means that it is not until we actually evaluate them that we will get any errors. This code example:&lt;/p&gt;&lt;pre class="brush: py;"&gt;def generateNumbers():
+    yield 2/2
+    yield 3/1
+    yield 4/0 # will cause a ZeroDivisionError
+    yield 5/-1
+
+numbersGenerator = generateNumbers()
+print("Numbers Generator", numbersGenerator)
+try:
+    numbers = [n for n in numbersGenerator]
+    print("Numbers", numbers)
+except ZeroDivisionError:
+    print("oops")
+&lt;/pre&gt;
+&lt;p&gt;Generates the following output:&lt;/p&gt;&lt;pre class="brush: py;"&gt;Numbers Generator &amp;lt;generator object 
+    generateNumbers at 0x0000000002ADD4C8&amp;gt;
+oops
+&lt;/pre&gt;
+&lt;p&gt;Python provides a method called “next” that allows you to step through the outputs from a generator one by one. Let’s try that with our children generator function:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; children = generateChildren()
+&amp;gt;&amp;gt;&amp;gt; next(children)
+'Ben'
+&amp;gt;&amp;gt;&amp;gt; next(children)
+'Lily'
+&amp;gt;&amp;gt;&amp;gt; next(children)
+'Joel'
+&amp;gt;&amp;gt;&amp;gt; next(children)
+'Sam'
+&amp;gt;&amp;gt;&amp;gt; next(children)
+'Annie'
+&amp;gt;&amp;gt;&amp;gt; next(children)
+Traceback (most recent call last):
+  File "&amp;lt;stdin&amp;gt;", line 1, in &amp;lt;module&amp;gt;
+StopIteration
+&lt;/pre&gt;
+&lt;p&gt;You’ll notice that calling next after we have reached the end gives us a StopIteration exception. C#’s closest equivalent to the Python next function is getting the enumerator and stepping through with MoveNext:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var children = GenerateChildren().GetEnumerator();
+children.MoveNext();
+Console.WriteLine(children.Current);
+children.MoveNext();
+Console.WriteLine(children.Current);
+children.MoveNext();
+Console.WriteLine(children.Current);    
+children.MoveNext();
+Console.WriteLine(children.Current);    
+children.MoveNext();
+Console.WriteLine(children.Current);
+children.MoveNext();
+Console.WriteLine(children.Current);
+&lt;/pre&gt;
+&lt;p&gt;This produces the following output (the last item is repeated because we didn’t check the return code of MoveNext which indicates whether we reached the end of the enumeration).&lt;/p&gt;&lt;pre class="brush: plain;"&gt;Ben
+Lily
+Joel
+Sam
+Annie
+Annie
+&lt;/pre&gt;
+&lt;p&gt;In practice in C# it is fairly rare to use the enumerator directly. When you have an IEnumerable&amp;lt;T&amp;gt; you typically use it in a foreach loop or with some of the LINQ extension methods.&lt;/p&gt;
+&lt;p&gt;The Python list comprehension syntax also allows us to create new generators from existing generators. For example:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; (x*x for x in range(10))
+&amp;lt;generator object &amp;lt;genexpr&amp;gt; at 0x0000000002ADD750&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;This allows you to compose complex generators out of simple statements, creating a pipeline very much like you can with chained LINQ extension methods.&lt;/p&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;As you can see, Python list comprehensions and generators provide the same power that you are used to with C# and LINQ, and with a syntax that is more compact in most cases. Look out for a follow-up post shortly where I will demonstrate how many of the standard LINQ extension methods such as Any, All, Max, Min, Take, Skip, TakeWhile, GroupBy, First, FirstOrDefault, and OrderBy can be achieved in Python.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Python</category>
+    <category>LINQ</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="22c1d3e6-be1a-4801-b01f-1c08e791df1e">
+      <author>Dan</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2014-03-06 17:30:57</date>
+      <content>One thing missing from .Net that Python has is a generator&amp;#39;s &lt;a href="http://docs.python.org/2/reference/expressions.html#generator.send" rel="nofollow"&gt;send&lt;/a&gt; method. It allows you to write values back into the method at the point you yielded. It&amp;#39;s a bit less useful in statically typed languages since you have to decide between being able to send in one type or losing out on some compile time checking.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="805bcfe0-2b2f-4355-b142-007c3f9485fc">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2014-03-06 18:09:06</date>
+      <content>@Dan, cool, I haven&amp;#39;t used that before. I&amp;#39;ll have a play with it</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,142 @@
+<post>
+  <title>Trimming a WAV file using NAudio</title>
+  <slug>trimming-wav-file-using-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-26 10:55:00</pubDate>
+  <lastModified>2010-09-23 14:32:23</lastModified>
+  <content>&lt;p&gt;I’m hoping to write a few brief code snippets to demonstrate various uses of &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt;, to eventually form the basis of an FAQ. This example shows how you can take a WAV file and trim a section out of it. You specify the TimeSpan to remove from the beginning and end, as well as an output WAV file. Please note this will only be reliable with PCM format WAV files.&lt;/p&gt;  &lt;pre class="brush: csharp;"&gt;public static class WavFileUtils
+{
+    public static void TrimWavFile(string inPath, string outPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
+    {
+        using (WaveFileReader reader = new WaveFileReader(inPath))
+        {
+            using (WaveFileWriter writer = new WaveFileWriter(outPath, reader.WaveFormat))
+            {
+                int bytesPerMillisecond = reader.WaveFormat.AverageBytesPerSecond / 1000;
+
+                int startPos = (int)cutFromStart.TotalMilliseconds * bytesPerMillisecond;
+                startPos = startPos - startPos % reader.WaveFormat.BlockAlign;
+
+                int endBytes = (int)cutFromEnd.TotalMilliseconds * bytesPerMillisecond;
+                endBytes = endBytes - endBytes % reader.WaveFormat.BlockAlign;
+                int endPos = (int)reader.Length - endBytes; 
+
+                TrimWavFile(reader, writer, startPos, endPos);
+            }
+        }
+    }
+
+    private static void TrimWavFile(WaveFileReader reader, WaveFileWriter writer, int startPos, int endPos)
+    {
+        reader.Position = startPos;
+        byte[] buffer = new byte[1024];
+        while (reader.Position &lt; endpos)="" {="" int="" bytesrequired="(int)(endPos" -="" reader.position);="" if="" (bytesrequired=""&gt; 0)
+            {
+                int bytesToRead = Math.Min(bytesRequired, buffer.Length);
+                int bytesRead = reader.Read(buffer, 0, bytesToRead);
+                if (bytesRead &gt; 0)
+                {
+                    writer.WriteData(buffer, 0, bytesRead);
+                }
+            }
+        }
+    }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="326c1613-1516-4976-9017-3388545370f1">
+      <author>Frederic</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00439799290420450484</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-08 23:37:38</date>
+      <content>Hello,&lt;br /&gt;&lt;br /&gt;Was pleased with this example.&lt;br /&gt;Tried it out with NAudio 1.3 (which was totally new to me) and worked perfectly on regular wav disk files.&lt;br /&gt;&lt;br /&gt;My scenario involed in-memory Waves so I was pleased to see that (apparently starting with 1.3 release) WaveFileReader/Writer did support Streams.&lt;br /&gt;&lt;br /&gt;Problem is that in the current WaveFileWriter class design, wave header and length is only updated when the object is disposed... which is ok when writing to a file, a little bit less when the stream is from another kind, because we might want to copy the result stream somewhere before disposing it.&lt;br /&gt;&lt;br /&gt;Correct me if I&amp;#39;m wrong, but I was thinking of copying the block of code that updates the header from the Dispose method into the Flush method. Do you think that could do the job without breaking anything else?&lt;br /&gt;&lt;br /&gt;UPDATE: Actually I did try this quick fix and it dit it, at least to me. Keep on the good work on this very helpful library.&lt;br /&gt;&lt;br /&gt;Regards&lt;br /&gt;Frederic</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bb52c6ff-2902-45f1-aba3-7a72ab75307b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-27 08:36:09</date>
+      <content>Can we use NAudio for web application..?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b826c7c7-7f69-4a2c-9781-43f341089da1">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-27 18:24:58</date>
+      <content>the web server can use NAudio to manipulate audio files, but NAudio cannot be used on the client side in the browser</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b0a38c37-6e49-4a8a-b471-1d5a6359daae">
+      <author>StarTraX</author>
+      <email>noreply@blogger.com</email>
+      <website>http://gpsanimator.com</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-25 00:51:16</date>
+      <content>I have tried to implement this code in Visual Basic, but am getting an error &lt;br /&gt;&amp;quot;Must read complete blocks&amp;quot; at&lt;br /&gt;Dim bytesRead As Integer = reader.Read(buffer, 0, bytesToRead)&lt;br /&gt;when invoking as follows:&lt;br /&gt;&lt;br /&gt;    Sub TrimWavFile(ByVal inPath As String, ByVal outPath As String, _&lt;br /&gt;             ByVal cutFromStart As TimeSpan, ByVal cutFromEnd As TimeSpan)&lt;br /&gt;        Dim reader As WaveFileReader = New WaveFileReader(inPath)&lt;br /&gt;        Dim writer As WaveFileWriter = New WaveFileWriter(outPath)&lt;br /&gt;        Dim bytesPerMillisecond As Integer = reader.WaveFormat.AverageBytesPerSecond / 1000&lt;br /&gt;        Dim startPos As Integer = cutFromStart.TotalMilliseconds * bytesPerMillisecond&lt;br /&gt;        startPos = startPos - startPos Mod reader.WaveFormat.BlockAlign&lt;br /&gt;        Dim endBytes As Integer = cutFromEnd.TotalMilliseconds * bytesPerMillisecond&lt;br /&gt;        endBytes = endBytes - endBytes Mod reader.WaveFormat.BlockAlign&lt;br /&gt;        Dim endPos As Integer = reader.Length - endBytes&lt;br /&gt;        TrimWavFile(reader, writer, startPos, endPos)&lt;br /&gt;    End Sub&lt;br /&gt;&lt;br /&gt;    Sub TrimWavFile(ByVal reader As WaveFileReader, ByVal writer As WaveFileWriter, ByVal startPos As Integer, ByVal endPos As Integer)&lt;br /&gt;        reader.Position = startPos&lt;br /&gt;        Dim buffer(1024) As Byte&lt;br /&gt;        While reader.Position &amp;lt; endPos&lt;br /&gt;            Dim bytesRequired As Integer = endPos - reader.Position&lt;br /&gt;            If bytesRequired &amp;gt; 0 Then&lt;br /&gt;                Dim bytesToRead As Integer = Math.Min(bytesRequired, buffer.Length)&lt;br /&gt;                Dim bytesRead As Integer = reader.Read(buffer, 0, bytesToRead)&lt;br /&gt;                If (bytesRead &amp;gt; 0) Then&lt;br /&gt;                    writer.WriteData(buffer, 0, bytesRead)&lt;br /&gt;                End If&lt;br /&gt;            End If&lt;br /&gt;        End While&lt;br /&gt;    End Sub&lt;br /&gt;&lt;br /&gt;    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click&lt;br /&gt;        TrimWavFile(&amp;quot;F:\VBProjectsDevelopment\3DTrackDisplay1\Sounds\tonovario.wav&amp;quot;, _&lt;br /&gt;            &amp;quot;F:\VBProjectsDevelopment\3DTrackDisplay1\Sounds\tonovarioShort.wav&amp;quot;, _&lt;br /&gt;            New TimeSpan(10000000), New TimeSpan(10000000))&lt;br /&gt;&lt;br /&gt;    End Sub&lt;br /&gt;&lt;br /&gt;My C# coding level is about 3 out of 10 so maybe I&amp;#39;ve missed something in the migration.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c85c1bc2-690c-40ce-8db0-d19a5428ee31">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-25 10:01:25</date>
+      <content>what is the value of bytesToRead?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="346f9969-70d8-4b78-acf2-3afd92a4946b">
+      <author>sodaDreamer</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-02-24 11:38:40</date>
+      <content>Thanks for the snippet. This worked a treat for me!&lt;br /&gt;&lt;br /&gt;I did spot one issue though - there&amp;#39;s a rounding error when calculating bytesPerMillisecond.  If you change it from an int to a double that should sort it.&lt;br /&gt;&lt;br /&gt;Also, for what it&amp;#39;s worth the &amp;#39;Must read complete blocks&amp;#39; error is because the data must be read in multiples of reader.WaveFormat.BlockAlign.  I had this issue reading a GSM file with a block align of 65, so I set the buffer size to BlockAlign * 100.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="28bbda1a-2b05-4860-a1aa-2798dbef78d6">
+      <author>RelevantAds</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14649839883617352018</website>
+      <ip />
+      <userAgent />
+      <date>2014-03-09 10:48:56</date>
+      <content>Getting the &amp;quot;Must read complete blocks&amp;quot; error.  Is this due to selecting a bad TimeSpan; or an oddly formed WAV file.  My is 13kbps bitrate.  I have 63 bytes left.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="91de2647-886d-443d-9f11-3fa363f9b3b4">
+      <author>RelevantAds</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14649839883617352018</website>
+      <ip />
+      <userAgent />
+      <date>2014-03-09 10:50:28</date>
+      <content>Getting the &amp;quot;Must read complete blocks&amp;quot; error.  Is this due to selecting a bad TimeSpan; or an oddly formed WAV file.  My is 13kbps bitrate.  I have 63 bytes left.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="72f249c2-9679-48cb-9918-66d3094faee0">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2014-03-09 22:54:10</date>
+      <content>instead of a buffer size of 1024, make sure it is sized to a multiple of your WaveFormat.BlockAlign.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="db5803d1-121f-4174-87ff-a68f28fa7dc6">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2014-03-09 22:54:15</date>
+      <content>instead of a buffer size of 1024, make sure it is sized to a multiple of your WaveFormat.BlockAlign.</content>
+    </comment>
+  </comments>
+</post>

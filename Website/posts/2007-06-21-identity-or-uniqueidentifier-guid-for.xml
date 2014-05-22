@@ -1,0 +1,24 @@
+<post>
+  <title>Identity or UniqueIdentifier (GUID) for Database Key?</title>
+  <slug>identity-or-uniqueidentifier-guid-for</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-21 10:37:00</pubDate>
+  <lastModified>2007-06-21 10:37:57</lastModified>
+  <content>&lt;p&gt;Jeff Atwood posted an interesting article on whether to use &lt;a href="http://www.codinghorror.com/blog/archives/000817.html"&gt;GUIDs or integers&lt;/a&gt; for primary keys in databases. Its been a while since I did any database design, and this issue has come up in a new ASP.NET project I have recently begun. &lt;/p&gt; &lt;p&gt;I'm not particularly bothered about the disk space / performance issues. I suspect the difference is not all that great and in any case, my database is not likely to be huge.&lt;/p&gt; &lt;p&gt;As I see it the reasons for me to use&amp;nbsp;GUIDs are:&lt;/p&gt; &lt;p&gt;1) The auto-generated ASP.NET 2 user database already uses &lt;strong&gt;uniqueidentifier&lt;/strong&gt;, thus my instinct is to use it in all my tables as well for consistency.&lt;/p&gt; &lt;p&gt;2) Easier to copy records to other tables / import into other databases without breaking relationships. (however, there appears to be a &lt;strong&gt;&lt;a href="http://msdn2.microsoft.com/en-us/library/aa259221(sql.80).aspx"&gt;SET IDENTITY_INSERT&lt;/a&gt;&lt;/strong&gt; command in SQL Server which means that this is also possible with IDENTITY fields)&lt;/p&gt; &lt;p&gt;There is however one significant drawback, which may move me back to using integers. The issue is that of URLs. I&amp;nbsp;want users of my site to be able to generate links to individual records in the format:&lt;/p&gt; &lt;p&gt;&lt;a href="http://www.mysite.com/View.aspx?id=104"&gt;www.mysite.com/View.aspx?id=104&lt;/a&gt;&lt;/p&gt; &lt;p&gt;With a GUID, this becomes a lot more unwieldy and much more likely to encounter problems with line-wrapping truncating the URL.&lt;/p&gt; &lt;p&gt;&lt;a href="http://www.mywebsite.com/View.aspx?id=015B34D5-A301-4543-AE1A-16708B19F602"&gt;www.mywebsite.com/View.aspx?id=015B34D5-A301-4543-AE1A-16708B19F602&lt;/a&gt;&amp;nbsp;(yuck!)&lt;/p&gt; &lt;p&gt;I did consider adding another integer column alongside the GUID which would act as the URL key, but this seems ridiculous to have two keys in the table.&lt;/p&gt; &lt;p&gt;Some people however have complained that IDs should never be present in a URL, as it allows people to randomly choose other IDs and perhaps get to pages they shouldn't. For my purposes this isn't a big deal. I have a 'private' field in my database that I will be checking before displaying an item to a user. &lt;/p&gt; &lt;p&gt;Constructing a URL out of an items textual description can make for nicer URLs in some cases:&lt;/p&gt; &lt;p&gt;&lt;a href="http://www.mysite.com/View.aspx?an-example-item"&gt;www.mysite.com/View.aspx?an-example-item&lt;/a&gt;&lt;/p&gt; &lt;p&gt;But this introduces an artificial constraint on the description being unique (e.g. why can't I have two blog entries with the same title?), and also can result in messy URLs if the description is long and contains punctuation or unusual characters.&lt;/p&gt; &lt;p&gt;So it looks like I may be heading back to integers, unless someone has a clever idea of how to make friendly URLs when the key is a GUID.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET</category>
+    <category>SQL</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="cf9848a4-32f8-4abf-8cb0-8378c9482f56">
+      <author>tayfun</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blog.tayfunsen.com</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-02 02:20:19</date>
+      <content>MySQL also provides &lt;a href="http://dev.mysql.com/doc/refman/5.1/en/miscellaneous-functions.html#function_uuid-short" rel="nofollow"&gt;shorter GUIDs, or Universal Unique ID&lt;/a&gt; as the term used by them.&lt;br /&gt;&lt;br /&gt;What you can do is use both a shorter ID and an understandable item name etc. to have nice looking URLs.&lt;br /&gt;&lt;br /&gt;Cheers.</content>
+    </comment>
+  </comments>
+</post>

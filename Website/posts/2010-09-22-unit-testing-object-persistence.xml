@@ -1,0 +1,34 @@
+<post>
+  <title>Unit Testing Object Persistence</title>
+  <slug>unit-testing-object-persistence</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-22 17:07:00</pubDate>
+  <lastModified>2010-09-22 17:07:42</lastModified>
+  <content>&lt;p&gt;Most applications have the need to save data to disk in order to reload it later. Very often this simply means the use of a database, particularly when you are dealing with server side programming. But those of us doing predominantly client side development often need to save data to custom file formats, or perhaps XML, in order to reload it at a later date. One of the trickiest challenges that surrounds this is how to ensure that future versions of your application can still successfully load in data saved in earlier versions. There are two types of test you need to write, to be sure you have got your persistence code right.&lt;/p&gt;  &lt;h3&gt;Roundtrip Testing&lt;/h3&gt;  &lt;p&gt;The first type of test is to take an object (or object graph), save it to a temporary file, and reload it in. Then you need to assert that the exported object is identical to the imported one (an overridden Equals method can be helpful here).&lt;/p&gt;  &lt;p&gt;It is important to make sure you cover every possible special case that can be exported, particularly every class that might need to be serialized at some point. Here’s a very simple example of a round-trip test:&lt;/p&gt;  &lt;pre class="brush: xml;"&gt;string fileName = &amp;quot;test.tmp&amp;quot;;
+Widget exported = new Widget();
+exported.Name = &amp;quot;xyz&amp;quot;;
+exported.Weight = 20;
+WidgetExporter.Export(exported, fileName);
+Widget imported = WidgetImporter(fileName);
+Assert.AreEqual(exported.Name, imported.Name);
+Assert.AreEqual(exported.Weight, imported.Weight);&lt;/pre&gt;
+
+&lt;h3&gt;Legacy Import Testing&lt;/h3&gt;
+
+&lt;p&gt;There are lots of gotchas surrounding preserving the ability to import data from legacy versions of your application. These are particularly tricky if you use .NET’s built-in XML or binary serialisation. While they can cope with new fields or fields being removed, when properties change their type, or move from one class into a sub-class, it can break horribly.&lt;/p&gt;
+
+&lt;p&gt;So the second type of test needed is to import some real exported data. What is needed is a store of real exported data from every version of your software has ever been in the hands of a customer. If you can automate the creation of such data, all the better. Again, you need to ensure that your test data includes an example of every possible type of exported object.&lt;/p&gt;
+
+&lt;p&gt;Ideally, your unit tests would go through each file, import it, and meticulously check that all the properties of the imported object are set correctly. In practice, this can be too time consuming to write all the necessary assert statements. &lt;/p&gt;
+
+&lt;p&gt;Typically we just choose a few representative files to check thoroughly. But there is still value in importing everything else. Often, deserialization code will throw exceptions on errors, so simply successfully importing several hundreds of files even without checking their contents is a worthwhile test.&lt;/p&gt;
+
+&lt;h3&gt;Future Proof Serialization&lt;/h3&gt;
+
+&lt;p&gt;One last piece of advice. Choose file formats and deserialization code that are very flexible to change. There is nothing worse than not being able to change a class or object hierarchy because it will break serialization. Where possible use XML, as it is much easier to handle wholesale changes to schemas down the line.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>unit testing</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,71 @@
+<post>
+  <title>Parameterized Tests with TestCase in NUnit 2.5</title>
+  <slug>parameterized-tests-with-testcase-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-14 17:30:00</pubDate>
+  <lastModified>2011-07-04 16:09:07</lastModified>
+  <content>&lt;p&gt;For some time, &lt;a href="http://www.nunit.org/index.php" target="_blank"&gt;NUnit&lt;/a&gt; has had a RowTest attribute in the NUnit.Extensions.dll, but with NUnit 2.5, we have built-in support for parameterized tests. These reduce the verbosity of multiple tests that differ only by a few arguments.&lt;/p&gt; &lt;p&gt;For example, if you had test code like this:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;[Test]
+public void Adding_1_and_1_should_equal_2()
+{
+    Assert.AreEqual(2,calculator.Add(1,1));
+}
+
+[Test]
+public void Adding_1_and_2_should_equal_3()
+{
+    Assert.AreEqual(3, calculator.Add(1, 2));
+}
+
+[Test]
+public void Adding_1_and_3_should_equal_4()
+{
+    Assert.AreEqual(4, calculator.Add(1, 3));
+}&lt;/pre&gt;
+&lt;p&gt;You can now simply refactor to:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;[TestCase(1, 1, 2)]
+[TestCase(1, 2, 3)]
+[TestCase(1, 3, 4)]
+public void AdditionTest(int a, int b, int expectedResult)
+{
+    Assert.AreEqual(expectedResult, calculator.Add(a, b));
+}&lt;/pre&gt;
+&lt;p&gt;The NUnit GUI handles this very nicely, allowing us to see which one failed, and run them individually:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/parameterized-tests-with-testcase-in-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="NUnit Parameterized Tests" border="0" alt="NUnit Parameterized Tests" src="/posts/files/parameterized-tests-with-testcase-in-1.png" width="203" height="89"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;&lt;a href="http://www.testdriven.net/"&gt;TestDriven.NET&lt;/a&gt; doesn’t give us the ability to specify an individual test case to run (hopefully a future feature), but it will show us the parameters used for any test failures:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;TestCase 'SanityCheck.CalculatorTests.AdditionTest(1,2,3)' failed: 
+  Expected: 3
+  But was:  2
+...\CalculatorTests.cs(19,0): at SanityCheck.CalculatorTests.AdditionTest(Int32 a, Int32 b, Int32 expectedResult)
+
+TestCase 'SanityCheck.CalculatorTests.AdditionTest(1,3,4)' failed: 
+  Expected: 4
+  But was:  2
+...\CalculatorTests.cs(19,0): at SanityCheck.CalculatorTests.AdditionTest(Int32 a, Int32 b, Int32 expectedResult)&lt;/pre&gt;
+&lt;p&gt;Another very cool feature is that you can specify a &lt;strong&gt;TestCaseSource&lt;/strong&gt; function, allowing you to generate test cases on the fly. One way I have used this feature is for some integration tests that examine a folder of legacy test data files and create a test for each file. &lt;/p&gt;
+&lt;p&gt;There are a few options for how to provide the source data. Here I show using a function that returns an IEnumerable&amp;lt;string&amp;gt;:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;[TestCaseSource("GetTestFiles")]
+public void ImportXmlTest(string xmlFileName)
+{
+    xmlImporter.Import(xmlFileName);
+}
+
+public IEnumerable&amp;lt;string&amp;gt; GetTestFiles()
+{
+    return Directory.GetFiles("D:\\Test Data", "*.xml");
+}&lt;/pre&gt;
+&lt;p&gt;Now when NUnit loads the test assembly, it runs the &lt;strong&gt;GetTestFiles &lt;/strong&gt;function, to get the test case parameters, allowing you to run them individually if necessary.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/parameterized-tests-with-testcase-in-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="TestCaseSource Function" border="0" alt="TestCaseSource Function" src="/posts/files/parameterized-tests-with-testcase-in-2.png" width="278" height="73"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;There is one gotcha. If your &lt;strong&gt;TestCaseSource&lt;/strong&gt; function takes a long time to run, you will need to wait every time NUnit (or TestDriven.NET) reloads your unit test DLL. So my example of examining a directory for files could negatively impact performance if there are too many test cases (I discovered this after loading 14000 test cases from a network drive).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NUnit</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="53b028c0-c2a0-44fd-9d79-052a512356e8">
+      <author>Anders</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/01032773808634776975</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-18 06:19:23</date>
+      <content>Thanks, find this a couple of years later. Very clear.</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,50 @@
+<post>
+  <title>XAML Football Pitch</title>
+  <slug>xaml-football-pitch</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-11 17:05:00</pubDate>
+  <lastModified>2010-10-04 12:49:22</lastModified>
+  <content>&lt;p&gt;Here's a XAML football pitch, potentially the beginnings of a Silverlight football application. I've used metres as coordinates, and drawn a pitch of the maximum allowed size. For the second penalty area, I just reflected the first one. Unfortunately there is no simple way of reusing the same item twice in the same XAML file.&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Canvas xmlns=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&amp;quot; xmlns:x=&amp;quot;http://schemas.microsoft.com/winfx/2006/xaml&amp;quot; Width=&amp;quot;525&amp;quot; Height=&amp;quot;400&amp;quot; Background=&amp;quot;#00b000&amp;quot;&amp;gt;
+    &amp;lt;Canvas x:Name=&amp;quot;Pitch&amp;quot; Canvas.Left=&amp;quot;20&amp;quot; Canvas.Top=&amp;quot;20&amp;quot; &amp;gt;
+        &amp;lt;Canvas.RenderTransform&amp;gt;
+            &amp;lt;ScaleTransform ScaleX=&amp;quot;4&amp;quot; ScaleY=&amp;quot;4&amp;quot; /&amp;gt;
+        &amp;lt;/Canvas.RenderTransform&amp;gt;
+        &amp;lt;!-- http://en.wikipedia.org/wiki/Football_pitch --&amp;gt;
+        &amp;lt;!-- dimensions in metres --&amp;gt;
+        &amp;lt;Polygon Points=&amp;quot;0,0 120,0, 120,90, 0,90 &amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+
+        &amp;lt;Canvas x:Name=&amp;quot;PenaltyArea&amp;quot; Canvas.Top=&amp;quot;24.85&amp;quot; &amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,0 16.5,0 16.5,40.3, 0,40.3&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,11 5.5,11 5.5,29.3, 0,29.3&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,16.5 -2.44,16.5 -2.44,23.8, 0,23.8&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Ellipse Canvas.Left=&amp;quot;2.15&amp;quot; Width=&amp;quot;18.3&amp;quot; Height=&amp;quot;18.3&amp;quot; Canvas.Top=&amp;quot;11&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; Clip=&amp;quot;M 14.35,0 h 10 v 20 h -10 Z&amp;quot; /&amp;gt;
+            &amp;lt;Ellipse Canvas.Left=&amp;quot;10.5&amp;quot; Width=&amp;quot;1&amp;quot; Height=&amp;quot;1&amp;quot; Canvas.Top=&amp;quot;19.65&amp;quot; Fill=&amp;quot;White&amp;quot; /&amp;gt;
+        &amp;lt;/Canvas&amp;gt;
+
+        &amp;lt;Canvas x:Name=&amp;quot;PenaltyArea2&amp;quot; Canvas.Top=&amp;quot;24.85&amp;quot; Canvas.Left=&amp;quot;120&amp;quot; &amp;gt;
+            &amp;lt;Canvas.RenderTransform&amp;gt;
+                &amp;lt;ScaleTransform ScaleX=&amp;quot;-1.0&amp;quot; /&amp;gt;
+            &amp;lt;/Canvas.RenderTransform&amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,0 16.5,0 16.5,40.3, 0,40.3&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,11 5.5,11 5.5,29.3, 0,29.3&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Polyline Points=&amp;quot;0,16.5 -2.44,16.5 -2.44,23.8, 0,23.8&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+            &amp;lt;Ellipse Canvas.Left=&amp;quot;2.15&amp;quot; Width=&amp;quot;18.3&amp;quot; Height=&amp;quot;18.3&amp;quot; Canvas.Top=&amp;quot;11&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; Clip=&amp;quot;M 14.35,0 h 10 v 20 h -10 Z&amp;quot; /&amp;gt;
+            &amp;lt;Ellipse Canvas.Left=&amp;quot;10.5&amp;quot; Width=&amp;quot;1&amp;quot; Height=&amp;quot;1&amp;quot; Canvas.Top=&amp;quot;19.65&amp;quot; Fill=&amp;quot;White&amp;quot; /&amp;gt;
+        &amp;lt;/Canvas&amp;gt;
+
+        &amp;lt;Ellipse Canvas.Left=&amp;quot;50.5&amp;quot; Width=&amp;quot;19&amp;quot; Height=&amp;quot;19&amp;quot; Canvas.Top=&amp;quot;35.5&amp;quot; Stroke=&amp;quot;White&amp;quot; /&amp;gt;
+
+        &amp;lt;Line X1=&amp;quot;60&amp;quot; Y1=&amp;quot;0&amp;quot; X2=&amp;quot;60&amp;quot; Y2=&amp;quot;90&amp;quot; Stroke=&amp;quot;White&amp;quot; StrokeThickness=&amp;quot;1&amp;quot; /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+&amp;lt;/Canvas&amp;gt;
+&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,113 @@
+<post>
+  <title>Lunchtime LINQ Challenge Answers</title>
+  <slug>lunchtime-linq-challenge-answers</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-06-27 14:33:00</pubDate>
+  <lastModified>2013-06-27 14:33:18</lastModified>
+  <content>&lt;p&gt;I had a number of people attempt the &lt;a href="/post/lunchtime-linq-challenge"&gt;Lunchtime LINQ Challenge&lt;/a&gt; I set yesterday, and so I thought I’d follow up with a post about each problem, and what my preferred approach was. With each problem I saw a wide variety of different approaches, and the majority were correct (apart from the odd off-by-one error). LINQ is very powerful, and chaining operators can let you achieve a lot, but you can risk creating incomprehensible code. So I was looking for answers that were succinct but also readable.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Problem 1: Numbering Players&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;&lt;em&gt;1. Take the following string "Davis, Clyne, Fonte, Hooiveld, Shaw, Davis, Schneiderlin, Cork, Lallana, &lt;/em&gt;&lt;em&gt;Rodriguez, Lambert" and give each player a shirt number, starting from 1, to create a string of the form: "1. Davis, 2. Clyne, 3. Fonte" etc&lt;/em&gt;&lt;/p&gt; &lt;p&gt;This one wasn’t too hard, and was designed to highlight the fact that the LINQ Select method lets you pass in a lambda that takes two parameters – the first is the item from the input IEnumerable, and the second is an index (zero based). Here was my solution to this problem:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;String.Join(", ",
+    "Davis, Clyne, Fonte, Hooiveld, Shaw, Davis, Schneiderlin, Cork, Lallana, Rodriguez, Lambert"
+        .Split(',')
+        .Select((item, index) =&amp;gt; index+1 + "." + item)
+        .ToArray())
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Problem 2: Order by Age&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;2. Take the following string "Jason Puncheon, 26/06/1986; Jos Hooiveld, 22/04/1983; Kelvin Davis, 29/09/1976; Luke Shaw, 12/07/1995; Gaston Ramirez, 02/12/1990; Adam Lallana, 10/05/1988" and turn it into an IEnumerable of players in order of age (bonus to show the age in the output).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This basic problem isn’t too hard to solve, but calculating the age proved rather tricky. Various attempts were made such as dividing the days old by 365.25, but the only one that worked for all test cases came from &lt;a href="http://stackoverflow.com/questions/9/how-do-i-calculate-someones-age"&gt;this StackOverflow answer&lt;/a&gt;. The trouble is, inserting this code snippet into a LINQ statement would make it quite cumbersome, so my preference would be to create a small helper method or even an extension method:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static int GetAge(this DateTime dateOfBirth)
+{
+    DateTime today = DateTime.Today;
+    int age = today.Year - dateOfBirth.Year;
+    if (dateOfBirth &amp;gt; today.AddYears(-age)) age--;
+    return age;
+}
+&lt;/pre&gt;
+&lt;p&gt;With that extension method in place, we can create much more readable code. Note that to sort players by age properly, the OrderBy should operate on the date of birth, rather than on the age.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"Jason Puncheon, 26/06/1986; Jos Hooiveld, 22/04/1983; Kelvin Davis, 29/09/1976; Luke Shaw, 12/07/1995; Gaston Ramirez, 02/12/1990; Adam Lallana, 10/05/1988"
+.Split(';')
+.Select(s =&amp;gt; s.Split(','))
+.Select(s =&amp;gt; new { Name = s[0].Trim(), Dob = DateTime.Parse(s[1].Trim()) })
+.Select(s =&amp;gt; new { Name = s.Name, Dob = s.Dob, Age = s.Dob.GetAge() })
+.OrderByDescending (s =&amp;gt; s.Dob)&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Problem 3: Sum Timespans&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;3. Take the following string "4:12,2:43,3:51,4:29,3:24,3:14,4:46,3:25,4:52,3:27" which represents the durations of songs in minutes and seconds, and calculate the total duration of the whole album&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The main challenges here are first turning the strings into TimeSpans, and then summing TimeSpans, since you can’t use LINQ’s Sum method on an IEnumerable&amp;lt;TimeSpan&amp;gt;. The first can be done with TimeSpan.ParseExact, or you could add an extra “0:” on the beginning to get it into the format that TimeSpan.Parse expects. Several people ignored timespans completely, and simply parsed out the minutes and seconds themselves, and added up the total number of seconds. This is OK, although not as extensible for changes to the input string format such as the introduction of millisecond components. The summing of TimeSpans can be done quite straightforwardly with the LINQ Aggregate method. Here’s what I came up with:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"4:12,2:43,3:51,4:29,3:24,3:14,4:46,3:25,4:52,3:27"
+    .Split(',')
+    .Select(s =&amp;gt; TimeSpan.Parse("0:" + s))
+    .Aggregate ((t1, t2) =&amp;gt; t1 + t2)
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Problem 4: Generate Coordinates&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;4. Create an enumerable sequence of strings in the form "x,y" representing all the points on a 3x3 grid. e.g. output would be: 0,0 0,1 0,2 1,0 1,1 1,2 2,0 2,1 2,2&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This one is nice and easy. I expected this one to be solved using a SelectMany, but I did get one answer that just used a Select:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Enumerable.Range(0,9)
+    .Select(x =&amp;gt; string.Format("{0},{1}", x / 3, x % 3))
+&lt;/pre&gt;
+&lt;p&gt;This works fine, although it would be a little more involved to change the maximum x and y values. The answer I was expecting from most people just uses two Enumerable.Range and a SelectMany&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Enumerable.Range(0,3)
+.SelectMany(x =&amp;gt; Enumerable.Range(0,3)
+    .Select(y =&amp;gt; String.Format("{0},{1}",x,y)))
+&lt;/pre&gt;
+&lt;p&gt;But I did get a few responses that use the alternative LINQ syntax, and although I tend to prefer the chained method calls approach, in this case I think it makes for easier to read code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;from i in Enumerable.Range(0, 3)
+from j in Enumerable.Range(0, 3)
+select String.Format("{0}, {1}", i, j);
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Problem 5: Swim Length Times&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;5. Take the following string "00:45,01:32,02:18,03:01,03:44,04:31,05:19,06:01,06:47,07:35" which represents the times (in minutes and seconds) at which a swimmer completed each of 10 lengths. Turn this into an enumerable of timespan objects containing the time taken to swim each length (e.g. first length was 45 seconds, second was 47 seconds etc)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This one was by far the hardest to implement as a single LINQ statement, since you needed to compare the current value with the previous value to calculate the difference. Perhaps the easiest trick is to Zip the sequence with itself delayed by one:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;("00:00," + splitTimes).Split(',')
+.Zip(splitTimes.Split(','), (s,f) =&amp;gt; new 
+    { Start = TimeSpan.Parse("0:" + s), 
+      Finish = TimeSpan.Parse("0:" + f) })
+.Select (q =&amp;gt;  q.Finish-q.Start)      
+
+&lt;/pre&gt;
+&lt;p&gt;The disadvantage of this approach is that you are enumerating the input sequence twice. Obviously for a string input it does not matter, but in some situations you cannot enumerate a sequence twice. I did receive two ingenious solutions that used the Aggregate function to avoid the double enumeration:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"00:45,01:32,02:18,03:01,03:44,04:31,05:19,06:01,06:47,07:35"
+    .Split(new char[] { ','})
+    .Select(x =&amp;gt; "00:"+x)
+    .Aggregate((acc, z) =&amp;gt; acc + "," + TimeSpan.Parse(z.Dump()).Add(new TimeSpan(0,0,- 
+        acc.Split(new char[] { ',' })
+            .Sum(x =&amp;gt; (int)TimeSpan.Parse(x).TotalSeconds))))    
+    .Split(new char[] {','})
+    .Select(x =&amp;gt; TimeSpan.Parse(x))
+&lt;/pre&gt;
+&lt;p&gt;and&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;.Split(',')
+.Aggregate("00:00:00", (lapsString, lapTime) =&amp;gt; 
+    string.Format("{0}-00:{1},00:{1}", lapsString, lapTime), result =&amp;gt; result.Substring(0, result.Length - 9))
+.Split(',')
+.Select(lap =&amp;gt; DateTime.Parse(lap.Substring(9)) - DateTime.Parse(lap.Substring(0,8)))
+&lt;/pre&gt;
+&lt;p&gt;But to be honest, I think that this is another case for a helper extension method. Suppose we had a ZipWithSelf method that allowed you to operate on the sequence in terms of the current and previous values:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static IEnumerable&amp;lt;X&amp;gt; ZipWithSelf&amp;lt;T,X&amp;gt;(this IEnumerable&amp;lt;T&amp;gt; inputSequence, Func&amp;lt;T,T,X&amp;gt; selector)
+{
+    var last = default(T);
+    foreach(var input in inputSequence)
+    {
+        yield return selector(last, input);
+        last = input;
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;then we could make the LINQ statement read very naturally and only require a single enumeration of the sequence:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"00:45,01:32,02:18,03:01,03:44,04:31,05:19,06:01,06:47,07:35"
+    .Split(',')    
+    .Select(x =&amp;gt; TimeSpan.Parse("00:"+x))
+    .ZipWithSelf((a,b) =&amp;gt; b - a)
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Problem 6:&lt;/strong&gt; &lt;strong&gt;Ranges&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;6. Take the following string "2,5,7-10,11,17-18" and turn it into an IEnumerable of integers: 2 5 7 8 9 10 11 17 18&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This one represents a real problem I had to solve a while ago, and after a few iterations, found that it could be solved quite succinctly in LINQ. The trick is to turn it into an enumeration of start and end values. For the entries that aren’t ranges, just have the same value for start and end. Then you can do a SelectMany combined with Enumerable.Range:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;"2,5,7-10,11,17-18"
+    .Split(',')
+    .Select(x =&amp;gt; x.Split('-'))
+    .Select(p =&amp;gt; new { First = int.Parse(p[0]), Last = int.Parse(p.Last()) })
+    .SelectMany(r =&amp;gt; Enumerable.Range(r.First, r.Last - r.First + 1))
+
+&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>LINQ</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e498aea6-65fd-41ac-9951-f1107175b8ea">
+      <author>Shimmy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blogs.microsoft.co.il/blogs/shimmy</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-28 02:39:14</date>
+      <content>Thank you for this great article.&lt;br /&gt;It actually served me a lot.&lt;br /&gt;&lt;br /&gt;Now I&amp;#39;m facing one of these issue, &lt;a href="http://stackoverflow.com/q/17355660" rel="nofollow"&gt;please take a look&lt;/a&gt;.</content>
+    </comment>
+  </comments>
+</post>

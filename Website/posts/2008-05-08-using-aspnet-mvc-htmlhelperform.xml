@@ -1,0 +1,111 @@
+<post>
+  <title>Using ASP.NET MVC HtmlHelper.Form</title>
+  <slug>using-aspnet-mvc-htmlhelperform</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-05-08 16:42:00</pubDate>
+  <lastModified>2010-10-05 11:46:12</lastModified>
+  <content>&lt;p&gt;Today, I tried making a HTML form with the ASP.NET MVC HtmlHelper, but it took me a while to get it working as documentation on the web is a little sparse at the moment. Here's some basic instructions.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;View&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;In the view, you can use a &lt;strong&gt;using&lt;/strong&gt; statement to ensure the Form tag is closed properly. I am using the generic version of the &lt;strong&gt;HtmlHelper.Form &lt;/strong&gt;method, so that I can easily specify a method on my controller to be called when the form submit button is clicked. This method can take parameters if you want (for example the ID when creating an edit form), but it should not have parameters for the actual input fields on the form - they will be read out of the Request object by the controller.&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;h2&amp;gt;New Post&amp;lt;/h2&amp;gt;
+&amp;lt;% using (Html.Form&amp;lt;BlogController&amp;gt;(c =&amp;gt; c.CreatePost()))
+  { %&amp;gt;
+&amp;lt;label for="postTitle"&amp;gt;Title&amp;lt;/label&amp;gt;
+&amp;lt;%= Html.TextBox("postTitle") %&amp;gt;
+&amp;lt;br /&amp;gt;
+&amp;lt;%= Html.TextArea("postBody","", 10,80) %&amp;gt;
+&amp;lt;%= Html.SubmitButton("submitButton","Save") %&amp;gt;
+&amp;lt;% 
+  } %&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Controller&lt;/strong&gt; &lt;/p&gt;
+
+&lt;p&gt;The controller method, as I have already indicated does not need to take the form inputs as parameters. It reads these out of the &lt;strong&gt;Request.Form&lt;/strong&gt; dictionary.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public ActionResult CreatePost()
+{
+   string postTitle = Request.Form["postTitle"];
+   string postBody = Request.Form["postBody"];   
+   Post post = new Post { Title = postTitle, Body = postBody };
+   post.Status = PublishStatus.Published; 
+   blogService.CreatePost(post);
+   return RedirectToAction(new { action = "Index" });
+}&lt;/pre&gt;
+
+&lt;p&gt;There is a &lt;strong&gt;Binding.UpdateFrom &lt;/strong&gt;helper method that you can use to speed up the code further if you name your fields correctly.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Testing&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;It's fairly easy to test your controller's new method. Simply add references to &lt;strong&gt;System.Web&lt;/strong&gt; and &lt;strong&gt;System.Web.Abstractions&lt;/strong&gt; and you can populate the &lt;strong&gt;Request.Form&lt;/strong&gt; dictionary before calling your action method:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;[Test]
+public void BlogControllerCanCallCreatePost()
+{
+   BlogController blogController = new BlogController(new TestBlogRepository());
+   blogController.Request.Form["postTitle"] = "Title";
+   blogController.Request.Form["postBody"] = "Body";
+   ActionResult result = blogController.CreatePost();
+}&lt;/pre&gt;
+
+
+&lt;p&gt;&lt;strong&gt;EDIT: &lt;/strong&gt;Looks like I spoke too soon. The above test code will actually fail because blogController.Request is null. I'll update this post once I have worked out an easy way to populate the Request.Form dictionary. And in future I'll try to remember to actually run my unit tests before declaring them a success!&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET MVC</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="73ffa9f3-d5e1-4538-8af8-8b294dbf3ff8">
+      <author>kamini</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03737980010730690498</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-16 11:47:00</date>
+      <content>nice post...&lt;BR/&gt;&lt;BR/&gt;just tell me what is ActionResult&lt;BR/&gt;and what is blogservice?&lt;BR/&gt;&lt;BR/&gt;can u explain me....&lt;BR/&gt;&lt;BR/&gt;and i am doing r&amp;d on MVC..and if possible send me a some document about MVC.....</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="39679a10-274a-4bfb-b38f-742198ce3fd8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-16 11:54:00</date>
+      <content>Hi kamini, go to &lt;A HREF="http://weblogs.asp.net/scottgu/" REL="nofollow"&gt;Scott Gu's blog&lt;/A&gt;, and the &lt;A HREF="http://www.asp.net/mvc/" REL="nofollow"&gt;official ASP.NET MVC site&lt;/A&gt; to find out more.&lt;BR/&gt;&lt;BR/&gt;blogservice is just my class that allows me to access my blog database.&lt;BR/&gt;&lt;BR/&gt;ActionResult is what is returned by MVC controller methods.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9b6d65dd-fd2a-4539-a304-4e42d59fbe75">
+      <author>Grande</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07522793168375306409</website>
+      <ip />
+      <userAgent />
+      <date>2008-08-19 19:10:00</date>
+      <content>Hi,&lt;BR/&gt;&lt;BR/&gt;I&amp;#39;m using pretty much the same thing as you, but I&amp;#39;m getting a NullReferenceException.  It seems Html is coming back as null.  Any idea why?&lt;BR/&gt;&lt;BR/&gt;&amp;lt;% using (Html.Form&amp;lt;UsersController&amp;gt;(action =&amp;gt; action.Create())) { %&amp;gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e6d2a0d6-3e92-4612-8128-22992a6be603">
+      <author>Erik Porter</author>
+      <email>noreply@blogger.com</email>
+      <website>http://weblogs.asp.net/eporter</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-01 07:19:00</date>
+      <content>Best pattern we've found for writing tests like you have shown is by using fake classes.  Stephen Walther has many great posts on these.&lt;BR/&gt;&lt;BR/&gt;http://weblogs.asp.net/stephenwalther/archive/2008/08/03/asp-net-mvc-tip-29-build-a-controller-to-debug-your-custom-routes.aspx</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="45deaa80-14f7-41d3-9c50-1159f8b4bed6">
+      <author>Leo H.</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-11-20 21:41:00</date>
+      <content>Where do I get Html.SubmitButton("submitButton","Save")? My HtmlHelper class does not contain this method.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a3974d70-5f98-4e59-9c00-07cf8e7d97bf">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-21 09:19:00</date>
+      <content>Hi Leo, this was with an old tech preview, so I imagine that HtmlHelper has changed since then. I haven't used the latest version yet.</content>
+    </comment>
+  </comments>
+</post>

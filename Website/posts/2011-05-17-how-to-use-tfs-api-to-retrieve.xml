@@ -1,0 +1,44 @@
+<post>
+  <title>How to use the TFS API to retrieve a historical version of your project</title>
+  <slug>how-to-use-tfs-api-to-retrieve</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-17 12:09:00</pubDate>
+  <lastModified>2011-05-17 12:09:58</lastModified>
+  <content>&lt;p&gt;I recently had the need to retrieve several old versions of a project from TFS. Fortunately, the TFS API allows you to automate this process.&lt;/p&gt; &lt;p&gt;First you need to connect to the TFS Server:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri("http://tfsserver:8080/"));
+tpc.EnsureAuthenticated();
+
+&lt;/pre&gt;
+&lt;p&gt;Next we will set up a workspace to use. I check first that the workspace doesn’t exist.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;VersionControlServer vcs = tpc.GetService&amp;lt;VersionControlServer&amp;gt;(); //.GetAllTeamProjects(false);
+string workspaceName = "temp";
+string workspaceOwner = "mheath"; // your user name
+// protect ourselves from using a workspace in use for something else\
+Assert.Throws&amp;lt;WorkspaceNotFoundException&amp;gt;(() =&amp;gt; vcs.GetWorkspace(workspaceName, workspaceOwner), "The workspace already exists");
+var workspace = vcs.CreateWorkspace(workspaceName, workspaceOwner);
+
+// use the workspace...
+
+// when we are done with it... &lt;br&gt;vcs.DeleteWorkspace(workspaceName, workspaceOwner);&lt;/pre&gt;
+&lt;p&gt;Now we need to map our workspace to a local temporary folder. We can use the server path to select only a subset of the code in the project (for example a single branch):&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;string localPath = @"D:\TFS\Temp";
+string requestPath = "$/MyProject/Dev/Source";
+
+// protect ourselves from accidentally overwriting something important
+Assert.IsFalse(Directory.Exists(localPath), "directory should not exist before this test is run");
+Directory.CreateDirectory(localPath);
+
+workspace.Map(requestPath, localPath);
+&lt;/pre&gt;
+&lt;p&gt;Finally we are ready to make a request. We use a &lt;strong&gt;VersionSpec&lt;/strong&gt; to specify which version we want. I am using a DateVersionSpec here, but you can use a ChangeVersionSet or a LabelVersionSet if you prefer. The &lt;strong&gt;ItemSpec &lt;/strong&gt;specifies what to get. We want everything in our request path including subfolders, so recursion is turned on:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var version = new DateVersionSpec(new DateTime(2009, 11, 24));
+var item = new ItemSpec(requestPath, RecursionType.Full);
+GetRequest getRequest = new GetRequest(item, version);
+
+GetStatus status = workspace.Get(getRequest, GetOptions.GetAll);
+Assert.AreEqual(0, status.NumWarnings);
+Assert.AreEqual(0, status.NumFailures);
+&lt;/pre&gt;
+&lt;p&gt;And that is it – it is usually quite quick to retrieve as well (certainly much faster than SourceSafe was!).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>TFS</category>
+  </categories>
+  <comments />
+</post>

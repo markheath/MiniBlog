@@ -1,0 +1,99 @@
+<post>
+  <title>Detecting Mouse Hover Over ListBox Items in WPF</title>
+  <slug>detecting-mouse-hover-over-listbox</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-03-14 13:45:00</pubDate>
+  <lastModified>2014-03-14 13:45:13</lastModified>
+  <content>&lt;p&gt;I’m a big fan of using MVVM in WPF and for the most part it works great, but still I find myself getting frustrated from time to time that data binding tasks that ought to be easy seem to require tremendous feats of ingenuity as well as encyclopaedic knowledge of the somewhat arcane WPF data binding syntax. However, my experience is that you can usually achieve whatever you need to if you create an attached behaviour.&lt;/p&gt; &lt;p&gt;In this instance, I wanted to detect when the mouse was hovered over an item in a ListBox, so that my ViewModel could perform some custom actions. The ListBox was of course bound to items in a ViewModel, and the items had their own custom template. You may know that unfortunately you can’t bind a method on your ViewModel to an event handler, or this would be straightforward.&lt;/p&gt; &lt;p&gt;My solution was to create an attached behaviour that listened to both the MouseEnter and MouseLeave events for the top level element in my ListBoxItem template. Both will call the Execute method of the ICommand you are bound to. When the mouse enters the ListBoxItem, it passes true as the parameter, and when it exits, it passes false. Here’s the attached behaviour:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static class MouseOverHelpers
+{
+    public static readonly DependencyProperty MouseOverCommand =
+        DependencyProperty.RegisterAttached("MouseOverCommand", typeof(ICommand), typeof(MouseOverHelpers),
+                                                                new PropertyMetadata(null, PropertyChangedCallback));
+
+    private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    {
+        var ui = dependencyObject as UIElement;
+        if (ui == null) return;
+
+        if (args.OldValue != null)
+        {
+            ui.RemoveHandler(UIElement.MouseLeaveEvent, new RoutedEventHandler(MouseLeave));
+            ui.RemoveHandler(UIElement.MouseEnterEvent, new RoutedEventHandler(MouseEnter));
+        }
+
+        if (args.NewValue != null)
+        {
+            ui.AddHandler(UIElement.MouseLeaveEvent, new RoutedEventHandler(MouseLeave));
+            ui.AddHandler(UIElement.MouseEnterEvent, new RoutedEventHandler(MouseEnter));
+        }
+    }
+
+    private static void ExecuteCommand(object sender, bool parameter)
+    {
+        var dp = sender as DependencyObject;
+        if (dp == null) return;
+
+        var command = dp.GetValue(MouseOverCommand) as ICommand;
+        if (command == null) return;
+
+        if (command.CanExecute(parameter))
+        {
+            command.Execute(parameter);
+        }
+    }
+
+    private static void MouseEnter(object sender, RoutedEventArgs e)
+    {
+        ExecuteCommand(sender, true);
+    }
+
+    private static void MouseLeave(object sender, RoutedEventArgs e)
+    {
+        ExecuteCommand(sender, false);
+    }
+
+    public static void SetMouseOverCommand(DependencyObject o, ICommand value)
+    {
+        o.SetValue(MouseOverCommand, value);
+    }
+
+    public static ICommand GetMouseOverCommand(DependencyObject o)
+    {
+        return o.GetValue(MouseOverCommand) as ICommand;
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;And here’s how you would make use of it in a ListBoxItem template:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+    &amp;lt;Border Name="Border"
+           my:MouseOverHelpers.MouseOverCommand="{Binding MouseOverCommand}"&amp;gt;
+        &amp;lt;Image Source="{Binding ImageSource}" Width="32" Height="32" Margin="2,0,2,0"/&amp;gt;
+    &amp;lt;/Border&amp;gt;
+&amp;lt;/ControlTemplate&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;This is essentially a specialised version of the generic approach described &lt;a href="http://blog.functionalfun.net/2008/09/hooking-up-commands-to-events-in-wpf.html"&gt;here&lt;/a&gt; for binding an ICommand to any event. My version simply saves you needing a separate command for MouseEnter and MouseLeave.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="2bf6c5e9-e630-41b3-93e8-0a5576b7e9f2">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2014-03-21 10:04:50</date>
+      <content>Hi,&lt;br /&gt;I think that You can also use triggers changing EventName.&lt;br /&gt;&lt;br /&gt;In Silverlight I use in ListBox.ItemTemplate.DataTemplate:&lt;br /&gt;&lt;br /&gt;                                &lt;br /&gt;                                                                            &lt;br /&gt;                                        &lt;br /&gt;                                    &lt;br /&gt;                                &lt;br /&gt;&lt;br /&gt;where &lt;br /&gt;xmlns:i=&amp;quot;http://schemas.microsoft.com/expression/2010/interactivity&amp;quot;&lt;br /&gt;&lt;br /&gt;I think that caliburn micro is also usful in doing this in easy way.&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;MW</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6664471a-4635-422f-9b27-c5550c76793a">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2014-03-21 10:12:09</date>
+      <content>Once again because in first comment code disappear. I have to cut&amp;quot;&amp;lt;&amp;quot; &lt;br /&gt;&lt;br /&gt;Hi,&lt;br /&gt;I think that You can also use triggers changing EventName.&lt;br /&gt;&lt;br /&gt;In Silverlight I use in ListBox.ItemTemplate.DataTemplate:&lt;br /&gt;&lt;br /&gt;i:Interaction.Triggers&amp;gt;&lt;br /&gt;i:EventTrigger EventName=&amp;quot;MouseLeftButtonDown&amp;quot;&amp;gt;                                      i:InvokeCommandAction Command=&amp;quot;{Binding ElementName=Page,Path=DataContext.GoToDetails}&amp;quot; CommandParameter=&amp;quot;{Binding}&amp;quot;/&amp;gt;&lt;br /&gt;&lt;br /&gt;/i:EventTrigger&amp;gt;&lt;br /&gt;/i:Interaction.Triggers&amp;gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;where &lt;br /&gt;xmlns:i=&amp;quot;http://schemas.microsoft.com/expression/2010/interactivity&amp;quot;&lt;br /&gt;&lt;br /&gt;I think that caliburn micro is also usful in doing this in easy way.&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;MW</content>
+    </comment>
+  </comments>
+</post>

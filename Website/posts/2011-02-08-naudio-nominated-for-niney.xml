@@ -1,0 +1,41 @@
+<post>
+  <title>NAudio Nominated for a Niney!</title>
+  <slug>naudio-nominated-for-niney</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-02-08 14:50:00</pubDate>
+  <lastModified>2011-02-08 14:50:24</lastModified>
+  <content>&lt;p&gt;I received news recently that &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; has been nominated for &lt;a href="http://www.zoomerang.com/Survey/WEB22BQU9KHP5G/"&gt;a Niney award&lt;/a&gt; (for “favourite Codeplex project) at the forthcoming &lt;a href="http://live.visitmix.com/"&gt;MIX 11&lt;/a&gt; conference. There’s some stiff competition as there are some other excellent CodePlex projects nominated including Laurent Bugnion’s excellent &lt;a href="http://www.galasoft.ch/mvvm/getstarted/"&gt;MVVM Light&lt;/a&gt; toolkit. So do head over to &lt;a href="http://channel9.msdn.com/"&gt;Channel 9&lt;/a&gt; and vote, and maybe I’ll get round to finally releasing NAudio 1.4 in the not too distant future.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="601d681b-b30a-4f26-9b10-2e17c091c83a">
+      <author>Ryan</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-11 15:25:43</date>
+      <content>Congrats, Mark!&lt;br /&gt;There&amp;#39;s something that I would like to ask. May I know how should I use the &amp;#39;Timeline&amp;#39; control in Naudio? Thank you.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2c0e384b-ebd4-451b-a443-fda4f7a60d4a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-03-11 16:14:50</date>
+      <content>I&amp;#39;m afraid the Timeline control was never finished. It should probably be deleted.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="34fa528e-4d80-4771-898e-edf0e885852e">
+      <author>Ryan</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-14 16:51:03</date>
+      <content>I see. That&amp;#39;s a waste. Is there any way that I can edit the controls?</content>
+    </comment>
+  </comments>
+</post>

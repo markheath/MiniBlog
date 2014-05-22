@@ -1,0 +1,59 @@
+<post>
+  <title>Useful Git and Mercurial Links</title>
+  <slug>useful-git-and-mercurial-links</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-04-20 12:38:00</pubDate>
+  <lastModified>2012-09-10 16:33:36</lastModified>
+  <content>Following on from my talk on DVCS at &lt;a href="http://www.nxtgenug.net/"&gt;NxtGenUG&lt;/a&gt; last night, here are some links to the tools I talked about.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Git Install on Windows&lt;/h3&gt;&lt;br&gt;
+Git users on Windows should start by installing &lt;a href="http://code.google.com/p/msysgit/downloads/list"&gt;msysgit&lt;/a&gt;. Visual Studio integration is available with &lt;a href="https://github.com/pvginkel/VisualGit"&gt;VisualGit&lt;/a&gt;. To visualise your repository, keep an eye on &lt;a href="http://haacked.github.com/SeeGit/"&gt;SeeGit&lt;/a&gt;, which is still in its early stages, but could develop into a very useful tool. There is also a forthcoming GitHub for Windows application (still in private beta) that should be worth the wait. Finally, &lt;a href="https://github.com/dahlbyk/posh-git"&gt;Posh-Git&lt;/a&gt; is a good PowerShell integration for git.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Mercurial Install on Windows&lt;/h3&gt;&lt;br&gt;
+Get started with Mercurial by installing &lt;a href="http://tortoisehg.bitbucket.org/"&gt;TortoiseHg&lt;/a&gt; and if you want Visual Studio integration there is &lt;a href="http://visualhg.codeplex.com/"&gt;VisualHg&lt;/a&gt;. &lt;a href="https://github.com/jeremyskinner/posh-hg"&gt;Posh-Hg&lt;/a&gt; provides PowerShell integration.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Converting Repositories&lt;/h3&gt;&lt;br&gt;
+Both Mercurial and git support importing the history from other Version Control Systems. In Mercurial, see the &lt;a href="http://mercurial.selenic.com/wiki/ConvertExtension"&gt;convert extension&lt;/a&gt; which supports many DVCS systems. You can also &lt;a href="http://stackoverflow.com/questions/1046261/import-tfs-history-into-mercurial-hg"&gt;import from TFS&lt;/a&gt; and &lt;a href="http://mercurial.selenic.com/wiki/SourceSafeConversion"&gt;SourceSafe&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+For git users there are similar tools. Here’s some help for converting &lt;a href="http://code.google.com/p/vss2git/"&gt;VSS to git&lt;/a&gt;, &lt;a href="https://github.com/spraints/git-tfs"&gt;TFS to git&lt;/a&gt; and &lt;a href="http://blog.julipedia.org/2012/02/converting-subversion-repository-to-git.html"&gt;Subversion to git&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Publishing a Repository from Your Local Machine&lt;/h3&gt;&lt;br&gt;
+There are occasions when you want another developer to pull from a repository on your local machine. With Mercurial, you can use &lt;a href="http://mercurial.selenic.com/wiki/hgserve"&gt;hgserve&lt;/a&gt; to launch a webserver, and with git, you use &lt;a href="http://stackoverflow.com/a/377293/7532"&gt;git daemon&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Open Source Git and Mercurial Hosting&lt;/h3&gt;&lt;br&gt;
+&lt;a href="http://sourceforge.net/"&gt;Sourceforge&lt;/a&gt;, &lt;a href="http://code.google.com/hosting/"&gt;google code&lt;/a&gt;, &lt;a href="https://bitbucket.org/"&gt;bitbucket&lt;/a&gt; and &lt;a href="http://www.codeplex.com/"&gt;codeplex&lt;/a&gt; all support both git and Mercurial open source projects. Then there is &lt;a href="https://github.com/"&gt;github&lt;/a&gt;, which only supports git, but has a deserved reputation for being one of the best DVCS hosting sites out there.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Private Git and Mercurial Hosting&lt;/h3&gt;&lt;br&gt;
+A number of sites allow you to pay for hosting of private repositories. Both &lt;a href="https://github.com/"&gt;github&lt;/a&gt; and &lt;a href="https://bitbucket.org/"&gt;bitbucket&lt;/a&gt; offer paid options. Bitbucket has the distinction of offering unlimited free private repositories (with a limit on the number of users). Others worth looking at include &lt;a href="http://repositoryhosting.com/"&gt;repository hosting&lt;/a&gt; and &lt;a href="http://unfuddle.com/"&gt;unfuddle&lt;/a&gt;. Fog Creek have a product called &lt;a href="http://www.fogcreek.com/kiln/"&gt;Kiln&lt;/a&gt; which is based on Mercurial.&lt;br&gt;
+&lt;br&gt;
+If you want to host the repositories on your own server, you can do so, but the hosting software tends to be more primitive than offered by sites like github, so you miss out on features user management, forking, pull requests etc. There is an open source project called &lt;a href="http://rhodecode.org/"&gt;rhodecode&lt;/a&gt; you can use to host Mercurial repositories. It would be great if a product similar to github were available for you to install locally, but I don’t know of any such product at the moment (let me know in the comments if such a thing does exist – &lt;a href="http://gitorious.org/"&gt;gitorious&lt;/a&gt; is the closest I have seen so far).&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Other DVCS products worth keeping an eye on&lt;/h3&gt;&lt;br&gt;
+Although git is very much out in front at the moment, I think there is still plenty of scope for innovation in the DVCS space, so it may not be the final word. Three to keep your eye on for the future are &lt;a href="http://www.fossil-scm.org/index.html/doc/trunk/www/index.wiki"&gt;Fossil&lt;/a&gt;, &lt;a href="http://www.plasticscm.com/"&gt;PlasticSCM&lt;/a&gt;, and &lt;a href="http://veracity-scm.com/"&gt;Veracity&lt;/a&gt;, which look to fill in some of the missing gaps in existing DVCS systems, like better visualisation, integration with bug tracking systems and IDEs, or capabilities such as exclusive file locks, or archiving of large binary files.</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>git</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="55b17700-f293-4329-9d8c-35b00fea11c2">
+      <author>Phil Collins</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13382940647661962337</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-20 13:32:46</date>
+      <content>Thank you Mark, that was a fantastic session last night.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dfc06e13-09d0-4b8e-86a3-0a99ecaacb07">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-04-26 18:37:32</date>
+      <content>RhodeCode supports git also</content>
+    </comment>
+  </comments>
+</post>

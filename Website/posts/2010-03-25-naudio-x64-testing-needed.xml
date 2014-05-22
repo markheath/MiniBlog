@@ -1,0 +1,131 @@
+<post>
+  <title>NAudio x64 Testing Needed</title>
+  <slug>naudio-x64-testing-needed</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-03-25 15:25:00</pubDate>
+  <lastModified>2010-03-25 15:25:22</lastModified>
+  <content>&lt;p&gt;After a bit of a blogging break, I think it is time to give a brief status update. I have been trying to keep up with the constant stream of support requests coming in through the &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt;&amp;#160;&lt;a href="http://naudio.codeplex.com/Thread/List.aspx"&gt;forums&lt;/a&gt; and comments on posts here but the reality is that there has been more than I can handle so please accept my apologies if your query has gone unanswered.&lt;/p&gt;  &lt;p&gt;I do continue to make slow progress on NAudio. Today I checked in a changeset that should hopefully give us proper x64 support. My only trouble is that I do not have an x64 machine to test on (next PC I buy will be x64 but that may not be for another year). If anyone has a 64 bit OS and is willing to help me out with a quick test then please do the following:&lt;/p&gt;  &lt;ol&gt;   &lt;li&gt;Download the latest &lt;a href="http://naudio.codeplex.com/SourceControl/list/changesets"&gt;NAudio source code&lt;/a&gt; and load it up in Visual Studio 2008&lt;/li&gt;    &lt;li&gt;Go to the NAudio project settings, and on the Build tab set the Platform target to &lt;strong&gt;Any CPU&lt;/strong&gt; (it is currently set to “x86”)&lt;/li&gt;    &lt;li&gt;Run the NAudioDemo application and attempt to play an MP3 file&lt;/li&gt;    &lt;li&gt;Comment here letting me know how you got on&lt;/li&gt; &lt;/ol&gt;  &lt;p&gt;It would be great to be able to properly support x64 as currently you are forced to set your calling application to x86 only as well.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b3fc00d1-b623-49fb-864e-ffd71211d7e1">
+      <author>Brian</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09932674808550771348</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-26 04:20:56</date>
+      <content>Tried to play an mp3 in x64 mode, but I there was an exception. I wasn&amp;#39;t sure how to figure out which parameter was invalid.&lt;br /&gt;&lt;br /&gt;NAudio.MmException: InvalidParameter calling acmStreamPrepareHeader&lt;br /&gt;   at NAudio.MmException.Try(MmResult result, String function) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\MmeInterop\MmException.cs:line 40&lt;br /&gt;   at NAudio.Wave.Compression.AcmStreamHeader.Prepare() in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\Compression\AcmStreamHeader.cs:line 37&lt;br /&gt;   at NAudio.Wave.Compression.AcmStreamHeader.Convert(Int32 bytesToConvert, Int32&amp;amp; sourceBytesConverted) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\Compression\AcmStreamHeader.cs:line 57&lt;br /&gt;   at NAudio.Wave.Compression.AcmStream.Convert(Int32 bytesToConvert, Int32&amp;amp; sourceBytesConverted) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\Compression\AcmStream.cs:line 163&lt;br /&gt;   at NAudio.Wave.WaveFormatConversionStream.Read(Byte[] array, Int32 offset, Int32 count) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\WaveStreams\WaveFormatConversionStream.cs:line 158&lt;br /&gt;   at NAudio.Wave.BlockAlignReductionStream.Read(Byte[] buffer, Int32 offset, Int32 count) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\WaveStreams\BlockAlignReductionStream.cs:line 148&lt;br /&gt;   at NAudio.Wave.WaveChannel32.Read(Byte[] destBuffer, Int32 offset, Int32 numBytes) in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\WaveStreams\WaveChannel32.cs:line 151&lt;br /&gt;   at NAudioDemo.MeteringStream.Read(Byte[] buffer, Int32 offset, Int32 count) in C:\Users\Brian\Downloads\naudio-43087\NAudioDemo\MeteringStream.cs:line 54&lt;br /&gt;   at NAudio.Wave.WaveOutBuffer.OnDone() in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\WaveStreams\WaveOutBuffer.cs:line 105&lt;br /&gt;   at NAudio.Wave.WaveOut.Play() in C:\Users\Brian\Downloads\naudio-43087\NAudio\Wave\WaveOutputs\WaveOut.cs:line 142&lt;br /&gt;   at NAudioDemo.AudioPlaybackForm.buttonPlay_Click(Object sender, EventArgs e) in C:\Users\Brian\Downloads\naudio-43087\NAudioDemo\AudioPlaybackForm.cs:line 97</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="aaa29cba-3871-4294-814f-a43025b346ae">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-26 07:42:18</date>
+      <content>thanks Brian, your help is greatly appreciated. I&amp;#39;ll revisit the acmStreamPrepareHeader function. It could possibly be due to some changes I made to ACMSTREAMHEADER as well.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="937c508b-6fbe-495a-a432-09e02e93b7f5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-26 07:51:57</date>
+      <content>I think I may have found the issue. In AcmStreamHeader.Prepare I was hard-coding the cbStruct member. It now uses Marshal.SizeOf. I&amp;#39;ve checked in a new version to CodePlex for anyone else who is willing to test for me.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5b8b68a5-675a-4ae1-80f0-f648fdca3361">
+      <author>Brian</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09932674808550771348</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-27 05:42:53</date>
+      <content>Hey Mark, I got the same exception with the new version, but I was able to get it to work. Marshal.SizeOf returned 104 for your class, but that wasn&amp;#39;t big enough. I got it to work with a class that is 128 bytes.&lt;br /&gt;The acmStreamPrepareHeader method fills the reserved array (at an offset of 88 bytes) with data and seems to ignore the 24 bytes before it.&lt;br /&gt;&lt;br /&gt;Here is a solution that works for both x86 and x64 modes.&lt;br /&gt;&lt;br /&gt;Explicitly set the size to 128:&lt;br /&gt;&lt;br /&gt;[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Size = 128)]&lt;br /&gt;class AcmStreamHeaderStruct&lt;br /&gt;&lt;br /&gt;and simply delete the following field, because user code isn&amp;#39;t supposed to touch it and it isn&amp;#39;t needed:&lt;br /&gt;&lt;br /&gt;[MarshalAs(UnmanagedType.ByValArray,SizeConst=10)]&lt;br /&gt;public int[] reserved;&lt;br /&gt;&lt;br /&gt;Is there anything else that needs testing in x64 mode?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="819df6a6-b7fb-4997-b1fa-dd0fe478993f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-27 07:13:05</date>
+      <content>thanks Brian. With hindsight, I think that was the reason why I originally had this structure with ten int members rather than an array and hardcoded its size. I&amp;#39;ve checked in your suggested code.&lt;br /&gt;&lt;br /&gt;Playing an MP3 gives a fairly good workout to WaveOut and some of the ACM stuff. It is probably also worth giving a quick run through the recording form, and also checking that all the playback modes work (WaveOut both modes, DirectSound and WASAPI). Using the ACM test form (even just to see the contents of the listbox) will also test out a few more function signatures.&lt;br /&gt;&lt;br /&gt;There is also some basic mixer interop and MIDI interop in NAudio. If you have any MIDI hardware you can use the NAudioDemo project to give it a go. Also you can run unit tests to give the mixer interop a runthrough. Some of the tests intermittently fail on x86 simply due to failing to set control values to exactly what we want, but the main thing is that the mixer functions can be called in x64 without crashing.&lt;br /&gt;&lt;br /&gt;thanks again Brian for doing this, it is extremely helpful.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="03405b7d-a376-4e78-aedc-1a9d49360ab4">
+      <author>The Reverand</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07844353682390086803</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-06 00:12:57</date>
+      <content>I have a 64bit OS, Windows 7 Pro, and I am hoping to get down a dirty with it shortly.&lt;br /&gt;I am using Beta 2 of Visual C# Express 2010 and when I compiled the latest source I was &amp;quot;warned&amp;quot; that there was a depreciated method call.&lt;br /&gt;The call is in DirectSoundOut.Stop(), you use a Monitor.TryEnter() overload that doesn&amp;#39;t use a lockTaken bool parameter.&lt;br /&gt;Here is the new code for Stop():&lt;br /&gt;public void Stop()&lt;br /&gt;        {&lt;br /&gt;            // Try and tidy up nicely&lt;br /&gt;            bool lockTaken = false;&lt;br /&gt;            &lt;br /&gt;            Monitor.TryEnter(m_LockObject, 50, ref lockTaken);&lt;br /&gt;            &lt;br /&gt;            if (lockTaken)&lt;br /&gt;            {&lt;br /&gt;                playbackState = PlaybackState.Stopped;&lt;br /&gt;                Monitor.Exit(m_LockObject);&lt;br /&gt;            }&lt;br /&gt;            else&lt;br /&gt;            {&lt;br /&gt;                // No joy - abort the thread!&lt;br /&gt;                if (notifyThread != null)&lt;br /&gt;                {&lt;br /&gt;                    notifyThread.Abort();&lt;br /&gt;                    notifyThread = null;&lt;br /&gt;                }&lt;br /&gt;            }&lt;br /&gt;        }</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dc5e336f-871b-4a1e-9a5b-8a3dfa23d411">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-06 10:41:47</date>
+      <content>thanks The Reverand. I&amp;#39;m guessing that must be some kind of .NET 4 thing, because that overload of Monitor.TryEnter isn&amp;#39;t available on my system.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e9b4a12b-319c-4ab0-85c4-592efad527ff">
+      <author>The Reverand</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07844353682390086803</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-09 00:39:19</date>
+      <content>Must be. I&amp;#39;d never seen it before.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cbdfc4bc-e67d-430f-a2e1-09fae18df410">
+      <author>AlienImation</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12300538983912297502</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-13 21:13:31</date>
+      <content>Working perfectly for me with my 64-bit app while I had the same &amp;quot;InvalidParameter calling acmStreamPrepareHeader&lt;br /&gt;&amp;quot; exception.&lt;br /&gt;&lt;br /&gt;Brillant</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="866b94cc-dc3e-4f0b-9100-4c5ce2d686cb">
+      <author>Bob Denny</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05934571357840447736</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-26 04:04:45</date>
+      <content>With 46831 I can play MP3 if both the demo and NAudio set to x86. When both set to ANyCPU (VS2008, XP64):&lt;br /&gt;&lt;br /&gt;NAudio.MmException was unhandled&lt;br /&gt;  Message=&amp;quot;NoDriver calling acmFormatSuggest&amp;quot;&lt;br /&gt;  Source=&amp;quot;NAudio&amp;quot;&lt;br /&gt;  StackTrace:&lt;br /&gt;       at NAudio.MmException.Try(MmResult result, String function) in D:\dev\DotNet Audio\naudio-46381\NAudio\Wave\MmeInterop\MmException.cs:line 40&lt;br /&gt;       at NAudio.Wave.Compression.AcmStream.SuggestPcmFormat(WaveFormat compressedFormat) in D:\dev\DotNet Audio\naudio-46381\NAudio\Wave\Compression\AcmStream.cs:line 111&lt;br /&gt;       at NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(WaveStream sourceStream) in D:\dev\DotNet Audio\naudio-46381\NAudio\Wave\WaveStreams\WaveFormatConversionStream.cs:line 29&lt;br /&gt;       at NAudioDemo.AudioPlaybackForm.CreateInputStream(String fileName) in D:\dev\DotNet Audio\naudio-46381\NAudioDemo\AudioPlaybackForm.cs:line 122&lt;br /&gt;       at NAudioDemo.AudioPlaybackForm.buttonPlay_Click(Object sender, EventArgs e) in D:\dev\DotNet Audio\naudio-46381\NAudioDemo\AudioPlaybackForm.cs:line 78&lt;br /&gt;       at System.Windows.Forms.ToolStripItem.RaiseEvent(Object key, EventArgs e)&lt;br /&gt;...etc...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f9ba987c-0d9c-4337-857f-49698b3f0006">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-26 10:38:57</date>
+      <content>thanks Bob,&lt;br /&gt;that&amp;#39;s annoying, will have to check that the MP3 wave format translates properly to 64 bit.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c318c147-604d-4266-ae67-2bfe280dfe71">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-04-26 10:48:04</date>
+      <content>Bob, is the ACM Format Conversion option on the NAudio Demo project able to show the ACM codecs installed on your PC. If so, is there an MP3 one one there, and are you able to display selected format info?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="afec4673-e37b-4b6b-9c96-4c6d9adc8568">
+      <author>Shimmy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16979929680149204626</website>
+      <ip />
+      <userAgent />
+      <date>2010-07-02 00:54:50</date>
+      <content>I changed the target-compile to x86 and everything works like a charm.</content>
+    </comment>
+  </comments>
+</post>

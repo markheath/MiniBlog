@@ -1,0 +1,105 @@
+<post>
+  <title>Media Foundation Support in NAudio 1.7</title>
+  <slug>media-foundation-support-in-naudio-17</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-12-14 14:04:00</pubDate>
+  <lastModified>2012-12-14 14:04:29</lastModified>
+  <content>&lt;p&gt;I’ve been working on adding Media Foundation support to &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; 1.7 over the past few weeks. There are two reasons for this. The first is that Windows Store apps can use Media Foundation but cannot use ACM or DMO, which were the two codec APIs that NAudio did support. This was the impetus I needed to finally get round to wrapping Media Foundation API, having been put off by the thought of wrapping yet another large COM-based API.&lt;/p&gt; &lt;p&gt;The second is simply that Media Foundation is the future for audio codecs in Windows, and includes some codec support that ACM doesn’t offer, such as AAC encode and decode. Windows 8 even comes with an MP3 encoder.&lt;/p&gt; &lt;p&gt;There was a lot of interop code required to get Media Foundation working, and with the help of a few people (most notably ManU from the Codeplex forums). I have now done enough to enable the three main uses of Media Foundation – encoding, decoding and resampling.&lt;/p&gt; &lt;p&gt;NAudio 1.7 will have the following three main classes to support Media Foundation:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;MediaFoundationReader&lt;/strong&gt; this implements WaveStream and basically allows you to play anything that Media Foundation can play. This means MP3, AAC, WMA, WAV, and includes streaming from the internet. It can even pull the audio out of video files. It may be that this class becomes the primary way of playing audio for NAudio going forwards. The output of MediaFoundationReader will always be PCM, so no second converter step is required. It also tries to hide the very awkward problem of COM apartment state issues from you by (optionally) recreating the Media Foundation source reader in the first call to Read (as that might come from an MTAThread). It uses Media Foundation’s support for repositioning which so far looks pretty good (although it might not get to exactly the point you asked for), and can even reposition in MP3 files you are downloading from the internet.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;MediaFoundationEncoder&lt;/strong&gt; I wanted to make encoding as simple as possible, and I’m quite pleased with the API I came up with (you can read a bit about it &lt;a href="http://www.codeproject.com/Articles/501521/How-to-convert-between-most-audio-formats-in-NET"&gt;here&lt;/a&gt;). This class includes helper methods for encoding WMA, MP3 and AAC (assuming you have the encoders), and all you need to do is supply the output filename, the PCM source stream and the desired bitrate. It is also extensible enough to let you use any other encoder you have.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;MediaFoundationResampler&lt;/strong&gt; The most useful of all the media foundation effects, and based on &lt;strong&gt;MediaFoundationTransform&lt;/strong&gt;, which you can use to wrap other effects if needed. The resampler in Media Foundation is reasonably good quality and can also change the bit depth and channel count, making it a very useful general purpose class. This also is hugely beneficial to supporting playback and recording with WASPI in Windows Store applications since the DMO interface which the existing WASAPI support uses is not allowed.&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;I’m also working on adding Windows Store support for . The main difference is the way you read and write files in Windows Store apps. Currently I’ve got a derived &lt;strong&gt;MediaFoundationReaderRT&lt;/strong&gt; class in the demo, which allows you to open files from an &lt;strong&gt;IRandomAccessStream&lt;/strong&gt;.&lt;strong&gt; &lt;/strong&gt;I’ll probably do a similar thing for the encoder class as well.&lt;/p&gt; &lt;p&gt;I think the code can still be optimised a bit, particularly in the way that Media Buffers are created during resampling, but I am actually very close to completion, and I think this is going to be a fantastic feature for the next version of NAudio. If you want to try it out, you can build the latest NAudio from code yourself, or lookout for &lt;a href="http://nuget.org/packages/naudio"&gt;preview builds of NAudio 1.7 on Nuget&lt;/a&gt;. The NAudio WPF Demo app includes demonstrations of using all three of the main NAudio Media Foundation classes, plus how to enumerate the Media Foundation codecs.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>Media Foundation</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="d5135592-f8f1-4ac7-84be-01f78ca017ac">
+      <author>Unknown</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14351149563070832932</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-27 01:34:56</date>
+      <content>Brilliant- I can&amp;#39;t wait for this.  I&amp;#39;ve found using MF in .Net a complete PITB, although I&amp;#39;m sure that&amp;#39;s more my ignorance than anything else.&lt;br /&gt;You da &lt;i&gt;Man&lt;/i&gt; Mr Heath.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5d426fdd-4ea7-4806-b5df-abbb00d3eded">
+      <author>Jonx</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02834446680849610263</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-29 05:43:48</date>
+      <content>That looks very promising... Is there also a chance that this will also works on Windows Phone 8? That would be great...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1d542276-9c01-4e13-9eda-a17d1dd1ab8a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-29 08:02:24</date>
+      <content>Possibly although I don&amp;#39;t have a Windows Phone 8 myself. Getting Windows Store support released is the first priority.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="09cbf984-997e-418c-a95b-bb3f05713ed0">
+      <author>Tom Spilman</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10769312491487874162</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-24 18:01:27</date>
+      <content>Have you considered using SharpDX (http://sharpdx.org/)?  They have a pretty good Media Foundation wrapper already.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8c94b95e-76f2-4fae-b0bf-afc1979f5323">
+      <author>Tom Spilman</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10769312491487874162</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-24 18:03:22</date>
+      <content>Did you consider using SharpDX (http://sharpdx.org/)?  He has a good Media Foundation wrapper that is procedurally generated from the C++ headers.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="946d9cc9-7545-4252-9df8-92bce919376f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-24 18:21:08</date>
+      <content>hi Tom, yes SharpDX is excellent and its author was a contributor to NAudio a while ago. It takes a slightly different approach in that it auto-generates P/Invoke for the whole API. My approach is to hand-craft the P/Invoke wrappers I need to supply the main features I want to support in NAudio. I&amp;#39;ve benefitted from looking at various people&amp;#39;s Media Foundation interop while adding the NAudio support. I&amp;#39;ve got most of what I want in there now, and the focus is shifting more the the Windows 8 support.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7ec533ea-1b5f-46d0-a040-3af698a84fea">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-04-04 20:43:09</date>
+      <content>I am very happy to hear NAudio will support Media Foundation.  My project works mostly with FLAC audio files and I found this project that will help:&lt;br /&gt;Media Foundation FLAC Codec&lt;br /&gt;http://sourceforge.net/projects/mfflac/?source=dlp&lt;br /&gt;&lt;br /&gt;Windforce</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2cbc210f-9290-49a6-aa4c-0ce1e0acf194">
+      <author>urs</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-05-15 19:00:13</date>
+      <content>I recognize that MFTEnumEx you use for Transcoding is not allowed in Win8 Store. &lt;br /&gt;Is the ResamplerComObject from MS allowed to use or is it forbidden and is it allowed to use with PCM format?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a6d02a32-e0da-4691-98d1-13a76b2f40ac">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-17 19:03:17</date>
+      <content>Hi urs, you can certainly use the MF decoders in Windows Store apps so I don&amp;#39;t see why not the encoders too. I&amp;#39;ll hopefully get some time to work on the Windows Store app demo to show this in action.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="11c5c5ca-637e-4dad-bac0-ed5273482303">
+      <author>urs</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-05-18 17:27:26</date>
+      <content>Hello Mark,&lt;br /&gt;&lt;br /&gt;i tried your example to pass the windows App Cert Kit 2.2 and the Function MFTEnumEx do not pass.&lt;br /&gt;Therefore you have no chance to use the MFTranscode Class. The other functions with the MFSourceReader works fine and pass. I found no logic why the encoder/decoder in some functions are allowed and in other are forbidden.&lt;br /&gt;See http://social.msdn.microsoft.com/Forums/en-US/winappswithcsharp/thread/4a4a5e22-2d3a-41b9-9f11-14e79b5eaf18&lt;br /&gt;&lt;br /&gt;Best regards&lt;br /&gt;Urs</content>
+    </comment>
+  </comments>
+</post>

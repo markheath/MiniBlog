@@ -1,0 +1,42 @@
+<post>
+  <title>NAudio and Mercurial</title>
+  <slug>naudio-and-mercurial</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-25 17:02:00</pubDate>
+  <lastModified>2011-05-25 17:02:17</lastModified>
+  <content>&lt;p&gt;I am on the verge of upgrading the &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; CodePlex project to use Mercurial for source control instead of TFS. Like many CodePlex developers I have been using TortoiseSVN since CodePlex allows you to access your project as though it were a Subversion repository. I prefer this to having to install the Team Explorer Client, which puts source control bindings in my csproj files, making them a pain to open for those without access.&lt;/p&gt; &lt;p&gt;I have converted a number of my other open source projects on CodePlex to Mercurial recently, and the process has gone very smoothly, and I am beginning to think that Mercurial offers a lot more benefits than the TFS/SVN model.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Easier Acceptance of Patches&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;For a long time I was completely oblivious of the fact that people were submitting patches to NAudio, because Codeplex didn’t send me any automated notifications. And often I don’t have time to review a patch straight away, meaning that by the time I get round to looking at it, it doesn’t merge into the latest code.&lt;/p&gt; &lt;p&gt;Then there is the fact that over 50% of patches I receive either contain a bug, or break some aspect of existing behaviour. I would like the ability to work with patch submitters to get their code fully ready for integration before accepting the patch. &lt;/p&gt; &lt;p&gt;Another benefit is that it allows for contributors to get their own name attached to checkins, without having to give them checkin privileges to the central repository, since I can pull from them, make any minor changes needed, and then push to CodePlex. It means contributors can get the credit for features they add (and the blame for bugs they introduce!).&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Possibility for Forks&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Finally, whilst I do often accept user contributed features into NAudio, sometimes the feature is too obscure to be considered for the core library. With Mercurial on CodePlex, people can publish their own extensions and special versions as forks, and retain the ability to pull in bug fixes and new features from the latest branch.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Need for Branches&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;A while ago I released NAudio 1.4 RC. Since its release I have discovered and fixed a few bugs that really ought to be back-ported into NAudio 1.4. However, I have no branching structure at the moment – NAudio is just in a single folder. Although TFS has branching support through creating a brand new folder containing a copy of the entire codebase, I prefer Mercurial’s approach which keeps the branch hidden from view unless you really need to work with it. I anticipate that only critical bugfixes will be done on previous releases, so the use of branching will be minimal in the central repository. &lt;/p&gt; &lt;p&gt;&lt;strong&gt;Better Offline Development&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Often when I am working on NAudio, I will want to make fairly large changes before checking into the central repository. The trouble with this is that I want to make regular small checkins, so I can easily roll back if I go down a wrong path. Mercurial makes this very easy, essentially giving me my own local branch to experiment in before commiting to the central repository. &lt;/p&gt; &lt;p&gt;Also, since I try to test NAudio on all the different OS’s and soundcards I have available to me, I often need to sync code between two computers without going via the central CodePlex repository. Mercurial makes this easy.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Backup&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;One final thing. In its early days CodePlex had a disaster where they &lt;a href="http://codeplex.codeplex.com/discussions/9096?ProjectName=codeplex"&gt;lost all their source control history&lt;/a&gt;. That’s why the NAudio history doesn’t go back earlier than April 2007. I think they have much more reliable backup processes in place now, but it would be nice to know with Mercurial that I would have a full backup of the checkin history if they ever lost it again, or if I felt the need to host elsewhere.&lt;/p&gt; &lt;p&gt;Also while the subversion to TFS bridge they use is good, it is not foolproof. A recent server upgrade meant that my local subversion repositories lost their ability to commit back into CodePlex, requiring me to check out to another folder and manually copy my changed files across.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Disadvantages?&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Are there any disadvantages to using Mercurial? One slight issue is that Mercurial never forgets anything, which of course is normally a good thing for a version control system. But if I accidentally checked in a large WAV file for example, that would vastly increase the download time for a repository clone, even if I deleted it in the very next check-in. There are ways to do history rewriting, but it requires contacting the CodePlex admins and getting them to do it for you.&lt;/p&gt; &lt;p&gt;Another slight issue is that when you switch from TFS to Mercurial on Codeplex, it loses all the stats of how many downloads each revision had. Any links to specific versions of files posted in forums are also broken. I suspect I will have to manually re-associate releases with their new changeset IDs too.&lt;/p&gt; &lt;p&gt;The only other TFS benefit over Mercurial that I can think of is that in TFS you can modify a checkin message&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;I’ll probably be going ahead with the move soon. If anyone has any objections, or cautionary tales to tell, now is the time to speak up.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="03113687-5308-4b99-8ef1-2d4a2f6fab19">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-25 21:48:26</date>
+      <content>Why not git? Most opensource developers already use git. I really hate to have both Mercurial and Git installed on my system.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ff620e07-4ba4-4210-9dca-a37c650ab3f5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-25 22:02:37</date>
+      <content>Well CodePlex doesn&amp;#39;t support git which is why I picked Mercurial as my first DVCS to learn. I&amp;#39;ve really grown to like it &amp;amp; know what I&amp;#39;m doing with it. I&amp;#39;ve tried git a few times, but I&amp;#39;m not at a point where I could be productive with it yet. I am pretty sure there are git extensions that will allow you to clone from a Mercurial repo though, so you shouldn&amp;#39;t need to install hg if you don&amp;#39;t want to.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fa01f042-9649-4a48-b535-5ac33e095836">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-25 22:04:02</date>
+      <content>... also, when I started looking into it, the git install on Windows was not a very good user experience, although I think things are a lot better now.</content>
+    </comment>
+  </comments>
+</post>

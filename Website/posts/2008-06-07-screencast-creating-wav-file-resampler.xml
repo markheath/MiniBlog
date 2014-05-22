@@ -1,0 +1,38 @@
+<post>
+  <title>Screencast: Creating a WAV File Resampler with NAudio</title>
+  <slug>screencast-creating-wav-file-resampler</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-07 07:08:00</pubDate>
+  <lastModified>2008-06-10 17:04:40</lastModified>
+  <content>&lt;p&gt;To give a feel for just how simple it is to use NAudio for WAV file processing, I have made a short screencast demonstrating how to make a command line WAV file resampler. This uses the new ResamplerDmoStream that I have been making reading for the next release of &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;. You can get it if you download the latest code from CodePlex.&lt;/p&gt;&lt;p&gt;To make the screencast, I used the very impressive &lt;a href="http://www.jingproject.com/"&gt;Jing utility&lt;/a&gt;, which currently limits you to five minute screen captures, so it is in two parts (if you are having trouble viewing the files embedded on this page, try these links: &lt;a href="http://screencast.com/t/XeZHI2Bu"&gt;Part 1&lt;/a&gt;, &lt;a href="http://screencast.com/t/gLnQF0VBsM"&gt;Part 2&lt;/a&gt;)...&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Part 1&lt;/strong&gt;&lt;/p&gt;
+&lt;div style="overflow: scroll"&gt;
+&lt;object height="729" width="794" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"&gt;&lt;param name="_cx" value="21008"&gt;&lt;param name="_cy" value="19288"&gt;&lt;param name="FlashVars" value=""&gt;&lt;param name="Movie" value="http://content.screencast.com/bootstrap.swf"&gt;&lt;param name="Src" value="http://content.screencast.com/bootstrap.swf"&gt;&lt;param name="WMode" value="Window"&gt;&lt;param name="Play" value="0"&gt;&lt;param name="Loop" value="-1"&gt;&lt;param name="Quality" value="High"&gt;&lt;param name="SAlign" value="LT"&gt;&lt;param name="Menu" value="-1"&gt;&lt;param name="Base" value=""&gt;&lt;param name="AllowScriptAccess" value="always"&gt;&lt;param name="Scale" value="NoScale"&gt;&lt;param name="DeviceFont" value="0"&gt;&lt;param name="EmbedMovie" value="0"&gt;&lt;param name="BGColor" value="FFFFFF"&gt;&lt;param name="SWRemote" value=""&gt;&lt;param name="MovieData" value=""&gt;&lt;param name="SeamlessTabbing" value="1"&gt;&lt;param name="Profile" value="0"&gt;&lt;param name="ProfileAddress" value=""&gt;&lt;param name="ProfilePort" value="0"&gt;&lt;param name="AllowNetworking" value="all"&gt;&lt;param name="AllowFullScreen" value="true"&gt;
+            &lt;embed src="http://content.screencast.com/bootstrap.swf" style="overflow:visible;" quality="high" bgcolor="#FFFFFF" width="794" height="729" type="application/x-shockwave-flash" allowscriptaccess="always" flashvars="thumb=http://content.screencast.com/media/63741f7f-3cf1-4770-a187-92a47d4dc709_20afcda6-2953-43ba-ba2c-f1ddaa4c27be_static_0_0_Thumbnail.gif&amp;amp;content=http://content.screencast.com/media/77b60550-cfbb-4039-8830-7c5858ca017b_20afcda6-2953-43ba-ba2c-f1ddaa4c27be_static_0_0_ResamplerScreencastPart1.swf&amp;amp;width=794&amp;amp;height=729" allowfullscreen="true" scale="showall"&gt; &lt;/object&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Part 2&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;object height="729" width="794" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"&gt;&lt;param name="_cx" value="21008"&gt;&lt;param name="_cy" value="19288"&gt;&lt;param name="FlashVars" value=""&gt;&lt;param name="Movie" value="http://content.screencast.com/bootstrap.swf"&gt;&lt;param name="Src" value="http://content.screencast.com/bootstrap.swf"&gt;&lt;param name="WMode" value="Window"&gt;&lt;param name="Play" value="0"&gt;&lt;param name="Loop" value="-1"&gt;&lt;param name="Quality" value="High"&gt;&lt;param name="SAlign" value="LT"&gt;&lt;param name="Menu" value="-1"&gt;&lt;param name="Base" value=""&gt;&lt;param name="AllowScriptAccess" value="always"&gt;&lt;param name="Scale" value="NoScale"&gt;&lt;param name="DeviceFont" value="0"&gt;&lt;param name="EmbedMovie" value="0"&gt;&lt;param name="BGColor" value="FFFFFF"&gt;&lt;param name="SWRemote" value=""&gt;&lt;param name="MovieData" value=""&gt;&lt;param name="SeamlessTabbing" value="1"&gt;&lt;param name="Profile" value="0"&gt;&lt;param name="ProfileAddress" value=""&gt;&lt;param name="ProfilePort" value="0"&gt;&lt;param name="AllowNetworking" value="all"&gt;&lt;param name="AllowFullScreen" value="true"&gt;
+            &lt;embed src="http://content.screencast.com/bootstrap.swf" quality="high" bgcolor="#FFFFFF" width="794" height="729" type="application/x-shockwave-flash" allowscriptaccess="always" flashvars="thumb=http://content.screencast.com/media/7870c70a-c37b-457d-9448-b2c1d83e578f_20afcda6-2953-43ba-ba2c-f1ddaa4c27be_static_0_0_Thumbnail.gif&amp;amp;content=http://content.screencast.com/media/286f9e5e-be3e-42d4-a4a7-506cc4163245_20afcda6-2953-43ba-ba2c-f1ddaa4c27be_static_0_0_ResamplerScreencast2.swf&amp;amp;width=794&amp;amp;height=729" allowfullscreen="true" scale="showall"&gt; &lt;/object&gt;Notes:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;I did actually check the resulting WAV files to make sure they played OK! &lt;/li&gt;&lt;li&gt;I have not yet explored the boundaries of the Resampler DMO object, so I can't guarantee changing bit depths and channel counts will necessarily work &lt;/li&gt;&lt;li&gt;To resample to IEEE floating point format requires you to use an IEEE WaveFormat for the output. You can't just set a bit depth of 32. &lt;/li&gt;&lt;li&gt;We could have made the code even more succinct had I used the WaveFileWriter.CreateWaveFile static method which would take the resampler stream and the wave output filename as an input, thus reducing our application to a mere three lines of code. &lt;/li&gt;&lt;/ul&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="8b39398e-541a-4031-9da4-9d6cadc0a6bc">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-02-09 06:30:18</date>
+      <content>Hi Mark!&lt;br /&gt;&lt;br /&gt;I just want to know, what is the data that is stored in the byte buffer when you read?&lt;br /&gt;&lt;br /&gt;Is this data from the &amp;#39;time domain&amp;#39; of the wav file?&lt;br /&gt;&lt;br /&gt;Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b8e9fe67-90eb-4dc7-aeb5-abf37dcaf03a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-21 10:12:11</date>
+      <content>yes, it contains the samples (2 bytes per 16 bit sample)</content>
+    </comment>
+  </comments>
+</post>

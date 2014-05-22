@@ -1,0 +1,105 @@
+<post>
+  <title>Getting Started With MSBuild</title>
+  <slug>getting-started-with-msbuild</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-09-30 15:29:00</pubDate>
+  <lastModified>2010-10-05 13:39:22</lastModified>
+  <content>&lt;p&gt;I tried using MSBuild for the first time this week, and took a couple of wrong turnings along the way. Here's a brief summary of how I got started and how to perform a few basic tasks...&lt;/p&gt; 
+
+&lt;p&gt;&lt;strong&gt;What is it? &lt;/strong&gt;&lt;/p&gt;  
+
+&lt;p&gt;&lt;a href="http://msdn.microsoft.com/en-us/library/0k6kkbsd.aspx"&gt;MSBuild&lt;/a&gt; is the build system used by Visual Studio to compile your .NET projects. Check out this nice &lt;a href="http://www.codeproject.com/KB/books/msbuild.aspx"&gt;introduction to MSBuild&lt;/a&gt; on CodeProject. The &lt;strong&gt;.csproj &lt;/strong&gt;files you may be familiar with from Visual Studio are in fact nothing more than MSBuild project files.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Why use it? &lt;/strong&gt;&lt;/p&gt;  
+
+&lt;p&gt;There are a few reasons why you might want to use MSBuild directly in preference to simply compiling your solution in Visual Studio:&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;You can use it on a dedicated build machine without the need to install Visual Studio.&lt;/li&gt;    &lt;li&gt;You can use it to batch build several Visual Studio solutions.&lt;/li&gt;    &lt;li&gt;You can use it to perform additional tasks such as creating installers, archiving, retrieving from source control etc.&lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;It is the third reason that appeals to me, as I wanted to automate the creation of zip files for source code and runtime binaries, as well as run some unit tests.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Creating a project file &lt;/strong&gt;&lt;/p&gt;  
+
+&lt;p&gt;MSBuild project&lt;strong&gt;&amp;#160;&lt;/strong&gt;files are simply XML files. I created &lt;em&gt;master.proj&lt;/em&gt; and put it in the root of my source code folder, alongside my &lt;em&gt;.sln &lt;/em&gt;file.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Build Target&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The first code I put in to my project file was an example I found on the web that performed a &lt;strong&gt;Clean&lt;/strong&gt; followed by a &lt;strong&gt;Build&lt;/strong&gt;. Here is a slightly modified version of the project file:&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;gt;
+&amp;lt;Project ToolsVersion="3.5" DefaultTargets="Build"  
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003"&amp;gt;
+
+  &amp;lt;PropertyGroup&amp;gt;
+    &amp;lt;Configuration Condition=" '$(Configuration)' == '' "&amp;gt;Debug&amp;lt;/Configuration&amp;gt;
+    &amp;lt;DeploymentProject&amp;gt;MyApplication&amp;lt;/DeploymentProject&amp;gt;
+    &amp;lt;OutputDirectory&amp;gt;$(DeploymentProject)\bin\$(Configuration)&amp;lt;/OutputDirectory&amp;gt;
+  &amp;lt;/PropertyGroup&amp;gt;
+
+  &amp;lt;Target Name="Clean"&amp;gt;    
+    &amp;lt;RemoveDir Directories="$(OutputDirectory)" 
+            Condition="Exists($(OutputDirectory))"&amp;gt;&amp;lt;/RemoveDir&amp;gt;
+  &amp;lt;/Target&amp;gt;
+  &amp;lt;Target Name="Build"&amp;gt;
+    &amp;lt;MSBuild 
+      Projects="$(DeploymentProject)\MyApplication.csproj"
+      Properties="Configuration=$(Configuration)" &amp;gt;      
+    &amp;lt;/MSBuild&amp;gt;
+  &amp;lt;/Target&amp;gt;
+&amp;lt;/Project&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;I ran the build script using the following command line: &lt;strong&gt;MSBuild master.proj&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;It deleted all my source code! Aarrghh!! Fortunately I had a recent backup available.&lt;/p&gt;
+
+&lt;p&gt;The reason was that I had not put a default value for &lt;strong&gt;Configuration&lt;/strong&gt; in the &lt;strong&gt;PropertyGroup&lt;/strong&gt;, and my &lt;strong&gt;OutputDirectory&lt;/strong&gt; property was missing the &lt;strong&gt;bin&lt;/strong&gt; from its folder path. Note to self: &lt;em&gt;always backup before running any script that can delete files for the first time&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Zip Target&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;After my unfortunate experience with clean, I was more determined than ever to create a target that would perform a source-code backup for me! To use the Zip task in MSBuild you first need to download and install &lt;a href="http://msbuildtasks.tigris.org/"&gt;MSBuild Community Tasks&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then you create an &lt;strong&gt;ItemGroup &lt;/strong&gt;defining which files you want to be included (and excluded) before using the &lt;strong&gt;Zip&lt;/strong&gt; task to actually create the archive. Here's the two targets I created - one to make a release package, and one to make a source code archive:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Target Name="Package" DependsOnTargets="Build"&amp;gt;
+    &amp;lt;ItemGroup&amp;gt;
+      &amp;lt;!-- All files from build --&amp;gt;
+      &amp;lt;ZipFiles Include="$(DeploymentProject)\bin\$(Configuration)\**\*.*"
+         Exclude="**\*.zip;**\*.pdb;**\*.vshost.*" /&amp;gt;
+    &amp;lt;/ItemGroup&amp;gt;
+    &amp;lt;Zip Files="@(ZipFiles)"
+         WorkingDirectory="$(DeploymentProject)\bin\$(Configuration)\"
+         ZipFileName="$(ApplicationName)-$(Configuration)-$(Version).zip"
+         Flatten="True" /&amp;gt;
+    &amp;lt;/Target&amp;gt;
+
+    &amp;lt;Target Name="Backup"&amp;gt;
+    &amp;lt;ItemGroup&amp;gt;
+      &amp;lt;!-- All source code --&amp;gt;
+      &amp;lt;SourceFiles Include="**\*.*" 
+        Exclude="**\bin\**\*.*;**\obj\**\*.*;*.zip" /&amp;gt;
+    &amp;lt;/ItemGroup&amp;gt;
+    &amp;lt;Zip Files="@(SourceFiles)"
+         WorkingDirectory=""
+         ZipFileName="$(ApplicationName)-SourceCode-$(Version).zip" /&amp;gt;
+&amp;lt;/Target&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;See Ben Hall's blog for &lt;a href="http://blog.benhall.me.uk/2008/09/using-msbuild-to-create-deployment-zip.html"&gt;another example&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Test Task&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;My final task was to get some &lt;a href="http://www.nunit.org/index.php"&gt;NUnit&lt;/a&gt; tests running. Again the MSBuild Community Tasks are required for this. It took me a while to get this working correctly, particularly because it seemed to have trouble detecting where my copy of NUnit was installed. Here's the XML:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Target Name="Test" DependsOnTargets="Build"&amp;gt;
+    &amp;lt;NUnit Assemblies="@(TestAssembly)"
+           WorkingDirectory="MyApplication.UnitTests\bin\$(Configuration)"
+           ToolPath="C:\\Program Files\\NUnit 2.4.7\\bin"
+           /&amp;gt;
+&amp;lt;/Target&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;It took me longer than I wanted to work out how to do these basic tasks with MSBuild, but even so, I am sure the time will be very quickly recouped as I will be able to reuse most of these tasks on future projects. The jury is still out on whether it is preferable to use MSBuild to &lt;a href="http://nant.sourceforge.net/"&gt;NAnt&lt;/a&gt; though.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MSBuild</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="f63e33f5-a877-45a6-9a93-99abe6baf24b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-08-04 11:11:38</date>
+      <content>its very funny when you said your source code was deleted. I cannot stop laughing...please stop me :)... hahahahha</content>
+    </comment>
+  </comments>
+</post>

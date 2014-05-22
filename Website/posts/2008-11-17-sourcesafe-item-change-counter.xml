@@ -1,0 +1,114 @@
+<post>
+  <title>SourceSafe Item Change Counter</title>
+  <slug>sourcesafe-item-change-counter</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-11-17 12:28:00</pubDate>
+  <lastModified>2010-10-05 15:12:27</lastModified>
+  <content>&lt;p&gt;Although I remain hopeful that we will switch to TFS soon, my work currently uses SourceSafe for our source control. I wanted to identify which files in our repository had been changed the most times, and which files had been changed by the most different people. This data is to be used as part of a presentation I will be doing on dependencies and the impact they have on code quality (low-level components that are frequently changing cause a lot of pain). &lt;/p&gt;  
+
+&lt;p&gt;Using the SourceSafe COM object makes this a simple task. It's not quick (and my code isn't optimised in any way), but it does provide a useful view into which are the classes subject to constant change. The &lt;strong&gt;project&lt;/strong&gt; parameter of the &lt;strong&gt;Count&lt;/strong&gt; method should be of the form &lt;strong&gt;$/MyProject&lt;/strong&gt;. &lt;/p&gt;  
+
+&lt;p&gt;Here's the code:&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using SourceSafeTypeLib;
+
+namespace SourceSafeAnalysis
+{
+    class SourceSafeChangeCounter : IDisposable
+    {
+        VSSDatabase db;
+        List&amp;lt;SourceSafeChange&amp;gt; changes;
+
+        public SourceSafeChangeCounter(string sourceSafeIni, string user, string password)
+        {
+            db = new VSSDatabase();
+            db.Open(sourceSafeIni, user, password);            
+        }
+
+        public void Count(string project)
+        {
+            changes = new List&amp;lt;SourceSafeChange&amp;gt;();
+            VSSItem item = db.get_VSSItem(project, false);
+            CountItem(item);
+            changes.Sort((x,y) =&amp;gt; y.Changes - x.Changes);
+        }
+
+        private void CountItem(IVSSItem item)
+        {
+            if (item.Type == (int)VSSItemType.VSSITEM_PROJECT)
+            {
+                IVSSItems children = item.get_Items(false);
+                foreach (IVSSItem child in children)
+                {
+                    CountItem(child);
+                }
+            }
+            else
+            {
+                if (item.Name.EndsWith(".cs"))
+                {
+                    IVSSVersions versions = item.get_Versions((int)VSSFlags.VSSFLAG_RECURSNO);
+                    SourceSafeChange change = new SourceSafeChange();
+                    change.FileName = item.Spec;
+
+                    foreach (IVSSVersion version in versions)
+                    {
+                        // ignore labels
+                        if (String.IsNullOrEmpty(version.Label))
+                        {
+                            change.AddUser(version.Username);
+                            change.Changes++;
+                        }
+                    }
+                    changes.Add(change);
+                }
+            }
+        }
+
+        public IList&amp;lt;SourceSafeChange&amp;gt; Results
+        {
+            get { return changes; }
+        }
+
+        public void Dispose()
+        {
+            db.Close();
+            db = null;
+        }
+    }
+
+    class SourceSafeChange
+    {
+        private List&amp;lt;string&amp;gt; users;
+
+        public SourceSafeChange()
+        {
+            users = new List&amp;lt;string&amp;gt;();
+        }
+
+        public string FileName { get; set; }
+        public int Changes { get; set; }
+        public IList&amp;lt;string&amp;gt; Users { get { return users; } }
+
+        public void AddUser(string username)
+        {
+            if (!users.Contains(username))
+            {
+                users.Add(username);
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1} ({2} users)", FileName, Changes, Users.Count);
+        }
+    }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments />
+</post>

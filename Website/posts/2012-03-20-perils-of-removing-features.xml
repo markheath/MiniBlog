@@ -1,0 +1,42 @@
+<post>
+  <title>The Perils of Removing Features</title>
+  <slug>perils-of-removing-features</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-03-20 20:49:00</pubDate>
+  <lastModified>2012-03-20 20:49:03</lastModified>
+  <content>&lt;p&gt;In the last couple of weeks, Microsoft have released preview versions of two new software products. First up is &lt;a href="http://windows.microsoft.com/en-US/windows-8/consumer-preview"&gt;Windows 8&lt;/a&gt;, the highly anticipated successor to Windows 7, sporting the brand new “Metro” interface, which promises to deliver a Windows UI suitable for tablet PCs. The other new product is &lt;a href="http://www.microsoft.com/visualstudio/11/en-us/downloads"&gt;Visual Studio 11&lt;/a&gt;, which debuts a number of key new features, including the next version of .NET and the ability to create Metro applications for Windows 8. All very exciting, and lots of us rushed to try out the preview versions as soon as possible.&lt;/p&gt; &lt;p&gt;Given that both products essentially are upgrades to existing and successful products, one would expect the reaction to these new products to be very positive. Both are loaded with cool new features and usability improvements, and yet the majority of the online chatter has been to complain.&lt;/p&gt; &lt;p&gt;What is the problem? As well as giving us new stuff, both products have taken something away. Windows 8 has taken away the Start menu, and VS 11 has taken away the colours from the icons. These two omissions, though relatively minor in the context of the overall changes, have managed to dominate the reaction to the new products.&lt;/p&gt; &lt;p&gt;One senses a little bit of frustration on the part of Microsoft (e.g. these &lt;a href="http://www.hanselman.com/blog/FeaturesNOONENOTICEDInVisualStudio11ExpressBetaForWeb.aspx"&gt;two&lt;/a&gt; &lt;a href="http://www.hanselman.com/blog/ChangeConsideredHarmfulTheNewVisualStudioLookAndFeel.aspx"&gt;posts&lt;/a&gt; from Scott Hanselman), and you can understand why. All that hard work on new features has seemingly gone unnoticed, and all people can do is moan about two decisions that were intended as a bold step to improve user experience.&lt;/p&gt; &lt;p&gt;So what is the moral of the story? &lt;strong&gt;Users hate having features taken away from them&lt;/strong&gt;. It doesn’t matter if you tell them that the feature removed was redundant, or poorly implemented. They feel robbed and short-changed. They feel like they are not understood. And they resent having to change the way of working they have been comfortable with.&lt;/p&gt; &lt;p&gt;Microsoft have a few options available. First, they stick to their guns, and say “you’ll thank us later, once you understand”. That may of course be the case, but is it really worth upsetting your customers over this? Second, they back down, and give us back our start menu and our coloured icons. A victory for the customer perhaps, but that is a recipe for never making any progress. The third option is to make it configurable. Let us choose if we want the old-fashioned start menu, or the colourful icons. If the new UX is truly an improvement, over time, people will be won over, and the obsolete features can be removed in the next version.&lt;/p&gt; &lt;p&gt;In summary, if you want to remove a feature from your application, even if you consider it to be an unnecessary one, consider first making it optional (whether that be on or off by default). The customer isn’t always right about what the best UX is, but they are right about what they like, and if they don’t like it, they won’t buy it. It will be very interesting to see which direction Microsoft take when the next preview versions come out. If they get it right, I’m sure they’ll get more bloggers talking about how cool these new products are, instead of moaning about what was taken away from them.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Windows 8</category>
+    <category>Visual Studio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="f43d43e8-ed79-4c9c-878f-412d81c85170">
+      <author>Steven</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12908867174932026789</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-20 22:52:24</date>
+      <content>I&amp;#39;m pretty sure that the Start button can be brought back with a registry edit. Does that count as optional? &lt;br /&gt;&lt;br /&gt;But even if the configuration was using an easily found check box, I bet 90% of people would be unaware it was there.&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t like options. They make me unhappy. Do the right thing!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b292899e-6cf5-404a-825c-2acd93c0ad90">
+      <author>Shimmy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16979929680149204626</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-21 00:51:18</date>
+      <content>You&amp;#39;re so damn right with every single word u just said!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ed1d8fa8-5e5b-4cbd-943e-946e0003b7a9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-21 07:24:51</date>
+      <content>@Steven, I sort of agree with &amp;quot;do the right thing&amp;quot;, but presumably they thought they were doing the right thing, and did some kind of study where users claimed it was better like this, however unlikely that may seem. &lt;br /&gt;&lt;br /&gt;You&amp;#39;re right that 90% (or more) of people don&amp;#39;t know about / change configuration options. But it is a handy way to defuse a hostile reaction to change in your software.</content>
+    </comment>
+  </comments>
+</post>

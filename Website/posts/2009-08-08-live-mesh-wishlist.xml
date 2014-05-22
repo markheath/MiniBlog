@@ -1,0 +1,50 @@
+<post>
+  <title>Live Mesh Wishlist</title>
+  <slug>live-mesh-wishlist</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-08-08 21:28:00</pubDate>
+  <lastModified>2009-08-08 21:28:17</lastModified>
+  <content>&lt;p&gt;I have been using Windows &lt;a href="http://www.mesh.com/" target="_blank"&gt;Live Mesh&lt;/a&gt; for over a year now, and I have to say it has become an invaluable tool for me. However, I do have a few feature requests I would like to see, to improve its usefulness and usability.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;1. Recycle Bin&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The biggest risk with Live Mesh is that if you accidentally delete a file on one PC, it gets deleted on all PCs. So you must not think of Live Mesh as a viable backup option, even though it does replicate your files across multiple PCs. I would like to see an option for deleted files to go into a recycle bin in the cloud. So long as you have available space in your 5GB, it should be possible to restore files you have previously deleted. Obviously it should be possible to empty that recycle bin if necessary.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;2. Syncing status&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The client software needs to give an indication of whether it is still in syncing or not. Often I make changes to a file at work just before I go home. I don’t want to turn the PC off until I know that the change has been uploaded to the cloud.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;3. Moving folder problem&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;In theory it should not be possible to inadvertently delete everything from a synced folder, but I managed to do so. I moved the parent folder which contained the Live Mesh folder to another drive, and moments later, the contents of the folder had been deleted on all my synchronized devices. Fortunately I was able to restore the data, but I would like Live Mesh to handle this scenario more gracefully.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;4. Ignore list&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;It should be possible to “ignore” certain files in a synchronized folder. This would be particularly useful for source code. You could do this at the subfolder level or by extension / filename matching.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;5. Backup Option&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;Finally, if Microsoft want to monetise Live Mesh, offering a backup solution with it would be ideal. This should keep not just deleted files, but could also store previous versions of files, allowing you to revert to earlier versions. On top of this, you could add a new type of Live Mesh folder, where you right-click and select that you simply want it to be backed up. Live Mesh would then upload its contents to the cloud, but the synchronization with other devices would not be needed. If it were reasonably priced, and you could control the scheduling of its bandwidth usage, I would definitely be interested.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Live Mesh</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="fab0a173-68ad-41d3-8007-48b87d0d36f2">
+      <author>Dargs</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05142815591815744142</website>
+      <ip />
+      <userAgent />
+      <date>2009-08-21 12:02:56</date>
+      <content>I&amp;#39;ve been using Live Mesh a bit as well.&lt;br /&gt;&lt;br /&gt;Regarding Number 2 the client does show when it&amp;#39;s busy downloading / uploading I think what you need is a Sync Now option as it only checks for changes periodically.&lt;br /&gt;&lt;br /&gt;The other thing that I&amp;#39;d really like to see is the ability to add directories on the network to Live Mesh.  (Which you can do with Groove).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a972d6cb-d83f-466b-afa7-0c96f47f76e7">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-08-21 13:49:07</date>
+      <content>yeah, I only just noticed the syncing status bar the other day.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="41dd6a9f-ab02-435f-a2bf-6c6570d34b94">
+      <author>legalalienlondon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10501035751946717805</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-17 11:39:26</date>
+      <content>Live Mesh is bloody dangerous. I had associated My Pictures folder with it and then I decided to remove it from Live Mesh so I clicked delete in the context menu. It told me if I delete this folder it won&amp;#39;t be available to other computers and I thought that&amp;#39;s fine and clicked ok. &lt;br /&gt;&lt;br /&gt;Then I realised that it actually PERMANENTLY deleted the whole folder from my PC. It didn&amp;#39;t even bother with putting it into the Recycle Bin. &lt;br /&gt;&lt;br /&gt;STAY AWAY FROM THIS PROGRAMME!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9524c83d-8c8d-43c7-a00a-96d5f112d43a">
+      <author>iliask</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-19 10:04:27</date>
+      <content>@legalalienlondon it&amp;#39;s not the program the did the mistake. It was you. It&amp;#39;s a folder like any other folder. If you delete it then it&amp;#39;s gone. You should &amp;quot;Stop it syncing&amp;quot;</content>
+    </comment>
+  </comments>
+</post>

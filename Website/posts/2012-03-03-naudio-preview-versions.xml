@@ -1,0 +1,16 @@
+<post>
+  <title>NAudio Preview Versions</title>
+  <slug>naudio-preview-versions</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-03-03 07:43:00</pubDate>
+  <lastModified>2012-03-03 07:43:59</lastModified>
+  <content>&lt;p&gt;NAudio 1.5 was the first release of NAudio I managed to get up &lt;a href="https://nuget.org/packages/NAudio/1.5"&gt;onto NuGet&lt;/a&gt;. Although the vast majority of NAudio users still continue to get their downloads from CodePlex, I’m hoping that NuGet will become the preferred means of adding it to a project, as it makes adding a reference very simple and allows easy upgrades to new versions.&lt;/p&gt; &lt;p&gt;Recently, NuGet added a feature that allows you to upload preview releases, by using semantic versioning such as &lt;a href="https://nuget.org/packages/NAudio/1.5.1-beta"&gt;NAudio 1.5.1-beta&lt;/a&gt;. Packages versioned like this won’t appear by default, but can be installed using the NuGet package manager console window using the –Pre switch on the Install-Package command.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;Install-Package NAudio -Pre
+&lt;/pre&gt;
+&lt;p&gt;The benefit of this is that it gives me a very quick and simple way of uploading preview versions of NAudio. This is useful for me, as I use NAudio in a lot of small projects, and often I want to use the features I have just added. The ability to push pre-release versions to NuGet is a big time-saver, and much quicker than creating a full release on CodePlex. So if you are looking for the latest build of NAudio, head over to NuGet. The &lt;a href="https://nuget.org/packages/NAudio/"&gt;NAudio feed page&lt;/a&gt; will show the latest version available (scroll to bottom for the full list).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>NuGet</category>
+  </categories>
+  <comments />
+</post>

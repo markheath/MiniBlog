@@ -1,0 +1,181 @@
+<post>
+  <title>How to Calculate Code Churn using TFS</title>
+  <slug>how-to-calculate-code-churn-using-tfs</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-03-04 18:57:00</pubDate>
+  <lastModified>2014-03-05 09:27:52</lastModified>
+  <content>&lt;p&gt;Your source control repository can provide a lot of valuable insight into your project. In particular, it can highlight source files that are being edited far too often. Files that are being changed on a regular basis (or by many different developers) indicates there might be one of these problems with your code:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;lots of bugs  &lt;li&gt;too many responsibilities (failure to adhere to the “Single Responsibility Principle”)  &lt;li&gt;not extensible enough (failure to adhere to the “&lt;a href="/post/essential-developer-principles-4-open"&gt;Open Closed Principle&lt;/a&gt;”)&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;Counting changes to source control files is often called “code churn”. It’s usually defined as the sum of all added, modified and deleted lines. Most source control systems will have some way of letting you get at this information, and I might post about how to extract it for other systems at a later date, but for now, here’s two approaches you can take if you’re using TFS.&lt;/p&gt; &lt;h3&gt;Using the TFS API&lt;/h3&gt; &lt;p&gt;The TFS API allows you to get details of each changeset individually. Unfortunately the lines added, deleted and modified aren’t included (or at least I can’t find them), but on the whole you’ll find that simply counting the number of modifications to each file is good enough at identifying trouble areas. I also like to count how many changes each user has made.&lt;/p&gt; &lt;p&gt;Here’s a simple class that demonstrates how to source control statistics from TFS using the API. You pass the URL of your collection (e.g. http://myserver:8080/tfs/MyCollection) into the constructor. Then to get the churn or user statistics you need to specify the path within that collection that you want to examine (e.g. $/MyProject/). You’ll see that I am filtering out only changes to the files I am interested in (e.g. only C# files), and I perform a regex on the path of each item, so changes to the same file in different branches are counted together. You’d need to customise that for whatever branching strategy you are using. I’ve also made it cancellable, as this can take a long time to run if you have a long history.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.VersionControl.Client;
+
+namespace TfsAnalysis
+{
+    class TfsAnalyser
+    {
+        private readonly VersionControlServer vcs;
+
+        public TfsAnalyser(string url)
+        {
+            var collection = ConnectToTeamProjectCollection(url, null);
+
+            vcs = (VersionControlServer)collection.GetService(typeof(VersionControlServer));
+        }
+
+        public TfsAnalyser(string url, string user, string password, string domain)
+        {
+
+            var networkCredential = new NetworkCredential(user, password, domain);
+            var collection = ConnectToTeamProjectCollection(url, networkCredential);
+            
+            vcs = (VersionControlServer) collection.GetService(typeof (VersionControlServer));
+        }
+
+        /// &amp;lt;summary&amp;gt;
+        /// Gets User Statistics (how many changes each user has made)
+        /// &amp;lt;/summary&amp;gt;
+        /// &amp;lt;param name="path"&amp;gt;Path in the form "$/My Project/"&amp;lt;/param&amp;gt;
+        /// &amp;lt;param name="cancellationToken"&amp;gt;Cancellation token&amp;lt;/param&amp;gt;
+        public IEnumerable&amp;lt;SourceControlStatistic&amp;gt; GetUserStatistics(string path, CancellationToken cancellationToken)
+        {
+            return GetChangesetsForProject(path, cancellationToken).GroupBy(c =&amp;gt; c.Committer).Select(g =&amp;gt;
+                new  SourceControlStatistic { Key = g.Key, Count = g.Count() } ).OrderByDescending(s =&amp;gt; s.Count);
+        }
+
+        /// &amp;lt;summary&amp;gt;
+        /// Gets Churn Statistics (how many times has each file been modified)
+        /// &amp;lt;/summary&amp;gt;
+        /// &amp;lt;param name="path"&amp;gt;Path in the form "$/My Project/"&amp;lt;/param&amp;gt;
+        /// &amp;lt;param name="cancellationToken"&amp;gt;Cancellation token&amp;lt;/param&amp;gt;
+        public IEnumerable&amp;lt;SourceControlStatistic&amp;gt; GetChurnStatistics(string path, CancellationToken cancellationToken)
+        {
+            return GetChangesetsForProject(path, cancellationToken)
+                .Select(GetChangesetWithChanges)
+                .SelectMany(c =&amp;gt; c.Changes) // select the actual changed files
+                .Where(c =&amp;gt; c.Item.ServerItem.Contains("/Source/")) // filter out just the files we are interested in
+                .Where(c =&amp;gt; c.Item.ServerItem.EndsWith(".cs"))
+                .Where(c =&amp;gt; ((int)c.ChangeType &amp;amp; (int)ChangeType.Edit) == (int)ChangeType.Edit) // don't count merges
+                .Select(c =&amp;gt; Regex.Replace(c.Item.ServerItem, @"^.+/Source/", "")) // count changes to the same file on different branches
+                .GroupBy(c =&amp;gt; c)
+                .Select(g =&amp;gt;
+                new SourceControlStatistic { Key = g.Key, Count = g.Count() }).OrderByDescending(s =&amp;gt; s.Count); 
+        }
+
+        private Changeset GetChangesetWithChanges(Changeset c)
+        {
+            return vcs.GetChangeset(c.ChangesetId, includeChanges: true, includeDownloadInfo: false);
+        }
+
+        private IEnumerable&amp;lt;Changeset&amp;gt; GetChangesetsForProject(string path, CancellationToken cancellationToken)
+        {
+            return vcs.QueryHistory(path, RecursionType.Full).TakeWhile(changeset =&amp;gt; !cancellationToken.IsCancellationRequested);
+        }
+
+        private TfsTeamProjectCollection ConnectToTeamProjectCollection(string url, NetworkCredential networkCredential)
+        {
+            var teamProjectCollection = new TfsTeamProjectCollection(new Uri(url), networkCredential);
+            teamProjectCollection.EnsureAuthenticated();
+            return teamProjectCollection;
+        }
+    }
+}
+
+&lt;/pre&gt;
+&lt;p&gt;Having got this information, I usually write it out to a CSV file to analyse it offline. It can yield very interesting results. One one project I discovered several files that were being modified on average more than once a week over the lifetime of the project (10 years).&lt;/p&gt;
+&lt;h3&gt;Using the TFS Warehouse Database&lt;/h3&gt;
+&lt;p&gt;There is however a quicker, and potentially easier way to get at the churn statistics, and that is to go direct to the Tfs_Warehouse database yourself. This does mean you need admin rights to access the database. You also lose the ability to differentiate between a regular edit commit, and a merge commit (although you could use the API to get this information). However it provides counts of lines added, removed and modified, and runs much quicker. The inspiration for this technique came from the &lt;a href="https://codechurn.codeplex.com"&gt;Code Churn&lt;/a&gt; Analyser CodePlex project (and updated to use what seems to be the newer schema in the Tfs_Warehouse database rather than the older TfsWarehouse). I’ve modified their SQL slightly as in our system, Changesets weren’t always connected to WorkItems. Here’s a SQL statement that grabs the code churn:&lt;/p&gt;&lt;pre class="brush: sql;"&gt;SELECT 
+[FactCodeChurn].CodeChurnSK ChurnId,
+DimFile.[FileName] [File]],
+DimFile.FilePath [FilePath],
+DimFile.FileExtension [FileExtension],
+DimChangeset.ChangesetID ChangesetId,
+DimChangeset.ChangesetTitle ChangesetTitle,
+DimPerson.PersonSK PersonId,
+DimPerson.Name PersonTitle,
+[FactCodeChurn].LastUpdatedDateTime Date,
+[FactCodeChurn].LinesAdded LinesAdded,
+[FactCodeChurn].LinesModified LinesModified,
+[FactCodeChurn].LinesDeleted LinesDeleted
+FROM [FactCodeChurn]
+JOIN DimChangeset on FactCodeChurn.ChangesetSK = DimChangeset.ChangesetSK
+JOIN DimPerson on DimChangeset.CheckedInBySK = DimPerson.PersonSK
+JOIN DimFile on FactCodeChurn.FilenameSK = DimFile.FileSK
+WHERE DimFile.FileExtension = '.cs'    
+&lt;/pre&gt;
+&lt;p&gt;I decided to use &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt; to process this information, as it provides nice LINQ to SQL strongly typed objects that greatly speed up development. Once again I filtered out files I wasn’t interested in and used a regular expression to group together changes to the same file on a different branch. This one is able to count the files that have had the most different developers working on them. I use LINQPad’s “Dump” method to output the results of interest, but they could easily be output to a data file:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;void Main()
+{
+    var churns = FactCodeChurns
+        .Where (cc =&amp;gt; cc.FilenameSKDimFile.FileExtension == ".cs")
+    .Select(cc =&amp;gt; new { File = Regex.Replace(cc.FilenameSKDimFile.FilePath , @"^.+/Source( Code)?/", ""),
+        User = cc.DimChangeset.CheckedInBySKDimPerson.Name, 
+        LinesAdded = cc.LinesAdded,
+        LinesDeleted = cc.LinesDeleted,
+        LinesModifided = cc.LinesModified
+    });
+    
+    var changes = new Dictionary&amp;lt;string, Stats&amp;gt;();
+    var users = new Dictionary&amp;lt;string, HashSet&amp;lt;string&amp;gt;&amp;gt;();
+    foreach(var churn in churns)
+    {
+        Stats stats;
+        if(!changes.TryGetValue(churn.File, out stats))
+        {
+            changes[churn.File] = stats = new Stats();
+        }
+        stats.Usages++;
+        stats.LinesAdded += churn.LinesAdded.Value;
+        stats.LinesDeleted += churn.LinesDeleted.Value;
+        stats.LinesModified += churn.LinesModifided.Value;
+        
+        HashSet&amp;lt;string&amp;gt; fileUsers;
+        if(!users.TryGetValue(churn.File, out fileUsers))
+        {
+            users[churn.File] = fileUsers = new HashSet&amp;lt;string&amp;gt;();
+        }
+        fileUsers.Add(churn.User);
+    }
+    
+    changes.Where(kvp =&amp;gt; kvp.Value.Usages &amp;gt; 200)
+            .OrderByDescending(kvp =&amp;gt; kvp.Value.Usages)
+            .Select(kvp =&amp;gt; new { kvp.Key, kvp.Value.Usages })
+            .Dump("Usages");
+    changes.Where(kvp =&amp;gt; kvp.Value.LinesModified &amp;gt; 5000)
+            .OrderByDescending(kvp =&amp;gt; kvp.Value.LinesModified)
+            .Select(kvp =&amp;gt; new { kvp.Key, kvp.Value.LinesModified })
+            .Dump("Lines Modified");
+    changes.Where(kvp =&amp;gt; kvp.Value.LinesAdded &amp;gt; 50000)
+            .OrderByDescending(kvp =&amp;gt; kvp.Value.LinesAdded)
+            .Select(kvp =&amp;gt; new { kvp.Key, kvp.Value.LinesAdded })
+            .Dump("Lines Added");
+    changes.Where(kvp =&amp;gt; kvp.Value.LinesDeleted &amp;gt; 40000)
+            .OrderByDescending(kvp =&amp;gt; kvp.Value.LinesDeleted)
+            .Select(kvp =&amp;gt; new { kvp.Key, kvp.Value.LinesDeleted })
+            .Dump("Lines Deleted");
+            
+    users.Where(kvp =&amp;gt; kvp.Value.Count &amp;gt; 20)
+        .OrderByDescending (kvp =&amp;gt; kvp.Value.Count)
+        .Select(kvp =&amp;gt; new { kvp.Key, kvp.Value })
+        .Dump("Users");    
+
+}
+
+class Stats
+{
+    public int Usages { get; set; }
+    public int LinesAdded { get; set; }
+    public int LinesDeleted { get; set; }
+    public int LinesModified { get; set; }
+}
+&lt;/pre&gt;
+&lt;p&gt;As you can see from my code, I only dump the statistics above a certain threshold – when you’ve got tens of thousands of files and commits, you’ll want to do this. &lt;/p&gt;
+&lt;p&gt;Hope this proves useful to someone. I think Code Churn statistics are a very quick and effective way of highlighting some of the areas of code that may be suffering from too much “technical debt”.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>TFS</category>
+  </categories>
+  <comments />
+</post>

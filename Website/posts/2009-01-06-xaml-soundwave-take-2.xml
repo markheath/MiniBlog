@@ -1,0 +1,60 @@
+<post>
+  <title>XAML SoundWave Take 2</title>
+  <slug>xaml-soundwave-take-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-01-06 13:19:00</pubDate>
+  <lastModified>2011-07-03 07:46:15</lastModified>
+  <content>&lt;p&gt;In my &lt;a href="/post/soundwave-xaml"&gt;previous post&lt;/a&gt;, I described a couple of options for creating a sound-wave icon graphic in XAML. While my final solution worked OK, I have since thought up an even simpler approach by using the XAML Path mini-language.&lt;/p&gt; &lt;p&gt;The reason I didn’t initially go for this option was that I didn’t want to calculate the coordinates of each point. However, we can draw the shape rotated by 45 degrees first, which allows us to put each point nicely on a grid, and then use a &lt;strong&gt;RotateTransform&lt;/strong&gt; afterwards to put it back.&lt;/p&gt; &lt;p&gt;The XAML Path is a very useful tool to master if you prefer to work directly with XAML instead of using a design tool like Expression Blend. Here’s the first path, to create a quadrant shape:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Fill="Orange" Data="M 0,0 h 1 a 1,1 90 0 1 -1,1 Z" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;strong&gt;M&lt;/strong&gt; command starts us off by &lt;strong&gt;moving&lt;/strong&gt; to the specified coordinates (0,0 in this case). A lower case &lt;strong&gt;h&lt;/strong&gt; means a relative horizontal line – we move one unit to the right. Now the lower case &lt;strong&gt;a&lt;/strong&gt; command means we are drawing an &lt;strong&gt;arc&lt;/strong&gt; using relative coordinates. The first two arguments are the radius of the arc (1,1 = circle of radius 1), then comes the angle in degrees (90), then a flag indicating if this is a large arc – in our case, no (0), and then another flag indicating if we are going clockwise (1 = yes). Finally, we put the end coordinates (-1,1) which are relative to the starting point because we used a lower case &lt;strong&gt;a&lt;/strong&gt;. This path is then closed with the &lt;strong&gt;Z&lt;/strong&gt; command although this is not strictly necessary for us as we are not using a &lt;strong&gt;Stroke&lt;/strong&gt; brush on this &lt;strong&gt;Path&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Now we can draw the other three sections, each of which consists of a &lt;strong&gt;horizontal&lt;/strong&gt; line followed by an &lt;strong&gt;arc&lt;/strong&gt;, then a &lt;strong&gt;vertical &lt;/strong&gt;line, and finally another &lt;strong&gt;arc&lt;/strong&gt; with a smaller radius. I don’t bother with the Z because I have reached my starting point again with the second arc.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Fill="Orange" Data="M 2,0 h 1 a 3,3 90 0 1 -3,3 v -1 a 2,2 90 0 0 2,-2" /&amp;gt;
+&amp;lt;Path Fill="Orange" Data="M 4,0 h 1 a 5,5 90 0 1 -5,5 v -1 a 4,4 90 0 0 4,-4" /&amp;gt;
+&amp;lt;Path Fill="Orange" Data="M 6,0 h 1 a 7,7 90 0 1 -7,7 v -1 a 6,6 90 0 0 6,-6" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;We end up with the right graphics but with the wrong orientation:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-soundwave-take-2-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/xaml-soundwave-take-2-1.png" width="95" height="92"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;RotateTransform&lt;/strong&gt; (plus a &lt;strong&gt;ScaleTransform&lt;/strong&gt;) allows us to put this exactly how we want it:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-soundwave-take-2-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/xaml-soundwave-take-2-2.png" width="100" height="118"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Here’s the complete XAML:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Page
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="#E0E0E0"&amp;gt;
+  &amp;lt;Grid Width="8" Height="8"&amp;gt;
+    
+    &amp;lt;Grid.RenderTransform&amp;gt;
+      &amp;lt;TransformGroup&amp;gt;
+      &amp;lt;ScaleTransform ScaleX="10" ScaleY="10" /&amp;gt;
+      &amp;lt;RotateTransform Angle="-45" /&amp;gt;
+      &amp;lt;/TransformGroup&amp;gt;
+    &amp;lt;/Grid.RenderTransform&amp;gt;
+    
+    &amp;lt;Path Fill="Orange" Data="M 0,0 h 1 a 1,1 90 0 1 -1,1 Z" /&amp;gt;
+    &amp;lt;Path Fill="Orange" Data="M 2,0 h 1 a 3,3 90 0 1 -3,3 v -1 a 2,2 90 0 0 2,-2" /&amp;gt;
+    &amp;lt;Path Fill="Orange" Data="M 4,0 h 1 a 5,5 90 0 1 -5,5 v -1 a 4,4 90 0 0 4,-4" /&amp;gt;
+    &amp;lt;Path Fill="Orange" Data="M 6,0 h 1 a 7,7 90 0 1 -7,7 v -1 a 6,6 90 0 0 6,-6" /&amp;gt;
+  &amp;lt;/Grid&amp;gt;
+&amp;lt;/Page&amp;gt;&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="715ab705-3ac3-4aba-becd-f19cfdda2cc2">
+      <author>nCubed</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07392935265432900581</website>
+      <ip />
+      <userAgent />
+      <date>2011-12-22 17:01:06</date>
+      <content>Was just looking to create an audio icon for a WPF app. Thanks for doing the hard work :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="85ff7d6e-cfc6-4ad3-984d-0bdff5e66d06">
+      <author>nCubed</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07392935265432900581</website>
+      <ip />
+      <userAgent />
+      <date>2011-12-22 17:01:45</date>
+      <content>Was just looking to create an audio icon for a WPF app. Thanks for doing the hard work :)</content>
+    </comment>
+  </comments>
+</post>

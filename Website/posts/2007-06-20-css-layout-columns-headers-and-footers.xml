@@ -1,0 +1,127 @@
+<post>
+  <title>CSS Layout - Columns, Headers and Footers</title>
+  <slug>css-layout-columns-headers-and-footers</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-20 14:45:00</pubDate>
+  <lastModified>2010-10-04 13:50:22</lastModified>
+  <content>&lt;p&gt;Most websites these days seem to have a standard layout. There is a header at the top, a footer at the bottom, and then one or two thin bars of links or adverts down either side. Using tables, this is relatively simple to do - it's a table with three rows and three columns:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;table border="1"&amp;gt;
+&amp;lt;tr&amp;gt;
+    &amp;lt;td colspan="3"&amp;gt;&amp;lt;b&amp;gt;Header&amp;lt;/b&amp;gt;&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+    &amp;lt;td width="20%"&amp;gt;Left Column&amp;lt;/td&amp;gt;
+    &amp;lt;td width="60%"&amp;gt;Centre Column&amp;lt;/td&amp;gt;
+    &amp;lt;td width="20%"&amp;gt;Right Column&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;tr&amp;gt;
+    &amp;lt;td colspan="3"&amp;gt;&amp;lt;i&amp;gt;Footer&amp;lt;/i&amp;gt;&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;
+    &amp;lt;td colspan="3"&amp;gt;Footer&amp;lt;/td&amp;gt;
+&amp;lt;/tr&amp;gt;
+&amp;lt;/table&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;But this is seriously out of fashion these days. You are now expected to use CSS, which can be a bit frustrating to learn at first. Here's how to generate a three column layout in CSS, which will expand in width to use your whole browser window.&lt;/p&gt;
+&lt;p&gt;The first thing to do is ditch the table and use &lt;strong&gt;div&lt;/strong&gt; tags:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;div id="header"&amp;gt;Header&amp;lt;/div&amp;gt;
+&amp;lt;div id="left-col"&amp;gt;left column&amp;lt;/div&amp;gt;
+&amp;lt;div id="right-col"&amp;gt;right column&amp;lt;br/&amp;gt;link&amp;lt;/div&amp;gt;
+&amp;lt;div id="centre-col"&amp;gt;centre column&amp;lt;/div&amp;gt;
+&amp;lt;div id="clear"&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div id="footer"&amp;gt;footer&amp;lt;/div&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;This is all fairly straight-forward, except the need for the clear div, which ensures the footer stays at the bottom of the page.&lt;/p&gt;
+
+&lt;p&gt;Now we need to write the styles. For the most part, they are simple to understand.&lt;/p&gt;
+
+&lt;pre class="brush: css"&gt;#header {
+border:solid thin gray;
+text-align:center;
+font-size:x-large;
+font-weight:bold;
+margin:5px;
+}
+
+#left-col {
+border:solid thin gray;
+margin:5px;
+width=150px;
+float:left;
+}
+
+#right-col {
+border:solid thin gray;
+margin:5px;
+width=150px;
+float:right;
+}
+
+#centre-col {
+border:solid thin gray;
+margin:10px 160px 5px 160px;
+min-height:400px;
+}
+
+#footer {
+text-align=center;
+border-top:dashed thin gray;
+margin:5px;
+font-style:italic;
+}
+
+#clear {
+clear:both;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Points of interest:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The centre column has to provide left and right margins wide enough not to obscure the left and right columns.&lt;/li&gt;
+&lt;li&gt;The min-height property ought to ensure that the page does not appear artificially squashed if there is no content. However, I am not sure this is working in all instances.&lt;/li&gt;
+&lt;li&gt;Borders and margins can be used together to create a much nicer looking separation of sections than can be achieved simply with tables.&lt;/li&gt;
+&lt;li&gt;You have to put the right column before the centre column for layout to work correctly.&lt;/li&gt;&lt;/ul&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="4dd83628-eb52-41a4-aa32-c357010bb2f1">
+      <author>Kyle</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16300620583356211913</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-29 00:01:00</date>
+      <content>this is great.&lt;BR/&gt;thank you.&lt;BR/&gt;i'm using this to learn!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0e6bebbf-1d68-4dfe-9c7a-10ca79156e6b">
+      <author>Kwasi</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12528781534871879104</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-04 10:33:27</date>
+      <content>very  very  good</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7592e7af-be2a-4349-8139-aeb903d0a2a5">
+      <author>Kwasi</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12528781534871879104</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-04 10:34:01</date>
+      <content>how is it possible to edit it so i can use it as a templete</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0ab3fce8-4e23-43dd-acac-c27fac831d54">
+      <author>Kwasi</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12528781534871879104</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-04 10:49:49</date>
+      <content>am aiming to do a booking web site in asp.net where one can make booking for an appointment any  help???</content>
+    </comment>
+  </comments>
+</post>

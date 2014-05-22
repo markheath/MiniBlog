@@ -1,0 +1,114 @@
+<post>
+  <title>NAudio Wave Stream Architecture</title>
+  <slug>naudio-wave-stream-architecture</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-04 07:23:00</pubDate>
+  <lastModified>2011-07-03 16:15:25</lastModified>
+  <content>&lt;p&gt;This post explains the basic architecture for audio streaming with the &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; .NET open source audio library. The most important concept to understand is a Wave Stream. This is simply a stream of audio data, in any format, that can be read from and repositioned. In NAudio, all Wave Streams inherit from &lt;strong&gt;WaveStream&lt;/strong&gt;, which in turn inherits from &lt;strong&gt;System.IO.Stream&lt;/strong&gt;. NAudio ships with a number of highly useful WaveStream derived classes, but there is nothing stopping you creating your own.&lt;/p&gt; &lt;p&gt;Many types of Wave Stream accept input from one or more other Wave Streams and process that data in some way. For example, the &lt;strong&gt;WaveChannel32&lt;/strong&gt; stream turns mono 16 bit WAV data into stereo 32 bit data, and allows you to adjust panning and volume at the same time. The &lt;strong&gt;WaveMixer32 &lt;/strong&gt;stream can take any number of 32 bit input streams and mix them together to produce a single output. The &lt;strong&gt;WaveFormatConversionStream &lt;/strong&gt;will attempt to find an ACM codec that performs the format conversion you wish. For example, you might have some ADPCM compressed audio that you wish to decompress to PCM. Another common use of WaveStreams is to apply audio effects such as EQ, reverb or compression to the signal.&lt;/p&gt; &lt;p&gt;Obviously, you need a starting point for your Wave data to come from. The most common options are the &lt;strong&gt;WaveFileReader&lt;/strong&gt; which can read standard WAV files, and the &lt;strong&gt;WaveInStream&lt;/strong&gt; which captures data from a soundcard. Other examples that you might want to create would be a software synthesizer, emitting sound according to the notes the user was playing on a MIDI keyboard.&lt;/p&gt; &lt;p&gt;Once you have processed your audio data, you will want to &lt;strong&gt;render&lt;/strong&gt; it somewhere. The two main options are to an audio device or to a file. NAudio provides a variety of options here. The most common are &lt;strong&gt;WaveOut&lt;/strong&gt; which allows playback of a WaveStream using the WinMM APIs and &lt;strong&gt;WaveFileWriter&lt;/strong&gt; which can write standard WAV files.&lt;/p&gt; &lt;p&gt;The following example shows a very simple graph which reads from one WAV file and passes the data through the DMO Resampler Wave Stream before writing it out to another WAV file. This would be all you needed to create your own WAV file resampling utility:&lt;/p&gt; &lt;p&gt;&amp;nbsp;&lt;a href="/posts/files/naudio-wave-stream-architecture-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="NAudioResample" border="0" alt="NAudioResample" src="/posts/files/naudio-wave-stream-architecture-1.png" width="230" height="228"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Of course, you can do much more complicated things with Wave Streams. The next example shows three WaveFileReader objects as the inputs. Two of them go through some stages of format conversion before they are all converted into IEEE 32 bit audio. Then one of the streams goes through an audio compressor effect to adjust its dynamic range, before all three streams are mixed together by &lt;strong&gt;WaveMixer32&lt;/strong&gt;. The output could be processed further, but in this example it is simply played out of the soundcard using &lt;strong&gt;WaveOut&lt;/strong&gt;.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/naudio-wave-stream-architecture-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="NAudioStreams" border="0" alt="NAudioStreams" src="/posts/files/naudio-wave-stream-architecture-2.png" width="517" height="497"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Hopefully this gives a good flavour of the type of things possible with WaveStreams in NAudio. In a future post, I will explain how to create your own custom WaveStream, and I will discuss in more depth the design decisions behind the WaveStream class.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="d9afcbcc-a93b-44bc-a0df-fac9b0991e13">
+      <author>iamnotsmart</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09879288181044734250</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-28 16:00:52</date>
+      <content>hi Mark,&lt;br /&gt;&lt;br /&gt;Im really sorry if im making comments everywhere. I just dont know how to contact you. Anyway, ive noticed that in the WaveFileWriter you have to call close so that the &amp;quot;file&amp;quot; or the stream it contains will have complete WAV file/stream. now, if i use file i have no prob with Wavout Playback. However if use IO stream such as MemoryStream to get the byte array from WaveFileWriter and use it in WAVEOUT playback without WaveFileWriter.Close it is having &amp;quot;NO RIFF header error&amp;quot;. I think because inorder for the stream to complete i have to call WaveFileWriter.Close. Well i DID call that procedure but the problem is im having the &amp;quot;STREAM already closed&amp;quot; errors or something thesame. is there work around with this? what im after is to be able to stream using bytearray over the network. &lt;br /&gt;(and hey i finally understood the READ part of IWAVEProvider) &lt;br /&gt;&lt;br /&gt;Thanks again for this really wonderful dll.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7621d5ce-799a-46c7-8f7f-ff72c9d5ed1d">
+      <author>iamnotsmart</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09879288181044734250</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-28 17:59:15</date>
+      <content>hi mark,&lt;br /&gt;&lt;br /&gt;ive got things working already, what i did was to imitate what you did on WaveFileWriter.Close and put it inside a new procedure like writerGenerateFullSoundStream...now i am able to stream byte array to the network...and play them...thank you so much for this wonderfull DLL...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dccaa166-cd35-41d5-96f2-db2a0333f8d0">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-28 19:29:12</date>
+      <content>hi iamnotsmart, glad you got things working in the end. hopefully I will have the time to write some demos of this kind of thing in the future, as I get a lot of similar questions</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9e2d1861-08b1-4fe9-8073-70000264b5b2">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-26 18:07:09</date>
+      <content>Hi Mark, I was wondering what tool did you use to draw your schemas like in this post?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0a62667d-629e-40c9-a00a-ff7ce0964010">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-26 18:19:21</date>
+      <content>Microsoft Word! I would love to find something better though</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="86c94879-da59-411e-a52b-42d741ad9c50">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-01-27 12:46:50</date>
+      <content>Haha, didn&amp;#39;t think about it ! Thanks.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="454f94c2-ad34-4ea4-ba9b-07b75ae89614">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-01-17 17:00:03</date>
+      <content>Hi Mark and iamnotsmart,&lt;br /&gt;&lt;br /&gt;Can you share with me how did u 2 do?? I&amp;#39;m new in C# and also in NAudio.. Now I ve to play back what the user write in text box. So it will be string. I changed string to memory stream..then use NAudio...But same with iamnotsmart...I got error shown that the header is not &amp;#39;RIFF&amp;#39;.... I urgently need help..pls pls pls...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b1e6c326-0db3-4731-9a42-3314519ec225">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-01-18 22:31:46</date>
+      <content>@anonymous - NAudio cannot to text to audio. You need to use the Microsoft speech engine to do that.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ed4db0a8-e64e-4ff7-b822-42844735547f">
+      <author>candritzky</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04674757146904324766</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-01 16:36:37</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I cannot find the WaveInStream class mentioned in this article in the most recent version of the library (1.4RC). What is the recommended replacement if I want to convert the data from a WaveIn device to a WaveStream?&lt;br /&gt;&lt;br /&gt;Thanks,&lt;br /&gt;Chris</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b432a490-1c2c-41fc-b135-449a06a664a8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-01 16:40:43</date>
+      <content>@candritzky - the recommended way is to put the recorded bytes into a BufferedWaveProvider. WaveInStream was never a proper WaveStream, so I renamed it to WaveIn.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="30bc2dd3-2919-4af5-9d45-4b7c649e30c8">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-08-03 16:02:22</date>
+      <content>I am unable to convert .wav file of IMA ADPCM format to .wav file of PCM format. Please help.</content>
+    </comment>
+  </comments>
+</post>

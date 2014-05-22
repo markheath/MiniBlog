@@ -1,0 +1,40 @@
+<post>
+  <title>Asserting Function Calls in Python</title>
+  <slug>asserting-function-calls-in-python</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-30 19:04:00</pubDate>
+  <lastModified>2010-09-30 19:04:00</lastModified>
+  <content>&lt;p&gt;One of the nicest features of Python is “&lt;a href="http://en.wikipedia.org/wiki/Duck_typing"&gt;duck typing&lt;/a&gt;”, which means you don’t need to create interfaces to allow you to swap out implementations. Instead you simply create a different object that has the functions you need.&lt;/p&gt;  &lt;p&gt;One really powerful use of this is in unit testing, allowing you to create lightweight replacements for dependencies without the need for a powerful mocking framework. Having said that, sometimes you need to be able to do things like checking that a function was called on an existing object. I asked about this &lt;a href="http://stackoverflow.com/questions/3829742/assert-that-a-method-was-called-in-a-python-unit-test"&gt;on StackOverflow&lt;/a&gt;, and got a variety of different approaches to this problem.&lt;/p&gt;  &lt;p&gt;Thanks to another feature of Python, sometimes called “&lt;a href="http://en.wikipedia.org/wiki/Monkey_patch"&gt;monkey patching&lt;/a&gt;” you can take any object and replace an existing function with your own. This is obviously very powerful (and potentially dangerous) but it opens up all sorts of possibilities.&lt;/p&gt;  &lt;p&gt;Here’s an example of monkey patching to replace the existing implementation of MyFunc with a lambda expression that simply counts how many times it was called.&lt;/p&gt;  &lt;pre class="brush: py; gutter: false; toolbar: false;"&gt;def testMyFunc():
+    obj = MyObject()
+    calls = 0
+    obj.MyFunc = lambda: calls += 1
+    # DoSomething should call MyFunc
+    DoSomething(obj)
+    assert calls == 1&lt;/pre&gt;
+
+&lt;p&gt;To take this one step further, we might wish to still call through to the original implementation of MyFunc. We can simply this by creating a helper class:&lt;/p&gt;
+
+&lt;pre class="brush: py; gutter: false; toolbar: false;"&gt;class MethodCallLogger(object):
+    def __init__(self, meth):
+        self.meth = meth
+        self.CallCount = 0
+
+    def __call__(self, *args):
+        self.meth(*args)
+        self.CallCount += 1&lt;/pre&gt;
+
+&lt;p&gt;This class will call through to the original function, as well as count how many times it was called. The &lt;strong&gt;__call__&lt;/strong&gt; function is a way of allowing a class to be called as though it were a function. The &lt;strong&gt;*args&lt;/strong&gt; syntax simply lets us support functions with multiple parameters. These could then be saved into a list and made available to the unit test if necessary. Here’s our first example again, using the MethodCallLogger class:&lt;/p&gt;
+
+&lt;pre class="brush: py; gutter: false; toolbar: false;"&gt;def testMyFunc():
+    obj = MyObject()
+    logger = MethodCallLogger(obj.MyFunc)
+    obj.MyFunc = logger
+    # DoSomething should call MyFunc
+    DoSomething(obj)
+    assert logger.CallCount == 1&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Python</category>
+  </categories>
+  <comments />
+</post>

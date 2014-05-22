@@ -1,0 +1,322 @@
+<post>
+  <title>TypeScript Tetris</title>
+  <slug>typescript-tetris</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-02-12 22:20:00</pubDate>
+  <lastModified>2014-02-13 16:34:07</lastModified>
+  <content>&lt;p&gt;Over a decade ago I decided to teach myself Java by writing a Tetris game which I made as an “applet” embedded in a webpage. The game itself worked fine, but Java in the browser never really took off, and so no one was actually able to play my masterpiece.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/typescript-tetris-1.png"&gt;&lt;img title="image" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; float: right; padding-top: 0px; padding-left: 0px; margin: 8px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="image" src="/posts/files/typescript-tetris-1.png" width="160" align="right" height="244"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Every now and then I would think about trying to port it to Javascript with a HTML 5 canvas. But one of the frustrating things about Javascript (from a Java or C# developer’s perspective) is it’s rather peculiar approach to object inheritance, which I hadn’t got round to learning.&lt;/p&gt; &lt;p&gt;So when TypeScript was announced, with its greatly simplified syntax for classes, I thought it might be worth giving this another try. And it turned out to be surprisingly easy to port. In fact I got it working shortly after the first version of TypeScript was released, but I never got round to blogging about it. Here’s some notes:&lt;/p&gt; &lt;h3&gt;The HTML&lt;/h3&gt; &lt;p&gt;There wasn’t much that needed to be done in the HTML, except to create a HTML 5 canvas object for us to draw on. Probably there is some cool trick web developers use to pick the optimal size for the game based on your browser size, but I just went for a fixed size canvas for now.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;canvas id="gameCanvas" width="240" height="360"&amp;gt;&amp;lt;/canvas&amp;gt;
+&lt;/pre&gt;
+&lt;h3&gt;The Shape Classes&lt;/h3&gt;
+&lt;p&gt;In my original Java code I had a &lt;strong&gt;Shape&lt;/strong&gt; base class, with methods like &lt;strong&gt;move&lt;/strong&gt;, &lt;strong&gt;drop&lt;/strong&gt;, &lt;strong&gt;rotate &lt;/strong&gt;etc, and a series of classes derived from it representing the different Tetris shapes (square, L-shape, T-shape etc).&lt;/p&gt;
+&lt;p&gt;These were the easiest to convert from Java into TypeScript. The only real difference was that Javascript’s arrays are slightly different to Java arrays. You declare an empty one, and then “push” elements into it. Here’s the base "Shape” class (I made my own Point type, as I don’t think JavaScript has a built in one):&lt;/p&gt;&lt;pre class="brush: java;"&gt;class Shape {
+    public points: Point[]; // points that make up this shape
+    public rotation = 0; // what rotation 0,1,2,3
+    public fillColor;
+
+    private move(x: number, y: number): Point[] {
+        var newPoints = [];
+
+        for (var i = 0; i &amp;lt; this.points.length; i++) {
+            newPoints.push(new Point(this.points[i].x + x, this.points[i].y + y));
+        }
+        return newPoints;
+    }
+
+    public setPos(newPoints: Point[]) {
+        this.points = newPoints;
+    }
+
+    // return a set of points showing where this shape would be if we dropped it one
+    public drop(): Point[] {
+        return this.move(0, 1);
+    }
+
+    // return a set of points showing where this shape would be if we moved left one
+    public moveLeft(): Point[] {
+        return this.move(-1, 0);
+    }
+
+    // return a set of points showing where this shape would be if we moved right one
+    public moveRight(): Point[] {
+        return this.move(1, 0);
+    }
+
+    // override these
+    // return a set of points showing where this shape would be if we rotate it
+    public rotate(clockwise: boolean): Point[] {
+        throw new Error("This method is abstract");
+    }
+}
+
+&lt;/pre&gt;
+&lt;p&gt;and here’s an example of a derived shape:&lt;/p&gt;&lt;pre class="brush: java;"&gt;class TShape extends Shape {
+    constructor (cols: number) {
+        super();
+        this.fillColor = 'red';
+        this.points = [];
+        var x = cols / 2;
+        var y = -2;
+        this.points.push(new Point(x - 1, y));
+        this.points.push(new Point(x, y)); // point 1 is our base point
+        this.points.push(new Point(x + 1, y));
+        this.points.push(new Point(x, y + 1));
+    }
+
+    public rotate(clockwise: boolean): Point[] {
+        this.rotation = (this.rotation + (clockwise ? 1 : -1)) % 4;
+        var newPoints = [];
+        switch (this.rotation) {
+            case 0:
+                newPoints.push(new Point(this.points[1].x - 1, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x + 1, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y + 1));
+                break;
+            case 1:
+                newPoints.push(new Point(this.points[1].x, this.points[1].y - 1));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y + 1));
+                newPoints.push(new Point(this.points[1].x - 1, this.points[1].y));
+                break;
+            case 2:
+                newPoints.push(new Point(this.points[1].x + 1, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x - 1, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y - 1));
+                break;
+            case 3:
+                newPoints.push(new Point(this.points[1].x, this.points[1].y + 1));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y));
+                newPoints.push(new Point(this.points[1].x, this.points[1].y - 1));
+                newPoints.push(new Point(this.points[1].x + 1, this.points[1].y));
+                break;
+        }
+        return newPoints;
+    }
+}
+&lt;/pre&gt;
+&lt;h3&gt;Drawing&lt;/h3&gt;
+&lt;p&gt;My application also had a “Grid” class, which was responsible for managing what shapes were present on the board, and for rendering it as well. So it needs the HTMLCanvasElement, and draws onto it with a CanvasRenderingContext2D. Thankfully the methods on the rendering context are actually quite close to the Java ones. We chose the colour with a call to &lt;strong&gt;context.fillStyle&lt;/strong&gt;, and then draw a rectangle with &lt;strong&gt;context.fillRect&lt;/strong&gt;.&lt;/p&gt;&lt;pre class="brush: java;"&gt;class Grid {
+    private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
+    private rows: number;
+    public cols: number;
+    public blockSize: number;
+    private blockColor: any[][];
+    public backColor: any;
+    private xOffset: number;
+    private yOffset: number;
+
+    constructor (rows: number, cols: number, blockSize: number, backColor, canvas: HTMLCanvasElement) {
+        this.canvas = canvas;
+        this.context = canvas.getContext("2d");
+        this.blockSize = blockSize;
+        this.blockColor = new Array(rows);
+        this.backColor = backColor;
+        this.cols = cols;
+        this.rows = rows;
+        for (var r = 0; r &amp;lt; rows; r++) {
+            this.blockColor[r] = new Array(cols);
+        }
+        this.xOffset = 20;
+        this.yOffset = 20;
+    }
+
+    public draw(shape: Shape) {
+        this.paintShape(shape, shape.fillColor);
+    }
+
+    public erase(shape: Shape) {
+        this.paintShape(shape, this.backColor);
+    }
+
+    private paintShape(shape: Shape, color) {
+        for (var i = 0; i &amp;lt; shape.points.length; i++) {
+            this.paintSquare(shape.points[i].y, shape.points[i].x, color);
+        }
+    }
+
+    // check the set of points to see if they are all free
+    public isPosValid(points: Point[]) {
+        var valid: boolean = true;
+        for (var i = 0; i &amp;lt; points.length; i++) {
+            if ((points[i].x &amp;lt; 0) ||
+                (points[i].x &amp;gt;= this.cols) ||
+                (points[i].y &amp;gt;= this.rows)) {
+                valid = false;
+                break;
+            }
+            if (points[i].y &amp;gt;= 0) {
+                if (this.blockColor[points[i].y][points[i].x] != this.backColor) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        return valid;
+    }
+
+    public addShape(shape: Shape) {
+        for (var i = 0; i &amp;lt; shape.points.length; i++) {
+            if (shape.points[i].y &amp;lt; 0) {
+                // a block has landed and it isn't even fully on the grid yet
+                return false;
+            }
+            this.blockColor[shape.points[i].y][shape.points[i].x] = shape.fillColor;
+        }
+        return true;
+    }
+
+    public eraseGrid() {
+        this.context.fillStyle = this.backColor;
+        var width = this.cols * this.blockSize;
+        var height = this.rows * this.blockSize;
+
+        this.context.fillRect(this.xOffset, this.yOffset, width, height);
+    }
+
+    public clearGrid() {
+        for (var row = 0; row &amp;lt; this.rows; row++) {
+            for (var col = 0; col &amp;lt; this.cols; col++) {
+                this.blockColor[row][col] = this.backColor;
+            }
+        }
+        this.eraseGrid();
+    }
+
+    private paintSquare(row, col, color) {
+        if (row &amp;gt;= 0) { // don't paint rows that are above the grid
+            this.context.fillStyle = color;
+            this.context.fillRect(this.xOffset + col * this.blockSize, this.yOffset + row * this.blockSize, this.blockSize - 1, this.blockSize - 1);
+        }
+    }
+
+    public drawGrid() {
+        for (var row = 0; row &amp;lt; this.rows; row++) {
+            for (var col = 0; col &amp;lt; this.cols; col++) {
+                if (this.blockColor[row][col] !== this.backColor) {
+                    this.paintSquare(row, col, this.blockColor[row][col]);
+                }
+            }
+        }
+    }
+
+    public paint() {
+        this.eraseGrid();
+        this.drawGrid();
+    }
+
+    // ... a few more methods snipped for brevity
+
+}
+&lt;/pre&gt;
+&lt;h3&gt;Keyboard Handling&lt;/h3&gt;
+&lt;p&gt;The game is controlled by the keyboard, both for moving pieces and for starting/pausing the game. In the &lt;strong&gt;Game&lt;/strong&gt; class constructor I subscribe to the keydown event with the following code:&lt;/p&gt;&lt;pre class="brush: java;"&gt;        var x = this;
+        document.onkeydown = function (e) { x.keyhandler(e); }; // gets the wrong thing as this, so capturing the right this
+&lt;/pre&gt;
+&lt;p&gt;One slight disappointment with TypeScript is that it doesn’t do anything to fix the weirdness around JavaScript’s “&lt;strong&gt;this&lt;/strong&gt;” keyword.&lt;strong&gt; &lt;/strong&gt;In JavaScript, “this” isn’t always what you think it would be if you’ve got a background in Java/C#. I had to resort to little hacky tricks like this in various places to make sure the right “this” object would be available in the called method. I guess if I did more Javascript this would be second nature to me. Here’s the keyboard handler:&lt;/p&gt;&lt;pre class="brush: java;"&gt;private keyhandler(event: KeyboardEvent) {
+    var points;
+    if (this.phase == Game.gameState.playing) {
+        switch (event.keyCode) {
+            case 39: // right
+                points = this.currentShape.moveRight();
+                break;
+            case 37: // left
+                points = this.currentShape.moveLeft();
+                break;
+            case 38: // up arrow
+                points = this.currentShape.rotate(true);
+                break;
+            case 40: // down arrow
+                // erase ourself first
+                points = this.currentShape.drop();
+                while (this.grid.isPosValid(points)) {
+                    this.currentShape.setPos(points);
+                    points = this.currentShape.drop();
+                }
+
+                this.shapeFinished();
+                break;
+        }
+
+        switch (event.keyCode) {
+            case 39: // right
+            case 37: // left
+            case 38: // up
+                if (this.grid.isPosValid(points)) {
+                    this.currentShape.setPos(points);
+                }
+                break;
+        }
+    }
+
+    if (event.keyCode == 113) { // F2
+        this.newGame();
+        // loop drawScene
+
+        // strange code required to get the right 'this' pointer on callbacks
+        // http://stackoverflow.com/questions/2749244/javascript-setinterval-and-this-solution
+        this.timerToken = setInterval((function (self) {
+            return function () { self.gameTimer(); };
+        })(this), this.speed);
+    }
+    else if (event.keyCode == 114) { // F3
+        if (this.phase == Game.gameState.paused) {
+            this.hideMessage();
+            this.phase = Game.gameState.playing;
+            this.grid.paint();
+        }
+        else if (this.phase == Game.gameState.playing) {
+            this.phase = Game.gameState.paused;
+            this.showMessage("PAUSED");
+        }
+    }
+    else if (event.keyCode == 115) { // F4
+        if ((this.level &amp;lt; 10) &amp;amp;&amp;amp; (this.phase == Game.gameState.playing) || (this.phase == Game.gameState.paused)) {
+            this.incrementLevel();
+            this.updateLabels();
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;h3&gt;Timer&lt;/h3&gt;
+&lt;p&gt;Any game needs a timer loop, and my original one would drop the falling block and paint the grid each tick. But I was also painting the falling brick from the keyboard handler whenever you moved it. So I refactored things slightly to have a rendering loop, which was doing all the drawing, and then a game timer, which dropped the current block and decided if you had lost, or progressed to the next level.&lt;/p&gt;
+&lt;p&gt;I discovered that the recommended way to create a render loop in Javascript seems to be window.requestAnimationFrame (with a fallback to window.setTimeout if that’s not available). For the game timer itself I carried on using window.setTimeout. Again, you have to jump through some hoops to get the right this pointer:&lt;/p&gt;&lt;pre class="brush: java;"&gt;this.timerToken = setInterval((function (self) {
+    return function () { self.gameTimer(); };
+})(this), this.speed);
+&lt;/pre&gt;
+&lt;h3&gt;Messages&lt;/h3&gt;
+&lt;p&gt;The final task was to show messages such as “Game over” and “Game paused”. I was in two minds about how to do this. I could either use place a div over the top of my canvas with the message in, or use fonts to draw onto the canvas. I initially went about trying to draw messages onto the canvas, which did work, but in the end I decided that simply positioning a floating div over the canvas to show messages was easier (although even that was quite frustrating to work out the correct CSS incantation).&lt;/p&gt;
+&lt;p&gt;I came up with this HTML and CSS to give me a floating message.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;div id="container"&amp;gt;
+    &amp;lt;canvas id="gameCanvas" width="240" height="360" &amp;gt;&amp;lt;/canvas&amp;gt;
+    &amp;lt;div id="floatingMessage" &amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/pre&gt;&lt;pre class="brush: css;"&gt;#container {
+    position: relative;
+    float: left;
+    background-color: cornflowerblue;
+}
+
+#gameCanvas {
+    height: 360px;
+    width: 240px;
+}
+
+#floatingMessage {
+    position: absolute; 
+    top: 120px; 
+    left: 60px;&lt;br&gt;    width: 120px;&lt;br&gt;    text-align: center;
+    background-color: azure;
+}
+&lt;/pre&gt;
+&lt;p&gt;There’s still a whole host of improvements I ought to make to both the appearance and functionality of this game, but the point of this exercise was simply to see how easily I could get started with TypeScript. And the good news is, it seems pretty straightforward, even for someone without a lot of web development experience.&lt;/p&gt;
+&lt;h3&gt;Try It&lt;/h3&gt;
+&lt;p&gt;I’ve uploaded the code for my TypeScript Tetris app to &lt;a href="https://github.com/markheath/typescript-tetris"&gt;GitHub&lt;/a&gt;, and you can also play it &lt;a href="http://markheath.github.io/typescript-tetris/"&gt;here&lt;/a&gt;. (Please note, this is not intended as a “best practices” guide to anything. This was my first ever TypeScript app, ported from my first ever Java app. So there are quite a few rough edges. Feel free to send me your comments, or fork it and show me how it should be done).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>JavaScript</category>
+    <category>typescript</category>
+    <category>HTML</category>
+  </categories>
+  <comments />
+</post>

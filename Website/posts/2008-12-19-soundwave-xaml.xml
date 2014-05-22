@@ -1,0 +1,53 @@
+<post>
+  <title>Soundwave XAML</title>
+  <slug>soundwave-xaml</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-12-19 17:16:00</pubDate>
+  <lastModified>2011-07-04 16:13:19</lastModified>
+  <content>&lt;p&gt;I visited the &lt;a href="https://www.noisetrade.com/#"&gt;NoiseTrade&lt;/a&gt; website this week and they had a neat looking soundwave icon they are using throughout the site. I doubt it is original to them, but I&amp;nbsp; it works nicely and I thought I would have a go at creating it in XAML.&lt;/p&gt; &lt;p&gt;Its very simple to do. You create a series of concentric circles and then mask off the bit you don’t want with a &lt;strong&gt;Polygon&lt;/strong&gt;.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/soundwave-xaml-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Soundwave in XAML" border="0" alt="Soundwave in XAML" src="/posts/files/soundwave-xaml-1.png" width="172" height="186"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt; &lt;p&gt;Here’s the XAML:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Grid Width="100" Height="100"&amp;gt;  
+    &amp;lt;Ellipse Width="10" Height="10" Fill="Orange" /&amp;gt;
+    &amp;lt;Ellipse Width="30" Height="30" Stroke="Orange" StrokeThickness="5"  /&amp;gt;
+    &amp;lt;Ellipse Width="50" Height="50" Stroke="Orange" StrokeThickness="5"  /&amp;gt;
+    &amp;lt;Ellipse Width="70" Height="70" Stroke="Orange" StrokeThickness="5"  /&amp;gt;
+    &amp;lt;Polygon Stretch="Fill" Fill="White" Points="0,0, 1,1 -1,1 -1,-1 1,-1" /&amp;gt;
+  &amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The only really clever thing going on here is that we use the &lt;strong&gt;Stretch&lt;/strong&gt; property of the &lt;strong&gt;Polygon&lt;/strong&gt; to centre our cut-out shape over the centre point of the circles. The &lt;strong&gt;Stretch&lt;/strong&gt; property also means we can use nominal coordinates, making it easier to get the coordinates right. Alternatively we could have used the following:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Polygon Fill="Red" Points="50,50, 100,100 0,100 0,0 100,0" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The outer &lt;strong&gt;Grid &lt;/strong&gt;must be sized to be a square so that the angles are 45 degrees when using the Stretch=Fill method. Here’s the whole thing with the cut-out in red to make it more obvious what is going on:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/soundwave-xaml-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Soundwave with clipping polygon" border="0" alt="XAML Soundwave with clipping polygon" src="/posts/files/soundwave-xaml-2.png" width="98" height="97"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;I then tried using Expression Blend to subtract the Polygon from the each of the Ellipses in turn, but it struggled to do what I wanted as it closed the new arcs giving the following effect (not sure why the right-hand sides look clipped):&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/soundwave-xaml-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Soundwave closed path" border="0" alt="Soundwave closed path" src="/posts/files/soundwave-xaml-3.png" width="153" height="182"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;However, I was able to fix this by first going in and removing the final “z” from each newly created Path, which meant that the shapes were no longer closed. Then using the node editor tool, delete the extra node from each path. This gets us almost there, with the exception that Expression Blend has let the central circle drift slightly out of position:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/soundwave-xaml-4.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Soundwave in Blend" border="0" alt="XAML Soundwave in Blend" src="/posts/files/soundwave-xaml-4.png" width="140" height="175"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;The resulting XAML isn’t quite so clean as our initial attempt, but it has the advantage of not relying on a white shape covering things up, meaning that it can be placed on top of any background image.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Grid Width="100" Height="100"&amp;gt;
+  &amp;lt;Path HorizontalAlignment="Right" Margin="0,46.464,45,46.464" Width="5" Fill="Orange" Stretch="Fill" Data="M3.535533,0 C4.4403558,0.90481973 5,2.1548209 5,3.535533 C5,4.916245 4.4403558,6.1662469 3.535533,7.0710659 L0,3.535533 z"/&amp;gt;
+  &amp;lt;Path Margin="0,38.661,34.5,38.339" Stretch="Fill" Stroke="Orange" StrokeThickness="5" Data="M11.338835,2.5 C13.600883,4.7620502 15,7.8870525 15,11.338835 C15,14.790609 13.600889,17.915615 11.338835,20.17767" Width="8.808" HorizontalAlignment="Right"/&amp;gt;
+  &amp;lt;Path Margin="0,31.59,24.5,31.41" Stretch="Fill" Stroke="Orange" StrokeThickness="5" Data="M18.409901,2.5 C22.481602,6.5716963 25,12.19669 25,18.409901 C25,24.623108 22.481606,30.248114 18.409901,34.319801" Width="11.737" HorizontalAlignment="Right"/&amp;gt;
+  &amp;lt;Path Margin="0,24.519,14.5,24.481" Stretch="Fill" Stroke="Orange" StrokeThickness="5" Data="M25.480968,2.5 C31.362314,8.3813419 35,16.506346 35,25.48097 C35,34.455612 31.362314,42.580608 25.480968,48.461937" Width="14.665" HorizontalAlignment="Right"/&amp;gt;
+&amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Interestingly, rendering this in &lt;a href="http://www.kaxaml.com/"&gt;Kaxaml&lt;/a&gt;, the inner segment now appears in the right place:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/soundwave-xaml-5.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Soundwave in Kaxaml" border="0" alt="XAML Soundwave in Kaxaml" src="/posts/files/soundwave-xaml-5.png" width="144" height="176"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="857574ff-930b-4d85-bb39-6914c0feba3b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-03-17 18:15:00</date>
+      <content>Congratulations for your blog. Which syntax highlighter do you use for xaml and c# code ? It look like great !&lt;BR/&gt;Thanks by advance</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3813074e-ace2-4274-915a-7ca32254b4da">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-18 10:27:00</date>
+      <content>Hi anonymous, I blog using Windows Live Writer, which I have downloaded the Code Syntax Highlighter plugin for</content>
+    </comment>
+  </comments>
+</post>

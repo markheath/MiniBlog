@@ -1,0 +1,45 @@
+<post>
+  <title>Converting SilverNibbles to Silverlight 2.0 beta 1</title>
+  <slug>converting-silvernibbles-to-silverlight</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-03-06 17:05:00</pubDate>
+  <lastModified>2010-10-04 17:36:24</lastModified>
+  <content>&lt;p&gt;Everyone knows that &lt;a href="http://silverlight.net/GetStarted/#betajump"&gt;Silverlight 2.0 beta 1&lt;/a&gt; was released yesterday, and already &lt;a href="http://dotnetkicks.com"&gt;DotNetKicks&lt;/a&gt; is awash with information about it, so I'll get straight to business.&lt;/p&gt;  &lt;p&gt;This beta brings lots of really cool stuff we have wanted for a long time, controls being the most obvious, as well as layout containers and the ability to apply themes. Also I really like the look of the new .xap format allowing much easier deployment.&lt;/p&gt;  &lt;p&gt;My task was to update one of my codeplex projects - &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt;, to use Silverlight 2.0 beta 1. SilverNibbles was my first ever Silverlight app, ported from a WinForms game in just a couple of evenings after downloading the Silverlight 1.1 alpha. It is even featured on the gallery on the Silverlight website, although my complete ineptitude at graphic design means that it looks dreadful compared to all the slick applications alongside it.&lt;/p&gt;  &lt;p&gt;My first mistake was installing the Silverlight 2.0 beta 1 SDK. You should just install the Silverlight 2.0 beta 1 tools for VS2008 which includes the SDK. I ended up having to uninstall the SDK before I could install the VS2008 tools.&lt;/p&gt;  &lt;p&gt;Next task was to load the project into Visual Studio. I didn't want to create a new project and copy files in, so it required a fair amount of hacking around with the csproj file in a text editor, after making a new 2.0 project which I could use to compare differences. The two web pages most helpful to me during this process were &lt;a href="http://www.topxml.com/WS-web-services/re-82456_Converting-Silverlight-1-1-Alpha-projects-to-Silverlight-2-Beta-1.aspx"&gt;Converting Silverlight 1.1 Alpha projects to Silverlight 2 Beta 1&lt;/a&gt; and the &lt;a href="http://msdn2.microsoft.com/en-us/library/cc189007(vs.95).aspx"&gt;breaking changes for Silverlight 2 Beta 1 page on MSDN&lt;/a&gt;. Eventually I had the project set up so it would compile to a .xap file.&lt;/p&gt;  &lt;p&gt;After this, there were plenty of compile errors I had to work my way through. The one that held me up the longest was that the [Scriptable] attribute is now replaced by [ScriptableType] and [ScriptableMember]. Also, some event handling functions had changed their function signatures, meaning that my events were no longer connected up to the XAML properly.&lt;/p&gt;  &lt;p&gt;The biggest change that had to be made was to completely rework the way that my UserControls were constructed. First of all, the XAML had to be set to compile instead of embedding as a resource. Second, the XAML had to be altered to be a UserControl at the top level rather than a Canvas. Third, the code behind needed to be a partial class that inherited from UserControl. Fourth, I needed to call InitializeComponent in the constructor and use the auto-generated member variables rather than loading from an embedded resource stream and using FindByName.&lt;/p&gt;  &lt;p&gt;My PauseControl had a lot of errors in the code, but thanks to the new layout containers in Silverlight 2.0 beta, I could just delete the sizing code. I simply put a text-block inside of a border control and resizing was handled automatically.&lt;/p&gt;  &lt;p&gt;One thing that has not improved at all in the transition to 2.0 beta is the error reporting. Errors are as vague as ever. Parse errors rarely point you to the true source of the problem. I got a &amp;quot;catastrophic failure&amp;quot; message simply because a Storyboard.TargetName was wrong.&lt;/p&gt;  &lt;p&gt;I eventually got my application compiling and running using the auto-generated test page, and here I ran into another strange bug. My snakes were no longer appearing to move. I traced this down to the fact that I was now modifying the PointsCollection of a polyline rather than giving an entirely new set of points to the polyline every time. I tried various functions such as InvalidateLayout, InvalidateMeasure, UpdateLayout on the polyline to persuade it to redraw itself but nothing worked. In the end I found the following solution:&lt;/p&gt;  &lt;pre class="brush: csharp"&gt;polyline.Points = polyline.Points;&lt;/pre&gt;
+&lt;p&gt;This did the trick nicely, although its not exactly elegant code!&lt;/p&gt;
+
+&lt;p&gt;The next hurdle was that my HTML page that hosted the application no longer worked. Thankfully, the new .xap format makes things a lot easier, and eventually I got my new 2.0 beta edition of SilverNibbles running without any need for external js files.&lt;/p&gt;
+
+&lt;p&gt;There is one outstanding bug though, that I can't seem to get the keyboard focus to go to my Silverlight control in FireFox, although it works in IE. I'm sure this used to work with the previous version of Silverlight, but I don't know what I can do to fix this. Any javascript gurus got any suggestions for me? Here's the code:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;var silverlightControl = document.getElementById('SilverlightControl');
+silverlightControl.Content.SilverNibbles.NewGame(players);
+silverlightControl.focus();&lt;/pre&gt;
+
+&lt;p&gt;The final obstacle was getting it uploaded to my web server. The game never appeared. Eventually I figured out that I needed to add a new MIME type for the &lt;strong&gt;.xap &lt;/strong&gt;extension: &lt;strong&gt;application/x-silverlight-app&lt;/strong&gt;. So finally it is ready to go and you can &lt;a href="http://www.markheath.me.uk/silvernibbles/"&gt;play the SilverNibbles game online&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next up is to begin properly working on &lt;a href="http://www.codeplex.com/silverlightaudioplayer"&gt;Silverlight Audio Player&lt;/a&gt; after too many issues with alpha 1.1 put this on hold.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="77e6597e-d684-4d76-9281-34bc215d9ace">
+      <author>Daryl</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16066756037637345997</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-24 21:21:00</date>
+      <content>Thanks for this blog. I couldn't figure out why my PolyLine wasn't updating on the screen until I found this blog.&lt;BR/&gt;&lt;BR/&gt;It makes a twisted sort of sense. The points property is a DependancyProperty and I imagine internally the fact that it's been updated is only recognized when you set that property. Manually modifying the contents of the collection is not seen. Very counterintuitive.&lt;BR/&gt;&lt;BR/&gt;The approach I took was to create a new PointCollection object. Add my new points to it. Then set the Points property of my PolyLine object to the new PointCollection. Seemed a little cleaner than updating the existing collection and setting it equal to itself.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0969f64a-dced-4524-815f-7fbfc9c408e5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-24 21:28:00</date>
+      <content>glad it helped you! and yes, your way avoids the awkward look to the code</content>
+    </comment>
+  </comments>
+</post>

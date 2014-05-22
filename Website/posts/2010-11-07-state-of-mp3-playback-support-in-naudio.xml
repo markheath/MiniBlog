@@ -1,0 +1,61 @@
+<post>
+  <title>State of MP3 Playback Support in NAudio</title>
+  <slug>state-of-mp3-playback-support-in-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-11-07 22:17:00</pubDate>
+  <lastModified>2010-11-07 22:17:06</lastModified>
+  <content>&lt;p&gt;The MP3 playback support in &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; was always rather experimental. The ACM conversion code I had written assumed CBR (constant bit rate) and constant block sizes. With MP3s this is not always the case, since there are VBR files with variable block sizes, and even in CBR MP3 files, padding means you can get frames of different sizes. However, despite these issues I did manage to get MP3 more or less playing back, which was cool, but not 100% reliable. People ran into issues like the occasional error while repositioning a stream, or the more irritating fact that Mp3FileReader was not good at calculating the duration of a file. &lt;/p&gt; &lt;p&gt;In this post I will go over some of the key challenges to getting good MP3 playback support, with details of some recent changes I have checked in, along with some ideas for the future.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;1. Correctly parsing MP3 frame headers&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;To work effectively with MP3 files you need to be able to parse frame headers correctly and determine their exact size. If this cannot be done, we have no choice but to pass blocks of MP3 file directly to the decoder without knowing whether we are giving it whole frames or not. &lt;/p&gt; &lt;p&gt;Finding out how to properly parse MP3 frame headers was a much harder challenge than it seemed. Googling for info on MP3 frames reveals some articles that look authoritative but simply failed to correctly parse everything I threw at them. Mono or low sample rate MP3s got their frame size calculation wrong. However, eventually I found &lt;a href="http://www.codeproject.com/KB/audio-video/mpegaudioinfo.aspx?msg=2900157"&gt;this article&lt;/a&gt;, whose source code had the final missing piece of information that allowed me to get it reliable.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;2. A single frame decoder &lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Once we can calculate frame sizes reliably, we are able to decode them one by one. The WaveFormatConversionStream assumes everywhere it is working with CBR, so I have removed it from the equation. Now a simple MP3 Frame Decoder class (final name and interface to be decided) is used to decode MP3 frames one at a time using ACM. Alternative frame decoders could easily be plugged in if required in the future (e.g. using DMO or &lt;a href="http://nlayer.codeplex.com"&gt;NLayer&lt;/a&gt;).&lt;/p&gt; &lt;p&gt;The really big change is that this means that the MP3FileReader no longer returns MP3 data in its Read method, but emits PCM. This makes life so much easier downstream and simplifies the playback graph considerably (no more BlockAlignReductionStream). I’ve made the ReadFrame method public so if you have a pressing need to get the compressed data out instead there is nothing stopping you.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;3. Accurate length reporting&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Accurate length reporting was never possible before, since it relied on an estimate of the bitrate. But now we can parse MP3 frames, we have accurate knowledge of exactly how many samples each frame will decompress into, and the TotalTime property (and CurrentTime property) of MP3FileReader should be entirely accurate. &lt;em&gt;n.b. I think that it may be possible that the first frame in a VBR MP3 file decompresses to zero samples (although I already exclude the Xing frame so maybe there is another similar meta-data type frame), so we might actually very slightly over-report the length – I’ll need to look into that.&lt;/em&gt;&lt;/p&gt; &lt;p&gt;&lt;strong&gt;4. Repositioning to frame granularity&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;When you reposition with the MP3FileReader.Position property, there is of course every possibility that you will ask for it to reposition to a place midway through a frame. We now automatically move you to the start of the frame that contains the position you asked for.&lt;/p&gt; &lt;p&gt;An earlier NAudio contributor had done some cool stuff with a BinarySearch to speed this up. I needed to drop this temporarily as I was making changes to the table of contents generation. However, there is no reason why this could not be reinstated now, to speed up performance further (although repositioning perf doesn’t seem to be a major issue with the tests I have done on 1 hour long MP3s).&lt;/p&gt; &lt;p&gt;&lt;strong&gt;5. Repositioning with sample granularity&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Obviously, it would be even nicer to support MP3 repositioning with sample granularity. This would involve us decompressing a frame during the seek process, so when the next Read occurs we can read from part-way through that frame. The framework to do that is already in place (we keep track of “leftovers”, so this could be a feature I add in the not too distant future).&lt;/p&gt; &lt;p&gt;&lt;strong&gt;6. Forward only&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;One thing I haven’t got round to doing yet, is making it possible to use MP3FileReader from an input stream that doesn’t support repositioning. Obviously, it would not be able to work out its Length, and there would be no real need for a TOC. Proper support for forward only streams would be useful to people wanting to do network streamed playback, which seems to be one of the most common queries I get.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;7. Changes of Sample Rate and Number of Channels&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;It is theoretically possible within an MP3 file for the sample rate and number of channels to change from frame to frame. However, I have no immediate plans to support this since I’ve never seen an MP3 file that does this. The only scenario in which I could imaging this would be if someone was attempting to concatenate two MP3 files by simply copying frames from one into the other.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;8. ID3 Tag Support&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;I have no plans to introduce ID3 tag reading or writing, since there are other open source libraries out there that do this perfectly well.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Give me feedback&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Please grab the latest NAudio code from Codeplex and let me know how you get on with it. As always, the best way to give it a run-through is to use the NAudioDemo app that is included in the solution. Load it up, select WAV playback and try it with whatever MP3s you have lying around on your hard disk. It would be great to have robust MP3 playback as a headline feature for NAudio 1.4.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>MP3</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="11f81cbd-885b-4e60-8029-f951dbccefc3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-08 07:32:32</date>
+      <content>Thanks for all your work on this. Any idea when we can expect a version 1.4  release?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="66224aa1-bfa8-4b2c-8c09-56ad13f2d80c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-08 07:47:10</date>
+      <content>the main tasks before 1.4 are laying the groundwork for an effect framework based on the work I did in Skype Voice Changer. Also updating some of the sample code to make use of IWaveProvider instead of WaveStream derived classes where that makes sense. I&amp;#39;d like to get it done before the end of the year, since its been over a year since 1.3</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4399cda9-a4c1-4758-b015-8546d1bfa669">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-01-26 15:23:31</date>
+      <content>Any update on when this will be available ?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fcd1614d-e2be-4abe-9335-c5f529323038">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-01-26 15:25:58</date>
+      <content>the new mp3 support is already available - just get the latest code from codeplex.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="427e4dc9-569e-4dcc-a6e0-3d7471845511">
+      <author>Alexander</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07640420930122609827</website>
+      <ip />
+      <userAgent />
+      <date>2011-04-24 05:08:13</date>
+      <content>Thank you for the update!   I&amp;#39;ve been using NAudio to work on a small application and it has really helped me out.  I was really happy to see that you guys are still working on making NAudio an even better audio library for us C# developers.</content>
+    </comment>
+  </comments>
+</post>

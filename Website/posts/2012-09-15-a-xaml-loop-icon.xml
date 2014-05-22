@@ -1,0 +1,37 @@
+<post>
+  <title>A XAML Loop Icon</title>
+  <slug>a-xaml-loop-icon</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-15 18:44:00</pubDate>
+  <lastModified>2012-09-15 18:44:00</lastModified>
+  <content>&lt;p&gt;I needed a XAML loop icon recently, so here’s what I came up with:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;Canvas&amp;gt;
+  &amp;lt;Path Stroke="Black" StrokeThickness="2" Data="M 5,3 h 20 a 5, 5, 180, 1, 1, 0, 10 h -20 a 5, 5, 180, 1, 1, 0, -10 Z" /&amp;gt;
+  &amp;lt;Path Stroke="Black" Fill="Black" StrokeThickness="2"  StrokeLineJoin="Round" Data="M 11,0 l 8,3 l -8, 3  Z" /&amp;gt;
+&amp;lt;/Canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;And this is what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/a-xaml-loop-icon-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/a-xaml-loop-icon-1.png" width="117" height="69"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="eee2c638-68ee-4062-9d87-6409133947fc">
+      <author>byteflux</author>
+      <email>noreply@blogger.com</email>
+      <website>http://byteflux.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-15 11:39:26</date>
+      <content>For things like this, I can reccomend the SyncFusion Metro Studio: http://www.syncfusion.com/&lt;br /&gt;&lt;br /&gt;It has a big collection of icons that are available in XAML and PNG formats, and it&amp;#39;s free.&lt;br /&gt;&lt;br /&gt;(disclaimer: I don&amp;#39;t have any relationship with SincFusion, I&amp;#39;m just a regular user :) )</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="833a77fe-4f02-4714-bb3d-8d86356c75cf">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-15 12:48:01</date>
+      <content>yes, that&amp;#39;s a superb resource. It doesn&amp;#39;t have everything, but it is a good start.</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,76 @@
+<post>
+  <title>Using Named Branches in Mercurial</title>
+  <slug>using-named-branches-in-mercurial</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-11-01 18:11:00</pubDate>
+  <lastModified>2012-11-01 18:11:00</lastModified>
+  <content>&lt;p&gt;Mercurial offers a variety of approaches to branching, including “named branches”, “bookmarks” (most similar to git), “anonymous branches” and using clones. For a good comparison of these techniques, I suggest reading Steve Losh’s &lt;a href="http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/"&gt;Guide to Mercurial Branching&lt;/a&gt;, which explains it well although is a little out of date now.&lt;/p&gt; &lt;p&gt;In this article I will walk through the process of how you can use a named branch for maintenance releases, and the workflow for both contributors and for accepting contributions. I’ll explain at the end why I’ve decided that named branches are the best option for NAudio.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Step 1: Creating an initial repository&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;We’ll start with a fresh repository with just two commits&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg init
+// make changes
+hg commit -m "first version"
+// make changes
+hg commit -m "version 1.0 release"&lt;/pre&gt;
+&lt;p&gt;Now we’ve released version 1, let’s start work on version 2. No branches have been made yet.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;// more changes
+hg commit -m "beginning work on v2"&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 2: Creating a Maintenance Branch&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Now we’ve had a bug report and need to fix version 1, without shipping any of our version 2 changes. We’ll create a branch by going back to the v1.0 commit (revision 1 in our repository) and using the branch command&lt;/p&gt;&lt;pre class="brush: plain;"&gt;// go back to v1 release
+hg update 1
+
+// create a named branch
+hg branch "v1.0 maintenance"
+
+// branch will be created when we commit to it
+// fix the bug
+hg commit -m "bugfix for v1.0"
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 3: Switching between branches&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;To get back to working on our main branch (which is called the default branch in Mercurial), we simply use the update command:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;// get back onto the v2 branch:
+hg update default
+// make changes
+hg commit -m "more work on v2"
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 4: Making forks&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Imagine at this point, we have a couple of contributors, who want to fork our repository and make some changes.&lt;/p&gt;
+&lt;p&gt;Our first contributor makes a clone, and is contributing a v2 feature, so they can simply commit to the default branch:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg clone public-repo-address my-feature-fork
+hg update default // not actually needed
+hg commit -m "contributing a new feature in v2"&lt;/pre&gt;
+&lt;p&gt;Our second contributor is offering a bugfix, so they must remember to switch to the named maintenance branch (they can use hg branches to see what branch names are available):&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg clone public-repo-address my-bugfix-fork
+hg update "v1.0 maintenance"
+hg commit -m "contributing a bugfix for v1.0"
+&lt;/pre&gt;
+&lt;p&gt;Their commit will me marked as being on the v1.0 maintenance branch (as named branches are stored in the commits, unlike git branches which are simply pointers to commits)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Step 5: Accepting Contributions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If our contributors issued pull requests now, things would be nice and easy, but let’s imagine that more work has gone on in both branches in the meantime:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg update default
+hg commit -m "another change on v2 after the fork"
+
+hg update "v1.0 maintenance"
+hg commit -m "another v1.0 bugfix after the fork"&lt;/pre&gt;
+&lt;p&gt;First, lets pull in the new v2.0 feature (n.b. it is often a good idea to use a local integration clone so that if you want to reject the contribution you can do so easily).&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg pull newfeaturefork
+// need to be on the default branch to merge
+hg update default
+hg merge
+// resolve any merge conflicts
+hg commit -m "merged in the new feature"&lt;/pre&gt;
+&lt;p&gt;Now we can do the same with the contribution on the maintenance branch (n.b. hg merge won’t do anything if you are still on the default branch, as it knows that the contribution is on a different branch):&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg pull bugfixfork
+// get onto the branch we are merging into
+hg update "v1.0 maintenance"
+hg merge
+hg commit -m "merged in a bugfix"&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Step 6: Merging from maintenance branch into default&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;We have a few bugfixes now in our v1.0 branch, and we’d like to get them into v2.0 as well. How do we do that? Go to the default branch and ask to merge from the maintenance branch.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg update default
+hg merge "v1.0 maintenance"
+// fix conflicts
+hg commit -m "merged in v1.0 bugfixes"&lt;/pre&gt;
+&lt;p&gt;And that is pretty much all you need to know to work with named branches. With your repository in this state you still have two branches (default and v1.0 maintenance) which you can continue work on separately. Here’s a screenshot of a repository which has had the steps above performed on it:&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;a href="/posts/files/using-named-branches-in-mercurial-1.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/using-named-branches-in-mercurial-1.png" width="565" height="290"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Why Named branches?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I actually think that branching with clones is easier for users to understand than named branches, but for NAudio it is not a viable option. This is because CodePlex allows only one repository per project. I’d either have to create a new project for each NAudio maintenance branch, or create a fork, but both options would cause confusion.&lt;/p&gt;
+&lt;p&gt;Anonymous branches are a bad idea because you open the door to merge the wrong things together, and it’s hard to keep track of which head relates to what. Their use is mainly limited to short-lived, experimental branches.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://mercurial.selenic.com/wiki/Bookmarks"&gt;Bookmarks&lt;/a&gt; are appealing as they are closest to the git philosophy, but because Mercurial requires you to explicitly ask to push them, and there can be naming collisions, I think they are best used simply as short-lived markers for local development (I might do another blog post on the workflow for this).&lt;/p&gt;
+&lt;p&gt;So with &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; I am thinking of creating a single maintenance branch for each major release (only created when it is needed). Most people who fork can just ignore the maintenance branch and work exclusively in the default branch (I can always use hg transplant to move a fix into a maintenance branch).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments />
+</post>

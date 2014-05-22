@@ -1,0 +1,69 @@
+<post>
+  <title>NAudio 1.2 Release Notes</title>
+  <slug>naudio-12-release-notes</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-26 07:37:00</pubDate>
+  <lastModified>2008-06-26 07:37:50</lastModified>
+  <content>&lt;p&gt;I have released a new version of &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; today on CodePlex. NAudio is an open source audio toolkit for .NET. It has been over a year since our last release, so let me run through a few of the highlights for this release.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;WASAPI Output Model&lt;/strong&gt;. We are now able to play audio using the new WASAPI output APIs in Windows Vista. We support shared mode and exclusive mode, and you can optionally use event callbacks for the buffer population. You may need to experiment to see what settings work best with your soundcard.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;ASIO Output Model. &lt;/strong&gt;We can also play back audio using any ASIO output drivers on your system. It is not working yet with all soundcards, but its working great with the ever-popular &lt;a href="http://www.asio4all.com/"&gt;ASIO4All&lt;/a&gt;.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;New DirectSound Output Model&lt;/strong&gt; We have moved away from using the old managed DirectX code for DirectSound output, and done the interop ourselves. This gives us a much more reliable way to use DirectSound.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;IWavePlayer simplifications&lt;/strong&gt;. As part of our ongoing plans to improve the NAudio architecture, the IWavePlayer interface has gone on a diet and lost some unnecessary methods.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;ResamplerDMO stream&lt;/strong&gt;. Some Windows Vista systems have a Resampler DirectX Media Object that can be used to convert PCM and IEEE audio samples between different sample rates and bit depths. We have provided a managed wrapper around this, and it is used internally by the WASAPI output stream to do sample rate conversion if required.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;ACM Enhancements&lt;/strong&gt; - There have been a number of bugfixes and enhancements to the support for using the ACM codecs in your system.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;BlockAlignmentReductionStream&lt;/strong&gt; - This WaveStream helps to alleviate the problem of dealing with compressed audio streams whose block alignment means that you can't position exactly where you want or read the amount you want. BlockAlignmentReductionStream uses buffering and read-ahead to allow readers full flexibility over positioning and read size.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;MP3 Playback&lt;/strong&gt; - The MP3 File Reader Stream is now able to work with any wave output thanks to the BlockAlignmentReductionStream and playback MP3 files without stuttering. It uses any MP3 ACM decoder it can find on your system.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Custom WaveFormat Marshaler&lt;/strong&gt; - The WaveFormat structure presents an awkward problem for interop with unmanaged code. A custom marshaler has been created which will be extended in future versions to allow WaveFormat structures to present their extra data.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;NAudioDemo &lt;/strong&gt;- One of the problems with NAudio has been that there are very few examples of how to use it. NAudioDemo has four mini-examples of using NAudio: &lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;receiving MIDI input &lt;/li&gt;    &lt;li&gt;playing WAV or MP3 files through any output &lt;/li&gt;    &lt;li&gt;examining ACM codecs and converting files using them &lt;/li&gt;    &lt;li&gt;recording audio using WaveIn &lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;In addition the AudioFileInspector, MixDiff, &lt;a href="http://www.codeplex.com/midifilesplitter"&gt;MIDI File Splitter&lt;/a&gt; and &lt;a href="http://www.codeplex.com/midifilemapper"&gt;MIDI File Mapper&lt;/a&gt; projects demonstrate other aspects of the NAudio framework.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Unit Tests&lt;/strong&gt; - NAudio now has a small collection of unit tests, which we intend to grow in future versions. This will help us to ensure that as the feature set grows, we don't inadvertently break old code.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;IWaveProvider Tech Preview&lt;/strong&gt; - As discussed recently on my blog, we will be using a new interface called IWaveProvider in future versions of NAudio, which uses the &lt;a href="/post/wavebuffer-casting-byte-arrays-to-float"&gt;WaveBuffer&lt;/a&gt; class. This code is available in the version 1.2 release, but you are not currently required to use it.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Alexandre Mutel &lt;/strong&gt;- Finally, this version welcomes a new contributor to the team. In fact, Alexandre is the first contributor I have added to this project. He has provided the new implementations of ASIO and DirectSoundOut, as well as helping out with WASAPI and the new IWaveProvider interface design. His enthusiasm for the project has also meant that I have been working on it a little more than I might have otherwise!&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;It's A Beta&lt;/strong&gt; - I do need to remind you that all these features should be thought of as being in &amp;quot;beta&amp;quot; state. We do not have the resources to exhaustively test with all the different soundcards that are available. Please report any bugs you encounter via the &lt;a href="http://www.codeplex.com/naudio/WorkItem/List.aspx"&gt;issue tracker on CodePlex&lt;/a&gt;. &lt;/p&gt;  &lt;p&gt;&lt;strong&gt;What's Coming Up&lt;/strong&gt; - NAudio tends to progress by adding features on an as-needed basis. The good news is that we have lots of ideas for NAudio's future, and we are hoping that version 1.3 will offer several features from the list below:&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;More extensive use of the new IWaveProvider interface&lt;/li&gt;    &lt;li&gt;Audio Capture for WASAPI &lt;/li&gt;    &lt;li&gt;Audio Capture for ASIO &lt;/li&gt;    &lt;li&gt;NAudioDemo to be updated to demonstrate more features &lt;/li&gt;    &lt;li&gt;Improving error handling and robustness of WASAPI, ASIO and DirectSound outputs &lt;/li&gt;    &lt;li&gt;... plus lots more goodies that we will announce later! &lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;Anyway, just in case you haven't already worked out where to download it, here's the link: &lt;a href="http://www.codeplex.com/naudio/Release/ProjectReleases.aspx?ReleaseId=14303"&gt;NAudio 1.2&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="105aae69-f75c-46b8-8612-ccc0543d3201">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-07-21 07:58:00</date>
+      <content>Dear Friend,&lt;BR/&gt;&lt;BR/&gt;I am a new for Audio technology. Now I have a requirement, which is difficult to me, the requirement is that I should control the line-in audio signals. playing the line-in audio signals or stopping the line-in audio signals and playing other media files. &lt;BR/&gt;I know you are the expert, could you give me a help?&lt;BR/&gt;I highly appreciate for your help. &lt;BR/&gt;I am looking forward to feedback!&lt;BR/&gt;My Email: NingDev@gmail.com&lt;BR/&gt;Thanks and best regards!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="12cc3855-7ed3-4965-8e6d-6b7e3c65b551">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-08-31 14:41:00</date>
+      <content>Hey great work. But did you test on Vista 64 bit?&lt;BR/&gt;&lt;BR/&gt;The 1.2 source release zip (not trunk) appears to have the projects set up for "Any CPU" compilation and while Wave output works, directsound didn't work until projects were compiled as x86.&lt;BR/&gt;&lt;BR/&gt;I couldn't get wasapi to work either as x86 or x64 with latest realtek hd audio drivers that afaik support wavert. Didn't look yet where the issue is.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3cfbbcbb-6c48-4a96-b6e2-8ec88c3068f5">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-08-31 14:50:00</date>
+      <content>Weird. I tried running again and wasapi/asio work now.&lt;BR/&gt;&lt;BR/&gt;However there is definitely some buggyness going on:&lt;BR/&gt;&lt;BR/&gt;I put a large wav file playing then flipped through the options like wave-&amp;gt;ds-&amp;gt;wasapi-&amp;gt;asio-&amp;gt;wasapi-&amp;gt;...  stopping the playback before changing of course but at some point the playback might not start (wasapi-&amp;gt;asio) .. on my first attempt going ds-&amp;gt;wasapi didn&amp;#39;t work.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a3a551eb-82e4-494d-8aed-5676503342d9">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-08-31 14:58:00</date>
+      <content>DirectSound now works under Any CPU compile after these changes:&lt;BR/&gt;&lt;BR/&gt;internal struct DirectSoundBufferPositionNotify&lt;BR/&gt;{&lt;BR/&gt;public UInt32 dwOffset;&lt;BR/&gt;public IntPtr hEventNotify;&lt;BR/&gt;}&lt;BR/&gt;&lt;BR/&gt;/// IDirectSoundNotify interface&lt;BR/&gt;....&lt;BR/&gt;....&lt;BR/&gt;{&lt;BR/&gt;void SetNotificationPositions(UInt32 dwPositionNotifies, [In, MarshalAs(UnmanagedType.LPArray)] DirectSoundBufferPositionNotify[] pcPositionNotifies);&lt;BR/&gt;}</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fdb24ad6-e4de-483f-805c-613b11601216">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-11-16 18:12:00</date>
+      <content>First of all, thanks - this is exactly what I've been looking for in the last 2 years!&lt;BR/&gt;&lt;BR/&gt;But I migth have found a bug. When playing a mp3 or wav, I get a choppy playback when some other application (winamp, mplayer2 etc.) is playing at the same time.&lt;BR/&gt;(naudio-18536)&lt;BR/&gt;&lt;BR/&gt;Regards Michael</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f95d897e-c382-4ead-87a3-b6b5f23d64b5">
+      <author>Grubbrother</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blog.grubbrother.com</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-10 17:51:13</date>
+      <content>Though its an old release, thanks to you for this great library! I&amp;#39;m more a musician than a programmer and I&amp;#39;m planning to write a little streaming application for people who wanna listen to me while I&amp;#39;m just playing at home, for myself. This is exactly what I was looking for ... I just need to check if recording the sound out is possible while using my DAW.</content>
+    </comment>
+  </comments>
+</post>

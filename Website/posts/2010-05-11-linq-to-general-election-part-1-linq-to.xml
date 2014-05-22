@@ -1,0 +1,44 @@
+<post>
+  <title>LINQ to General Election Part 1 – LINQ to JSON</title>
+  <slug>linq-to-general-election-part-1-linq-to</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-05-11 12:51:00</pubDate>
+  <lastModified>2010-05-11 12:54:37</lastModified>
+  <content>&lt;p&gt;I discovered this week that the Guardian newspaper is making the UK General Election results available in JSON format. Their &lt;a href="http://www.guardian.co.uk/open-platform/politics-api/getting-started"&gt;politics API&lt;/a&gt; gives access to all kinds of results, party and candidate information.&lt;/p&gt;  &lt;p&gt;What I wanted to do was to be able to quickly and easily perform some of my own queries on the election results. Having not worked with JSON, I needed something that could parse it and allow me to run LINQ queries on it. My search led me to &lt;a href="http://json.codeplex.com/"&gt;Json.NET&lt;/a&gt;, which is a very easy to use library that allows you to parse JSON into an object that you can run LINQ queries against.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Visualising JSON&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;When working with JSON, you need to have some kind of tool that will let you explore the structure of the JSON data. I found a handy utility called &lt;a href="http://jsonviewer.codeplex.com/"&gt;JsonViewer&lt;/a&gt; that parses it into a tree format. Alternatively, you can use this &lt;a href="http://www.bodurov.com/JsonFormatter/"&gt;online JSON formatter&lt;/a&gt;.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Parsing JSON&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The first step is to download the JSON and parse it into a &lt;strong&gt;JObject&lt;/strong&gt;:&lt;/p&gt;  &lt;pre class="brush: csharp"&gt;string url = &amp;quot;http://www.guardian.co.uk/politics/api/general-election/2010/results/json&amp;quot;;
+WebClient wc = new WebClient();
+string json = wc.DownloadString(url); 
+JObject o = JObject.Parse(json);&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;LINQ Queries&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Now it is straightfoward to write queries against the object. Notice that you can use Children() to select all the children under a specific node (useful for arrays).&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;var unpopularWinners = from winningMp in o[&amp;quot;results&amp;quot;][&amp;quot;called-constituencies&amp;quot;].Children()[&amp;quot;result&amp;quot;][&amp;quot;winning-mp&amp;quot;]
+&amp;#160;&amp;#160;&amp;#160; where (decimal)winningMp[&amp;quot;votes-as-percentage&amp;quot;] &amp;lt; (100 / 3M)
+&amp;#160;&amp;#160;&amp;#160; orderby (decimal)winningMp[&amp;quot;votes-as-percentage&amp;quot;] ascending
+&amp;#160;&amp;#160;&amp;#160; select winningMp;&lt;/pre&gt;
+
+&lt;p&gt;To get the values out of the instances of &lt;strong&gt;JToken &lt;/strong&gt;returned, you have to remember to cast them to the appropriate type (e.g. int, string, decimal):&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;Console.WriteLine(&amp;quot;Unpopular Winners:&amp;quot;);
+foreach (var winner in unpopularWinners)
+{
+&amp;#160;&amp;#160;&amp;#160; Console.WriteLine(&amp;quot;{0:F1}% {1} ({2})&amp;quot;, (decimal)winner[&amp;quot;votes-as-percentage&amp;quot;], (string)winner[&amp;quot;name&amp;quot;], (string)winner[&amp;quot;party&amp;quot;][&amp;quot;name&amp;quot;]);
+}&lt;/pre&gt;
+
+&lt;p&gt;LINQ to JSON seems to support the full range of LINQ operations, including grouping:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;var seatsPerParty = from winningMp in o[&amp;quot;results&amp;quot;][&amp;quot;called-constituencies&amp;quot;].Children()[&amp;quot;result&amp;quot;][&amp;quot;winning-mp&amp;quot;]
+&amp;#160;&amp;#160;&amp;#160; group winningMp by (string)winningMp[&amp;quot;party&amp;quot;][&amp;quot;name&amp;quot;] into g
+&amp;#160;&amp;#160;&amp;#160; orderby g.Count() descending
+&amp;#160;&amp;#160;&amp;#160; select new { Party = g.Key, Seats = g.Count(), TotalVotes = g.Sum(c =&amp;gt; (int)c[&amp;quot;votes-as-quantity&amp;quot;]) 
+};&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately, the Guardian do not provide one JSON file that contains the votes for all candidates, although it looks like you can get that information if you follow another link for each one. However, they did make the full results available in a Google spreadsheet, so I plan to follow up shortly with another post on how to perform LINQ queries against Excel data.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>JSON</category>
+    <category>LINQ</category>
+  </categories>
+  <comments />
+</post>

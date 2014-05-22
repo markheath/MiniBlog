@@ -1,0 +1,45 @@
+<post>
+  <title>NAudio and the PlaybackStopped Problem</title>
+  <slug>naudio-and-playbackstopped-problem</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-19 17:46:00</pubDate>
+  <lastModified>2011-05-19 17:46:00</lastModified>
+  <content>&lt;p&gt;The IWavePlayer interface in &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; features an event called PlaybackStopped. The original idea behind this event was simple: you start playing a file (e.g. pass a WaveFileReader into WaveOut.Init and then call Play), and when it reaches its end you are informed, allowing you to dispose the input stream and playback device if you wanted to, or maybe start playing something else.&lt;/p&gt; &lt;p&gt;The reality was not quite so simple, and I have ended up trying to discourage users of the NAudio library from making use of the PlaybackStopped event. In this post I will explain some of the reasons behind that and explain how I hope to restore the usefulness of PlaybackStopped in future versions of NAudio.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Never-Ending Stream Problem&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The way that each implementor of IWavePlayer determines whether it should automatically stop playback is when the &lt;strong&gt;Read &lt;/strong&gt;method on the source &lt;strong&gt;IWaveProvider&lt;/strong&gt; returns 0 (In fact Read should always return the count parameter unless the end of the stream has been reached).&lt;/p&gt; &lt;p&gt;However, there are some WaveStreams / IWaveProviders in NAudio that never stop returning audio. This isn’t a bug – it is quite normal behaviour for some scenarios. Perhaps &lt;strong&gt;BufferedWaveProvider&lt;/strong&gt; is the best example – it will return a zero-filled buffer if there is not enough queued data for playback. This is useful for streaming from the network where data might not be arriving fast enough but you don’t want playback to stop. Similarly &lt;strong&gt;WaveChannel32 &lt;/strong&gt;has a property called PadWithZeroes allowing you to turn this behaviour on or off, which can be useful for scenarios where you are feeding into a mixer.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Threading Problem&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;This is one of the trickiest problems surrounding the PlaybackStopped event. If you are using WaveOut, the chances are you are using windowed callbacks, which means that the PlaybackStopped event is guaranteed to fire on the GUI thread. Since only one thread makes calls to the waveOut APIs, it is also completely safe for the event handler to make other calls into waveOut, such as calling Dispose, or starting a new playback.&lt;/p&gt; &lt;p&gt;However, with DirectSound and WASAPI, the PlaybackStopped event is fired from a background thread we create. Even more problematic are WaveOut function callbacks and ASIO, where the event is raised from a thread from deep within the OS / soundcard device driver. If you make any calls back into the driver in the handler for the PlaybackStopped event you run the risk of deadlocks or errors. You also don’t want to give the user a chance to do anything that might take a lot of time in that context.&lt;/p&gt; &lt;p&gt;This problem almost caused me to remove PlaybackStopped from the IWavePlayer interface altogether. But I have decided to see if I can give it one last lease of life by using the .NET SynchronizationContext class. The SynchronizationContext class allows us easily in both WPF and WinForms to invoke the PlaybackStopped event on the GUI thread. This greatly reduces the chance of something you do in the handler causing a problem.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Has it Really Finished Problem&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The final problem with PlaybackStopped is another tricky one. How do you know when playback has stopped? You know when you have reached the end of the source file, since the Read method returns 0. And you know when you have given the last block of audio to the soundcard. But the audio may not have finished playing yet, particularly if you are working at high latency. The old WaveOut implementation in particular was guilty of raising PlaybackStopped too early.&lt;/p&gt; &lt;p&gt;One workaround requiring no changes to the existing IWavePlayer implementations would be to create a LeadOutWaveProvider class, deriving from IWaveProvider. This would do nothing more than append a specified amount of silence onto the end of your source stream, ensuring that it plays completely. Here’s a quick example of how that could be implemented:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private int silencePos = 0;
+private int silenceBytes = 8000;
+
+public int Read(byte[] buffer, int offset, int count)
+{
+    int bytesRead = source.Read(buffer,offset,count);
+    if (bytesRead &amp;lt; count)
+    {
+        int silenceToAdd = Math.Min(silenceBytes – silencePos, count – bytesRead);
+        Array.Zero(buffer,offset+bytesRead,silenceToAdd);
+        bytesRead += silenceToAdd;
+        silencePos += silenceToAdd;
+    }
+    return bytesRead;
+}&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Goals for NAudio 1.5&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Fixing all the problems with PlaybackStopped may not be fully possible in the next version, but my goals are as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Every implementor of IWavePlayer should raise PlaybackStopped (this is done)&lt;/li&gt;
+&lt;li&gt;PlaybackStopped should be automatically invoked on the GUI thread if at all possible using SynchronizationContext (this is done)&lt;/li&gt;
+&lt;li&gt;It should be safe to call the Dispose of IWavePlayer in the PlaybackStopped handler (currently testing and bugfixing)&lt;/li&gt;
+&lt;li&gt;PlaybackStopped should not be raised until all audio from the source stream has finished playing (done for WaveOut – we now raise it when there are no queued buffers, will need to code review other classes to decide if this is the case).&lt;/li&gt;
+&lt;li&gt;Keep the number of never-ending streams/providers in NAudio to a minimum and try to make it very clear which ones have this behaviour.&lt;/li&gt;&lt;/ul&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="5e7fa55f-a6e1-4791-a9c1-9fbd069730cc">
+      <author>crokusek</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-02-27 11:09:04</date>
+      <content>Hi, I really like this library.  I ended up usnig the PlaybackStopped event to restart after dropOuts.  I&amp;#39;d appreciate a comment on a better way to handle dropOuts in general.  I was getting them with Wasapi playback in event mode from 50ms - 200ms.  In non-event mode I get fewer.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;void player_PlaybackStopped(object sender, StoppedEventArgs e)&lt;br /&gt;{&lt;br /&gt;    IWavePlayer player = sender as IWavePlayer;&lt;br /&gt;    if (_waveStream.Position != 0 &amp;amp;&amp;amp;&lt;br /&gt;        _waveStream.Position &amp;lt; _waveStream.Length-1)&lt;br /&gt;    {&lt;br /&gt;         _dropOutsSinceLastPlay++;&lt;br /&gt;         Dbg.WriteLine(&amp;quot;Restarting after dropout #&amp;quot; + _dropOutsSinceLastPlay + &amp;quot;...&amp;quot;);&lt;br /&gt;         player.Play();&lt;br /&gt;         return;&lt;br /&gt;    }&lt;br /&gt;    player.Dispose();&lt;br /&gt;}</content>
+    </comment>
+  </comments>
+</post>

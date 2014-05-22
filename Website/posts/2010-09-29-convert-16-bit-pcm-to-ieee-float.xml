@@ -1,0 +1,116 @@
+<post>
+  <title>Convert 16 bit PCM to IEEE float</title>
+  <slug>convert-16-bit-pcm-to-ieee-float</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-29 14:44:00</pubDate>
+  <lastModified>2010-09-29 14:44:08</lastModified>
+  <content>&lt;p&gt;&lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt; has had the Wave32Stream for quite some time which converts a 16 bit PCM stream into a stereo IEEE floating point stream, with optional panning and volume. However, it could do with something simpler, that doesn’t automatically convert to stereo. So here is a preliminary implementation of an IWaveProvider that converts 16 bit PCM to IEEE float. It keeps the Volume property as that is always useful to have available. It keeps the code nice and clean by making use of the WaveBuffer class. I’ll probably add this to NAudio in the near future.&lt;/p&gt;  &lt;pre class="brush: csharp; gutter: false; toolbar: false;"&gt;/// &amp;lt;summary&amp;gt;
+/// Converts 16 bit PCM to IEEE float, optionally adjusting volume along the way
+/// &amp;lt;/summary&amp;gt;
+public class Wave16toIeeeProvider : IWaveProvider
+{
+    private IWaveProvider sourceProvider;
+    private readonly WaveFormat waveFormat;
+    private volatile float volume;
+    private byte[] sourceBuffer;
+
+    /// &amp;lt;summary&amp;gt;
+    /// Creates a new Wave16toIeeeProvider
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;sourceStream&amp;quot;&amp;gt;the source stream&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name=&amp;quot;volume&amp;quot;&amp;gt;stream volume (1 is 0dB)&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name=&amp;quot;pan&amp;quot;&amp;gt;pan control (-1 to 1)&amp;lt;/param&amp;gt;
+    public Wave16toIeeeProvider(IWaveProvider sourceProvider)
+    {
+        if (sourceProvider.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+            throw new ApplicationException(&amp;quot;Only PCM supported&amp;quot;);
+        if (sourceProvider.WaveFormat.BitsPerSample != 16)
+            throw new ApplicationException(&amp;quot;Only 16 bit audio supported&amp;quot;);
+
+        waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sourceProvider.WaveFormat.SampleRate, sourceProvider.WaveFormat.Channels);
+
+        this.sourceProvider = sourceProvider;
+        this.volume = 1.0f;
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Helper function to avoid creating a new buffer every read
+    /// &amp;lt;/summary&amp;gt;
+    byte[] GetSourceBuffer(int bytesRequired)
+    {
+        if (sourceBuffer == null || sourceBuffer.Length &amp;lt; bytesRequired)
+        {
+            sourceBuffer = new byte[bytesRequired];
+        }
+        return sourceBuffer;
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Reads bytes from this wave stream
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;destBuffer&amp;quot;&amp;gt;The destination buffer&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name=&amp;quot;offset&amp;quot;&amp;gt;Offset into the destination buffer&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name=&amp;quot;numBytes&amp;quot;&amp;gt;Number of bytes read&amp;lt;/param&amp;gt;
+    /// &amp;lt;returns&amp;gt;Number of bytes read.&amp;lt;/returns&amp;gt;
+    public int Read(byte[] destBuffer, int offset, int numBytes)
+    {
+        int sourceBytesRequired = numBytes / 2;
+        byte[] sourceBuffer = GetSourceBuffer(sourceBytesRequired);
+        int sourceBytesRead = sourceProvider.Read(sourceBuffer, offset, sourceBytesRequired);
+        WaveBuffer sourceWaveBuffer = new WaveBuffer(sourceBuffer);
+        WaveBuffer destWaveBuffer = new WaveBuffer(destBuffer);
+
+        int sourceSamples = sourceBytesRead / 2;
+        int destOffset = offset / 4;
+        for (int sample = 0; sample &amp;lt; sourceSamples; sample++)
+        {
+            destWaveBuffer.FloatBuffer[destOffset++] = (sourceWaveBuffer.ShortBuffer[sample] / 32768f) * volume;
+        }
+
+        return sourceSamples * 4;
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// &amp;lt;see cref=&amp;quot;IWaveProvider.WaveFormat&amp;quot;/&amp;gt;
+    /// &amp;lt;/summary&amp;gt;
+    public WaveFormat WaveFormat
+    {
+        get { return waveFormat; }
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Volume of this channel. 1.0 = full scale
+    /// &amp;lt;/summary&amp;gt;
+    public float Volume
+    {
+        get { return volume; }
+        set { volume = value; }
+    }
+}&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>C#</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="55e48d98-0315-4c43-a23e-0e791a215d32">
+      <author>cckerr</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-03-15 05:52:28</date>
+      <content>Can&amp;#39;t you just use struct.unpack to do this in Python?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dfe14b8b-febd-4c29-84c8-99b0e2730ad4">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-15 11:25:36</date>
+      <content>@cckerr, NAudio is a C# project</content>
+    </comment>
+  </comments>
+</post>

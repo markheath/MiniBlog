@@ -1,0 +1,69 @@
+<post>
+  <title>Enabling NAudio for Windows 8 Store Apps–First Steps</title>
+  <slug>enabling-naudio-for-windows-8-store</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-11-23 23:48:00</pubDate>
+  <lastModified>2012-11-23 23:48:05</lastModified>
+  <content>&lt;p&gt;One of my goals for NAudio 1.7 is to have a version available for Windows Store apps. Obviously there are a lot of classes in NAudio that simply won’t work with Windows Store apps, but I have been pleasantly surprised to discover that the bulk of the WASAPI and Media Foundation APIs are allowed. ACM, and all the rest of the old MME functions (waveIn.., waveOut…) are obviously not available. I’m not entirely sure what the status of DirectX Media Objects is (DMOs), but I suspect they are not available. &lt;p&gt;The first step was simply to create a Windows Store class library and see how much of the existing code I could move across. Here’s some notes on classes that I couldn’t move across &lt;ul&gt; &lt;li&gt;&lt;strong&gt;WaveFormatCustomMarshaller&lt;/strong&gt; - not supported because there is no support for System.Runtime.InteropServices.ICustomMarshaller. This is a bit of a shame, but not a huge loss.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;ProgressLog &lt;/strong&gt;and &lt;strong&gt;FileAssociations&lt;/strong&gt; in the Utils folder probably should have been kicked out of the NAudio DLL a long time ago. I’ll mark them as Obsolete&lt;/li&gt; &lt;li&gt;Some of the DMO interfaces were marked with &lt;strong&gt;System.Security.SuppressUnmanagedCodeSecurity&lt;/strong&gt;. I can’t remember why I needed to do this. It may be irrelevant if Windows Store apps can’t use DMO. I’ve simply allowed the code to compile by hiding this attribute with &lt;strong&gt;#if !NETFX_CORE&lt;/strong&gt;&lt;/li&gt; &lt;li&gt;One really annoying thing is that the Guid constructor has subtly changed, meaning that you can’t pass in unsigned int and shorts. It means that I had to put &lt;strong&gt;unchecked&lt;/strong&gt; casts to short or int on lots of them&lt;/li&gt; &lt;li&gt;One apparent oversight is that &lt;strong&gt;COMException &lt;/strong&gt;no longer has an error code property. I guess it might be available in the exception data dictionary. It was only needed for DMO so again it may not matter&lt;/li&gt; &lt;li&gt;The &lt;strong&gt;ApplicationException &lt;/strong&gt;class has gone away, so I’ve replaced all instances of it with more appropriate exception types (usually InvalidDataException or ArgumentException)&lt;/li&gt; &lt;li&gt;The fact that there is no more &lt;strong&gt;GetSafeHandle&lt;/strong&gt; on wait handles means that I will need to rework the WASAPI code to use CreateEventEx.&lt;/li&gt; &lt;li&gt;I’ve not bothered to bring across the Cakewalk drum map or sfz support. Both can probably be obsoleted from NAudio.&lt;/li&gt; &lt;li&gt;The &lt;strong&gt;AcmMp3FrameDecompressor &lt;/strong&gt;is not supported, and I suspect that Media Foundation will become the main way to decode MP3s (with the other option being fully managed decoders for which I have a working prototype – watch this space)&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Encoding.ASCIIEncoding &lt;/strong&gt;is no longer present. Quite a bit of my code uses it, and I’ve switched to UTF8 for now even though it it is not strictly correct. I’ll probably have to make my own byte encoding utility for legacy file formats. Also &lt;strong&gt;Encoding.GetString &lt;/strong&gt;has lost the overload that takes one parameter.&lt;/li&gt; &lt;li&gt;I had some very old code still using &lt;strong&gt;ArrayList&lt;/strong&gt; removing it had some knock-on effects throughout the SoundFont classes (which I suspect very few people actually use).&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WaveFileChunkReader&lt;/strong&gt; will have to wait until RiffChunk gets rewritten to not depend on mmioToFourCC&lt;/li&gt; &lt;li&gt;Everything in the &lt;strong&gt;GUI&lt;/strong&gt; namespace is WindowsForms and won’t come across&lt;/li&gt; &lt;li&gt;The &lt;strong&gt;Midi &lt;/strong&gt;namespace I have left out for now. The classes for the events should move across, and the file reader writer will need reworking for Windows 8 file APIs. I don’t think windows store apps have any support for actual MIDI devices unfortunately.&lt;/li&gt; &lt;li&gt;The old &lt;strong&gt;Mixer &lt;/strong&gt;API is not supported at all in Win 8. The WASAPI APIs will give some control over stream volumes.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;ASIO – &lt;/strong&gt;I’m assuming ASIO is not supported at all in Windows Store apps&lt;/li&gt; &lt;li&gt;The &lt;strong&gt;Compression&lt;/strong&gt; folder has all the ACM stuff. None of this is supported in Windows Store apps.&lt;/li&gt; &lt;li&gt;The &lt;strong&gt;MmeInterop &lt;/strong&gt;folder also doesn’t contain anything that is supported in Windows Store apps.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;SampleProviders &lt;/strong&gt;- all came across successfully. These are going to be a very important part of NAudio moving forwards&lt;/li&gt; &lt;li&gt;&lt;strong&gt;MediaFoundation&lt;/strong&gt; (a new namespace), has come across successfully, and should allow converting MP3, AAC, and WMA to WAV in Windows Store apps. It will also be very useful for regular Windows apps on Vista and above. Expect more features to be added in this area in the near future..&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WaveInputs – &lt;/strong&gt;not much of this folder could be ported&lt;/li&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;WasapiCapture &lt;/strong&gt;- needs rework to not use Thread or WaitHandle. Also I think the way you specify what device to use has changed in Windows Store apps&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WasapiLoopbackCapture &lt;/strong&gt;– I don’t know if Windows Store apps are going to support loopback capture, but I will try to see what is possible&lt;/li&gt; &lt;li&gt;I may revisit the IWaveIn interface, which I have never really been happy with, and come up with an IRecorder interface in the future,to make it easier to get at the samples as they are recorded (rather than just getting a byte array)&lt;/li&gt;&lt;/ul&gt; &lt;li&gt;&lt;strong&gt;WaveOutputs:&lt;/strong&gt;&lt;/li&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;WasapiOut &lt;/strong&gt;– should work in Windows Store, but because it uses Thread and EventWaitHandle it needs some reworking&lt;/li&gt; &lt;li&gt;&lt;strong&gt;AsioOut, WaveOut, WaveOutEvent, &lt;strong&gt;DirectSoundOut &lt;/strong&gt;&amp;nbsp;&lt;/strong&gt;- not supported. For Windows Store apps, it will either be WasapiOut or possibly a new output device depending on what I find in the Windows RT API reference.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;AiffFileWriter, CueWaveFileWriter , WaveFileWriter – &lt;/strong&gt;all the classes that can write audio files need to be reworked as you can’t use FileStreams in Windows Store. I need to find a good approach to this that doesn’t require the Windows Store and regular .NET code to completely diverge. Suggestions welcome.&lt;/li&gt;&lt;/ul&gt; &lt;li&gt;&lt;strong&gt;WaveProviders&lt;/strong&gt; – mostly came across with a few exceptions:&lt;/li&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;MixingWaveProvider32 - &lt;/strong&gt;used unsafe code, MixingSampleProvider should be preferred anyway&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WaveRecorder – &lt;/strong&gt;relies on WaveFileWriter which needs rework&lt;/li&gt;&lt;/ul&gt; &lt;li&gt;&lt;strong&gt;WaveStream – &lt;/strong&gt;lots of classes in this folder will need reworking for &lt;/li&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;WaveFileReader,&lt;/strong&gt; &lt;strong&gt;AiffFileReader, AudioFileReader, CueWaveFileReader&lt;/strong&gt;&amp;nbsp; all need to support Windows Store file APIs&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Mp3FileReader&lt;/strong&gt; – may be less important now we have MediaFoundationReader, but it still can be useful to have a frame by frame decode, so I’ll see if I can make a new IMp3FrameDecompressor that works in Windows Store apps.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;RiffChunk – &lt;/strong&gt;to be reworked&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WaveInBuffer, WaveOutBuffer &lt;/strong&gt;are no longer applicable (and should really be moved into the MmeInterop folder)&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Wave32To16Stream – &lt;/strong&gt;contains unsafe code, should be obsoleted anyway&lt;/li&gt; &lt;li&gt;&lt;strong&gt;WaveMixerStream32 – &lt;/strong&gt;contains unsafe code, also should be obsoleted&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; &lt;p&gt;So as you can see, there is plenty of work still to be done. There are a few additional tasks once I’ve got everything I wanted moved across. &lt;ul&gt; &lt;li&gt;I want to investigate all the new Media APIs (e.g &lt;a href="http://msdn.microsoft.com/en-us/library/windows/apps/windows.media.transcoding"&gt;transcoding&lt;/a&gt;) and see if NAudio can offer any value-add to using these APIs&lt;/li&gt; &lt;li&gt;Make a Windows Store demo app to show off and test what can be done. Would also like to test on a Surface device if possible (not sure if I’ll run into endian issues on ARM devices – anyone know?).&lt;/li&gt; &lt;li&gt;Update the nuget package to contain a Windows Store binary&lt;/li&gt;&lt;/ul&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>Windows 8</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="7a607ecf-323c-401a-b23e-0f4407eb3b6f">
+      <author>Ananth Balasubramaniam</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.ananthonline.net</website>
+      <ip />
+      <userAgent />
+      <date>2012-11-28 19:52:30</date>
+      <content>I love NAudio and have used it for desktop apps before but want to do so for Windows Store apps - and this is great news.&lt;br /&gt;&lt;br /&gt;My current need is quite specific, how can I decode MP3s using NAudio on Windows 8? How much is missing to be able to that at this time?&lt;br /&gt;&lt;br /&gt;Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5706ed1d-662c-4a2a-aa0d-42bef1bdba17">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-11-28 20:02:01</date>
+      <content>The MediaFoundationReader class will be able to do this, it may be enough for you for now. I&amp;#39;ve not ported the WaveFileWriter yet though. Hopefully I&amp;#39;ll get round to a demo app soon showing how to do this.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2d1f4fad-9ad0-4e9b-a3e8-b95a49dab2d3">
+      <author>Jason Olson</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09506042673601435668</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-03 20:40:58</date>
+      <content>This is fantastic Mark! Any place we can go to grab early bits if we want to test it out ourselves (I&amp;#39;m writing a synthesizer and want to see if I can avoid introducing a C++ component just for my WASAPI audio renderer).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="405b66ee-59c5-4071-89cd-63ff95d7e5f0">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-03 21:03:17</date>
+      <content>hi Jason, currently I&amp;#39;m not publishing any builds so you&amp;#39;d need to build from source over at CodePlex. Unfortunately I&amp;#39;ve not done WASAPI yet, although I don&amp;#39;t think there will be too much to do given that I&amp;#39;ve already done the bulk of the interop. Annoyingly there seems to be a problem with my VS2012 install which means I can&amp;#39;t make Windows Store apps at the moment, so there will be a bit of a delay until I work out how to fix that. </content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="006f942a-d9be-4f4b-a6cb-addba13b9e9d">
+      <author>Jasmine wilson</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00076161061960975303</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-07 07:20:18</date>
+      <content>I am glad to see this beneficial piece of writing. &lt;br /&gt;Critical information loss situation is often an Inconvenience for the individual. &lt;br /&gt; But for the simplicity of users, experts have designed a a solution for data damage issues. &lt;br /&gt;If a data removal scenario has taken place, person must know which tool or application to apply to be able to handle this case of data damage.&lt;br /&gt;&lt;a href="http://www.diskdoctors.net/repair-corrupt-2gb-pst-file.html" rel="nofollow"&gt;pst file size &lt;/a&gt;&lt;br /&gt;&lt;br /&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dbb0846a-1232-4a3d-a722-a8e5203ceb42">
+      <author>Christoph</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-01-12 20:51:27</date>
+      <content>If I remember correctly Encoding.GetEncoding(&amp;quot;utf-7&amp;quot;) is a way to get ASCII encoding in the Windows Runtime.</content>
+    </comment>
+  </comments>
+</post>

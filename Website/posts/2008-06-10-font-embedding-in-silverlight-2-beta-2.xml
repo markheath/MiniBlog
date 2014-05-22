@@ -1,0 +1,14 @@
+<post>
+  <title>Font Embedding in Silverlight 2 beta 2</title>
+  <slug>font-embedding-in-silverlight-2-beta-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-10 07:09:00</pubDate>
+  <lastModified>2011-07-03 08:21:23</lastModified>
+  <content>&lt;p&gt;I added a font to my &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt; game this weekend as part of converting to beta 2. You can &lt;a href="http://www.markheath.me.uk/silvernibbles"&gt;see it in action here&lt;/a&gt;. &lt;/p&gt; &lt;p&gt;The way to do this is relatively straightforward:&lt;/p&gt; &lt;p&gt;1. Add your font to the project. The build action should be &lt;strong&gt;Resource&lt;/strong&gt;. You do not need to copy to the output directory. Visual Studio will put it into your &lt;strong&gt;DLL&lt;/strong&gt; file at compile time. (n.b. If you choose &lt;strong&gt;Content&lt;/strong&gt; instead, it will go into your &lt;strong&gt;XAP&lt;/strong&gt; file which also works, but apparently &lt;a href="http://silverlight.net/forums/p/17523/58653.aspx#58571"&gt;loading fonts from the XAP will not be supported after beta 2&lt;/a&gt; so this method is not recommended)&lt;/p&gt; &lt;p&gt;2. Now whenever you need to use the font, simply use the syntax &lt;strong&gt;FontFamily="Font Name.ttf#FontName"&lt;/strong&gt;.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/font-embedding-in-silverlight-2-beta-2-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="font-embedding-silverlight" border="0" alt="Font Embedding in Silverlight" src="/posts/files/font-embedding-in-silverlight-2-beta-2-1.png" width="414" height="213"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;And that is all there is to it.&amp;nbsp; &lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

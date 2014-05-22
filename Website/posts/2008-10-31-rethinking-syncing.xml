@@ -1,0 +1,15 @@
+<post>
+  <title>Rethinking Syncing</title>
+  <slug>rethinking-syncing</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-31 19:34:00</pubDate>
+  <lastModified>2008-10-31 19:49:24</lastModified>
+  <content>&lt;p&gt;I have been doing a lot of synchronization work recently, trying to get multiple video and audio streams to play back together as best synchronized as possible. This is not a trivial task, especially if those streams are only partially downloaded and the user can reposition anywhere they like during playback.&lt;/p&gt;  &lt;p&gt;In the past I have tended to use locks for synchronization. So you have a renderer thread, that is writing video frames or audio samples to an output device, and when it needs to read some more data, it takes a lock, reads what it needs and releases that lock. Meanwhile, over in another thread, quite probably controlled by a slider of some description on the GUI, the user makes repositioning requests. When one of these requests comes in, the various audio and video streams take a lock on the same object that the renderer wants, reposition their streams to the new position, and then release the lock. Hey presto, the renderer will now read from the correct place on its next read call and is in no danger of reading corrupt data packets because we are midway through repositioning.&lt;/p&gt;  &lt;p&gt;However, I am beginning to think that there is a better approach. When the user attempts to reposition the playback cursor, this simply posts a repositioning request into a queue. Then when the renderer threads want to read more data, they first check to see if a reposition request needs to be serviced. I think this approach will perform just as well as the first, (if not better because we can throw away repositioning requests if they are not serviced quickly enough). It also means that locks do not need to be held for significant periods of time (just a quick one to govern the read/write from the reposition queue). I am thinking I might trial this new sync model in a future version of &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;. Let me know in the comments if you think this is a better approach or not.&lt;/p&gt;&lt;p&gt;There are a couple of interesting implications of this approach that need to be considered. First, when you ask a stream to reposition, you won't find out whether the reposition was successful immediately. You can query the current position just after setting the position and its value will not be up to date. Second, if the renderer thread is processing the repositioning requests, then when playback is stopped, repositioning requests may not get serviced. It very much depends on your application as to whether this is a problem or not.
+&lt;/p&gt;&lt;p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,49 @@
+<post>
+  <title>Blogger Users Beware - Google+ Can Delete Your Blog Images</title>
+  <slug>blogger-users-beware-google-can-delete</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-01 20:48:00</pubDate>
+  <lastModified>2011-07-02 07:54:05</lastModified>
+  <content>&lt;p&gt;I was given an invite to Google+ today. I thought it would be interesting to see what the fuss is about, so I signed up. It asked me if I wanted to import any pictures from Picasa. I didn’t think I had any pictures on there – I certainly never visit the site, but I clicked yes anyway just in case there was some stuff I had forgotten about on there. And indeed there was. It imported a couple of random photos I had taken of door hinges to email to my dad, plus a whole bunch of screenshots.&lt;/p&gt;
+&lt;p&gt;Obviously, that’s not the kind of stuff I want on my Google+ profile, so I deleted the photo albums from my profile page. What I hadn’t realised is that Picassa was where Windows Live Writer had been storing all the images for this blog. And instead of just deleting the albums from my Google+ profile, it also deleted them from Picassa. Not into some kind of recycle bin. Deleted permanently.&lt;/p&gt;
+&lt;p&gt;Clearly Google have committed a cardinal sin of user interface design – don’t make it easy to accidentally and irrevocably delete all your data. And the data stored on Picassa should only be deleteable from Picassa, not from another completely separate website, even if it is run by the same company.&lt;/p&gt;
+&lt;p&gt;They have also committed the cardinal sin of customer support – utter unresponsiveness. I guess they can get away with this because they are so big and I’m not paying them any money. Even if they can’t recover my data, a response of some kind would be nice. I’ve already come across several other people who’ve done similar things, leaving blogs that have been running several years completely broken.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Update:&lt;/b&gt; they have now responded to say:&lt;/p&gt;
+&lt;blockquote&gt;
+ Our team can't undelete your photos, but we'll make it clearer that your
+ Picasa photos themselves are displayed on Google+ and not copied. It's 
+the same backend, so photos you upload in Picasa are visible from 
+Google+, and vice versa.&lt;/blockquote&gt;
+&lt;p&gt;The upshot of that is that this blog is missing all its screenshots and diagrams, almost 100 of them. Some of them I might be able to recover from my PC, although my usual way of taking screenshots and adding them through Windows Live Writer only involves the clipboard so there is no physical file on my machine that I can use to recover the images with. I can only apologise, particularly if you came here to read the NAudio documentation, only to find it missing its architecture diagrams.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="49a02a61-86e6-4dc0-b705-c5cc1eed3396">
+      <author>kjk</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/15389425316089091355</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-01 21:44:31</date>
+      <content>You can try archive.org to recover old content from your website.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9e0ab815-5bde-4e9a-97c8-f64e47633fea">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-01 21:55:44</date>
+      <content>sadly archive.org hasn&amp;#39;t archived this blog, but thanks for the suggestion</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="855f42bc-3cb5-40cb-9407-1dfdedaeec7d">
+      <author>simjen</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.simjenweb.com.au</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-19 10:20:47</date>
+      <content>even that dint work for me, when i tried it for my blog</content>
+    </comment>
+  </comments>
+</post>

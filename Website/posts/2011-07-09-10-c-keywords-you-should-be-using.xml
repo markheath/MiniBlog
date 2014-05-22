@@ -1,0 +1,169 @@
+<post>
+  <title>10 C# keywords you should be using</title>
+  <slug>10-c-keywords-you-should-be-using</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-09 17:57:00</pubDate>
+  <lastModified>2011-07-09 21:00:54</lastModified>
+  <content>&lt;p&gt;Most developers who learn C# pick up the basic keywords quite quickly. Within a few weeks of working with a typical codebase you’ll have come across around a third of the C# keywords, and understand roughly what they do. You should have no trouble explaining what the following keywords mean:  &lt;blockquote&gt; &lt;p&gt;public, private, protected, internal, class, namespace, interface, get, set, for, foreach .. in, while, do, if, else, switch, break, continue, new, null, var, void, int, bool, double, string, true, false, try, catch&lt;/p&gt;&lt;/blockquote&gt; &lt;p&gt;However, while doing code reviews I have noticed that some developers get stuck with a limited vocabulary of keywords and never really get to grips with some of the less common ones, and so miss out on their benefits. So here’s a list, in no particular order, of some keywords that you should not just understand, but be using on a semi-regular basis in your own code.&lt;/p&gt; &lt;h3&gt;is &amp;amp; as&lt;/h3&gt; &lt;p&gt;Sometimes I come across a variation of the following code, where we want to cast a variable to a different type but would like to check first if that cast is valid:&lt;pre class="brush: csharp;"&gt;if (sender.GetType() == typeof(TextBox))
+{
+   TextBox t = (TextBox)sender;
+   ...
+}&lt;/pre&gt;
+&lt;p&gt;While this works fine, the &lt;strong&gt;is&lt;/strong&gt; keyword could be used to simplify the if clause:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;if (sender is TextBox)
+{
+   TextBox t = (TextBox)sender;
+   ...
+}&lt;/pre&gt;
+&lt;p&gt;We can improve things further by using the &lt;strong&gt;as &lt;/strong&gt;keyword, which is like a cast, but doesn’t throw an exception if the conversion is not valid – it just returns null instead. This means we can write code in a way that doesn’t require the .NET framework to check the type of our sender variable twice:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;TextBox t = sender as TextBox;
+if (t != null)
+{
+   ...
+}
+&lt;/pre&gt;
+&lt;p&gt;I feel obliged to add that if your code contains a lot of casts, you are probably doing something wrong, but that is a discussion for another day.&lt;/p&gt;
+&lt;h3&gt;using&lt;/h3&gt;
+&lt;p&gt;Most developers are familiar with the &lt;strong&gt;using&lt;/strong&gt; keyword for importing namespaces, but a surprising number do not make regular use of it for dealing with objects that implement IDisposable. For example, consider the following code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var writer = new StreamWriter("test.txt");
+writer.WriteLine("Hello World");
+writer.Dispose();
+&lt;/pre&gt;
+&lt;p&gt;What we have here is a potential resource leak if there is an exception thrown between opening the file and closing it. The using keyword ensures that Dispose will always be called if the writer object was successfully created.&lt;/p&gt;
+&lt;p&gt;&lt;pre class="brush: csharp;"&gt;using (var writer = new StreamWriter("test.txt"))
+{
+   writer.WriteLine("Hello World");
+}
+&lt;/pre&gt;
+&lt;p&gt;Make it a habit to check whether the classes you create implement IDisposable, and if so, make use of the using keyword.&lt;/p&gt;
+&lt;h3&gt;finally&lt;/h3&gt;
+&lt;p&gt;Which brings us onto our next keyword, &lt;strong&gt;finally&lt;/strong&gt;. Even developers who know and use &lt;strong&gt;using &lt;/strong&gt;often miss appropriate scenarios for using a finally block. Here’s a classic example:&lt;pre class="brush: csharp;"&gt;public void Update()
+{   
+    if (this.updateInProgress)
+    {    
+        log.WriteWarning("Already updating");    
+        return;
+    } 
+    this.updateInProgress = true;
+    ...
+    DoUpdate();
+    ...
+    this.updateInProgress = false;
+
+}&lt;/pre&gt;
+&lt;p&gt;The code is trying to protect us from some kind of re-entrant or multithreaded scenario where an Update can be called while one is still in progress (please ignore the potential race condition for the purposes of this example). But what happens if there is an exception thrown within DoUpdate? Now we are never able to call Update again because our updateInProgress flag never got unset. A finally block ensures we can’t get into this invalid state:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public void Update()
+{   
+    if (this.updateInProgress)
+    {    
+        log.WriteWarning("Already updating");    
+        return;
+    } 
+    try
+    {
+        this.updateInProgress = true;
+        ...
+        DoUpdate();
+        ...
+    }
+    finally
+    {
+        this.updateInProgress = false;
+    }
+}&lt;/pre&gt;
+&lt;h3&gt;readonly &lt;/h3&gt;
+&lt;p&gt;OK, this one is a fairly simple one, and you could argue that code works just fine without it. The &lt;b&gt;readonly&lt;/b&gt; keyword says that a field can only be written to from within the constructor. It’s handy from a code readability point of view, since you can immediately see that this is a field whose value will never change during the lifetime of the class. It also becomes a more important keyword as you begin to appreciate the benefits of immutable classes. Consider the following class:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class Person
+{
+    public string FirstName { get; private set; }
+    public string Surname { get; private set; }
+
+    public Person(string firstName, string surname)
+    { 
+        this.FirstName = firstName;
+        this.Surname = surname;
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Person is certainly immutable from the outside – no one can change the FirstName or Surname properties. But nothing stops me from modifying those properties within the class. In other words, my code doesn’t advertise that I intend this to be an immutable class. Using the &lt;strong&gt;readonly &lt;/strong&gt;keyword, we can express our intent better:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class Person
+{
+    private readonly string firstName;
+    private readonly string surname;
+
+    public string FirstName { get { return firstName; } }
+    public string Surname { get { return surname; } }
+
+    public Person(string firstName, string surname)
+    { 
+        this.firstName = firstName;
+        this.surname = surname;
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Yes, it’s a shame that this second version is a little more verbose than the first, but it makes it more explicit that we don’t want firstName or surname to be modified during the lifetime of the class. (Sadly C# doesn’t allow the readonly keyword on properties).&lt;/p&gt;
+&lt;h3&gt;yield&lt;/h3&gt;
+&lt;p&gt;This is a very powerful and yet rarely used keyword. Suppose we have a class that searches our hard disk for all MP3 files and returns their paths. Often we might see it written like this:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public List&amp;lt;string&amp;gt; FindAllMp3s()
+{
+   var mp3Paths = List&amp;lt;string&amp;gt;();
+   ... 
+   // fill the list
+   return mp3Paths;
+}
+&lt;/pre&gt;
+&lt;p&gt;Now we might use that method to help us search for a particular MP3 file we had lost:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;foreach(string mp3File in FindAllMp3s())
+{
+   if (mp3File.Contains("elvis"))
+   {
+       Console.WriteLine("Found it at: {0}", mp3File);
+       break;
+   }  
+}
+&lt;/pre&gt;
+&lt;p&gt;Although this code seems to work just fine, it’s performance is sub-optimal, since we first find &lt;em&gt;every &lt;/em&gt;MP3 file on the disk, and then search through that list. We could save ourselves a lot of time if we checked after each file we found and aborted the search at that point.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;yield&lt;/strong&gt; keyword allows us to fix this without changing our calling code at all. We modify FindAllMp3s to return an IEnumerable&amp;lt;string&amp;gt; instead of a List. And now every time it finds a file, we return it using the yield keyword. So with some rather contrived example helper functions (.NET 4 has already added &lt;a href="http://msdn.microsoft.com/en-us/library/dd383458.aspx"&gt;a method&lt;/a&gt; that does exactly this) our FindAllMp3s method looks like this: &lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public IEnumerable&amp;lt;string&amp;gt; FindAllMp3s()
+{
+   var mp3Paths = List&amp;lt;string&amp;gt;();
+   
+   for (var dir in GetDirs())
+   {
+       for (var file in GetFiles(dir))
+       {
+           if (file.EndsWith(".mp3")
+           {
+               yield return file;
+           }
+       }
+   }      
+}&lt;/pre&gt;
+&lt;p&gt;This not only saves us time, but it saves memory too, since we now don’t need to store the entire collection of mp3 files in a List.&lt;/p&gt;
+&lt;p&gt;It can take a little while to get used to debugging this type of code since you jump in and out of a function that uses yield repeatedly as you walk through the sequence, but it has the power to greatly improve the design and performance of the code you write and is worth mastering.&lt;/p&gt;
+&lt;h3&gt;select&lt;/h3&gt;
+&lt;p&gt;OK, this one is cheating since this is a whole family of related keywords. I won’t attempt to explain LINQ here, but it is one of the best features of the C# language, and you owe it to yourself to learn it. It will revolutionise the way you write code. Download &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt; and start working through the tutorials it provides.&lt;/p&gt;
+&lt;h3&gt;interface&lt;/h3&gt;
+&lt;p&gt;So you already know about this keyword. But you probably aren’t using it nearly enough. The more you write code that is testable and adheres to the &lt;a href="http://en.wikipedia.org/wiki/Dependency_inversion_principle"&gt;Dependency Inversion Principle&lt;/a&gt;, the more you will need it. In fact at some point you will grow to hate how much you are using it and wish you were using a dynamic language instead. (&lt;strong&gt;dynamic&lt;/strong&gt; is itself another very interesting new C# keyword, but I feel that the C# community is only just beginning to discover how we can best put it to use).&lt;/p&gt;
+&lt;h3&gt;throw &lt;/h3&gt;
+&lt;p&gt;You do know you are allowed to &lt;strong&gt;throw&lt;/strong&gt; as well as catch exceptions right? Some developers seem to think that a function should never let any exceptions get away, and so contain a generic &lt;strong&gt;catch &lt;/strong&gt;block which writes an error to the log and returns giving the caller no indication that things went wrong.&lt;/p&gt;
+&lt;p&gt;This is almost always wrong. Most of the time your methods should simply allow exceptions to propagate up to the caller. If you are using the &lt;strong&gt;using &lt;/strong&gt;keyword correctly, you are probably already doing all the cleanup you need to. &lt;/p&gt;
+&lt;p&gt;But you can and should sometimes throw exceptions. An exception thrown at the point you realise something is wrong with a good error message can save hours of debugging time.&lt;/p&gt;
+&lt;p&gt;Oh, and if you really do need to catch an exception and re-throw it, make sure you use do it &lt;a href="http://stackoverflow.com/questions/178456/what-is-the-proper-way-to-re-throw-an-exception-in-c"&gt;the correct way&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;goto&lt;/h3&gt;
+&lt;p&gt;Only joking, pretend you didn’t see this one. Just because a keyword is in the language, doesn’t mean it is a good idea to use it. &lt;strong&gt;out &lt;/strong&gt;and &lt;strong&gt;ref &lt;/strong&gt;usually fall into this category too – there are better ways to write your code.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="677cf140-4f77-4e36-bfc0-ed9574fa9cd2">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-11-19 14:26:59</date>
+      <content>Nice blog.&lt;br /&gt;&lt;br /&gt;I&amp;#39;m wondering - is there a special reason why in the readonly example you declared the fields as private and created public-get properties? wouldn&amp;#39;t it be easier to declare public readonly fields instead? or is there a reason why it is a good idea to do that...?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="340beb04-6e09-4b12-a5e4-eabe5ce8ed5d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-11-21 15:13:32</date>
+      <content>@Anonymous, yes you could do that, although I tend to avoid public fields as a rule.</content>
+    </comment>
+  </comments>
+</post>

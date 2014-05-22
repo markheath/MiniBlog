@@ -1,0 +1,77 @@
+<post>
+  <title>HOWTO: Make your Silverlight 1.1 Application Scriptable</title>
+  <slug>howto-make-your-silverlight-11</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-01 11:16:00</pubDate>
+  <lastModified>2010-10-04 12:55:45</lastModified>
+  <content>&lt;p&gt;Here's how to make your Silverlight application scriptable from JavaScript. I'll use my &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt; application as an example, and we will make it so that you can start a new game by pressing an ordinary HTML button that calls into the Silverlight application.&lt;/p&gt;
+
+&lt;p&gt;This requires us to make our Page class scriptable. We will also make the NewGame function accessible to JavaScript. First we must mark both the Page class and the NewGame function with the &lt;strong&gt;Scriptable&lt;/strong&gt; attribute, found in the System.Windows.Browser namespace.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;using System.Windows.Browser;
+...
+namespace SilverNibbles
+{
+[Scriptable]
+public partial class Page : Canvas
+{
+...
+
+[Scriptable]
+public void NewGame(int players)
+{
+...
+&lt;/pre&gt;
+
+&lt;p&gt;The next step is to register a variable that JavaScript can use to access the instance of the Page class. We do this in the Page's Loaded event handler. We have chosen to call our instance, "SilverNibbles".&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public void Page_Loaded(object o, EventArgs e)
+{
+...
+WebApplication.Current.RegisterScriptableObject("SilverNibbles", this);&lt;/pre&gt;
+
+&lt;p&gt;Now we will create some buttons in our main HTML page that will start a new game, along with some JavaScript that handles them. Notice I have set the focus to the Silverlight control which will ensure we have keyboard focus for the new game. Also notice that our registered scriptable object is referenced as a member of the Content property of the Silverlight control.&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;
+&amp;lt;script src="Silverlight.js" type="text/javascript"&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script src="SilverNibbles.html.js" type="text/javascript"&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;script type="text/javascript"&amp;gt;
+function onNewGameClick(players) {
+var silverlight = document.getElementById('SilverlightControl');
+silverlight.focus();
+silverlight.Content.SilverNibbles.NewGame(players);
+}
+&amp;lt;/script&amp;gt;
+...
+
+&amp;lt;p&amp;gt;New game:
+&amp;lt;input onclick="onNewGameClick(1)" type="button" value="One Player"&amp;gt;
+&amp;lt;input onclick="onNewGameClick(2)" type="button" value="Two Players"&amp;gt;
+&amp;lt;/p&amp;gt;
+&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Silverlight</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="767e05d1-753c-4abb-af70-76466cdfb8b9">
+      <author>balla</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2007-10-05 07:19:00</date>
+      <content>Thanks you.&lt;BR/&gt;&lt;BR/&gt;Your site was the first I found that contained the information to use the System.Windows.Browser namespace to be able to mark something in CS as [Scriptable].&lt;BR/&gt;&lt;BR/&gt;Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="561d18b6-518f-4fff-94b2-4c9693d68cfe">
+      <author>Stanley</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09441273166356836245</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-16 21:54:00</date>
+      <content>Me too. Thanks.</content>
+    </comment>
+  </comments>
+</post>

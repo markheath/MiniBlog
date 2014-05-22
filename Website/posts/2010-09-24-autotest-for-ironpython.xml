@@ -1,0 +1,77 @@
+<post>
+  <title>Autotest for IronPython</title>
+  <slug>autotest-for-ironpython</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-24 17:25:00</pubDate>
+  <lastModified>2010-09-28 17:47:33</lastModified>
+  <content>&lt;p&gt;Continuing my explorations of IronPython, I decided I wanted a continuous test setup, which would automatically run my unit tests every time I saved a .py file, which was something I had seen on various “&lt;a href="http://katas.softwarecraftsmanship.org/?p=168"&gt;katacasts&lt;/a&gt;”. After a bit of investigation, I found the promising looking &lt;a href="http://www.metareal.org/p/modipyd/"&gt;modipyd&lt;/a&gt;, which seemed to be &lt;a href="http://jason.diamond.name/weblog/2010/06/18/autotest-for-python/"&gt;Windows friendly&lt;/a&gt;. Unfortunately, github won’t let me download the files, so I set about creating my own basic continuous test tool for IronPython.&lt;/p&gt;
+&lt;p&gt;One advantage of using IronPython is that it immediately gives me access to the .NET framework’s &lt;a href="http://msdn.microsoft.com/en-us/library/system.io.filesystemwatcher%28VS.71%29.aspx"&gt;FileSystemWatcher&lt;/a&gt;, which meant I didn’t have to worry about learning threading in Python. I did however have to work around one quirk which meant that the file changed event could get triggered multiple times, despite a single save command in my code editor.&lt;br&gt;
+Another challenge was working out how to load or reload a module given its name. This is done with the __import__ function, and using the sys.modules dictionary for the reload.&lt;/p&gt;
+&lt;p&gt;It took slightly longer than I hoped to get it fully working. Occasionally I get a spurious ValueError thrown when it attempts a reload. I’m not sure what that is all about. It should also be improved to rerun tests on all loaded modules not just the one that changed if you are not working entirely within a single file.&lt;br&gt;
+Again, any Python gurus feel free to suggest improvements.&lt;/p&gt;
+&lt;pre class="brush: py;"&gt;import unittest
+import clr
+import sys
+from System.IO import FileSystemWatcher
+from System.IO import NotifyFilters
+from System import DateTime
+
+def changed(sender, args):
+    global lastFileTimeWatcherEventRaised
+    if DateTime.Now.Subtract(lastFileTimeWatcherEventRaised).TotalMilliseconds &amp;lt; 500:
+        return
+    moduleName = args.Name[:-3]
+    if reloadModule(moduleName):
+        runTests(moduleName)
+    lastFileTimeWatcherEventRaised = DateTime.Now
+
+def reloadModule(moduleName):
+    loaded = False
+    try:
+        if(sys.modules.has_key(moduleName)):
+            print 'Reloading ' + moduleName    
+            reload(sys.modules[moduleName])
+        else:
+            print 'Importing ' + moduleName
+            __import__(moduleName)
+        loaded = True
+    except SyntaxError, s:
+        print 'Syntax error loading ' + s.filename, 'line', s.lineno, 'offset', s.offset
+        print s.text
+    except:
+        #sometimes get a ValueError here, not sure why
+        error = sys.exc_info()[0]
+        print error
+    return loaded
+
+def runTests(moduleName):
+    loader = unittest.TestLoader()
+    suite = loader.loadTestsFromModule(sys.modules[moduleName])
+    if suite.countTestCases() &amp;gt; 0:
+        runner = unittest.TextTestRunner()
+        runner.run(suite)
+    else:
+        print 'No tests in module'
+
+def watch(path):
+    watcher = FileSystemWatcher()
+    watcher.Filter = '*.py'
+    watcher.Changed += changed
+    watcher.Path = path
+    watcher.NotifyFilter = NotifyFilters.LastWrite
+    watcher.EnableRaisingEvents = 1
+    
+lastFileTimeWatcherEventRaised = DateTime.Now
+
+if __name__ == '__main__':
+    print 'Watching current folder for changes...'
+    watch('.')
+    input('press Enter to exit')&lt;/pre&gt;
+&lt;p&gt;If I get a chance I’ll record my own “katacast” showing the autotest python module in action.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Update:&lt;/b&gt; I've made the &lt;a href="/post/ironpython-codebreaker-katacast"&gt;katacast&lt;/a&gt;. I've also made a slight improvement to the autotest code, moving the setting of lastFileTimeWatcherEventRaised further down to stop long-running tests thwarting the multiple-event filtering. &lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>IronPython</category>
+  </categories>
+  <comments />
+</post>

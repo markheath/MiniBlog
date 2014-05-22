@@ -1,0 +1,88 @@
+<post>
+  <title>Styling a ListBox With Silverlight 2 Beta 2 (Part 1)</title>
+  <slug>styling-listbox-with-silverlight-2-beta</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-19 22:04:00</pubDate>
+  <lastModified>2011-07-04 16:36:41</lastModified>
+  <content>&lt;p&gt;&lt;em&gt;This post is an updated version of an &lt;a href="/post/styling-listbox-in-silverlight-part-1"&gt;earlier series&lt;/a&gt; I wrote on how to style a ListBox with Silverlight. I hope to update all three parts over the coming days. This tutorial is not about how to use Expression Blend, as there are plenty of other blogs that will explain that. This is for those who like to go right to the XAML.&lt;/em&gt;&lt;/p&gt; &lt;p&gt;One of the challenges of styling a control like the &lt;strong&gt;ListBox&lt;/strong&gt; in Silverlight is the sheer number of subcomponents it uses. A ListBox has its own template which includes a &lt;strong&gt;ScrollViewer&lt;/strong&gt; and an &lt;strong&gt;ItemPresenter&lt;/strong&gt;. The &lt;strong&gt;ScrollViewer&lt;/strong&gt; contains &lt;strong&gt;Scrollbars&lt;/strong&gt; which contain &lt;strong&gt;RepeatButtons&lt;/strong&gt;, &lt;strong&gt;Thumbs&lt;/strong&gt; etc.&lt;/p&gt; &lt;p&gt;My original idea was to make copies of the default styles and slowly change them to look how I wanted, but I soon realised that the sheer quantity of XAML would get very confusing. So I decided to take the opposite approach. Start with a very basic template and slowly add features until it looks right. So here is the most basic of all ListBox styles which contains just a simple template:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxStyle1" TargetType="ListBox"&amp;gt;
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="ListBox"&amp;gt;
+                &amp;lt;Grid x:Name="Root"&amp;gt;
+                    &amp;lt;ItemsPresenter /&amp;gt;
+                &amp;lt;/Grid&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This simply presents the items, with no outline of any sort displayed. To test our style, let's add some items to a ListBox (notice that with Silverlight 2 Beta 2 I need to put TextBlocks inside my ListBoxItem instead of just text that worked fine in Beta 1)&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox Margin="5" Width="160" Height="160"
+ Style="{StaticResource ListBoxStyle1}"&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Hello"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="World"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 3"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 4 with a really long name"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 5"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 6"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 7"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 8"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 9 out of bounds"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+    &amp;lt;ListBoxItem&amp;gt;&amp;lt;TextBlock Text="Item 10 out of bounds"/&amp;gt;&amp;lt;/ListBoxItem&amp;gt;
+&amp;lt;/ListBox&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This is what it looks like so far:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-with-silverlight-2-beta-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="ListBox Style Step 1" border="0" alt="ListBox Style Step 1" src="/posts/files/styling-listbox-with-silverlight-2-beta-1.png" width="196" height="189"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Next step is the border for our ListBox. I want all the ListBox items to be drawn on top of a filled rounded rectangle. To do this, I have added a &lt;strong&gt;Border&lt;/strong&gt; control. I have given it some padding so we can actually see it, because the &lt;strong&gt;ListBoxItem&lt;/strong&gt; template is currently drawing white rectangles over the top of it.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Grid x:Name="Root"&amp;gt;
+  &amp;lt;Border Padding="5" Background="#E6BB8A" CornerRadius="5"&amp;gt;
+    &amp;lt;ItemsPresenter /&amp;gt;
+  &amp;lt;/Border&amp;gt;
+&amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This is what it looks like now:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-with-silverlight-2-beta-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Listbox Style Step 2" border="0" alt="Listbox Style Step 2" src="/posts/files/styling-listbox-with-silverlight-2-beta-2.png" width="178" height="175"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;So before we go doing anything further to the ListBox template itself (like adding scrollbars), let's sort out the item templates.&lt;/p&gt;
+&lt;p&gt;For this we need to create a new style - &lt;strong&gt;ListBoxItemStyle1&lt;/strong&gt;. Here is a minimal ListBoxItem style:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxItemStyle1" TargetType="ListBoxItem"&amp;gt;
+    &amp;lt;Setter Property="Foreground" Value="#FF000000" /&amp;gt;    
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+                &amp;lt;Grid x:Name="Root"&amp;gt;
+                    &amp;lt;ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        Foreground="{TemplateBinding Foreground}"
+                     /&amp;gt;                    
+                &amp;lt;/Grid&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, it is a little more involved than the basic ListBox template. We needed to have the Foreground property set to a sensible default value (Black) for anything to appear. And we have simply used one &lt;strong&gt;ContentPresenter&lt;/strong&gt; control to show the contents of each ListBox item.&lt;/p&gt;
+&lt;p&gt;(n.b. Remember to define the ListBoxItemStyle before your ListBox style. Expression Blend will be OK with this, but when you come to run it, Silverlight will fail with one of its characteristically unhelpful errors.)&lt;/p&gt;
+&lt;p&gt;We can tell our ListBox to use it by modifying our ListBox Style as follows:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxStyle1" TargetType="ListBox"&amp;gt;
+    &amp;lt;Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemStyle1}" /&amp;gt;
+    &amp;lt;Setter Property="Template"&amp;gt;
+        ...&lt;/pre&gt;
+&lt;p&gt;Now we have got rid of those white backgrounds:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-with-silverlight-2-beta-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="ListBox Style Step 3" border="0" alt="ListBox Style Step 3" src="/posts/files/styling-listbox-with-silverlight-2-beta-3.png" width="176" height="173"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Finally we will make the item template just a little more interesting. I've added a border to the item presenter, and modified some margins and colours:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Border CornerRadius="5" Background="#51615B" Margin="1"&amp;gt;
+&amp;lt;ContentPresenter
+    Margin="1"
+    Content="{TemplateBinding Content}"
+    Foreground="{TemplateBinding Foreground}"
+ /&amp;gt;                    
+ &amp;lt;/Border&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This leaves us with something looking like this:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-with-silverlight-2-beta-4.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="ListBox Style Step 4" border="0" alt="ListBox Style Step 4" src="/posts/files/styling-listbox-with-silverlight-2-beta-4.png" width="176" height="173"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;So that is at least a reasonable start. Our ListBox is missing at least three crucial features though, which I will tackle in a future blog-post:&lt;/p&gt;
+&lt;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scrollbars 
+&lt;li&gt;Selected Item Rendering 
+&lt;li&gt;Mouse Over Rendering &lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;p&gt;
+&lt;p&gt;&lt;a href="/post/styling-listbox-with-silverlight-2-beta_21"&gt;Continue to Part 2...&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,124 @@
+<post>
+  <title>Screencast: Modular WPF with MEF &amp; MVVM Tutorial Part 1</title>
+  <slug>screencast-modular-wpf-with-mef-mvvm</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-08 18:02:00</pubDate>
+  <lastModified>2011-07-08 18:02:00</lastModified>
+  <content>&lt;p&gt;A while ago I began to write a blog tutorial about how to create a modular WPF application using MVVM and &lt;a href="http://mef.codeplex.com/"&gt;MEF&lt;/a&gt;. I have decided to present it as a screencast instead, so here is the first part. It uses WPF, but a lot of the techniques I show apply equally well to Silverlight.&lt;/p&gt; &lt;p&gt;My approach is not to start off using MVVM and MEF (or any of the more fully featured WPF frameworks), but to introduce these libraries and design patterns at the point at which they make sense. Hopefully this will make it clearer why we might actually want to use them in the first place.&lt;/p&gt; &lt;p&gt;In this first video I create a very simple application with a menu allowing you to switch between two modules, and show how MEF enables us to work around violations of the “&lt;a href="http://en.wikipedia.org/wiki/Open/closed_principle"&gt;Open Closed Principle&lt;/a&gt;”.&lt;/p&gt;&lt;iframe height="300" src="http://player.vimeo.com/video/26149952?title=0&amp;amp;byline=0&amp;amp;portrait=0" frameborder="0" width="400"&gt;&lt;/iframe&gt; &lt;p&gt;I’ve got at least one more episode planned which hopefully will appear shortly and introduce MVVM to make our application more easily testable. If there is demand, I may also post my notes and upload my mercurial repository to bitbucket.&lt;/p&gt; &lt;p&gt;Another reason for presenting this as a screencast is that I am planning to create some &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; screencasts in the future, and so I need to get some practice in. This one is a little raw as I didn’t do a practice beforehand, but I have tried to keep things flowing along at a reasonable pace. I also know the sound quality isn’t brilliant. Let me know if you think the resolution is acceptable. &lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>MEF</category>
+    <category>screencast</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e9d10d24-b045-403b-80b4-9977fb8a0519">
+      <author>Pierre Mengal</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07825797939266737145</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-09 14:59:07</date>
+      <content>Please keep doing those great screencasts! Don&amp;#39;t forget to turn off the cell phone next time ;)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c924172d-cff3-41d1-becc-3900d5de0125">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-09 15:06:35</date>
+      <content>Yeah, sorry about that ;) Hopefully will find some time to get part 2 done soon. I&amp;#39;ve already written the code; just need to record the screencast.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cf9992fd-86d5-4816-9b2a-d2d6c0968995">
+      <author>Scott</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-07-12 11:16:38</date>
+      <content>thanks for the screencast, it was very easy to follow and understand! can&amp;#39;t wait for the next installment when you split it up to follow the mvvm pattern. it would be nice to see this example with modules in separate assemblies.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f25143e0-55ec-4870-bc9a-2dc098ebd34b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-12 11:19:52</date>
+      <content>hi Scott, modules in separate assemblies is one of the things on my list to cover (possibly in part 4?). Also, part 2 is out now.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9f3ddb88-d2de-47f2-a5af-c9064c4f5d6b">
+      <author>Scott</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-07-12 11:38:49</date>
+      <content>hi mark,&lt;br /&gt;&lt;br /&gt;i just found part 2, very good again !&lt;br /&gt;&lt;br /&gt;looking forward to more in this series.&lt;br /&gt;&lt;br /&gt;thanks, scott</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="227311ad-f5c2-4205-ab76-6af229d01f18">
+      <author>Jerry Davis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12705205257046663924</website>
+      <ip />
+      <userAgent />
+      <date>2011-08-19 00:10:21</date>
+      <content>Mark, I don&amp;#39;t know how long I&amp;#39;ve been searching for a simple, straightforward demo which covers view changing and navigation in WPF/MVVM. This series fills a *HUGE* void between the trivial single-view apps and the esoteric discussions of 3rd party frameworks. As for a request, I would love to see the demo application cover some more Line-of-Business topics, like messaging and passing data around. Well done, and I look forward to coming back for more!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c10e88fb-725d-4489-80e5-3948cd017c6e">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-08-24 11:43:10</date>
+      <content>thanks Jerry, I&amp;#39;ve been on various holidays this summer, but I&amp;#39;ll bear your suggestions in mind when I get back to continuining with this series</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="26165f17-1366-468f-a2e7-c54d4165a8c2">
+      <author>James Smith</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-02-16 05:59:48</date>
+      <content>where is part 3. and where is the source code.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e6643423-4080-47c3-8a0b-5914ed6c8eb1">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-02-16 09:34:02</date>
+      <content>@sorry James, still haven&amp;#39;t made part 3, been doing other stuff. Maybe later this year</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6d9c3019-94c8-4380-be4e-1566106b2116">
+      <author>James Smith</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-02-16 09:47:23</date>
+      <content>dont know when you will upload the third part of video. can you upload the code. i need that. that will be very helpful for me.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4b42008f-1dad-4e2d-8016-dbb555953c2c">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-05-14 22:54:58</date>
+      <content>Thank you very much for the good tutorial.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="71644bcf-0126-418b-9fcd-4980fe3a7e2c">
+      <author>John Peters</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08638484965974862190</website>
+      <ip />
+      <userAgent />
+      <date>2012-06-27 16:00:17</date>
+      <content>Very nice intro to MEF.  I like your technique of starting from what-is and moving to what-should-be.&lt;br /&gt;&lt;br /&gt;This very clearly shows how one&amp;#39;s mindset needs to change with respect to thinking in terms of the future.</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,22 @@
+<post>
+  <title>How to Add a Custom Work Item to a Category In TFS</title>
+  <slug>how-to-add-custom-work-item-to-category</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-20 17:32:00</pubDate>
+  <lastModified>2011-05-20 17:32:13</lastModified>
+  <content>&lt;p&gt;I recently had to make a custom work item type using the TFS 2010 Power Tools. However, the requirements search in Test Center didn’t return any results for work items of this new type. The problem was, TFS has a concept of work item categories (or “groups”), and my new work item type needed to be in the “requirements” group.  &lt;p&gt;To add a new work item type to a work item category you have to use &lt;a href="http://msdn.microsoft.com/en-us/library/dd312129.aspx"&gt;witadmin&lt;/a&gt;. Open a VS2010 command prompt and get the categories like this:&lt;pre class="brush: plain;"&gt;C:\Users\Administrator\Documents&amp;gt;witadmin exportcategories /collection:http://win-gs9gmujits8:8080/tfs/defaultcollection /p:"My Project Name" /f:categories.xml
+
+&lt;/pre&gt;Then this &lt;a href="http://msdn.microsoft.com/en-us/library/dd286631.aspx"&gt;MSDN article&lt;/a&gt; explains the syntax of the categories xml file. I added my custom work item type in like this: &lt;pre class="brush: plain;"&gt;&amp;lt;CATEGORY refname="Microsoft.RequirementCategory" name="Requirement Category"&amp;gt;
+  &amp;lt;DEFAULTWORKITEMTYPE name="User Story" /&amp;gt;
+  &amp;lt;WORKITEMTYPE name="My Custom Work Item Type" /&amp;gt;
+&amp;lt;/CATEGORY&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;Then you reimport them using the witadmin tool again: &lt;pre class="brush: plain;"&gt;C:\Users\Administrator\Documents&amp;gt;witadmin importcategories /collection:http://win-gs9gmujits8:8080/tfs/defaultcollection /p:"My Project Name" /f:categories.xml
+&lt;/pre&gt;
+&lt;p&gt;And now Testing Center is able to assign the new work item types as requirements.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>TFS</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,65 @@
+<post>
+  <title>Reactive Extensions Observables Versus Regular .NET Events Part 2</title>
+  <slug>reactive-extensions-observables-versus_24</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-04-24 13:56:00</pubDate>
+  <lastModified>2014-04-24 13:56:31</lastModified>
+  <content>&lt;p&gt;In my &lt;a href="/post/reactive-extensions-observables-versus"&gt;last post&lt;/a&gt;, I compared the code to raise and subscribe to regular .NET events with the Reactive Extensions equivalent. In this post, I want to look at a few reasons you might want to make the transition to Rx Observables.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Idiomatic unsubscribe&lt;/strong&gt; &lt;p&gt;Unsubscribing from regular .NET events is straightforward, so long as you don’t use the lambda syntax:&lt;pre class="brush: csharp;"&gt;// subscribe:
+raiser.Progress += OnProgress;
+// unsubscribe:
+raiser.Progress -= OnProgress;
+
+// subscribe with lambda:
+raiser.Progress += (sender, args) =&amp;gt; Console.WriteLine("Progress");
+// ... but how do we unsubscribe?
+&lt;/pre&gt;
+&lt;p&gt;Rx is much nicer. Calling Subscribe returns a disposable subscription object, which you can use to unsubscribe when you’re no longer interested in receiving any more events. This makes it easier to write code that avoids some of the &lt;a href="/post/understanding-and-avoiding-memory-leaks"&gt;memory leak gotchas&lt;/a&gt; that you occasionally can run into with events.&lt;pre class="brush: csharp;"&gt;var subscription = raiser.Progress.Subscribe(
+ p =&amp;gt; Console.WriteLine("Progress {0}", p.Value);
+// later if required:
+subscription.Dispose()
+&lt;/pre&gt;
+&lt;p&gt;Also, as &lt;a href="https://twitter.com/flagbug/status/458934979536625665"&gt;Dennis Daume kindly pointed out on Twitter&lt;/a&gt;, Rx things even safer by automatically unsubscribing all subscribers once a sequence has completed or errored. So in most cases, you won’t need to unsubscribe at all.
+&lt;p&gt;&lt;strong&gt;Built-in Errors and Complete&lt;/strong&gt;
+&lt;p&gt;IObservables also have built-in capability to report that the sequence has ended, either successfully (Complete) or with an error. This saves having to create additional events to report problems, or add exception properties to event args that developers need to remember to check.
+&lt;p&gt;&lt;strong&gt;Filter and Transform&lt;/strong&gt; 
+&lt;p&gt;This is where things get really interesting. Observable sequences can be filtered and transformed in a very similar way to enumerable sequences with LINQ. In fact, many of the same operators are available. So I can filter out every other progress event from our last example like this:&lt;pre class="brush: csharp;"&gt;eventDemo.Progress
+    .Where(p =&amp;gt; p.Value % 2 == 0)
+    .Subscribe(p =&amp;gt; Console.WriteLine("Progress {0}", p.Value));
+&lt;/pre&gt;
+&lt;p&gt;and I can even move the string formatting into a select statement like this, so I get an observable sequence of strings instead of a sequence of Progress events:&lt;pre class="brush: csharp;"&gt;eventDemo.Progress
+    .Where(p =&amp;gt; p.Value%2 == 0)
+    .Select(p =&amp;gt; String.Format("Progress {0}", p.Value))
+    .Subscribe(Console.WriteLine);
+&lt;/pre&gt;
+&lt;p&gt;As you can see, IObservable events are composable, and the operators can be chained together. This opens up lots of really cool and interesting possibilities. For example you can &lt;a href="http://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.throttle(v=vs.103).aspx"&gt;throttle&lt;/a&gt; events if there are too many and you are only interested in receiving periodic updates:&lt;pre class="brush: csharp;"&gt;eventDemo.Progress
+    .Throttle(TimeSpan.FromSeconds(3))
+    .Select(p =&amp;gt; String.Format("Progress {0}", p.Value))
+    .Subscribe(Console.WriteLine);
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Threading Helpers&lt;/strong&gt;
+&lt;p&gt;One issue you regularly face with events in .NET is that the can be raised on a different thread to the one you need to handle them on. This is an issue when the handler needs to make GUI changes. Rx solves this problem by letting you specify a synchronization context for the events to be handled on:&lt;pre class="brush: csharp;"&gt;eventDemo.Progress
+    .Select(p =&amp;gt; String.Format("Progress {0}", p.Value))
+    .ObserveOn(SynchronizationContext.Current)
+    .Subscribe(Console.WriteLine);
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Observable Timers&lt;/strong&gt;
+&lt;p&gt;Observable also provides a convenient Timer function, which allows you to receive a single event in a specified timespan, or a repeated sequence of events. If can even be given a DateTimeOffset to alert you at a specific time.&lt;pre class="brush: csharp;"&gt;var period = TimeSpan.FromMilliseconds(500);
+Observable.Timer(period).Subscribe(t =&amp;gt; Console.WriteLine("One-off: {0}", t));
+Observable.Timer(period, period).Subscribe(t =&amp;gt; Console.WriteLine("Repeating: {0}", t));
+
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Observe Regular .NET Events&lt;/strong&gt;
+&lt;p&gt;Obviously regular .NET events aren’t going to go away overnight, but if you like you can convert them into IObservables, allowing you to make use of all the cool stuff that Rx provides. It does require a rather strange syntax, but that’s due to the way .NET events work:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Observable.FromEventPattern&amp;lt;ProgressEventArgs&amp;gt;
+    (h =&amp;gt; eventDemo.Progress += h, 
+     h =&amp;gt; eventDemo.Progress -= h)
+   .Subscribe(p =&amp;gt; Console.WriteLine("Progress {0}",p);
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Summary&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I’ve barely scratched the surface of what’s possible with Rx and Observables, but as you can see, it’s &lt;em&gt;much &lt;/em&gt;more powerful than regular .NET events. It would be nice if everyone using .NET would migrate over to using Observables, but I suspect that won’t happen since although the IObservable interface is now part of the .NET framework, to get the most out of it, you also need the Reactive Extensions libraries. But certainly my experimentations with Rx have made me want to make use of it more frequently rather than just defaulting to plain old .NET events for everything.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Reactive Extensions</category>
+  </categories>
+  <comments />
+</post>

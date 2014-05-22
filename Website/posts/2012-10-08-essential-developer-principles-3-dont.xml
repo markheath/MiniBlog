@@ -1,0 +1,42 @@
+<post>
+  <title>Essential Developer Principles #3 - Don’t Repeat Yourself</title>
+  <slug>essential-developer-principles-3-dont</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-10-08 08:30:00</pubDate>
+  <lastModified>2012-10-08 08:30:02</lastModified>
+  <content>&lt;p&gt;You’ve probably heard of &lt;a href="http://www.codinghorror.com/blog/2007/02/why-cant-programmers-program.html"&gt;the “FizzBuzz” test&lt;/a&gt;, a handy way of checking whether a programmer is actually able to program. But suppose you used it to test a candidate for a programming job, asking him to perform FizzBuzz for the numbers 1-20 and he wrote the following code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Console.WriteLine("1");
+Console.WriteLine("2");
+Console.WriteLine("Fizz");
+Console.WriteLine("4");
+Console.WriteLine("Buzz");
+Console.WriteLine("Fizz");
+Console.WriteLine("7");
+Console.WriteLine("8");
+Console.WriteLine("Fizz");
+Console.WriteLine("Buzz");
+Console.WriteLine("11");
+Console.WriteLine("Fizz");
+Console.WriteLine("13");
+Console.WriteLine("14");
+Console.WriteLine("FizzBuzz");
+Console.WriteLine("16");
+Console.WriteLine("17");
+Console.WriteLine("Fizz");
+Console.WriteLine("19");
+Console.WriteLine("Buzz");
+&lt;/pre&gt;&lt;p&gt;You would probably not be very impressed. But let’s think for a moment about what it has in its favour:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;It works! It meets our requirements perfectly, and has no bugs.&lt;/li&gt;
+&lt;li&gt;It has minimal complexity. Lower than the “best” solution which uses if statements nested within a for loop. In fact it is so simple that a non-programmer could understand it and modify it without difficulty.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;So why would we not want to hire a programmer whose solution was the above code? Because it is not maintainable. Changing it so that it outputs the numbers 1-100, or uses “Fuzz” and “Bizz”, or writes to a file instead of the console, all ought to be trivial changes, but with the approach above the changes become labour intensive and error-prone.&lt;/p&gt;&lt;p&gt;This code has simultaneously managed to lose information (it doesn’t express &lt;em&gt;why&lt;/em&gt; certain numbers are replaced with Fizz or Buzz), and duplicate information: &lt;/p&gt;&lt;ul&gt;&lt;li&gt;We have a requirement that this program should write its output to the console, but that requirement is expressed not just once, but 20 times. So to change it to write to a file requires 20 existing lines to be modified.&lt;/li&gt;
+&lt;li&gt;We have a requirement that numbers that are a multiple of 3 print “Fizz”, but this requirement is duplicated in six places. Changing it to “Fuzz” requires us to find and modify those six lines.&lt;/li&gt;
+&lt;li&gt;We have a requirement that we print the output for the numbers 1 to 20. This piece of information has not been isolated to one place, so changing the program to do the numbers 10-30 requires some lines to be deleted and others changed.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;All these are basic examples of violation of the “Don’t Repeat Yourself” principle, which is often stated in the following way:&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt;Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.&lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;So a good solution to the FizzBuzz problem would have the following pieces of “knowledge” expressed only once in the codebase:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;What the starting and ending numbers are (i.e. 1 and 20)&lt;/li&gt;
+&lt;li&gt;What the rules are for deciding which numbers to replace with special strings are (i.e. Multiples of 3, 5 with a special case for multiples of 3 and 5)&lt;/li&gt;
+&lt;li&gt;What the special strings are (i.e. “Fizz” and “Buzz”)&lt;/li&gt;
+&lt;li&gt;Where the output should be sent to (i.e. Console.WriteLine)&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;If any of these pieces of knowledge are duplicated, we have violated DRY and made a program that is inherently hard to maintain.&lt;/p&gt;&lt;p&gt;Violating DRY not only means extra work when you need to change one of the pieces of “knowledge”, it means that it is all too easy to get your program into an internally inconsistent state, where you fail to update all the instances of that piece of knowledge. So for example, if you tried to modify the program listed above so that all instances of “Fizz” became “Fuzz”, you would end up with a program that sometimes outputs “Fizz” and sometimes outputs “Fuzz” if you accidentally missed a line. &lt;/p&gt;&lt;p&gt;Obviously in a small application like this, you probably wouldn’t struggle too much to update all the duplicates of a single piece of knowledge, but imagine what happens when the duplication is spread across multiple classes in a large enterprise project. Then it becomes nearly impossible to keep your program in an internally consistent state. And it’s why the DRY principle is so important. Code that violates DRY is hard to maintain no matter how simple it may appear, and almost inevitably leads to internal inconsistencies and contradictions over time.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Developer Principles</category>
+  </categories>
+  <comments />
+</post>

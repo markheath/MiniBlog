@@ -1,0 +1,81 @@
+<post>
+  <title>Visualizing TFS Repositories with Gource</title>
+  <slug>visualizing-tfs-repositories-with</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-04 17:31:00</pubDate>
+  <lastModified>2011-07-04 17:31:34</lastModified>
+  <content>&lt;p&gt;I recently came across the &lt;a href="http://code.google.com/p/gource/"&gt;gource&lt;/a&gt; project, which creates stunning visualizations of your source control history. It doesn’t include built-in support for TFS repositories, but its custom log file format makes it quite simple to work with.&lt;/p&gt; &lt;p&gt;Since the project I worked on recently hit 1,000,000 lines of code (yes, I know that means it needs to be mercilessly refactored), I thought I would create a gource visualization. My example code below has a regular expression to allow me to filter out the bits in source control I am interested in. It also deals with the fact that we imported our solution from SourceSafe, so it needs to get the real commit dates for early items out of the comments.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public void CreateGourceLogFile(string outputFile)
+{
+    TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri("http://mytfsserver:8080/"));
+    tpc.EnsureAuthenticated();
+    VersionControlServer vcs = tpc.GetService&amp;lt;VersionControlServer&amp;gt;();
+    int latestChangesetId = vcs.GetLatestChangesetId();
+    Regex regex = new Regex(sourceFileRegex); // optional - a regular expression to match source files you want to include in the gource visualisation
+    Regex sourceSafeImportComment = new Regex(@"^\{\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d\}");
+    int lines = 0;
+    using (var writer = new StreamWriter(outputFile))
+    {
+        for (int changesetId = 1; changesetId &amp;lt; latestChangesetId; changesetId++)
+        {
+            var changeset = vcs.GetChangeset(changesetId);
+            var devEdits = from change in changeset.Changes
+                           where
+                           ((change.ChangeType &amp;amp; ChangeType.Edit) == ChangeType.Edit
+                           || (change.ChangeType &amp;amp; ChangeType.Add) == ChangeType.Add
+                           || (change.ChangeType &amp;amp; ChangeType.Delete) == ChangeType.Delete)
+                           &amp;amp;&amp;amp; regex.IsMatch(change.Item.ServerItem)
+                           select change;
+            foreach (var change in devEdits)
+            {
+                DateTime creationDate = changeset.CreationDate;
+                var commentMatch = sourceSafeImportComment.Match(changeset.Comment);
+                if (commentMatch.Success)
+                {
+                    creationDate = DateTime.ParseExact(commentMatch.Value,"{dd/MM/yyyy HH:mm:ss}", CultureInfo.InvariantCulture);
+                }
+
+                int unixTime = (int)(creationDate - new DateTime(1970, 1, 1)).TotalSeconds;
+                writer.WriteLine("{0}|{1}|{2}|{3}", unixTime, changeset.Committer,
+                    GetChangeType(change.ChangeType), change.Item.ServerItem);
+            }
+        }
+    }
+}
+
+private string GetChangeType(ChangeType changeType)
+{
+    if ((changeType &amp;amp; ChangeType.Edit) == ChangeType.Edit)
+    {
+        return "M";
+    }
+    if ((changeType &amp;amp; ChangeType.Add) == ChangeType.Add)
+    {
+        return "A";
+    }
+    if ((changeType &amp;amp; ChangeType.Delete) == ChangeType.Delete)
+    {
+        return "D";
+    }
+    throw new ArgumentException("Unsupported change type");
+}
+&lt;/pre&gt;
+&lt;p&gt;Once you have your log file created, just run gource to see an amazing replay of the history of your project:&lt;/p&gt;&lt;pre&gt;
+gource custom.log
+
+&lt;font face="Arial"&gt;Here’s a screenshot:&lt;/font&gt;&lt;/pre&gt;&lt;pre&gt;&lt;a href="/posts/files/visualizing-tfs-repositories-with-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Gource screenshot" border="0" alt="Gource screenshot" src="/posts/files/visualizing-tfs-repositories-with-1.png" width="622" height="484"&gt;&lt;/a&gt; &lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>TFS</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="8d905246-f16d-4104-8662-9060182ddc54">
+      <author>Mike Calvert</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07443390846314357995</website>
+      <ip />
+      <userAgent />
+      <date>2011-09-21 20:39:32</date>
+      <content>Very cool visuals!  There have been a lot of posts lately about using games to solve complex gene structure problems in science, I wonder if we could model the same for advanced programming paradigm issues.</content>
+    </comment>
+  </comments>
+</post>

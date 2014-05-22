@@ -1,0 +1,11 @@
+<post>
+  <title>Installing Windows Virtual PC on Windows 7 Home Premium</title>
+  <slug>installing-windows-virtual-pc-on</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-01 20:34:00</pubDate>
+  <lastModified>2010-10-01 20:34:43</lastModified>
+  <content>&lt;p&gt;Microsoft have replaced Virtual PC 2007 with “Windows Virtual PC”, but theoretically it is only supported with Windows 7 Professional and above. However, if you head over to the &lt;a href="http://www.microsoft.com/windows/virtual-pc/default.aspx"&gt;Windows Virtual PC website&lt;/a&gt;, and say that you have Windows 7 Professional, it enables the downloads of Windows XP Mode and Windows Virtual PC. You only need to download the Virtual PC part, which arrives as the rather cryptically named &lt;strong&gt;Windows6.1-KB958559-x86.msu&lt;/strong&gt;. Simply double-click to install.&lt;/p&gt; &lt;p&gt;Once installed you may, like me, run into the issue that hardware assisted virtualization is not enabled in your BIOS. I have a Dell laptop, and it was a matter of hitting F12 on bootup and searching around for the option in the BIOS settings. &lt;a href="http://www.microsoft.com/windows/virtual-pc/support/configure-bios.aspx"&gt;More info on enabling HAV&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;The final step was to load up one of the old Virtual PC 2007 vmc files I had lying around. This went smoothly, although my virtualized XP did attempt and fail to install new device drivers when it booted up. Windows Virtual PC adds a &lt;strong&gt;Virtual Machines&lt;/strong&gt; folder under your user account from which you can set up a new virtual machine if you require. I haven’t done this yet, but I might give it a go later and attempt to get Ubuntu running (something which was notoriously difficult under VPC 2007 so hopefully the process is a bit smoother now). &lt;/p&gt; &lt;p&gt;Anyway, it’s nice that Microsoft have made this tool available for free, which is very useful for software testing, and even better that its usable on Win 7 Home Premium, without having to upgrade to Professional.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments />
+</post>

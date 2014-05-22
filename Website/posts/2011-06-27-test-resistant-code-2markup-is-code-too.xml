@@ -1,0 +1,74 @@
+<post>
+  <title>Test Resistant Code #2–Markup is Code Too</title>
+  <slug>test-resistant-code-2markup-is-code-too</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-06-27 22:51:00</pubDate>
+  <lastModified>2013-09-30 16:07:31</lastModified>
+  <content>&lt;p&gt;After blogging about &lt;a href="/post/test-resistant-code-and-battle-for-tdd"&gt;one of the biggest obstacles to doing TDD&lt;/a&gt;, I thought I’d follow up with another form of test resistant code, and that is &lt;strong&gt;markup&lt;/strong&gt;. &lt;/p&gt;&lt;p&gt;Now calling markup ‘code’ might seem odd, because we have been led to believe that these are two completely different things. After all &lt;em&gt;applications = code + markup&lt;/em&gt; right? It’s the code that has the logic and all the important stuff to test in. Markup is just structured data. &lt;/p&gt;&lt;p&gt;But of course, we all know that you can have bugs in markup. 100% test coverage of your code alone does not guarantee that your customer will have a happy experience. In fact, I would go so far as to say, my experience with Silverlight and WPF programming is that the &lt;strong&gt;vast majority&lt;/strong&gt; of the bugs are to do with me getting the markup wrong in some way. 100% unit coverage of my ViewModels is nice, but doesn’t really help me solve the most challenging problems I face. If I declare an animation in XAML, I have to &lt;em&gt;watch&lt;/em&gt; it to know if I got it right. If I get it wrong, I see nothing, and I have no idea why.&lt;/p&gt;&lt;h3&gt;Exhibit A – XAML&lt;/h3&gt;&lt;p&gt;Here’s a bunch of XAML I wrote for a Silverlight star rating control I made recently:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;UserControl x:Class="MarkHeath.StarRating.Star"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="34" d:DesignWidth="34" Foreground="#C0C000"&amp;gt;
+    &amp;lt;Canvas x:Name="LayoutRoot"&amp;gt;
+        &amp;lt;Canvas.RenderTransform&amp;gt;
+            &amp;lt;ScaleTransform x:Name="scaleTransform" /&amp;gt;
+        &amp;lt;/Canvas.RenderTransform&amp;gt;
+        &amp;lt;Path x:Name="Fill" Fill="{Binding Parent.StarFillBrush, ElementName=LayoutRoot}" 
+                Data="M 2,12 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+
+        &amp;lt;Path x:Name="HalfFill" Fill="{Binding Parent.HalfFillBrush, ElementName=LayoutRoot}"                
+                Data="M 2,12 l 10,0 l 5,-10 v 25 l -10,5 l 2,-10 Z M 34,34" /&amp;gt;
+
+        &amp;lt;Path x:Name="Outline" Stroke="{Binding Parent.Foreground, ElementName=LayoutRoot}"     
+                StrokeThickness="{Binding Parent.StrokeThickness, ElementName=LayoutRoot}" 
+                StrokeLineJoin="{Binding Parent.StrokeLineJoin, ElementName=LayoutRoot}"
+                Data="M 2,12 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+        &amp;lt;!-- width and height of this star is 34--&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+&amp;lt;/UserControl&amp;gt;
+&lt;/pre&gt;&lt;p&gt;Does this XAML have any ‘bugs’ in it? Well, not that I know of, but in the process of developing it, I ran into a bunch of problems. For a long time the top level element was a Grid rather than a Canvas, but strange things were happening when I resized it. I also resisted putting the ScaleTransform in there for a while, convinced I could do something with the Stretch properties on the Path objects to get the resizing to happen automatically (it was the half star that spoiled it).&lt;/p&gt;&lt;p&gt;Was this ‘real’ development? I think it was. XAML is after all just a way of writing creating objects and setting properties on them with a syntax that is more convenient for designer tools to work with. I could create exactly the same effect by creating a UserControl class, and setting its Content property to an instance of Canvas and so on.&lt;/p&gt;&lt;p&gt;Could I have developed this using TDD? Hmmm. Well you can always &lt;em&gt;write&lt;/em&gt; a test for a piece of code. The trouble comes when you try to decide whether that test has passed or not. For this code, the only sane way of validating it was for me to visually inspect it at various sizes and see if it looked right.&lt;/p&gt;&lt;h3&gt;Exhibit B – Build Scripts&lt;/h3&gt;&lt;p&gt;I recently had the misfortune of having to do some work on MSBuild scripts. Don’t get me wrong, MSBuild is a powerful and feature rich build framework. It’s just that I had to resort to books and StackOverflow every time I attempted the simplest of tasks.&lt;/p&gt;&lt;p&gt;It is not long before it becomes clear that a build script is a program, and not simply structured data. In MSBuild, you can declare variables, call subroutines (‘Targets’), and write if statements (‘Conditions’). A build script is a program with a very important task – it creates the application you ship to customers. Can there be bugs in a build script? Yes. Can those bugs affect the customer? Yes. Would it be useful to be able to test the build script too? Yes.&lt;/p&gt;&lt;p&gt;Which is why felt a bit jealous when I watched a &lt;a href="http://www.ndc2011.no/agenda.aspx?cat=1071&amp;amp;id=-1&amp;amp;day=3727"&gt;recent presentation&lt;/a&gt; from Shay Friedman on IronRuby, and discovered that with &lt;a href="http://rake.rubyforge.org/"&gt;rake&lt;/a&gt; you can write your build scripts in Ruby. I’ve not learned the Ruby language myself yet, but I would love my build processes to be defined using IronPython instead of some XML monstrosity. Not only would it be far more productive, it would be &lt;em&gt;testable&lt;/em&gt; too.&lt;/p&gt;&lt;h3&gt;Exhibit C – P/Invoke&lt;/h3&gt;&lt;p&gt;My final example might take you by surprise. As part of NAudio, I write a lot of P/Invoke wrappers. It is a laborious, error-prone process. A bug in one of those wrappers can cause bad things to happen, like crash your application, or even reboot your PC if your soundcard drivers are not well behaved.&lt;/p&gt;&lt;p&gt;Now although these wrappers are written in C#, they are not ‘code’ in the classic sense. They are just a bunch of class and method definitions. There is no logic and there are no expressions in there at all. In fact, it is the attributes that they are decorated with that do a lot of the work. Here’s a relatively straightforward example that someone else contributed recently:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;[StructLayout(LayoutKind.Explicit)]
+struct MmTime
+{
+    public const int TIME_MS = 0x0001;
+    public const int TIME_SAMPLES = 0x0002;
+    public const int TIME_BYTES = 0x0004;
+
+    [FieldOffset(0)]
+    public UInt32 wType;
+    [FieldOffset(4)]
+    public UInt32 ms;
+    [FieldOffset(4)]
+    public UInt32 sample;
+    [FieldOffset(4)]
+    public UInt32 cb;
+    [FieldOffset(4)]
+    public UInt32 ticks;
+    [FieldOffset(4)]
+    public Byte smpteHour;
+    [FieldOffset(5)]
+    public Byte smpteMin;
+    [FieldOffset(6)]
+    public Byte smpteSec;
+    [FieldOffset(7)]
+    public Byte smpteFrame;
+    [FieldOffset(8)]
+    public Byte smpteFps;
+    [FieldOffset(9)]
+    public Byte smpteDummy;
+    [FieldOffset(10)]
+    public Byte smptePad0;
+    [FieldOffset(11)]
+    public Byte smptePad1;
+    [FieldOffset(4)]
+    public UInt32 midiSongPtrPos;
+}
+&lt;/pre&gt;&lt;p&gt;Can classes like this be written with TDD? Well sort of, but the tests wouldn’t really test anything, except that I wrote the code I thought I should write. How would I verify it? I can only prove these wrappers really work by actually calling the real Windows APIs – i.e. by running integration tests. &lt;/p&gt;&lt;p&gt;Now as it happens I can (and do) have a bunch of automated integration tests for NAudio. But it gets worse. Some of these wrappers I can only properly test by running them on Windows XP &lt;em&gt;and &lt;/em&gt;Windows 7, in a 32 bit process &lt;em&gt;and&lt;/em&gt; a 64 bit process, and with a bunch of different soundcards configured for every possible bit depth and byte ordering. Maybe in the future, virtualization platforms and unit test frameworks will become so integrated that I can just use attributes to tell NUnit to run the test on a whole host of emulated operating systems, processor architectures, and soundcards. But even that wouldn’t get me away from the fact that I actually have to &lt;em&gt;hear&lt;/em&gt; the sound coming out of the speakers to know for sure that my test worked.&lt;/p&gt;&lt;h3&gt;Has TDD over-promised?&lt;/h3&gt;&lt;p&gt;So are these examples good counter-points to TDD? Or are they things that TDD never promised to solve in the first place? &lt;a href="http://www.objectmentor.com/omTeam/martin_r.html"&gt;Uncle Bob&lt;/a&gt; may be able to run his test suite and ship &lt;a href="http://fitnesse.org/"&gt;Fitnesse&lt;/a&gt; if it goes green without checking anything else at all. But I can’t see how I could ever get to that point with NAudio. Maybe the majority of code we do in markup can’t be tested without manual tests. And if they can’t be tested without manual tests, does TDD even make sense as a practice for developing them in the first place?&lt;/p&gt;&lt;p&gt;For TDD to truly “win the war”, it needs needs to come clean about what problems it can solve for us, and what problems are left unsolved. Some test-resistant code (such as &lt;a href="/post/test-resistant-code-and-battle-for-tdd"&gt;tightly coupled code&lt;/a&gt;) can be made testable. Other test-resistant code will always need an amount of manual test and verification. The idea that we could get to the point of “not needing a QA department” does not seem realistic to me. TDD may mean a smaller QA department, but we cannot get away from the need for real people to verify things with their eyes and ears, and to verify them on a bunch of different hardware configurations that cannot be trivially emulated. &lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>unit testing</category>
+    <category>TDD</category>
+  </categories>
+  <comments />
+</post>

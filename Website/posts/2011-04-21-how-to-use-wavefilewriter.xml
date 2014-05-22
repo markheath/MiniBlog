@@ -1,0 +1,163 @@
+<post>
+  <title>How to Use WaveFileWriter</title>
+  <slug>how-to-use-wavefilewriter</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-04-21 23:41:00</pubDate>
+  <lastModified>2011-04-21 23:41:22</lastModified>
+  <content>&lt;p&gt;In this post I will explain how to use the &lt;strong&gt;WaveFileWriter&lt;/strong&gt; class that is part of &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;. I will discuss how to use it now in NAudio 1.4 and mention some of the changes that will be coming for NAudio 1.5. &lt;/p&gt; &lt;p&gt;The purpose of WaveFileWriter is to allow you to create a standard .WAV file. WAV files are often thought of as containing uncompressed PCM audio data, but actually they can contain any audio compression, and are often used as containers for telephony compression types such as mu-law, ADPCM, G.722 etc.&lt;/p&gt; &lt;p&gt;NAudio provides a one-line method to produce a WAV file if you have an existing &lt;strong&gt;WaveStream&lt;/strong&gt; derived class that can provide the data (in NAudio 1.5 it can be an IWaveProvider).&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav");
+WaveFormat waveFormat = new WaveFormat(8000, 8, 2);
+WaveStream sourceStream = new NullWaveStream(waveFormat, 10000);
+WaveFileWriter.CreateWaveFile(tempFile, sourceStream);&lt;/pre&gt;
+&lt;p&gt;In the above example, I am using a simple utility class as my source stream, but in a real application this might be the output of a mixer, or the output from some effects or a synthesizer. The most important thing to note is that the &lt;strong&gt;Read&lt;/strong&gt; method of your source stream &lt;strong&gt;MUST&lt;/strong&gt; eventually return 0, otherwise your file will keep on writing until your disk is full! So beware of classes in NAudio (such as WaveChannel32) that can be configured to always return the number of bytes asked for from the Read method.&lt;/p&gt;
+&lt;p&gt;For greater control over the data you write, you can simply use the &lt;strong&gt;WriteData&lt;/strong&gt; method (renamed to “&lt;strong&gt;Write&lt;/strong&gt;” in NAudio 1.5, as WaveFileWriter will inherit from Stream). WriteData assumes that you are providing raw data in the correct format and will simply write it directly into the data chunk of the WAV file. This is therefore the most general purpose way of writing to a WaveFileWriter, and can be used for both PCM and compressed formats.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;byte[] testSequence = new byte[] { 0x1, 0x2, 0xFF, 0xFE };
+using (WaveFileWriter writer = new WaveFileWriter(fileName, waveFormat))
+{
+    writer.WriteData(testSequence, 0, testSequence.Length);
+}
+&lt;/pre&gt;
+&lt;p&gt;WaveFileWriter has an additional constructor that takes a Stream instead of a filename, allowing you to write to any kind of a stream (for example, a MemoryStream). Be aware though that when you dispose the WaveFileWriter, it disposes the output stream, so use the &lt;strong&gt;IgnoreDisposeStream&lt;/strong&gt; utility class to wrap the output stream if you don’t want that to happen.&lt;/p&gt;
+&lt;p&gt;One of the most commonly used bit depths for PCM WAV files is 16 bit, and so NAudio provides another &lt;strong&gt;WriteData&lt;/strong&gt; overload (to be called &lt;strong&gt;WriteSamples&lt;/strong&gt; in NAudio 1.5) that allows you to supply data as an array of shorts (Int16s). Obviously, this only really makes sense if you are writing to a 16 bit WAV file, but the current implementation will also try to scale the sample value for different bit depths.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;short[] samples = new short[1000];
+// TODO: fill sample buffer with data
+waveFileWriter.WriteData(samples, 0, samples.Length);&lt;/pre&gt;
+&lt;p&gt;Another consideration is that very often after applying various audio effects (even as simple as changing the volume), the audio samples stored as 32 bit floating point numbers (float or Single). To make writing these to the WAV file as simple as possible, a &lt;strong&gt;WriteSample &lt;/strong&gt;function is provided, allowing you to write one sample at a time. If the underlying PCM format is a different bit depth (e.g. 16 or 24 bits), then the WriteSample function will attempt to convert the sample to that bit depth before writing it to a file. NAudio 1.5 will also feature a &lt;strong&gt;WriteSamples &lt;/strong&gt;function to allow arrays of floating point samples to be written. The following example shows one second of a 1kHz sine wave being written to a WAV file using the &lt;strong&gt;WriteSample &lt;/strong&gt;function:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;float amplitude = 0.25f;
+float frequency = 1000;
+
+for (int n = 0; n &amp;lt; waveFileWriter.WaveFormat.SampleRate; n++)
+{
+    float sample = (float)(amplitude * Math.Sin((2 * Math.PI * n * frequency) / waveFileWriter.WaveFormat.SampleRate));
+    waveFileWriter.WriteSample(sample);
+}
+&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="6fe1e9f1-afab-4ef9-98cf-e74ab241aeb1">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 09:34:21</date>
+      <content>Hi&lt;br /&gt;First of all I want to congratulate you on the software package Naudio.&lt;br /&gt;my question is :&lt;br /&gt;i have 2 WaveProvider32 that produce sine wave at diffrent amplitude(like the example &amp;quot;Play a Sine Wave&amp;quot;)i have also MultiplexingWaveProvider that connect WaveProvider32 of sine wave 1 to output 0 and WaveProvider32 of sine wave 2 to output 1.&lt;br /&gt;(i dont do anything in MultiplexingWaveProvider.read function) the sound work perfect .&lt;br /&gt;i want to be able to write the both signals to wave file how can i do it?&lt;br /&gt;should i pass WaveFileWriter reference to the 2 instances of WaveProvider32 ? &lt;br /&gt;can i get the the samples from MultiplexingWaveProvider and write it?&lt;br /&gt;what about the performance issue I/O can be in another thread,how can i do it ?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="502a5e8c-f0bb-4f43-9eca-73c31c5e9e01">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 09:37:23</date>
+      <content>you can just pass your MultiplexingWaveProvider into the WaveFileWriter.CreateWaveFile function. CreateWaveFile will call Read repeatedly until it reaches the end. You can do this in another thread no problem. One thing is that your source WaveProviders must return 0 from Read when they reach the end, or you&amp;#39;ll create a never-ending WAV file that fills your hard disk up.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="39b61463-9d9f-46d7-b209-8909743e94e5">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 10:26:50</date>
+      <content>Hi Mark&lt;br /&gt;what i do wrong?&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;SineWaveProvider32 file&lt;br /&gt;&lt;br /&gt;namespace Hello2ChannelsAudio&lt;br /&gt;{&lt;br /&gt;    public class SineWaveProvider32 : IWaveProvider&lt;br /&gt;    {&lt;br /&gt;        private WaveFormat waveFormat;&lt;br /&gt;        float m_fAmplitude;&lt;br /&gt;        float m_fFrequency;&lt;br /&gt;        int m_nSample;&lt;br /&gt;    &lt;br /&gt;       &lt;br /&gt;        &lt;br /&gt;        public SineWaveProvider32( int sampleRate, int channels, float Amplitude,float Frequency)&lt;br /&gt;            &lt;br /&gt;        {&lt;br /&gt;            m_fAmplitude = Amplitude;&lt;br /&gt;            m_fFrequency = Frequency;         &lt;br /&gt;            SetWaveFormat(sampleRate, channels);&lt;br /&gt;&lt;br /&gt;        }&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;        public void SetWaveFormat(int sampleRate, int channels)&lt;br /&gt;        {&lt;br /&gt;            this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public int Read(byte[] buffer, int offset, int count)&lt;br /&gt;        {&lt;br /&gt;            WaveBuffer waveBuffer = new WaveBuffer(buffer);&lt;br /&gt;            int samplesRequired = count / 4;&lt;br /&gt;            int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);&lt;br /&gt;            return samplesRead * 4;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public int Read(float[] buffer, int offset, int sampleCount)&lt;br /&gt;        {&lt;br /&gt;            int sampleRate = WaveFormat.SampleRate;         &lt;br /&gt;            for (int n = 0; n &amp;lt; sampleCount; n++)        &lt;br /&gt;            {&lt;br /&gt;                buffer[n + offset] = (float)(m_fAmplitude * Math.Sin((2 * Math.PI * m_nSample * m_fFrequency) / sampleRate));&lt;br /&gt;                m_nSample++;&lt;br /&gt;                if (m_nSample &amp;gt;= sampleRate)&lt;br /&gt;                    m_nSample = 0;      &lt;br /&gt;            }         &lt;br /&gt;            return sampleCount;                         &lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public WaveFormat WaveFormat&lt;br /&gt;        {&lt;br /&gt;            get { return waveFormat; }&lt;br /&gt;        }&lt;br /&gt;    }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Form file&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt; private void button1_Click(object sender, EventArgs e)&lt;br /&gt;        {&lt;br /&gt;            if (waveOut == null)&lt;br /&gt;            {&lt;br /&gt;                input1 = new SineWaveProvider32(10000, 1, 0.25F, 1000F);&lt;br /&gt;&lt;br /&gt;                input2 = new SineWaveProvider32(10000, 1, 1.5F, 2000F);&lt;br /&gt;&lt;br /&gt;                multiplexingWaveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { input1, input2 }, 2);&lt;br /&gt;                multiplexingWaveProvider.ConnectInputToOutput(0, 0);&lt;br /&gt;                multiplexingWaveProvider.ConnectInputToOutput(1, 1);&lt;br /&gt;                waveOut = new WaveOut();&lt;br /&gt;                waveOut.Init(multiplexingWaveProvider);&lt;br /&gt;                waveOut.Play();                &lt;br /&gt;                WaveFileWriter.CreateWaveFile(&amp;quot;temp.wav&amp;quot;, multiplexingWaveProvider);&lt;br /&gt;               &lt;br /&gt;            }&lt;br /&gt;            else&lt;br /&gt;            {&lt;br /&gt;                waveOut.Stop();&lt;br /&gt;                waveOut.Dispose();&lt;br /&gt;                waveOut = null;&lt;br /&gt;            }&lt;br /&gt;        }</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="45e89df9-bb7e-418d-bef8-25ed6317b2ca">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 10:32:22</date>
+      <content>you&amp;#39;ve got two things trying to read from the same waveprovider. You can either play or write a wave file. If you want to do both, creae a new IWaveProvider that in the Read method, reads from the source, writes to a WAV file and then passes the data on through.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ef34fa05-645d-44ee-879a-aa4fb902c106">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 10:42:58</date>
+      <content>Hi Mark&lt;br /&gt;Thanks for the fast response.&lt;br /&gt;so i need to pass the same instance of wavefilewriter to both waveproviders ?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f23228a7-2c6c-429a-ad38-1e0d17a8c9a8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 10:47:07</date>
+      <content>no, the new waveprovider you make should be the last thing in the pipeline, after the multiplexer. It makes its own WaveFileWriter and writes the data into it as it passes it through in its Read function</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b196b31a-06fe-4c38-a4a2-b35d05bd0aea">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 11:03:14</date>
+      <content>Hi again&lt;br /&gt;i do what you describe and a wave file is genreate but it seems that is not sync like what i hear from the player.&lt;br /&gt;&lt;br /&gt;here is my code:&lt;br /&gt;&lt;br /&gt;public class SineWaveProvider32 : IWaveProvider&lt;br /&gt;    {&lt;br /&gt;        private WaveFormat waveFormat;&lt;br /&gt;        float m_fAmplitude;&lt;br /&gt;        float m_fFrequency;&lt;br /&gt;        int m_nSample;&lt;br /&gt;        WaveFileWriter m_waveFileWriter;&lt;br /&gt;       &lt;br /&gt;        &lt;br /&gt;        public SineWaveProvider32( WaveFileWriter waveFileWriter,int sampleRate, int channels, float Amplitude,float Frequency)&lt;br /&gt;            &lt;br /&gt;        {&lt;br /&gt;            m_waveFileWriter = waveFileWriter;&lt;br /&gt;            m_fAmplitude = Amplitude;&lt;br /&gt;            m_fFrequency = Frequency;         &lt;br /&gt;            SetWaveFormat(sampleRate, channels);&lt;br /&gt;&lt;br /&gt;        }&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;        public void SetWaveFormat(int sampleRate, int channels)&lt;br /&gt;        {&lt;br /&gt;            this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public int Read(byte[] buffer, int offset, int count)&lt;br /&gt;        {&lt;br /&gt;            WaveBuffer waveBuffer = new WaveBuffer(buffer);&lt;br /&gt;            int samplesRequired = count / 4;&lt;br /&gt;            int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);&lt;br /&gt;            return samplesRead * 4;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public int Read(float[] buffer, int offset, int sampleCount)&lt;br /&gt;        {&lt;br /&gt;            int sampleRate = WaveFormat.SampleRate;         &lt;br /&gt;            for (int n = 0; n &amp;lt; sampleCount; n++)        &lt;br /&gt;            {&lt;br /&gt;                buffer[n + offset] = (float)(m_fAmplitude * Math.Sin((2 * Math.PI * m_nSample * m_fFrequency) / sampleRate));&lt;br /&gt;                m_nSample++;&lt;br /&gt;                if (m_nSample &amp;gt;= sampleRate)&lt;br /&gt;                    m_nSample = 0;&lt;br /&gt;                m_waveFileWriter.WriteSample(buffer[n + offset]);&lt;br /&gt;            }         &lt;br /&gt;            return sampleCount;                         &lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public WaveFormat WaveFormat&lt;br /&gt;        {&lt;br /&gt;            get { return waveFormat; }&lt;br /&gt;        }&lt;br /&gt;    }&lt;br /&gt;&lt;br /&gt;private void button1_Click(object sender, EventArgs e)&lt;br /&gt;        {&lt;br /&gt;            if (waveOut == null)&lt;br /&gt;            {&lt;br /&gt;                waveFileWriter = new WaveFileWriter(&amp;quot;temp.wav&amp;quot;, new WaveFormat(10000, 1));&lt;br /&gt;                input1 = new SineWaveProvider32(waveFileWriter,10000, 1, 0.25F, 1000F);&lt;br /&gt;&lt;br /&gt;                input2 = new SineWaveProvider32(waveFileWriter,10000, 1, 1.5F, 2000F);&lt;br /&gt;&lt;br /&gt;                multiplexingWaveProvider = new MultiplexingWaveProvider(new IWaveProvider[] { input1, input2 }, 2);&lt;br /&gt;                multiplexingWaveProvider.ConnectInputToOutput(0, 0);&lt;br /&gt;                multiplexingWaveProvider.ConnectInputToOutput(1, 1);&lt;br /&gt;                waveOut = new WaveOut();&lt;br /&gt;                waveOut.Init(multiplexingWaveProvider);&lt;br /&gt;                waveOut.Play();    &lt;br /&gt;            &lt;br /&gt;                //WaveFileWriter.CreateWaveFile(&amp;quot;temp.wav&amp;quot;, multiplexingWaveProvider);&lt;br /&gt;               &lt;br /&gt;            }&lt;br /&gt;            else&lt;br /&gt;            {&lt;br /&gt;                waveOut.Stop();&lt;br /&gt;                waveOut.Dispose();&lt;br /&gt;                waveOut = null;&lt;br /&gt;                waveFileWriter.Close();&lt;br /&gt;            }&lt;br /&gt;        }&lt;br /&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d8aedbbd-98c5-432f-9615-3f051f3bee4b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 11:07:44</date>
+      <content>no, the wavefilewriter must be after the multiplexer in the pipeline. You have it before. You need to create a new class that implements IWaveProvider. In its constructor it takes the multiplexing wave provider. In its Read method it reads from the multiplexing wave provider, writes what it gets to a file, and then returns what it read to the caller (which will be WaveOut)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4b6e9766-f29f-4e5c-b4be-af16c685f130">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 11:11:24</date>
+      <content>Hi&lt;br /&gt;I lost you :(&lt;br /&gt;i have 2 WaveProvider32 ~ Sine&lt;br /&gt;after i have MultiplexingWaveProvider .&lt;br /&gt;now i need to add another waveProvider that get data from the multiplexingWaveProvider?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2bad3a08-bd2c-45b2-8dbb-d1c67326eb14">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-19 11:14:50</date>
+      <content>yes, you&amp;#39;ll need to create a helper class if you want to both play and record to WAV at the same time.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5eba6935-8f6a-4cc1-8b8f-ea347614e37a">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-20 08:12:30</date>
+      <content>Hi &lt;br /&gt;i think its work.&lt;br /&gt;i add new class like you say.&lt;br /&gt;class MultiplexingWaveProvider32Stereo : IWaveProvider&lt;br /&gt;    {&lt;br /&gt;        private WaveFormat m_waveFormat;&lt;br /&gt;        WaveFileWriter m_waveFileWriter;&lt;br /&gt;        MultiplexingWaveProvider m_multiplexingWaveProvider;&lt;br /&gt;        public MultiplexingWaveProvider32Stereo(MultiplexingWaveProvider multiplexingWaveProvider, WaveFileWriter waveFileWriter)&lt;br /&gt;        {&lt;br /&gt;            m_waveFileWriter = waveFileWriter;&lt;br /&gt;            m_waveFormat = multiplexingWaveProvider.WaveFormat;&lt;br /&gt;            m_multiplexingWaveProvider = multiplexingWaveProvider;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;    &lt;br /&gt;        #region IWaveProvider Members&lt;br /&gt;&lt;br /&gt;        public int Read(byte[] buffer, int offset, int count)&lt;br /&gt;        {&lt;br /&gt;            WaveBuffer waveBuffer = new WaveBuffer(buffer);&lt;br /&gt;            int samplesRead =m_multiplexingWaveProvider.Read(waveBuffer.ByteBuffer, offset, count);&lt;br /&gt;            for (int i = 0; i &amp;lt; samplesRead/4; i++)&lt;br /&gt;            {&lt;br /&gt;                m_waveFileWriter.WriteSample(waveBuffer.FloatBuffer[i]);&lt;br /&gt;            }&lt;br /&gt;            return samplesRead;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;      &lt;br /&gt;&lt;br /&gt;        public WaveFormat  WaveFormat&lt;br /&gt;        {&lt;br /&gt;            get { return m_waveFormat; }&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        #endregion&lt;br /&gt;    }&lt;br /&gt;&lt;br /&gt;Thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="de60a47b-5e5c-45d5-98f0-6d0c7cb2474f">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2012-12-20 08:26:02</date>
+      <content>Hi&lt;br /&gt;now i think its working i add the new class.&lt;br /&gt;&lt;br /&gt;class MultiplexingWaveProvider32Stereo : IWaveProvider&lt;br /&gt;    {&lt;br /&gt;        private WaveFormat m_waveFormat;&lt;br /&gt;        WaveFileWriter m_waveFileWriter;&lt;br /&gt;        MultiplexingWaveProvider m_multiplexingWaveProvider;&lt;br /&gt;        public MultiplexingWaveProvider32Stereo(MultiplexingWaveProvider multiplexingWaveProvider, WaveFileWriter waveFileWriter)&lt;br /&gt;        {&lt;br /&gt;            m_waveFileWriter = waveFileWriter;&lt;br /&gt;            m_waveFormat = multiplexingWaveProvider.WaveFormat;&lt;br /&gt;            m_multiplexingWaveProvider = multiplexingWaveProvider;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;    &lt;br /&gt;        #region IWaveProvider Members&lt;br /&gt;&lt;br /&gt;        public int Read(byte[] buffer, int offset, int count)&lt;br /&gt;        {&lt;br /&gt;            WaveBuffer waveBuffer = new WaveBuffer(buffer);&lt;br /&gt;            int samplesRead =m_multiplexingWaveProvider.Read(waveBuffer.ByteBuffer, offset, count);&lt;br /&gt;            for (int i = 0; i &amp;lt; samplesRead/4; i++)&lt;br /&gt;            {&lt;br /&gt;                m_waveFileWriter.WriteSample(waveBuffer.FloatBuffer[i]);&lt;br /&gt;            }&lt;br /&gt;            return samplesRead;&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;       &lt;br /&gt;&lt;br /&gt;      &lt;br /&gt;&lt;br /&gt;        public WaveFormat  WaveFormat&lt;br /&gt;        {&lt;br /&gt;            get { return m_waveFormat; }&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        #endregion&lt;br /&gt;    }&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Thanks :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b4efb676-674d-45bd-9583-b8ae2724a2c9">
+      <author>hen vertis</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03876524753417998627</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-02 16:31:02</date>
+      <content>Hi Mark&lt;br /&gt;i have 2 WaveProvider32 and MultiplexingWaveProvider32Stereo ,&lt;br /&gt;i have at the begining of playing and recording at the same time alots of beeps that disapear after 5-10 seconds also in the file that WaveFileWriter create.&lt;br /&gt;What could be the problem? &lt;br /&gt;thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="efe18d7d-1b63-4aae-9468-9a4e881ef8cc">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2014-02-20 13:44:07</date>
+      <content>Hi, I juste want to resample but only CreateWaveFile work and i dont want a wave file&lt;br /&gt;&lt;br /&gt;bye [] data = From64String(&amp;quot;----- string encoded ---&amp;quot;);&lt;br /&gt;MemoryStream fs = new MemoryStream(data);&lt;br /&gt;      var baseDir = AppDomain.CurrentDomain.BaseDirectory;&lt;br /&gt;&lt;br /&gt;      using (var wfr = new WaveFileReader(fs))&lt;br /&gt;      {&lt;br /&gt;          var outputFormat = new WaveFormat(8000, 16, 1);&lt;br /&gt;          using (var pcmStream = new WaveFormatConversionStream(outputFormat, wfr))&lt;br /&gt;          {&lt;br /&gt;              using (var ms = new MemoryStream())&lt;br /&gt;              {&lt;br /&gt;                  var bytesRead = -1;&lt;br /&gt;                  while (bytesRead != 0)&lt;br /&gt;                  {&lt;br /&gt;                      var buffer = new byte[pcmStream.WaveFormat.AverageBytesPerSecond];&lt;br /&gt;                      bytesRead = pcmStream.Read(buffer, 0, pcmStream.WaveFormat.AverageBytesPerSecond);&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;                      ms.Write(buffer, 0, bytesRead);&lt;br /&gt;                   }&lt;br /&gt;&lt;br /&gt;                   program.WaveHeaderIN(ms.GetBuffer());&lt;br /&gt;                  ms.Position = 0;&lt;br /&gt;                  RawSourceWaveStream RawStram = new RawSourceWaveStream(ms, outputFormat);&lt;br /&gt;&lt;br /&gt;                  System.IO.File.WriteAllBytes(@&amp;quot;Desktop\waveConvertBy.wav&amp;quot;, ms.GetBuffer());&lt;br /&gt;                  // to make a real wav file...&lt;br /&gt;&lt;br /&gt;                  ms.Position = 0;&lt;br /&gt;                  WaveFileWriter.CreateWaveFile(Path.Combine(\Desktop\output.wav&amp;quot;), RawStram);&lt;br /&gt;                  Console.WriteLine(&amp;quot;wavefile length: &amp;quot; + RawStram.Length);&lt;br /&gt;&lt;br /&gt;              }&lt;br /&gt;          }&lt;br /&gt;      }&lt;br /&gt;ms.getBUffer is not a wav file when i play it. there is another way to put RawSourcewave stream into byte? or memory Stream?&lt;br /&gt;thanks</content>
+    </comment>
+  </comments>
+</post>

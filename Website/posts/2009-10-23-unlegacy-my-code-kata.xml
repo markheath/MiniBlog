@@ -1,0 +1,65 @@
+<post>
+  <title>The “Unlegacy my Code” Kata</title>
+  <slug>unlegacy-my-code-kata</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-10-23 12:49:00</pubDate>
+  <lastModified>2011-07-03 14:20:38</lastModified>
+  <content>&lt;b&gt;Daily TDD Kata&lt;/b&gt;
+&lt;p&gt;I’ve read a number of blog posts recommending doing a daily TDD ‘&lt;a href="http://codekata.pragprog.com/"&gt;kata&lt;/a&gt;’ recently. For those unfamiliar with the concept, essentially you attempt to solve a simple programming task using &lt;a href="http://en.wikipedia.org/wiki/Test-driven_development"&gt;TDD&lt;/a&gt;. The problems are often simple mathematical challenges, such as finding the &lt;a href="http://butunclebob.com/ArticleS.UncleBob.ThePrimeFactorsKata"&gt;prime factors&lt;/a&gt; of a number, or &lt;a href="http://osherove.com/tdd-kata-1/"&gt;creating a calculator&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You limit yourself to 30 minutes to work on the problem. One of the goals of doing this is to speed up the way you work. For this reason, many people recommend doing the same kata many times, just like a musician would practice the same piece daily, gradually improving in speed, fluency and accuracy.&lt;/p&gt;
+&lt;b&gt;Benefits&lt;/b&gt;
+&lt;p&gt;There are several benefits to taking the time each day for a coding warm-up.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Learning the TDD way of working: &lt;a href="http://jamesshore.com/Blog/Red-Green-Refactor.html"&gt;red, green, refactor&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;Learning a unit testing or mocking framework &lt;/li&gt;
+&lt;li&gt;Stretching your brain to see if you can come up with an even more elegant solution than last time &lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blogs.msdn.com/domgreen/archive/2009/10/07/increase-productivity-go-mouse-less.aspx"&gt;Mouseless&lt;/a&gt; programming (learning to use keyboard shortcuts) &lt;/li&gt;
+&lt;li&gt;Solving a familiar problem in a new language &lt;/li&gt;
+&lt;li&gt;Learning how to apply a design pattern &lt;/li&gt;
+&lt;/ul&gt;
+&lt;b&gt;A Possible Weakness?&lt;/b&gt;
+&lt;p&gt;While I think these benefits are great, I do think most of the kata examples I have seen suffer from a weakness. And that is that you are always testing something that is inherently easy to test. After all, what could be easier to write unit tests for than an Add method? This can mean that when you transition to attempting to write tests for your “real” code, you can fall at the first hurdle, as the “&lt;a href="http://c2.com/cgi/wiki?ArrangeActAssert"&gt;arrange&lt;/a&gt;” part of your test is horribly complicated, and you have no idea what to do for the “assert” part.&lt;/p&gt;
+&lt;b&gt;Introducing the “Unlegacy my code” Kata&lt;/b&gt;
+&lt;p&gt;Legacy code has been described as “&lt;a href="http://www.objectmentor.com/resources/articles/WorkingEffectivelyWithLegacyCode.pdf"&gt;code without tests&lt;/a&gt;”. Which means that unless your your development team is comprised of TDD champions, you likely have a &lt;b&gt;lot&lt;/b&gt; of “legacy code”. Recently I decided I would try my own variation on a daily kata, that would go like this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Load up the source code of the application you are working on. &lt;/li&gt;
+&lt;li&gt;Choose a class or method that is not covered by any existing unit tests (preferably something you are currently working on).&lt;/li&gt;
+&lt;li&gt;Give yourself a maximum of 30 minutes to create a meaningful unit test. &lt;/li&gt;
+&lt;li&gt;If it passes, check it in, and congratulations, you now have slightly less legacy code than before. &lt;/li&gt;
+&lt;li&gt;If it fails, rollback and get on with your day’s work. Hopefully you learned something from the experience. You could write up a memo on what is wrong with the design of the class you tried to test. And you could always have another go at it tomorrow. &lt;/li&gt;
+&lt;/ol&gt;
+&lt;b&gt;Problems you will run into&lt;/b&gt;
+&lt;p&gt;This kata will not necessarily be straightforward. Here’s the two main difficulties you will encounter:&lt;/p&gt;
+&lt;b&gt;1. Tight Coupling &amp;amp; Hidden Dependencies&lt;/b&gt;.
+&lt;p&gt;You may find that it is almost impossible to instantiate an instance of the class you want to test because of its dependencies (often &lt;a href="http://c0de517e.blogspot.com/2009/09/you-should-already-know.html"&gt;hidden through the use of singletons&lt;/a&gt;). Sometimes your 30 minutes is up before you have even managed to successfully instantiate the class.&lt;/p&gt;
+&lt;b&gt;2. Multiple Responsibility Syndrome&lt;/b&gt;.
+&lt;p&gt;Classes that fail to adhere to the “&lt;a href="http://en.wikipedia.org/wiki/Single_responsibility_principle"&gt;Single Responsibility Principle&lt;/a&gt;” often fail spectacularly. They are responsible for everything from the printout of wage slips to the launching of nuclear warheads. They talk to the database, the file system, the network, the registry, and create a few background threads too. This means that they typically have dozens of dependencies unrelated to the behaviour you want to test. And when you call a single method you aren’t doing one thing, you are doing 100 additional things, one of which is bound to throw an exception. The best course of action is to extract a single, isolated responsibility and move it into its own testable class.&lt;/p&gt;
+&lt;b&gt;Give it a try&lt;/b&gt;
+&lt;p&gt;I’ve been doing this “unlegacy my code” kata for a couple of weeks now, and am (very) slowly seeing the unit test coverage rise. The fact that it is directly related to what you are working on also makes it much easier to justify the 30 minute daily investment to your manager.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>unit testing</category>
+    <category>Single Responsibility Principle</category>
+    <category>TDD</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="055ffa86-0d0d-4bde-974d-c98be225ac84">
+      <author>Rob The Geek</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04578932741770127659</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-23 14:55:24</date>
+      <content>Nice post - I too have been thinking of coming up with some Kata for daily practice. It seems like every time I feel like I make progress with TDD, I learn something new that makes me feel like a n00b again :)&lt;br /&gt;&lt;br /&gt;I like the idea of the &amp;quot;unlegacy my code&amp;quot; most of my (and I expect most other developers) time is spent doing maintenance. I think you have accurately picked two of the worst problems with legacy code.&lt;br /&gt;&lt;br /&gt;I would perhaps also suggest refactoring out code duplication. Often in (crappy) legacy code, other people have run into the same testability problems and rather than fix, they have just duped the code. As to how you would want to implement in a kata (e.g. code copied verbatim or &lt;i&gt;very&lt;/i&gt; similar code) but I think it would be important to include in any code used as the &amp;quot;template&amp;quot; for the kata.&lt;br /&gt;&lt;br /&gt;What are your thoughts on this? Any ideas on how you would like to see it in a kata (if at all)?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0f68e4a5-f2e7-4801-88d0-36f60a1ec680">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-23 15:29:59</date>
+      <content>hi Rob,&lt;br /&gt;&lt;br /&gt;yes code duplication is a real issue in legacy systems. It is especially painful because the duplicates subtly diverge, leaving you with no idea which (if any) of the duplicates is &amp;quot;right&amp;quot;. &lt;br /&gt;&lt;br /&gt;But assuming they were genuine duplicates, extracting reusable class would be a very good exercise for a daily kata, and quite probably achievable in a 30 minute period.</content>
+    </comment>
+  </comments>
+</post>

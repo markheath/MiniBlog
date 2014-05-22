@@ -1,0 +1,36 @@
+<post>
+  <title>Unit Testing is Not About Testing</title>
+  <slug>unit-testing-is-not-about-testing</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-26 16:46:00</pubDate>
+  <lastModified>2010-10-04 17:28:23</lastModified>
+  <content>&lt;p&gt;&lt;em&gt;When I started drafting this post, I was under the illusion that I had just stumbled across an amazing discovery, never before articulated by any programmers before me. But over the past few weeks, I have found out that what I am about to say isn't even slightly original. Everyone is saying it. But it took me quite some time to realize, so here it is anyway, for the two people out there who are as slow as me...&lt;/em&gt;&lt;/p&gt;  &lt;p&gt;The concept of automated unit testing is appealing to most developers, even if the idea of writing all tests before writing code seems a bit over the top. It is certainly attractive to think that I might never have to perform another boring manual test of my software, because I can check it is working correctly simply by launching NUnit (or similar) and running through a suite of tests.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Unautomatable Tests&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The trouble is, automated testing only works for a certain subset of classes - those whose outputs are clearly defined and easily measurable. And of course, those are exactly the type of classes I keep finding myself working on.&lt;/p&gt;  &lt;p&gt;For example, I spent many months writing a library of custom Windows Forms controls. They had to be tested with keyboard and mouse entry, and at a variety of screen resolutions and font sizes. Unit testing was sadly out of the question...&lt;/p&gt; &lt;pre class="brush: csharp"&gt;Assert.LooksReallyCool(button); // not possible&lt;/pre&gt;   &lt;p&gt;Then there was the audio related code I worked on. Passing audio to the Windows MME APIs and checking that the sound played back correctly without stuttering. Or passing audio through a DSP algorithm to speed it up to double speed and automatically increase the volume in quiet bits.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;Assert.DoesntStutter(audio); // not possible    
+Assert.SoundsGood(audio); // not possible&lt;/pre&gt;   
+
+&lt;p&gt;I could go on. How does an automated test check that a webpage renders correctly on IE and FireFox (or harder still, on Mac and Linux)? &lt;/p&gt;  &lt;p&gt;And here lies the trouble with the documentation for Unit Testing frameworks. It conveniently ignores these awkward cases and gives us an example of a BankAccount class that has a Withdraw method. Classes that add numbers or sort lists are ideal candidates for automated testing.&lt;/p&gt;  
+
+&lt;p&gt;&lt;strong&gt;Why Bother?&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;The observation that a large proportion of your classes cannot be meaningfully tested with an automated test therefore puts off many developers from writing unit tests at all.&lt;/p&gt;  
+
+&lt;p&gt;But what if the main benefit of unit testing was not actually testing? Here's my grand (but unoriginal) idea: &lt;em&gt;the main benefit of unit testing is not testing, but design principles&lt;/em&gt;.&lt;/p&gt;  
+
+&lt;p&gt;&lt;strong&gt;Design Benefits&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;Having a unit test for each and every class in your project means that each and every class is used at least more than once. It forces you to design classes that are loosely coupled. It will highlight hidden static dependencies. It will also enforce separation of GUI and business logic.&lt;/p&gt;  
+
+&lt;p&gt;The trouble with thinking that Unit Testing is about testing is that &amp;quot;untestable&amp;quot; classes won't have unit tests written for them, which in turn means more badly designed classes. In short, if all your unit tests ever do is create instances of classes and call their methods without doing any checking of what they return at all, you will still benefit from greatly improved design.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Software Development</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="84f9f932-6dff-4b13-ade7-6eff65359b40">
+      <author>Will</author>
+      <email>noreply@blogger.com</email>
+      <website>statestreetgang.net</website>
+      <ip />
+      <userAgent />
+      <date>2008-04-14 16:02:00</date>
+      <content>&lt;I&gt;It conveniently ignores these awkward cases and gives us an example of a BankAccount class that has a Withdraw method.&lt;/I&gt;&lt;BR/&gt;&lt;BR/&gt;Isn't that always the case with EVERYTHING??  I particularly despise this when going to a talk and all they do is recount the most basic of examples.  Its pointless to the extent where its practically useless.</content>
+    </comment>
+  </comments>
+</post>

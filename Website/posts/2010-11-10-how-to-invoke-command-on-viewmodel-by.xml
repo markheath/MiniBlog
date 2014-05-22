@@ -1,0 +1,90 @@
+<post>
+  <title>How to Invoke a Command on the ViewModel by Pressing the Enter Key in a TextBox with Silverlight and MVVM</title>
+  <slug>how-to-invoke-command-on-viewmodel-by</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-11-10 18:26:00</pubDate>
+  <lastModified>2010-11-10 18:26:00</lastModified>
+  <content>&lt;p&gt;I recently attempted to upgrade a WPF application to compile for Silverlight as well. One of the many issues I ran into was that in the WPF version, pressing the Enter key while I was in a TextBox caused the OK button I had on the form to be clicked by virtue of the fact that I could set the &lt;a href="http://msdn.microsoft.com/en-us/library/system.windows.controls.button.isdefault.aspx"&gt;IsDefault property&lt;/a&gt; on the button. However, after porting to Silverlight, that no longer worked, since the IsDefault property is missing..&lt;/p&gt; &lt;p&gt;A web-search revealed that someone had made a “behavior” that allows a specified button to be clicked when you press Enter within a TextBox (available for download &lt;a href="http://gallery.expression.microsoft.com/en-us/TextBoxInvokeButton"&gt;here&lt;/a&gt;). However, it had one big problem: at the point that the command fired in my ViewModel, the value bound to the textbox contents had not been updated, since the textbox had not lost focus.&lt;/p&gt; &lt;p&gt;The original WPF binding I had an UpdateSourceTrigger ensuring that the ViewModel was always kept up to date with what was in the TextBox:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;TextBox Text="{Binding Answer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;but in Silverlight, the PropertyChanged UpdateSourceTrigger is not available, so&amp;nbsp; I was left with the following:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;TextBox Text="{Binding Answer, Mode=TwoWay}" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;I decided to make my own EnterKeyCommand binding that would allow you to specify for a TextBox which command on the ViewModel should be run. Here’s the code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static class EnterKeyHelpers
+{
+    public static ICommand GetEnterKeyCommand(DependencyObject target)
+    {
+        return (ICommand)target.GetValue(EnterKeyCommandProperty);
+    }
+
+    public static void SetEnterKeyCommand(DependencyObject target, ICommand value)
+    {
+        target.SetValue(EnterKeyCommandProperty, value);
+    }
+
+    public static readonly DependencyProperty EnterKeyCommandProperty =
+        DependencyProperty.RegisterAttached(
+            "EnterKeyCommand",
+            typeof(ICommand),
+            typeof(EnterKeyHelpers),
+            new PropertyMetadata(null, OnEnterKeyCommandChanged));
+
+    static void OnEnterKeyCommandChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
+    {
+        ICommand command = (ICommand)e.NewValue;
+        FrameworkElement fe = (FrameworkElement)target;
+        Control control = (Control)target;
+        control.KeyDown += (s, args) =&amp;gt;
+        {
+            if (args.Key == Key.Enter)
+            {
+                // make sure the textbox binding updates its source first
+                BindingExpression b = control.GetBindingExpression(TextBox.TextProperty);
+                if (b != null)
+                {
+                    b.UpdateSource();
+                }
+                command.Execute(null);
+            }
+        };
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Most of it is pretty simple, and it will allow an Enter key command to be specified for any control, not just textboxes. However, if you have bound to a textbox, it will call UpdateSource on any Text binding you have made, to ensure your ViewModel operates on the latest data.&lt;/p&gt;
+&lt;p&gt;Here’s how you use it in XAML:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;TextBox 
+    Text="{Binding Answer, Mode=TwoWay}" 
+    my:EnterKeyHelpers.EnterKeyCommand="{Binding SubmitAnswerCommand}"/&amp;gt;&lt;/pre&gt;
+&lt;p&gt;It also has the advantage of being considerably more succinct than the equivalent XAML for using the behavior I linked to earlier.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>Silverlight</category>
+    <category>Data Binding</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="29fd8ec6-1d33-45ce-998a-2d7e970e2dda">
+      <author>blorq</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16308269163452150701</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-11 08:02:47</date>
+      <content>Be careful using that inside ItemsControls as that will be a memory leak.  The += on the KeyDown event is never cleaned up.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7811b1c4-bf8d-42e3-981d-1e6fc36ea32a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-11 08:09:45</date>
+      <content>thanks blorq. Would be interested if you have an idea for what would be a safer way.&lt;br /&gt;&lt;br /&gt;I think I need to update it with unsubscription because I got a strange case recently where OnEnterKeyCommandChanged seemed to get called twice on the same object, meaning I double-subscribed to the key-down event.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fc5b8553-04fd-4f9a-ae9a-3fdf368a5aa5">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-01-15 16:49:04</date>
+      <content>This shouldn&amp;#39;t cause a memory leak of the textbox, the behavior/event handler is a static class.  In the reverse,where a class instance subscribes to a static event or a event of a long-lived object, you may end up with &amp;#39;leaks&amp;#39;</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,172 @@
+<post>
+  <title>Refactoring to Reduce Method Complexity</title>
+  <slug>refactoring-to-reduce-method-complexity</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-10 15:01:00</pubDate>
+  <lastModified>2011-07-04 16:21:27</lastModified>
+  <content>&lt;p&gt;I gave a seminar to the developers at my work this week on the subject of how we can keep the overall complexity of our projects down by refactoring methods. Here's some of my key points...&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Measure the Complexity of Your Source Code&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;I have been experimenting recently with the excellent freeware application &lt;a href="http://www.campwoodsw.com/sourcemonitor.html"&gt;SourceMonitor&lt;/a&gt;. This can scan your source code folder (it supports several languages including C#, C++, VB.NET, Java), and give you a report that will help you quickly identify classes with the most methods, methods with the most lines of code, methods with the deepest level of indentation, and methods with the greatest "complexity" rating (which I think is related to how many possible routes through the code there are). You will be surprised at how good this simple tool is at identifying the areas of your code that have the most problems.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/refactoring-to-reduce-method-complexity-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="SourceMonitor output" border="0" alt="SourceMonitor output" src="/posts/files/refactoring-to-reduce-method-complexity-1.png" width="644" height="103"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/refactoring-to-reduce-method-complexity-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="SourceMonitor output" border="0" alt="SourceMonitor output" src="/posts/files/refactoring-to-reduce-method-complexity-2.png" width="638" height="187"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;Measuring complexity allows you to identify whether new code you have written is over-complicated. It also alerts you to the fact that you may have &lt;em&gt;increased &lt;/em&gt;the complexity of the existing code you have modified. If developers make it a goal to leave the code they work on less complex than it was when they started, gradually an overcomplicated codebase can be brought under control.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Complexity Grows Gradually&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;A competent developer writing new code knows not to make functions that are hugely long and convoluted. But complexity sneaks in gradually, most commonly because of bug fixes or special cases come up. Often these 5-10 line additions are considered so trivial that the method in question does not need to be refactored. But before long, you have gigantic methods that cause headaches for anyone who needs to debug, modify or reuse them.&lt;/p&gt; &lt;p&gt;Consider this simple line of code:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;string filename = Path.Combine(folderBrowserDialog.SelectedPath,
+    String.Format("RecordedItem {0}-{1}-{2}-{3}-{4}-{5} Channel {6}.xml", 
+        recordedItem.StartTime.Year,
+        recordedItem.StartTime.Month,
+        recordedItem.StartTime.Day,
+        recordedItem.StartTime.Hour,
+        recordedItem.StartTime.Minute,
+        recordedItem.StartTime.Second,
+        recordedItem.Channel));&lt;/pre&gt;
+&lt;p&gt;All it is doing is creating a filename. Many developers would not consider putting this into a function of its own (even though it is taking up 9 lines of vertical space). What happens next is a bug report is filed, and suddenly, the code to create a filename gets even longer...&lt;/p&gt;&lt;pre class="brush: csharp"&gt;string filename = Path.Combine(folderBrowserDialog.SelectedPath,
+    String.Format("RecordedItem {0}-{1}-{2}-{3}-{4}-{5} Channel {6}.xml", 
+        recordedItem.StartTime.Year,
+        recordedItem.StartTime.Month,
+        recordedItem.StartTime.Day,
+        recordedItem.StartTime.Hour,
+        recordedItem.StartTime.Minute,
+        recordedItem.StartTime.Second,
+        recordedItem.Channel));
+int attempts = 0;
+while (File.Exists(filename))
+{
+    attempts++;
+    if (attempts &amp;gt; 20)
+    {
+        log.Error("Could not create a filename for {0}", recordedItem);
+        throw new InvalidOperationException("Error creating filename");
+    }
+    filename = Path.Combine(folderBrowserDialog.SelectedPath,
+        String.Format("RecordedItem {0}-{1}-{2}-{3}-{4}-{5} Channel {6} {7}.xml", 
+            recordedItem.StartTime.Year,
+            recordedItem.StartTime.Month,
+            recordedItem.StartTime.Day,
+            recordedItem.StartTime.Hour,
+            recordedItem.StartTime.Minute,
+            recordedItem.StartTime.Second,
+            recordedItem.Channel,
+            attempts));
+}&lt;/pre&gt;
+&lt;p&gt;Now we have thirty lines of code all devoted to the relatively simple task of creating a unique filename. Most developers who will work on our code do not need or want to know the details. This code therefore is an ideal candidate for breaking out into a single method:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;string filename = GetFilenameForRecordedItem(folderBrowserDialog.Path, recordedItem);&lt;/pre&gt;
+&lt;p&gt;Now developers can skip over this code and only look within the function if they actually need to know how the filename is generated.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Break Long Methods into Individual Tasks&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The most common reason for a method being very long, or deeply nested is simply that it is performing more than one task. If a method doesn't fit onto one screen in an IDE, the chances are it does too much.&lt;/p&gt;
+&lt;p&gt;Methods are not just for code that needs to be reused. It is fine to have private methods that only have one caller. If creating a method makes overall comprehension easier, then that is reason enough to create it.&lt;/p&gt;
+&lt;p&gt;Let's take another simple example. It is common to see functions that have a comment followed by several lines of code, and then another comment, and then more code, as follows:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void buttonSearch_Click(object sender, EventArgs args)
+{
+    // validate the user input
+    ... several lines of code
+    // do the search
+    ... several lines of code
+}&lt;/pre&gt;
+&lt;p&gt;When presented like this, it is pretty obvious that the search button click handler performs two discrete tasks, one after the other. The code can therefore be made much more simple to read if it is refactored into...&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void buttonSearch_Click(object sender, EventArgs e)
+{
+    if (IsUserInputValid())
+    {
+        PerformSearch();
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Now a developer can quickly see what is going on, and can easily choose which of the two functions to delve deeper into depending on what part of the functionality needs to be changed. It is also interesting to note that we don't need the comments any more. Comments are added when the code isn't self-explanatory. So clear code requires less comments. 
+&lt;p&gt;&lt;strong&gt;Refactor Similar Code, Not Just Duplicated Code&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Most developers know not to reuse by cutting and pasting large blocks of code. If exactly the same code is needed in two places, they will move it into a common function. But often the code isn't an exact duplicate, it is simply &lt;em&gt;similar&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Consider this example&lt;/p&gt;&lt;pre class="brush: csharp"&gt;XmlNode childNode = xmlDoc.CreateElement("StartTime");
+XmlText textNode = xmlDoc.CreateTextNode(recordedItem.StartTime.ToString());
+childNode.AppendChild(textNode);
+recItemNode.AppendChild(childNode);
+
+childNode = xmlDoc.CreateElement("Duration");
+textNode = xmlDoc.CreateTextNode(recordedItem.Duration.ToString());
+childNode.AppendChild(textNode);
+recItemNode.AppendChild(childNode);&lt;/pre&gt;
+&lt;p&gt;Here we have two very similar blocks of code, but they are not identical. This should not be seen as a barrier to reuse. Without too much effort this duplicated code can be extracted into a helper method. The end result is less complexity and much easier to see the intent.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;AddTextNode(recItemNode,"StartTime", recordedItem.StartTime.ToString());
+AddTextNode(recItemNode,"Duration", recordedItem.Duration.ToString());&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Extract Reusable Functionality into Static Helper Methods&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The AddTextNode method in the previous example actually could be used by any class that needed to add a child node to an XML node. So rather than staying buried inside the class that uses it, only for the wheel to be reinvented by the next coder who needs to do a similar task, move it out into a static method in a utility class. In this case, we could create an XmlUtils class. Obviously there is no guarantee that other developers will notice it and use it, but they stand a greater chance of finding it if it resides in a common utilities location rather than hidden away in the code behind of a Windows form.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Use Delegates To Enable Reuse Of Common Surrounding Code&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There is one type of cut and paste code that can seem too hard to effectively refactor. Consider the following two functions. They are virtually identical, with the exception that the line of code inside the try block is different.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void buttonSaveAsXml_Click(object sender, EventArgs args)
+{
+    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+    folderBrowserDialog.Description = "Select folder to save search results to";
+    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+    {
+        try
+        {
+            SaveAsXml(folderBrowserDialog.SelectedPath);
+        }
+        catch (Exception e)
+        {
+            log.Error(e, "Error exporting to XML");
+            MessageBox.Show(this, e.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+}
+
+private void buttonSaveAsCsv_Click(object sender, EventArgs args)
+{
+    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+    folderBrowserDialog.Description = "Select folder to save search results to";
+    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+    {
+        try
+        {
+            SaveAsCsv(folderBrowserDialog.SelectedPath);
+        }
+        catch (Exception e)
+        {
+            log.Error(e, "Error exporting to CSV");
+            MessageBox.Show(this, e.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;The answer is to make use of delegates. We can take all the common code and put it into a &lt;strong&gt;SelectSaveFolder&lt;/strong&gt; function, and pass in the action to do once the folder has been selected as a delegate. I've used the new C#3 lambda syntax, but ordinary or anonymous delegates work just as well:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;delegate void PerformSave(string path);
+
+void SelectSaveFolder(PerformSave performSaveFunction)
+{
+    FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+    folderBrowserDialog.Description = "Select folder to save search results to";
+    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+    {
+        try
+        {
+            performSaveFunction(folderBrowser.SelectedPath);
+        }
+        catch (Exception e)
+        {
+            log.Error(e, "Error exporting");
+            MessageBox.Show(this, e.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+}
+
+private void buttonSaveAsXml_Click(object sender, EventArgs args)
+{
+    SelectSaveFolder(path =&amp;gt; SaveAsXml(path));
+}
+
+private void buttonSaveAsCsv_Click(object sender, EventArgs args)
+{
+    SelectSaveFolder(path =&amp;gt; SaveAsCsv(path));
+}&lt;/pre&gt;
+&lt;p&gt;The benefit here is that the two button click handlers which previously had a lot of duplicated code now show very simply what they will do. And that is the point of refactoring your methods. Make them show the &lt;strong&gt;intent&lt;/strong&gt;, not the implementation details.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Use IDE Refactoring Support&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally, remember to use the Visual Studio &lt;strong&gt;Refactor | Extract Method &lt;/strong&gt;command wherever possible. It can't always work out exactly what you would like it to do, but it can save you a lot of time and avoid a lot of silly mistakes if you make a habit of using it. (If you have a tool like &lt;a href="http://www.jetbrains.com/resharper/"&gt;Resharper&lt;/a&gt; then I'm sure that's even better).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Refactoring</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="1698021b-dbc5-4179-a92f-301376ec7499">
+      <author>Matthew</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.creativewebsitedesigner.com</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-16 14:23:00</date>
+      <content>thank u r   information                              &lt;BR/&gt;&lt;BR/&gt;it very  useful&lt;BR/&gt;&lt;BR/&gt;u r blog Is very  nice</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bbb2d51e-f641-46e3-ba3b-155df1fbe263">
+      <author>Adam</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-03-16 15:49:00</date>
+      <content>I was looking for something to send to team members who don't seem to understand these basic concepts, and this is good material.&lt;BR/&gt;&lt;BR/&gt;On another point, I doubt Matthew will read this, but to others who type "u r": Is it that hard to type "your?" It's just four letters and is real English.</content>
+    </comment>
+  </comments>
+</post>

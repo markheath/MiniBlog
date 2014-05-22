@@ -1,0 +1,231 @@
+<post>
+  <title>Introducing NAudio - .NET Audio Toolkit</title>
+  <slug>introducing-naudio-net-audio-toolkit</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-03 10:42:00</pubDate>
+  <lastModified>2008-06-03 10:42:29</lastModified>
+  <content>&lt;p&gt;Although I have been developing &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; for six years now, I have never really written much by way of documentation for it. This post is the first in a series that will attempt to rectify this shortcoming.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;What Is NAudio?&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;NAudio is an open source .NET audio toolkit, containing a variety of classes for working with audio files and devices in Windows. Its key features are:&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;Standard WAV file reading and writing&lt;/li&gt;    &lt;li&gt;A pluggable wave streaming architecture including various mixers, format conversion and some basic effects&lt;/li&gt;    &lt;li&gt;Full access to installed ACM codecs&lt;/li&gt;    &lt;li&gt;Individual WAV samples can be accessed&lt;/li&gt;    &lt;li&gt;Audio playback and recording using the WinMM APIs&lt;/li&gt;    &lt;li&gt;Handling compressed WAV files using &lt;/li&gt;    &lt;li&gt;Extensive MIDI file handling and processing&lt;/li&gt;    &lt;li&gt;Ability to receive MIDI events&lt;/li&gt;    &lt;li&gt;Soundfont reading&lt;/li&gt;    &lt;li&gt;OGG file encoding&lt;/li&gt;    &lt;li&gt;Various experimental DSP functions&lt;/li&gt;    &lt;li&gt;A selection of Windows Forms controls for audio related GUIs&lt;/li&gt;    &lt;li&gt;Cakewalk drum map reading&lt;/li&gt;    &lt;li&gt;RGCAudio sfz sampler file reading&lt;/li&gt;    &lt;li&gt;Audio output using DirectSound&lt;/li&gt;    &lt;li&gt;Audio output using ASIO&lt;/li&gt;    &lt;li&gt;Vista CoreAudio API wrappers &lt;/li&gt;    &lt;li&gt;DirectX Media Object wrappers &lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;All this resides in &lt;strong&gt;NAudio.dll&lt;/strong&gt; which can easily be linked to and used from your projects. Not all the features listed are production quality yet, but I will be writing up tutorials on some of the more mature parts of the framework in the future.&lt;/p&gt;  &lt;p&gt;In addition to this, NAudio is the basis for a variety of utilities, some of which have moved off into their own CodePlex projects.&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;&lt;strong&gt;AudioFileInspector&lt;/strong&gt; is a debugging tool that allows you to simply get textual information on WAV files, MIDI files and SoundFonts.&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;MIDI File Converter&lt;/strong&gt; can convert MIDI files between different MIDI file types (useful for fixing up some drum loops to work with different sequencers)&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;MIDI File Mapper&lt;/strong&gt; can batch process MIDI files remapping their notes, and performing other transformations on the data. Very useful for converting MIDI drum loops to work with different drum samplers.&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;MIDI File Splitter&lt;/strong&gt; is another utility for working with drum loops. It can split long MIDI files at markers.&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;MixDiff &lt;/strong&gt;demonstrates how to use the Wave Playback features of NAudio. It is intended to allow you to perform double-blind listening tests on different versions of a mix you are working on. It has yet to be properly released.&lt;/li&gt;    &lt;li&gt;&lt;strong&gt;NAudioDemo&lt;/strong&gt; is still very incomplete, but the intention is to create an application that showcases all the features of NAudio, and so serve as a coding tutorial.&lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;&lt;strong&gt;Rationale&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;When .NET came out I was very excited that Microsoft had created a technology that combined the strengths of MFC, Visual Basic 6 and Java, whilst having very few of their limitations. I wanted to do as much future development in .NET as possible. The only trouble was, a lot of the applications I was writing were dealing with various audio file formats, or processing audio and playing it back.&lt;/p&gt;  &lt;p&gt;It seemed that very few open source projects dealing with audio were around back then, and today there still are not that many. So I decided to create my own library, slowly adding whatever bits and pieces I needed to it. I fully expected Microsoft to come along and blow most of it away with a low-level audio stack for .NET but that never happened. And while a handful of other .NET audio libraries have showed up, none seem to have quite the same focus.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;History&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;I started work on NAudio shortly after .NET 1.0 first came out. I had a Pentium III 450MHz PC back then, and one of the first things I implemented was the interop to the WinMM mixer APIs, complete with forms that auto-populated themselves with sliders. I haven't used the code much since, and I expect I would cringe if I looked back at it now.&lt;/p&gt;  &lt;p&gt;The next task was to read Wave Files and play them back using the WaveOut APIs. This took me into a whole world of pain - interop in a garbage collected language. Eventually I got it all working and could play 44.1kHz wave files at a latency of around 400ms.&lt;/p&gt;  &lt;p&gt;It was about this time I set up a SourceForge project for NAudio but I never really got on with using CVS.&lt;/p&gt;  &lt;p&gt;I also ported a lot of code I had written for working with SoundFonts to C#. The only thing I couldn't get working in C# was the API for loading SoundFonts into the Soundblaster Live card. It used pointers to tables of function pointers, which was out of my depth for interop. I did create a managed C++ library for it though, but before long I had become fed up with Soundblaster's appalling driver support in XP and bought a new soundcard so that part of NAudio came to an end.&lt;/p&gt;  &lt;p&gt;The next few years were spent slowly ramping up the MIDI library, and enhancing the Wave playback. I also added DirectSound ouput option. In 2005 I started work at a new company, and realised that a lot of the work I had done in NAudio could be useful for one of their products. I started working in earnest on getting ACM working well which eventually allowed me to use NAudio to form the basis of the audio mixing library for one of my company's key products. It performs well, mixing upwards of 30 concurrent streams of audio (albeit at 8kHz sample rate), and passing through various ACM effects. We work at a latency of around 200ms with no noticeable stuttering even on fairly modest PCs (Pentium IV 2Ghz).&lt;/p&gt;  &lt;p&gt;During this time some features were added to NAudio that were eventually&amp;#160; dropped. I ported &lt;a href="http://www.javazoom.net/javalayer/javalayer.html"&gt;JavaLayer&lt;/a&gt; (a Java MP3 decoder) over to C#, but got fed up of constantly needing to update it. Version 1 is out now though, so perhaps it might be worth another go. I also attempted to create wrappers for Steinberg's VST, but the job took longer than I was hoping, and in any case, a promising new project has been created by someone else - &lt;a href="http://www.codeplex.com/vstnet"&gt;VST.NET&lt;/a&gt;.&lt;/p&gt;  &lt;p&gt;In more recent times, I have added an ASIO output option, and am currently working on adding Vista's CoreAudio WASAPI interface, and access to DirectX Media Objects. I am increasingly trying to write NUnit unit tests for the new features I am developing.&lt;/p&gt;  &lt;p&gt;As for the future, NAudio will continue to progress based on the features I need for the applications I am working on. I have no shortage of ideas for audio utilities, but sadly time is at a premium. I'm hoping to create a new release in the near future if I can get the Resampler DMO object working nicely with WASAPI.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c9a23df0-6543-4180-80b6-aaeef77b03a8">
+      <author>Kronk</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14194556548956813308</website>
+      <ip />
+      <userAgent />
+      <date>2008-06-10 13:39:00</date>
+      <content>Hey Mark,&lt;BR/&gt;&lt;BR/&gt;Good work with teh Library, I've been looking around on the net for libraries such as yours for a project I'm working on.&lt;BR/&gt;&lt;BR/&gt;It seems these libraries are few and far between when it comes to Audio DSP for C# which is a little dissapointing, I did think that old m$ would have extended some of the .net api to include some fun audio functions but alas we've all been left wanting.&lt;BR/&gt;&lt;BR/&gt;I'm quite interested in your library, and the one thing I did noteice was teh lack of documentation;-) but that happens to the best of us right, no time. &lt;BR/&gt;&lt;BR/&gt;So me thinks I'll go straight to the source to get teh info I need. &lt;BR/&gt;&lt;BR/&gt;what I'm wanting to accomplish is to take 4 wav files and smack them together merging the audio into one file, I had a look at the wavereader/wavemixerstream32 objects, and tried them but with little success, since its your library thought you would probably knwo the best way of doing such a thing. As I really don't want to write my own as processing WAVE files can be a total b$tch.&lt;BR/&gt;&lt;BR/&gt;Anyhelp would be much appreciated.&lt;BR/&gt;&lt;BR/&gt;Cheers,&lt;BR/&gt;&lt;BR/&gt;Ryan</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6f16657c-d1dd-4530-b568-1d18058c4722">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-06-14 23:17:00</date>
+      <content>Hi Kronk,&lt;BR/&gt;Assuming your input files are the same format as each other and are 16 bit PCM, you can do this:&lt;BR/&gt;&lt;BR/&gt;WaveFileReader reader1 = new WaveFileReader(file1);&lt;BR/&gt;WaveFileReader reader2 = new WaveFileReader(file2);&lt;BR/&gt;etc.&lt;BR/&gt;then&lt;BR/&gt;WaveChannel32 channel1 = new WaveChannel32(reader1);&lt;BR/&gt;WaveChannel32 channel2 = new WaveChannel32(reader2);&lt;BR/&gt;&lt;BR/&gt;then you can make a WaveMixer32 and put the channels in as input.&lt;BR/&gt;&lt;BR/&gt;then you probably want a Wave32to16stream to get back into 16 bit world before using a WaveFileWriter to make your WAV file.&lt;BR/&gt;&lt;BR/&gt;Hopefully this explanation makes sense to you. I want to expand on the NAudio documentation in the future, but there is still a lot to do. Let me know if you have any further problems.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="eac7aa85-9502-4adb-8a9c-a1cd309a654a">
+      <author>Thomas Holloway</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08791502684875336032</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-20 05:56:00</date>
+      <content>Woo! I am excited to using this API.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9ed889e2-e649-4036-a1e6-44716e765590">
+      <author>NingDev</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06955425552661444135</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-24 03:29:00</date>
+      <content>Dear Mark,&lt;BR/&gt;Thanks for your efforts, providing the good Audio library for dot net. I have a question about how to control the line in signals, I want to play the line-in signals directly. But I a new for multimedia scope. Could you give me a help? Could you give me a demo for this. Thank you very much!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="eca0f992-bfed-4ca0-8754-e677d83c1473">
+      <author>Gilberto Carcano - Italy</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-02-03 12:25:00</date>
+      <content>Is there a way (using your library or without it) to convert MIDI files in wav tracks in c#? I know this question can appear a little generic and ambiguous, but this is wath permits my poor english at moment. For a project I'm working on, I need to do such conversion as fast as possible. I have heared about SoundFonts and i think those may be a good direction... can you help me to find some documentation or C# examples? Thanks in advance.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="39b2c17d-a30f-4063-9fb9-23e8a52f43b4">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-02-03 12:33:00</date>
+      <content>Hi Gilberto,&lt;BR/&gt;&lt;BR/&gt;Unfortunately NAudio does not currently support MIDI to WAV. It is one feature I would love to add, but would require some serious development time either to create a SoundFont player or to host VSTi's in managed code.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ea8820e0-da8a-4da8-b6a7-6715feaeba87">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-07-01 05:39:06</date>
+      <content>Hello Mark,&lt;br /&gt;&lt;br /&gt;You have made a good mark with NAudio. Well appreciated and wonderful effort to bring out such a handy library.&lt;br /&gt;&lt;br /&gt;I tried to replicate the &amp;quot;Introduction to Using NAudio &amp;quot; sample as provided by you. I want to convert a 24 Bit Wave file to 16 Bit wave format and play it. Unfortunately an unhandled exception was thrown and it read :&lt;br /&gt;&lt;br /&gt;&amp;quot;Mm Exception was unhandled&amp;quot; &lt;br /&gt;Exception message was : &amp;quot;Acm Not Possible calling acmStreamOpen&amp;quot;&lt;br /&gt;&lt;br /&gt;Any help on this would be well appreciated Mark.&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;Karthik&lt;br /&gt;&lt;br /&gt;My Input : 24 Bit Wave file</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="16306bc1-0b0e-43ec-a8a0-5a1f33c49c25">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-05 22:58:07</date>
+      <content>Hi Karthic,&lt;br /&gt;NAudio does not support 24 bit audio directly yet. I hope to add that in a future version. You exception is because NAudio is looking for an ACM codec to do the conversion and you don&amp;#39;t have one installed.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f0a22ff7-8937-4fb4-8bb3-c78a45517d5a">
+      <author>Karthik</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-07-07 13:36:23</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Thanks for your reply. I was waiting for them :). Well I appreciate your current work though as of now NAudio does not directly support 24 Bit Wav Files.&lt;br /&gt;&lt;br /&gt;A few things to clarify:&lt;br /&gt;1) As of now the NAudio does not support 24 Bit Wav File directly, does this mean NAudio does not process any functionalities if wav is above 16 Bit ( including conversion of 24 Bit Wave file to 16 Bit Wav File) ?&lt;br /&gt;&lt;br /&gt;2)I am mainly looking forward to convert a 24 Bit Wav File ( or higher ) to 16 Bit Wav File. I understand from your comment that ACM codec is not installed, will conversion work if I have ACM Codec installed? Can you please suggest any Codec which can be downloaded and installed if it helps for conversion?&lt;br /&gt;&lt;br /&gt;Your feedback and suggestions will be very helpful.&lt;br /&gt;&lt;br /&gt;Thanks in advance.&lt;br /&gt;&lt;br /&gt;Cheers,&lt;br /&gt;Karthik</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a5ad4ca2-1bec-4909-94fe-29c1dbfde38b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-07 13:45:57</date>
+      <content>Hi Karthik,&lt;br /&gt;You do have the ACM codec installed, but it doesn&amp;#39;t do 24 bit either. NAudio can deal with 32 bit floating point audio. To convert you would need to create a derived WaveStream class. In the Read method, for every two bytes requested, read three from the source file. Convert those 3 values into an integer (use BitConverter) and then scale it down to 16 bit range, before writing it into the output buffer. You could look at the Wave32To16 (that might not be its exact name) converter stream that is in NAudio for an example.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a49bf72a-c244-4042-86c9-7f997da647e1">
+      <author>jcoburn</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14824844565056070575</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-24 15:40:42</date>
+      <content>Mark,&lt;br /&gt;thanks for all the work. I&amp;#39;m trying to do something a bit different. I want to take an analog input signal (processed through a NI DAQ card and inputted to my program as a 2D array of voltage values) and convert it to sound. Based on what i&amp;#39;ve seen your dll, it looks like i want to create an input stream. is this possible with the methods available?&lt;br /&gt;thanks,&lt;br /&gt;&lt;br /&gt;Jim</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4e228625-813e-4555-99e8-283d2ff75698">
+      <author>jcoburn</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14824844565056070575</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-24 15:43:43</date>
+      <content>ps. I should add that i bring in a fresh array every 150ms. the array is 150 samples in size. I&amp;#39;ve thought of trying to create a wav file format, but the system needs to update continuously while data is being collected.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8f18f845-7b00-4b38-babf-8c2f7b51ba0c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-24 15:49:52</date>
+      <content>Hi Jim,&lt;br /&gt;yes this is possible. Create a class derived from WaveStream. In the Read method, make return the raw bytes from your input.&lt;br /&gt;&lt;br /&gt;You also need to override WaveFormat to tell NAudio what format to use, but apart from that you are ready to play it with the WaveOut class.&lt;br /&gt;&lt;br /&gt;Length and Position don&amp;#39;t really matter as you won&amp;#39;t support repositioning while streaming.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e4cc95b1-83a9-49f0-914b-3fac7edb64ee">
+      <author>noqqu</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02120720646577664405</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-29 18:22:30</date>
+      <content>Hi Mark, &lt;br /&gt;i&amp;#39;m trying to play one file on the front output of a sound card and another file on the rear output of the same sound card. Can you tell me how can I achieve this?&lt;br /&gt;&lt;br /&gt;Thanks for your help</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0d12dfb0-4400-4642-b283-09de7114d64d">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-12-29 21:13:08</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Great tool.  I&amp;#39;ve just about got it working for our needs, but I get an error on the final step.  &lt;br /&gt;&lt;br /&gt;Basically we need to mix multiple wav files into a single file.  I&amp;#39;ve coded against your library as you had suggested to Kronk back on 14 June 2008.  Everything looks good until the WaveFileWriter tries to write the resulting mixed file.  It returns the error below.  Interestingly, it does start to write the file; the resulting file is exactly 4KB on disk which is the 1st buffer read size in the CreateWaveFile function.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;? ex.ToString&lt;/b&gt;&lt;br /&gt;System.ArgumentException: Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.&lt;br /&gt;   at System.IO.FileStream.Read(Byte[] array, Int32 offset, Int32 count)&lt;br /&gt;   at NAudio.Wave.WaveFileReader.Read(Byte[] array, Int32 offset, Int32 count)&lt;br /&gt;   at NAudio.Wave.WaveChannel32.Read(Byte[] destBuffer, Int32 offset, Int32 numBytes)&lt;br /&gt;   at NAudio.Wave.WaveMixerStream32.Read(Byte[] buffer, Int32 offset, Int32 count)&lt;br /&gt;   at NAudio.Wave.Wave32To16Stream.Read(Byte[] destBuffer, Int32 offset, Int32 numBytes)&lt;br /&gt;   at NAudio.Wave.WaveFileWriter.CreateWaveFile(String filename, WaveStream stream)&lt;br /&gt;   at UltPursuitData.MediaFile.GetTestSoundFile(HttpServerUtility HTTPServer) &lt;br /&gt;&lt;br /&gt;&lt;b&gt;Here&amp;#39;s my test code:&lt;/b&gt;&lt;br /&gt;Dim strFile As String = FileRoot &amp;amp; &amp;quot;mediafiles\bugsbunny3.wav&amp;quot; &amp;#39;test file&lt;br /&gt;Dim strFile2 As String = FileRoot &amp;amp; &amp;quot;mediafiles\hankhill3.wav&amp;quot; &amp;#39;test file        &lt;br /&gt;Dim m As New NAudio.Wave.WaveMixerStream32&lt;br /&gt;Dim r As New NAudio.Wave.WaveFileReader(strFile)&lt;br /&gt;Dim r2 As New NAudio.Wave.WaveFileReader(strFile2)&lt;br /&gt;Dim c As New NAudio.Wave.WaveChannel32(r)&lt;br /&gt;Dim c2 As New NAudio.Wave.WaveChannel32(r2)&lt;br /&gt;        &lt;br /&gt;        &amp;#39;add sound files to mixer&lt;br /&gt;        m.AddInputStream(c)&lt;br /&gt;        m.AddInputStream(c2)&lt;br /&gt;&lt;br /&gt;        Dim x As New NAudio.Wave.Wave32To16Stream(m)&lt;br /&gt;&lt;br /&gt;        strPath = FileRoot &amp;amp; &amp;quot;mediafiles\testsoundfile.wav&amp;quot;&lt;br /&gt;        &lt;br /&gt;&lt;b&gt;This is the line that causes error:&lt;/b&gt;        &lt;br /&gt;NAudio.Wave.WaveFileWriter.CreateWaveFile(strPath, x)&lt;br /&gt;&lt;br /&gt;Any advice?&lt;br /&gt;&lt;br /&gt;Thanks!&lt;br /&gt;&lt;br /&gt;Randy</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="004820fd-b5a6-4400-81e9-f31c0fd2f2e8">
+      <author>J. Pablo Fernández</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/03108454279465216232</website>
+      <ip />
+      <userAgent />
+      <date>2009-12-31 18:09:44</date>
+      <content>I&amp;#39;m trying to do the same thing as Max, mix two wavs and getting the same result.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="29016ee8-895f-4d85-a8f8-505037c1dbc1">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-04 14:10:56</date>
+      <content>this problem has been fixed and checked in at Codeplex now</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ff3298fa-c216-45ee-866f-dd3d6a1db44f">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-02-10 02:40:58</date>
+      <content>Hi Mark&lt;br /&gt;I got to playing with NAudio and I got it to work. All I want to do is record a simple 15 sec. sound byte. I discovered a problem with overloading WaveIn in version 1.3.8.0&lt;br /&gt;&lt;br /&gt;waveInStream = new WaveIn(44100,2);&lt;br /&gt;&lt;br /&gt;I cant overload in this version. VS. returns a does not accept 2 overloads error. It works ok in default if I leave out the overloads.&lt;br /&gt;&lt;br /&gt;waveInStream = new WaveIn();&lt;br /&gt;&lt;br /&gt;If I use version 1.3.5.0 the overloads work ok.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="14c6329a-d724-44b0-8939-8a1a2449a988">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-11 14:35:52</date>
+      <content>@anonymous - you need to set the WaveFormat property of WaveIn. The signature was changed in 1.3.8</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="68b7407e-dc81-460f-b81e-94514a97fef9">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-07-30 11:29:52</date>
+      <content>Hi&lt;br /&gt;&lt;br /&gt;I&amp;#39;m interesed in playing SoundFont notes with NAudio but can&amp;#39;t find any example on the whole internet.&lt;br /&gt;&lt;br /&gt;Can anyone please help me?&lt;br /&gt;&lt;br /&gt;Thanks.&lt;br /&gt;&lt;br /&gt;ivg2003@hotmail.com</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="60ee6204-2e5e-4654-980d-6899095ec4ad">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-08-11 13:45:21</date>
+      <content>you would need to build a software synthesiser in order to play sounds from a SoundFont with NAudio. this would be quite a big undertaking</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b6a89bfb-b519-409d-b823-8adf55268283">
+      <author>Philip Jones</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-07 14:23:11</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I found NAudio yesterday and I have been trying it out for my MIDI applications. It is really good and easy to use even though I have little experience of C# or .NET&lt;br /&gt;Can you offer any hints on how to send a MIDI SysEx string?&lt;br /&gt;&lt;br /&gt;thanks&lt;br /&gt;Philip J</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a22a3cdb-6928-40ce-b94b-789742904d5f">
+      <author>edoluz</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05551184472596919097</website>
+      <ip />
+      <userAgent />
+      <date>2013-07-10 13:47:43</date>
+      <content>Hello Mark.&lt;br /&gt;Thank you very much for your articles.&lt;br /&gt;I really hope you can answer to this question:&lt;br /&gt;- is there a way to change volume of a recorded track (voice) with NAUDIO? I&amp;#39;m not thinking to normalize it, but with something like an &lt;b&gt;&amp;quot;audio compressor&amp;quot;&lt;/b&gt; make the loudest parts of the track quieter, enabling the volume of the whole thing to be raised without clipping.&lt;br /&gt;&lt;br /&gt;We&amp;#39;re looking for this so we can have all the recoded voices at the same volume (for example 0 dB).&lt;br /&gt;&lt;br /&gt;Best regards,&lt;br /&gt;&lt;br /&gt;Edo</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cbd95c15-09b0-4b61-96ec-e37954093bdd">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-07-15 14:57:08</date>
+      <content>NAudio does have a compressor algorithm, in the SimpleCompressor class, but to be honest, I need to make this a bit easier to work with, by making it implement the ISampleProvider interface.</content>
+    </comment>
+  </comments>
+</post>

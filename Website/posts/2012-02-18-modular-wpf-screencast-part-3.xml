@@ -1,0 +1,52 @@
+<post>
+  <title>Modular WPF Screencast Part 3</title>
+  <slug>modular-wpf-screencast-part-3</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-02-18 22:57:00</pubDate>
+  <lastModified>2012-02-18 22:57:34</lastModified>
+  <content>&lt;p&gt;Due to popular demand, I have finally got round to recording part three of my modular WPF application screencast series. Rather than jumping directly to a fully featured solution, I wanted to show how we might evolve an architecture step by step, and without being afraid to make some wrong choices that we will need to refactor later.&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;a href="/post/screencast-modular-wpf-with-mef-mvvm"&gt;Part 1&lt;/a&gt; covered setting up the framework to use MEF  &lt;li&gt;&lt;a href="/post/screencast-modular-wpf-with-mef-mvvm_11"&gt;Part 2&lt;/a&gt; covered adding MVVM to make it unit testable&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;In this episode I walk through adding a new feature, the ability to cancel switching between modules, which turns out to be a bit more tricky than we might have anticipated, and ends up with us creating a templated list of buttons to replace our original ListBox. (n.b. an even better choice might have been to use a tab control, but I didn’t think of that when I created this tutorial, so maybe that can be another refactoring for a future episode).&lt;/p&gt; &lt;p&gt;Also, loads of people are asking for the code, so I have made the Mercurial repository &lt;a href="https://bitbucket.org/markheath/modularwpfdemo"&gt;publicly available&lt;/a&gt;. In the video, the reason you don’t see me coding, is because I am just switching between revisions of my repository (and it also keeps the video much more succinct). I’ve bought a new headset too, so the voice quality ought to be better than before (although I’ll probably reduce the level slightly for next time). I also tried capturing at 1280x720, so there is a bit more screen real estate. Let me know if this is better or worse.&lt;/p&gt;  &lt;iframe src="http://player.vimeo.com/video/37032250?title=0&amp;amp;byline=0&amp;amp;portrait=0" width="600" height="338" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""&gt;&lt;/iframe&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>screencast</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="30c73fa0-8fbb-4b0d-a702-bfcf8b794088">
+      <author>Rutix</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16953963273586259428</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-04 15:53:06</date>
+      <content>Thanks m8! Was waiting for part 3 ^_^.&lt;br /&gt;One improvement I can say is that you have magic string when using the RaisePropertyChanged .&lt;br /&gt;&lt;br /&gt;You use something like this:&lt;br /&gt;&lt;br /&gt;    public class PropertyOf&lt;br /&gt;    {&lt;br /&gt;       public static string Resolve(Expression&amp;gt; expression )&lt;br /&gt;        {&lt;br /&gt;            Expression candidate = null;&lt;br /&gt;&lt;br /&gt;            if (expression.Body is UnaryExpression)&lt;br /&gt;                candidate = (expression.Body as UnaryExpression).Operand;&lt;br /&gt;&lt;br /&gt;            if (expression.Body is MemberExpression)&lt;br /&gt;                candidate = expression.Body;&lt;br /&gt;&lt;br /&gt;            return (candidate as MemberExpression).Member.Name;&lt;br /&gt;        }&lt;br /&gt;    }&lt;br /&gt;&lt;br /&gt;And then call it like this:&lt;br /&gt;&lt;br /&gt;RaisePropertyChanged(PropertyOf.Resolve(x =&amp;gt; x.UserInterface));&lt;br /&gt;&lt;br /&gt;That would remove the magic strings :).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6efb99df-820d-4910-b249-472ed8a95b37">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-04 15:56:31</date>
+      <content>thanks Rutix, that&amp;#39;s an intersting technique. Recently I&amp;#39;ve been experimenting with &lt;a href="http://code.google.com/p/notifypropertyweaver/" rel="nofollow"&gt;notifypropertyweaver&lt;/a&gt; which is another way to get rid of magic strings.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="42865342-c5d0-4abd-9181-a95e674cab27">
+      <author>Rutix</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16953963273586259428</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-11 20:07:51</date>
+      <content>Oh that notifypropertyweaver looks interesting. I will look into that too, since the problem with my technique is that you lose some performance since it needs to do the expression stuff while the string one is just passing the string.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9590507c-850c-49b7-8c74-d41c3baaa3d7">
+      <author>Sebisebo</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-04-18 20:59:01</date>
+      <content>I&amp;#39;ve just finished watching the 3 parts and I absolutely loved it. By far the most comprehensive and pragmatic MVVM tutorial I&amp;#39;ve seen so far...Great work!</content>
+    </comment>
+  </comments>
+</post>

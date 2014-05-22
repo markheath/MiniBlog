@@ -1,0 +1,71 @@
+<post>
+  <title>Creating a Piano Roll in WPF Part 3 - Data Binding</title>
+  <slug>creating-piano-roll-in-wpf-part-3-data</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-13 14:32:00</pubDate>
+  <lastModified>2011-07-04 16:30:42</lastModified>
+  <content>&lt;p&gt;I have posted a couple of times on creating a Piano Roll control in WPF. (&lt;a href="/post/creating-piano-roll-control-in-wpf"&gt;Part 1&lt;/a&gt; and &lt;a href="/post/creating-piano-roll-in-wpf-part-2"&gt;Part 2&lt;/a&gt;). Today I want to take a slight digression and ask whether this could be accomplished more elegantly using a &lt;strong&gt;data binding&lt;/strong&gt; approach. I went to an excellent presentation by &lt;a href="http://www.thejoyofcode.com/Josh.aspx"&gt;Josh Twist&lt;/a&gt; on WPF and data binding yesterday in which he claimed that if you are not using data binding in WPF, you a probably missing something.&lt;/p&gt; &lt;p&gt;So I decided to experiment. First, rather than setting a property on our PianoRoll control, we simply set the &lt;strong&gt;DataContext&lt;/strong&gt; of our Window and let it propagate down:&lt;/p&gt;&lt;pre class="brush: csharp"&gt;MidiFile midiFile = new MidiFile(openFileDialog.FileName);
+this.DataContext = midiFile.Events;&lt;/pre&gt;
+&lt;p&gt;Now we can bind a plain old &lt;strong&gt;ListBox&lt;/strong&gt; to that property. Unfortunately because the MidiEventCollection is not simply a list of events but a list of lists (one per track), I need to use the slightly odd &lt;strong&gt;.[2]&lt;/strong&gt; path binding syntax to get at the events for the third track (which is typically the first one with any notes on for multi-timbral MIDI files).&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox Grid.Row ="1" x:Name="PianoRollListBox" ItemsSource="{Binding Path=.[2]}" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-in-wpf-part-3-data-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Binding a listbox to MIDI" border="0" alt="Binding a listbox to MIDI" src="/posts/files/creating-piano-roll-in-wpf-part-3-data-1.png" width="316" height="249"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Now it is very cool that we can get a textual representation so easily, but of course this is not the look we are after. We need to change the &lt;strong&gt;ItemsPanel&lt;/strong&gt; which by default is a &lt;strong&gt;StackPanel&lt;/strong&gt; and make it a &lt;strong&gt;Canvas&lt;/strong&gt; instead:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox Grid.Row ="1" x:Name="PianoRollListBox" 
+         ItemsSource="{Binding Path=.[2]}"&amp;gt;
+    &amp;lt;ListBox.ItemsPanel&amp;gt;
+        &amp;lt;ItemsPanelTemplate&amp;gt;
+            &amp;lt;Canvas /&amp;gt;
+        &amp;lt;/ItemsPanelTemplate&amp;gt;
+    &amp;lt;/ListBox.ItemsPanel&amp;gt;
+&amp;lt;/ListBox&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Visually, things get worse...&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-in-wpf-part-3-data-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Binding to a Canvas" border="0" alt="Binding to a Canvas" src="/posts/files/creating-piano-roll-in-wpf-part-3-data-2.png" width="184" height="88"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;So now we want to get back to having rectangles representing MIDI events. First we need to do some sizing and scaling on our &lt;strong&gt;ItemsPanel Canvas&lt;/strong&gt; to get things roughly the right size. Then we will create a &lt;strong&gt;DataTemplate&lt;/strong&gt; for the rectangle itself. The only property we bind to is the &lt;strong&gt;NoteLength&lt;/strong&gt;, which is used to set the rectangle's &lt;strong&gt;Width&lt;/strong&gt;.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox Grid.Row ="1" x:Name="PianoRollListBox" 
+         ItemsSource="{Binding Path=.}" 
+         ItemContainerStyle="{StaticResource PianoRollItemContainerStyle}"&amp;gt;
+    &amp;lt;ListBox.ItemsPanel&amp;gt;
+        &amp;lt;ItemsPanelTemplate&amp;gt;
+            &amp;lt;Canvas Height="1280" Width="4000"&amp;gt;
+                &amp;lt;Canvas.RenderTransform&amp;gt;
+                    &amp;lt;ScaleTransform ScaleX="0.2" ScaleY="10" /&amp;gt;
+                &amp;lt;/Canvas.RenderTransform&amp;gt;
+            &amp;lt;/Canvas&amp;gt;
+        &amp;lt;/ItemsPanelTemplate&amp;gt;
+    &amp;lt;/ListBox.ItemsPanel&amp;gt;
+    &amp;lt;ListBox.ItemTemplate&amp;gt;
+        &amp;lt;DataTemplate&amp;gt;
+            &amp;lt;Rectangle 
+                Fill="Red"
+                Height="1"
+                Width="{Binding NoteLength}" /&amp;gt;
+        &amp;lt;/DataTemplate&amp;gt;
+    &amp;lt;/ListBox.ItemTemplate&amp;gt;
+&amp;lt;/ListBox&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The X and Y coordinates of each Rectangle are set by our &lt;strong&gt;ItemContainerStyle&lt;/strong&gt;. We can't do this in the &lt;strong&gt;DataTemplate&lt;/strong&gt; because each Rectangle will not be a direct child element of the ItemsPanel Canvas. Our ItemContainerStyle is very basic, simply holding a &lt;strong&gt;ContentPresenter&lt;/strong&gt;. But it is in here that we can position our rectangles by binding to &lt;strong&gt;AbsoluteTime&lt;/strong&gt; and &lt;strong&gt;NoteNumber &lt;/strong&gt;of the NoteOn event and using them to set the Canvas.Left and Canvas.Top values. Here's the style:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="PianoRollItemContainerStyle" TargetType="{x:Type ListBoxItem}"&amp;gt;
+    &amp;lt;Setter Property="Canvas.Left" Value="{Binding AbsoluteTime}" /&amp;gt;
+    &amp;lt;Setter Property="Canvas.Top" Value="{Binding NoteNumber}" /&amp;gt;
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="{x:Type ListBoxItem}"&amp;gt;
+                &amp;lt;ContentPresenter x:Name="ContentHost" 
+                                  Margin="{TemplateBinding Padding}" 
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}" /&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;So now we have a functional (albeit still very basic) Piano Roll view with only one line of code behind.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-in-wpf-part-3-data-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="WPF Binding to Canvas" border="0" alt="WPF Binding to Canvas" src="/posts/files/creating-piano-roll-in-wpf-part-3-data-3.png" width="297" height="357"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;As cool as this is, there are a number of issues with the data binding approach.&lt;/p&gt;
+&lt;p&gt;1. &lt;strong&gt;Speed &lt;/strong&gt;- it is not nearly as responsive as the old control. I could look into "virtualising" the control, but I'm not sure I want to delve into this at the moment.&lt;/p&gt;
+&lt;p&gt;2. We will need binding converters to set the Width of the canvas and the real note position(currently it is upside-down with low note numbers at the top) if we want to do this right. This means writing more code, and we start to lose the elegance of doing it all in XAML.&lt;/p&gt;
+&lt;p&gt;3. Using a ListBox means that there is mouse and keyboard handling built-in for us, but it probably does not do what we want. I found it became very unresponsive when I clicked around, and occasionally some of the notes appeared to be highlighted, but not the ones I expected. There may be a lower-level ItemsControl we could use instead of ListBox that could help us.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;We want our final PianoRoll control to be easy to use with data binding, but I am not sure yet that this is the best approach internally for implementing a complex control like this. I'll probably progress without the Data Binding for now, but with a view to using Data Binding wherever it does make sense. As usual I welcome any comments and suggestions, as I am still very much a beginner when it comes to WPF.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments />
+</post>

@@ -1,0 +1,35 @@
+<post>
+  <title>MSBuild task to update AssemblyVersion and AssemblyFileVersion in C# files</title>
+  <slug>msbuild-task-to-update-assemblyversion</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-06-11 11:26:00</pubDate>
+  <lastModified>2011-06-11 11:26:34</lastModified>
+  <content>&lt;p&gt;A while ago I decided I needed an MSBuild task that could update the version numbers in my AssemblyInfo.cs file. I had a search around the web, but all the custom tasks I found seemed to work in a different way to what I wanted. So I created my own.&lt;/p&gt; &lt;p&gt;What I wanted was a simple way to say “increment the revision number but leave other numbers the same”, or “set the version to exactly this”. So I came up with a simple syntax to let me do just that. For example:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;SetVersion FileName="AssemblyInfo.cs" AssemblyVersion="1.2.+.=" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This means, set the major version to 1, set the minor version to 2, increment the revision number and leave the build number at whatever it was before. You can also specify a rule for AssemblyFileVersion if you want to keep them both in sync.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://bitbucket.org/markheath/setversiontask"&gt;SetVersionTask&lt;/a&gt; is open source, and hosted on BitBucket. You can download the build of the latest version there, and read &lt;a href="https://bitbucket.org/markheath/setversiontask/wiki/Home"&gt;more detailed instructions&lt;/a&gt; on how to set it up in your MSBuild script.&lt;/p&gt;
+&lt;p&gt;I had originally planned to make it work for nuspec files too, but I don’t have a pressing need for that just yet. Shouldn’t be too hard to add though. Feel free to make use of it if it does what you need.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MSBuild</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="8bab23da-891e-4f6c-ab3a-6f050e5afb82">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-06-15 09:42:47</date>
+      <content>Hi,&lt;br /&gt;&lt;br /&gt;You won&amp;#39;t need it for NuGet as you can pass the versionnumber as an argument, which overrides the version in the nuspec file.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5d9ccd63-bc1e-4925-8b2c-33581aaa39db">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-15 09:44:20</date>
+      <content>thanks anonymous, I didn&amp;#39;t know that</content>
+    </comment>
+  </comments>
+</post>

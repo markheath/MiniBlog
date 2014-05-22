@@ -1,0 +1,114 @@
+<post>
+  <title>WaveOutOpen Callbacks in NAudio</title>
+  <slug>waveoutopen-callbacks-in-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-11-13 12:29:00</pubDate>
+  <lastModified>2010-10-05 15:11:44</lastModified>
+  <content>&lt;p&gt;The waveOutOpen Windows API allows you to specify a variety of callback modes to receive information about when a buffer has finished playing. The choices are:&lt;/p&gt;  &lt;table cellspacing="0" cellpadding="2" width="399" border="1"&gt;&lt;tbody&gt;     &lt;tr&gt;       &lt;td valign="top" width="201"&gt;CALLBACK_EVENT&lt;/td&gt;        &lt;td valign="top" width="196"&gt;The &lt;i&gt;dwCallback&lt;/i&gt; parameter is an event handle.&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="202"&gt;CALLBACK_FUNCTION&lt;/td&gt;        &lt;td valign="top" width="196"&gt;The &lt;i&gt;dwCallback&lt;/i&gt; parameter is a callback procedure address.&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="202"&gt;CALLBACK_NULL&lt;/td&gt;        &lt;td valign="top" width="196"&gt;No callback mechanism. This is the default setting.&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="202"&gt;CALLBACK_THREAD&lt;/td&gt;        &lt;td valign="top" width="196"&gt;The &lt;i&gt;dwCallback&lt;/i&gt; parameter is a thread identifier.&lt;/td&gt;     &lt;/tr&gt;      &lt;tr&gt;       &lt;td valign="top" width="202"&gt;CALLBACK_WINDOW&lt;/td&gt;        &lt;td valign="top" width="196"&gt;The &lt;i&gt;dwCallback&lt;/i&gt; parameter is a window handle.&lt;/td&gt;     &lt;/tr&gt;   &lt;/tbody&gt;&lt;/table&gt;  
+
+&lt;p&gt;Of these, only the CALLBACK_FUNCTION and CALLBACK_WINDOW are of interest to us in &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;, as they are the only two that will actually give back information about which buffer in particular has finished playing.&lt;/p&gt;  
+
+&lt;p&gt;My preference was to use CALLBACK_FUNCTION as this means that the user has no need to pass Window handles to the &lt;strong&gt;WaveOut &lt;/strong&gt;open constructor. There are of course implications to this. It means that the callback function itself will not be running on the GUI thread. However, so long as you are aware of this and don't attempt to talk to GUI components, all is well.&lt;/p&gt;  
+
+&lt;p&gt;The company I work for has been using CALLBACK_FUNCTION for a large .NET application installed on thousands of PCs worldwide. However, we have discovered that certain audio chipsets have intermittent problems hanging in waveOutReset or waveOutPause if the CALLBACK_FUNCTION is used. Early versions of Realtek drivers exhibited this problem, but the latest drivers work correctly. However, the SoundMAX chipset found on a lot of modern laptops has this problem, and we have not been able to find a workaround.&lt;/p&gt;  
+
+&lt;p&gt;So no problem, we decided to switch over to the CALLBACK_WINDOW mechanism. This works great on all chipsets we have tested. There is however one big problem. If you decide you want to stop playing, close the WaveOut device, and immediately create a new one and start playing, it all falls over horribly, and the .NET framework crashes with an execution engine exception.&lt;/p&gt;  
+
+&lt;p&gt;The problem is related to the use of a native window to intercept the WaveOut messages. Here's the NativeWindow used by NAudio:&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;private class WaveOutWindow : System.Windows.Forms.NativeWindow
+{
+    private WaveInterop.WaveOutCallback waveOutCallback;
+
+    public WaveOutWindow(WaveInterop.WaveOutCallback waveOutCallback)
+    {
+        this.waveOutCallback = waveOutCallback;
+    }
+
+    protected override void WndProc(ref System.Windows.Forms.Message m)
+    {
+        if (m.Msg == (int)WaveInterop.WaveOutMessage.Done)
+        {
+            IntPtr hOutputDevice = m.WParam;
+            WaveHeader waveHeader = new WaveHeader();
+            Marshal.PtrToStructure(m.LParam, waveHeader);
+
+            waveOutCallback(hOutputDevice, WaveInterop.WaveOutMessage.Done, 0, waveHeader, 0);
+        }
+        else if (m.Msg == (int)WaveInterop.WaveOutMessage.Open)
+        {
+            waveOutCallback(m.WParam, WaveInterop.WaveOutMessage.Open, 0, null, 0);
+        }
+        else if (m.Msg == (int)WaveInterop.WaveOutMessage.Close)
+        {
+            waveOutCallback(m.WParam, WaveInterop.WaveOutMessage.Close, 0, null, 0);
+        }
+        else
+        {
+            base.WndProc(ref m);
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;When the WaveOut device is created we attach our NativeWindow to the handle passed in. Then when the WaveOut device is closed, we dispose of our buffers and detach from the NativeWindow:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;protected void Dispose(bool disposing)
+{
+    Stop();
+    lock (waveOutLock)
+    {
+        WaveInterop.waveOutClose(hWaveOut);
+    }
+    if (disposing)
+    {
+        if (buffers != null)
+        {
+            for (int n = 0; n &amp;lt; numBuffers; n++)
+            {
+                if (buffers[n] != null)
+                {
+                    buffers[n].Dispose();
+                }
+            }
+            buffers = null;
+        }
+        if (waveOutWindow != null)
+        {
+            waveOutWindow.ReleaseHandle();
+            waveOutWindow = null;
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;This works fine with CALLBACK_FUNCTION, as by the time the call to waveOutReset (which happens in the Stop function) returns, all the callbacks have been made. In CALLBACK_WINDOW mode, this is not the case. We might still get Done and Closed WaveOutMessages. What happens to those messages? Well in the normal case they simply will be ignored by the message loop of the main window now that we have unregistered our NativeWindow. But if we immediately open another WaveOut device, using the same Window handle, then messages for the (now disposed) WaveOut device will come through to be handled by the new WaveOut's callback function. This means that the associated buffer GCHandle will be to a disposed object.&lt;/p&gt;
+
+&lt;p&gt;Could accessing an invalid GCHandle cause an ExecutionEngineException? I'm not sure. I put in various safety checks to ensure we didn't access the Target of a dead GCHandle, but that didn't solve the problem. Sadly there is no stack trace available to point to the exact cause of the fault.&lt;/p&gt;
+
+&lt;p&gt;The solution? Don't use an existing window. Instead of inheriting from NativeWindow, inherit directly from Form. No attaching of handles is needed any more. The form doesn't even need to be shown. I will do some more testing on this, but if it looks robust enough, the change will be checked in to NAudio.&lt;/p&gt;
+
+&lt;p&gt;Of course the CALLBACK_FUNCTION method continues to work fine, and there are no known issues with the current CALLBACK_WINDOW implementation so long as you don't recreate a new one based on the same window handle immediately after closing the last. There will be an additional benefit to this change - the need for Window handles to be passed to the WaveOut constructor will be completely removed.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="6de5fada-30c5-43ad-993d-e3f3ccfbb820">
+      <author>DotNetURL</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.dotneturl.com</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-25 17:55:00</date>
+      <content>Hi,&lt;BR/&gt;  Nice blog.. for DotNet developer. Publish you new content url at &lt;A HREF="http://www.dotneturl.com" REL="nofollow"&gt;www.dotneturl.com&lt;/A&gt; and get reader and back link form us for free.&lt;BR/&gt;&lt;BR/&gt;www.dotneturl.com</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4b18470b-18fc-4735-b98e-b5c07e97ddd1">
+      <author>hver</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05004567240098171061</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-16 16:00:21</date>
+      <content>Actually, CALLBACK_THREAD does give you the address of the buffer in the message lParam. It is fine compromise between CALLBACK_FUNCTION (no window required) and CALLBACK_WINDOW (loose coupling to driver thread).</content>
+    </comment>
+  </comments>
+</post>

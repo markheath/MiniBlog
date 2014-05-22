@@ -1,0 +1,41 @@
+<post>
+  <title>Creating Zip Files with IronPython</title>
+  <slug>creating-zip-files-with-ironpython</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-11-29 16:11:00</pubDate>
+  <lastModified>2011-11-29 16:11:21</lastModified>
+  <content>&lt;p&gt;I’ve been working on automating some of the parts of the release process for &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;, as I always seem to forget something or make a mistake. One of the tasks was to create a “demo” zip file containing the demo applications together with their supporting files.&lt;/p&gt; &lt;p&gt;I initially attempted to do this with MSBuild and the Zip task from &lt;a href="http://msbuildtasks.tigris.org/"&gt;MSBuild Community Extensions&lt;/a&gt;, but I ended up double-adding a number of files, as well as struggling to get exactly the right folder structure.&lt;/p&gt; &lt;p&gt;This is exactly the sort of task that Python excels at, and Python comes with the &lt;a href="http://docs.python.org/library/zipfile.html"&gt;zipfile module&lt;/a&gt; built in, meaning that the script I wrote is not &lt;a href="http://ironpython.net"&gt;IronPython&lt;/a&gt; specific. Here’s what I came up with:&lt;/p&gt;&lt;pre class="brush: py;"&gt;import zipfile
+import os
+
+folders = ['AudioFileInspector','NAudioDemo','NAudioWpfDemo']
+files = {}
+
+def exclude(filename):
+    return filename.endswith('.pdb') or ('nunit' in filename)
+
+for folder in folders:
+    fullpath = folder + "\\bin\\debug\\"
+    for filename in os.listdir(fullpath):
+        if not exclude(filename):
+            files[filename] = fullpath + filename
+
+zip = zipfile.ZipFile("BuildArtefacts\\test.zip", "w")
+
+for filename, fullpath in files.iteritems():
+    if os.path.isdir(fullpath):
+        for subfile in os.listdir(fullpath):
+            zip.write(fullpath + "\\" + subfile, filename + "\\" + subfile)
+    else:
+        zip.write(fullpath, filename)
+
+zip.close()&lt;/pre&gt;
+&lt;p&gt;There's not a lot to it really. I first build up a dictionary containing the files I want in my zip, using the filename to exclude duplicates. Then I use the &lt;strong&gt;write &lt;/strong&gt;method on &lt;strong&gt;zipfile&lt;/strong&gt; to specify the file I want to add, and the folder it belongs in.&lt;/p&gt;
+&lt;p&gt;My Python skills are a bit rusty, so the code above would probably benefit from being refactored a little, but as you can see, it is very easy, and much simpler than fighting MSBuild to make it do what I want.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MSBuild</category>
+    <category>IronPython</category>
+    <category>Python</category>
+  </categories>
+  <comments />
+</post>

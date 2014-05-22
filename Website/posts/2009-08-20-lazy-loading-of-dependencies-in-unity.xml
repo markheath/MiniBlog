@@ -1,0 +1,79 @@
+<post>
+  <title>Lazy Loading of Dependencies in Unity</title>
+  <slug>lazy-loading-of-dependencies-in-unity</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-08-20 17:04:00</pubDate>
+  <lastModified>2010-09-23 17:18:56</lastModified>
+  <content>&lt;p&gt;I have been learning the &lt;a href="http://www.codeplex.com/unity"&gt;Unity&lt;/a&gt; IoC container recently as we will be making use of it in a project I am working on. Like all IoC containers, it makes it nice and easy to automatically construct an object, fulfilling all its dependencies.&lt;/p&gt;  &lt;p&gt;One issue that comes up frequently when using IoC containers, is how to implement lazy loading. For example, suppose my class has a dependency on &lt;strong&gt;IEmailSender&lt;/strong&gt;, but only uses it in certain circumstances. I might not wish for the concrete implementation to be created until I actually know I need it.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp;"&gt;public class MyClass(IEmailSender emailSender)&lt;/pre&gt;
+
+&lt;p&gt;One quick way round this is to take a dependency on the container instead. With Unity, the container comes already registered, so you can simply change the constructor prototype. Now you can call &lt;strong&gt;container.Resolve&amp;lt;IEmailSender&amp;gt;&lt;/strong&gt; at the point you are ready to use it.&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public class MyClass(IUnityContainer container)&lt;/pre&gt;
+
+&lt;p&gt;The disadvantage of this solution is that we have now obscured the real dependencies of &lt;strong&gt;MyClass&lt;/strong&gt;. It could ask for anything it likes from the container, and we have to examine the code to find out what it actually uses. Fortunately, there is a way we can solve this using Unity’s ability to allow you to register open generic types.&lt;/p&gt;
+
+&lt;p&gt;Suppose we create a generic class called &lt;strong&gt;Lazy&lt;/strong&gt;, that implements &lt;strong&gt;ILazy&lt;/strong&gt; as follows:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public interface ILazy&amp;lt;T&amp;gt;
+{
+    T Resolve();
+    T Resolve(string namedInstance);
+}
+
+public class Lazy&amp;lt;T&amp;gt; : ILazy&amp;lt;T&amp;gt;
+{
+    IUnityContainer container;
+
+    public Lazy(IUnityContainer container)
+    {
+        this.container = container;
+    }
+
+    public T Resolve()
+    {
+        return container.Resolve&amp;lt;T&amp;gt;();
+    }
+
+    public T Resolve(string namedInstance)
+    {
+        return container.Resolve&amp;lt;T&amp;gt;(namedInstance);
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now we need to tell our container to use &lt;strong&gt;Lazy &lt;/strong&gt;when someone asks for &lt;strong&gt;ILazy&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;container.RegisterType(typeof(ILazy&amp;lt;&amp;gt;),typeof(Lazy&amp;lt;&amp;gt;));&lt;/pre&gt;
+
+&lt;p&gt;And now that allows us to change our original class to have the following prototype:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public class MyClass(ILazy&amp;lt;IEmailService&amp;gt; emailServiceFactory)&lt;/pre&gt;
+
+&lt;p&gt;Now we have advertised that our class depends on an &lt;strong&gt;IEmailService&lt;/strong&gt;, but have not created it immediately on construction of &lt;strong&gt;MyClass&lt;/strong&gt;, nor have we allowed &lt;strong&gt;MyClass&lt;/strong&gt; to get at the &lt;strong&gt;IUnityContainer&lt;/strong&gt; itself.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Unity</category>
+    <category>IoC</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="62f50e11-27f4-4adb-806a-293ed9b8c37a">
+      <author>Piotr Włodek</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16128908255082039702</website>
+      <ip />
+      <userAgent />
+      <date>2010-05-13 22:34:35</date>
+      <content>There&amp;#39;s even better solution - native support for Lazy&amp;lt;T&amp;gt; and IEnumerable&amp;lt;Lazy&amp;lt;T&amp;gt;&amp;gt; in the Unity 2.0. Check it out at http://bit.ly/bNUOdG</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="702c7004-ec66-45b3-a39e-ae331b426657">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-05-17 10:56:57</date>
+      <content>yes, this is a welcome new feature for those using .NET 4</content>
+    </comment>
+  </comments>
+</post>

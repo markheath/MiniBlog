@@ -1,0 +1,37 @@
+<post>
+  <title>Roundtrip Serialization of DateTimes in C#</title>
+  <slug>roundtrip-serialization-of-datetimes-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-04-14 16:55:00</pubDate>
+  <lastModified>2014-04-14 16:55:55</lastModified>
+  <content>&lt;p&gt;Say you need to serialize a DateTime object to string (perhaps for an XML or JSON file), and want to ensure that you get back exactly the same time you serialized. Well, you might think that you can just use DateTime.ToString and DateTime.Parse:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var testDate = DateTime.Now;
+var serialized = testDate.ToString();
+Console.WriteLine("Serialized: {0}",serialized);
+var deserialized = DateTime.Parse(serialized);
+Console.WriteLine("Deserialized: {0}",deserialized);
+
+// prints:
+Serialized: 14/04/2014 16:32:00
+Deserialized: 14/04/2014 16:32:00
+&lt;/pre&gt;
+&lt;p&gt;At first glance it seems to work, but actually this is a very bad idea. What’s wrong with this approach? Well two things. For starters, the millisecond component of the time has been lost. More seriously, you are entirely dependent on the deserializing system’s short date format being the same as the serializing system’s. For example, if you serialize in a UK culture with a short date format of dd/mm/yyyy and then deserialize in a US culture with a short date format of mm/dd/yyyy you can end up with completely the wrong date (e.g. 1st of March becomes the 3rd of January).&lt;/p&gt;
+&lt;p&gt;So how can you ensure you get &lt;em&gt;exactly &lt;/em&gt;the same DateTime object back that you serialized? Well the answer is to use ToString with the “O” format specifier which is called the “&lt;a href="http://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx#Roundtrip"&gt;roundtrip format specifier&lt;/a&gt;”. This will not only include the milliseconds, but also ensures that the &lt;a href="http://msdn.microsoft.com/en-us/library/system.datetime.kind(v=vs.110).aspx"&gt;DateTime.Kind property&lt;/a&gt; is represented in the string (under the hood a .NET DateTime is essentially a tick count plus a DateTimeKind).&lt;/p&gt;
+&lt;p&gt;Here’s three dates formatted with the roundtrip format specifier, but each with a different DateTime.Kind value:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;Console.WriteLine("Local: {0}", DateTime.Now.ToString("O"));
+Console.WriteLine("UTC: {0}", DateTime.UtcNow.ToString("O"));
+var unspecified = new DateTime(2014,3,11,16,13,56,123,DateTimeKind.Unspecified);
+Console.WriteLine("Unspecified: {0}", unspecified.ToString("O"));
+
+// prints:
+Local: 2014-04-14T16:36:01.5305961+01:00
+UTC: 2014-04-14T15:36:01.5345961Z
+Unspecified: 2014-03-11T16:13:56.1230000
+&lt;/pre&gt;
+&lt;p&gt;As you can see, UTC times end in Z, local times include the current offset from UTC, and unspecified times have no suffix. You can also see that we have fractions of a second to 7 decimal places. If you’ve serialized your DateTime objects like this, you can then get them back to exactly what they were before by using &lt;strong&gt;DateTime.Parse&lt;/strong&gt;, and passing in the &lt;strong&gt;DateTimeStyles.RoundTripKind &lt;/strong&gt;argument:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;DateTime.Parse("2014-03-11T16:14:27.8660648+01:00", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+&lt;/pre&gt;
+&lt;p&gt;The only thing to note here is that the serialization of a local time includes the offset from UTC. Which means that if you deserialize it in a different timezone, you will get the correct local time for that timezone. Which will of course be a different local time to the one originally serialized This is almost certainly what you want, but it does mean that technically, the binary representation of the deserialized DateTime object is not identical to the one that was serialized (different number of ticks).&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+  </categories>
+  <comments />
+</post>

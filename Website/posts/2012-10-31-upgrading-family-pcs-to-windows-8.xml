@@ -1,0 +1,77 @@
+<post>
+  <title>Upgrading family PCs to Windows 8</title>
+  <slug>upgrading-family-pcs-to-windows-8</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-10-31 13:02:00</pubDate>
+  <lastModified>2012-10-31 13:02:39</lastModified>
+  <content>&lt;p&gt;I have five children, and with only three PCs in the house, it can be a challenge to get access to one. Probably the time to buy another has come. However, managing accounts on three PCs for seven people is hardly fun, and a fourth would just add to the workload. So the idea of upgrading to Windows 8 with its accounts that can sync their settings across PCs appeals to me. I decided this week to take advantage of the £25 upgrade offer and set to work on upgrading.&lt;/p&gt; &lt;h3&gt;Upgrade Assistant&lt;/h3&gt; &lt;p&gt;Normally when I upgrade to a new version of Windows, I will do a fresh install. But the thought of having to recreate seven user accounts and set them all up with their preferences was not appealing, so I opted for an upgrade, keeping all apps and settings. There is also an upgrade that only keeps settings, but I presume that would mean that programs like Office, iTunes, CrashPlan, DropBox etc would get lost along the way.&lt;/p&gt; &lt;p&gt;The upgrade assistant examines your system and warns you about issues you might face. This is a nice touch and it warned me that I needed to uninstall Microsoft Security Essentials and that there might be a problem with VS2010 SP1. It also told me I needed to deauthorize my computer on iTunes, which it didn’t explain, but this turns out to be a fairly simple task (my wife uses iTunes but I don’t so I’m not too familiar with the interface). It warns that Windows 8 doesn’t come with DVD playback as standard, although there does seem to be &lt;a href="http://howto.cnet.com/8301-11310_39-57540793-285/how-to-add-windows-media-center-to-windows-8-pro-for-free/"&gt;a rather convoluted way to add Windows Media Center for free&lt;/a&gt; if you take up the upgrade offer. The one thing the upgrade assistant forgot to tell me was to uninstall Windows Live Family Safety first, which I should have done as I want to use with Windows 8 family safety settings.&lt;/p&gt; &lt;p&gt;It was a little irritating that the upgrade assistant insists on downloading Windows on every machine you upgrade. It is also worth noting that it won’t give you the option to go from x86 to x64, although for my two 32 bit Windows 7 machines I had I have no real need to give them more than 4GB RAM, so it is no big deal.&lt;/p&gt; &lt;p&gt;All told, the installation took around 2 hours. It backs up the old installation to a folder called Windows.old, which &lt;a href="http://www.eightforums.com/tutorials/2527-windows-old-folder-delete-windows-8-a.html"&gt;can be deleted&lt;/a&gt; if you are sure the transition went correctly and none of your data is lost.&lt;/p&gt; &lt;h3&gt;Windows 8 Usability&lt;/h3&gt; &lt;p&gt;There has been a lot of fuss in the media about the loss of the start menu and that the touch-centric design of the Start screen and Metro apps would be confusing for new users, so I was interested to see how my wife and children got on with it. The answer is, just fine. They picked it up incredibly quickly. Within an hour or so they knew how to get to the start screen, how to sign in and out, how to change their account picture and colour scheme (most important to them!), how to organize live tiles, and how to install stuff from the store. Probably they don’t know how to use the charms or search for stuff, but they haven’t really needed to do that so far.&lt;/p&gt; &lt;p&gt;I also have to say that I have been won over to the new start screen despite my scepticism. It is a much better version of the start menu, with the ability to organize and pin stuff, better searching, and the live tiles are great for things like calendar and email notifications (as on my Windows Phone).&lt;/p&gt; &lt;p&gt;There were however a few examples of poor usability I encountered. I’m not sure why the search doesn’t automatically show you results in other categories if your selected category has no results. If downloading apps and updates stalls, you get very little feedback as to what is going on. I’d like to see bytes downloaded and remaining to help me troubleshoot. I occasionally got stuck in certain screens, like the store updates screen not letting me go back to the store front page, or the user settings screen not letting me out until I converted an account from Microsoft to local. Hopefully Microsoft are planning to fix a lot of these types of annoyances in updates soon.&lt;/p&gt; &lt;h3&gt;Family PC&lt;/h3&gt; &lt;p&gt;For my family PCs, there are two things I want. First, to be able to easily control what my children can access, and second, to sync as many settings between the PCs as possible to avoid having to manually configure accounts on each machine.&lt;/p&gt; &lt;p&gt;The first is well handled by Windows 8 family safety, which is essentially an improved Windows Live family safety. Its web filtering lets you choose by category and then add entries to a blacklist or whitelist. You can also control Windows Store apps by rating, but there doesn’t seem to be a blacklist or whitelist for apps, which is a great shame, as some apps I wanted to allow my younger children access to (e.g. OneNote), had a 12+ rating. &lt;/p&gt; &lt;p&gt;Family safety also has settings to control how many hours a child can be on the PC, and select times of day when they can use the computer. This is great, as we can stop them using the PC on weekdays from 8:00-8:30 when they should be getting ready for school. We can also limit them to 3 hours a day on the computer, and since the family safety website lets you link up local accounts, this should work even if they switch between computers during the day.&lt;/p&gt; &lt;p&gt;To get the benefit of syncing settings between PCs, you have to upgrade from a local account to a Microsoft account. I did this for my wife and eldest child who both have hotmail accounts. But it is a little less clear what Microsoft expect me to do for younger children. It would be nice if I could somehow enable their accounts for syncing but manage them via my Microsoft account.&lt;/p&gt; &lt;p&gt;The syncing is a little confusing. It wasn’t clear to me what exactly would be synced. For example, I was expecting my calendar settings to sync, but they didn’t seem to. There is no way to tell if settings sync has completed or not, so maybe I just needed to wait a bit longer. It also appears that installing a Windows store app on one PC does not automatically install it on the others, so it would at be nice if the Windows Store had a “my apps” area showing me apps that I had installed on at least one of my computers.&lt;/p&gt; &lt;p&gt;The next step is to take my development laptop through the same procedure, and then I can get to grips with seeing how much of &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; will work with Windows RT.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Windows 8</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c0c43f89-dbd6-4e20-8106-5fbbea6b3492">
+      <author>jschroedl</author>
+      <email>noreply@blogger.com</email>
+      <website>http://jschroedl.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-31 14:03:39</date>
+      <content>I had a similar upgrade experience with our family machines this weekend.&lt;br /&gt;&lt;br /&gt;If you right-click in the Store app you see &amp;quot;My Apps&amp;quot; and that shows a list of all the apps you&amp;#39;ve installed or bought for your account. If you login to another machine with that account you can go there and quickly install all the stuff you want.&lt;br /&gt;&lt;br /&gt;John</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="11afc5ab-bc63-4f94-96c4-257dfbd96ca9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-31 14:12:29</date>
+      <content>thanks John, I suspected there might be a way to do this. Didn&amp;#39;t think of right-clicking though - not something I expected to have any effect in an app designed for use on tablets.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2b358793-3e9e-45da-8054-94ab95bbb301">
+      <author>Андрей Ерёмин</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09740957206336104412</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-31 14:40:49</date>
+      <content>Hello, is there any way to buy an upgrade without further installation?&lt;br /&gt;&lt;br /&gt;i mean now i have only devices with Mac OS X, but soon i plan to move to Windows 7 and i&amp;#39;d like to upgrade it to Windows 8, but i don&amp;#39;t want to lose a special offer for 39$</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="23d5a23f-4b38-451e-b51e-700a5e37fa2c">
+      <author>jschroedl</author>
+      <email>noreply@blogger.com</email>
+      <website>http://jschroedl.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-31 16:27:30</date>
+      <content>@Андрей:  Yes, you can upgrade and shortly into the installation process you have the choice of downloading the ISO file and stopping the install (you&amp;#39;ll also have your install key by then too which you&amp;#39;ll need later).&lt;br /&gt;&lt;br /&gt;I downloaded on one machine, made a disc and got product keys for the other machines and cancelled their downloads and just installed off the DVD I made on those other machines. Worked great!&lt;br /&gt;&lt;br /&gt;John</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4c12ccf6-279f-4b4e-a48d-5c38fc6861a2">
+      <author>Unknown</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14277299986288628338</website>
+      <ip />
+      <userAgent />
+      <date>2012-11-01 18:18:48</date>
+      <content>Please make NAudio compatible also with Metro App :-)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7b54703d-6fbf-47aa-949c-ab7095b80ce9">
+      <author>R. Bovill</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13806761971999862684</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-25 07:55:51</date>
+      <content>Hey Mark, I installed the classic start menu on my Windows 8 machine, just press the WIN button to go immediately to the desktop and SHIFT-WIN to go immediately to the Metro desktop; I found this very intuitive.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2b5e93b0-7d1c-41cb-afda-042b35f4def3">
+      <author>R. Bovill</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13806761971999862684</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-25 07:58:18</date>
+      <content>Hey Mark, I installed the classic start menu on my Windows 8 machine, just press the windows button to go immediately to the desktop and SHIFT-WIN to go immediately to the Metro desktop; I found this very intuitive.</content>
+    </comment>
+  </comments>
+</post>

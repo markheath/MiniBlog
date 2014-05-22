@@ -1,0 +1,123 @@
+<post>
+  <title>WPF and MVVM in IronPython</title>
+  <slug>wpf-and-mvvm-in-ironpython</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-06 17:31:00</pubDate>
+  <lastModified>2011-07-02 08:57:08</lastModified>
+  <content>&lt;p&gt;I’ve been getting to grips with &lt;a href="http://ironpython.net/"&gt;IronPython&lt;/a&gt; recently, and wanted to see how easy it would be to use the MVVM pattern. What we need is a basic library of MVVM helper functions. First is a class to load an object from a XAML file.&lt;/p&gt;&lt;pre class="brush: py; gutter: false; toolbar: false;"&gt;import clr
+clr.AddReference("PresentationFramework")
+clr.AddReference("PresentationCore")
+
+from System.IO import File
+from System.Windows.Markup import XamlReader
+
+class XamlLoader(object):
+    def __init__(self, xamlPath):
+        stream = File.OpenRead(xamlPath)
+        self.Root = XamlReader.Load(stream)
+        
+    def __getattr__(self, item):
+        """Maps values to attributes.
+        Only called if there *isn't* an attribute with this name
+        """
+        return self.Root.FindName(item)&lt;/pre&gt;
+&lt;p&gt;In addition to loading the XAML, I’ve added a helper method to make it easy to access any named items within your XAML file, just in case the MVVM approach is proving problematic and you decide to work directly with the controls.&lt;/p&gt;
+&lt;p&gt;Next we need a base class for our view models to inherit from, which implements &lt;strong&gt;INotifyPropertyChanged&lt;/strong&gt;. I thought it might be tricky to inherit from .NET interfaces that contain events, but it turns out to be remarkably simple. We just inplement add_PropertyChanged and remove_PropertyChanged, and then we can raise notifications whenever we want.&lt;/p&gt;&lt;pre class="brush: py; gutter: false; toolbar: false;"&gt;from System.ComponentModel import INotifyPropertyChanged
+from System.ComponentModel import PropertyChangedEventArgs
+
+class ViewModelBase(INotifyPropertyChanged):
+    def __init__(self):
+        self.propertyChangedHandlers = []
+
+    def RaisePropertyChanged(self, propertyName):
+        args = PropertyChangedEventArgs(propertyName)
+        for handler in self.propertyChangedHandlers:
+            handler(self, args)
+            
+    def add_PropertyChanged(self, handler):
+        self.propertyChangedHandlers.append(handler)
+        
+    def remove_PropertyChanged(self, handler):
+        self.propertyChangedHandlers.remove(handler)&lt;/pre&gt;
+&lt;p&gt;The next thing we need is a way of creating command objects. I created a very basic class that inherits from ICommand and allows us to run our own function when Execute is called. Obviously it could easily be enhanced to properly support CanExecuteChanged and command parameters.&lt;/p&gt;&lt;pre class="brush: py;"&gt;from System.Windows.Input import ICommand
+
+class Command(ICommand):
+    def __init__(self, execute):
+        self.execute = execute
+    
+    def Execute(self, parameter):
+        self.execute()
+        
+    def add_CanExecuteChanged(self, handler):
+        pass
+    
+    def remove_CanExecuteChanged(self, handler):
+        pass
+
+    def CanExecute(self, parameter):
+        return True&lt;/pre&gt;
+&lt;p&gt;And now we are ready to create our application. Here’s some basic XAML. I’ve only named the grid to demonstrate accessing members directly, but it obviously is not good MVVM practice.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="IronPython MVVM Demo"
+    Width="450"
+    SizeToContent="Height"&amp;gt;
+    &amp;lt;Grid Margin="15" x:Name="grid1"&amp;gt;
+        &amp;lt;Grid.RowDefinitions&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+            &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+        &amp;lt;/Grid.RowDefinitions&amp;gt;
+        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+            &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+            &amp;lt;ColumnDefinition Width="*" /&amp;gt;
+        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+        &amp;lt;Label Grid.Row="0" Grid.Column="0" FontSize="24" Content="First Name:" /&amp;gt;
+        &amp;lt;Label Grid.Row="0" Grid.Column="1" FontSize="24" Content="{Binding FirstName}" /&amp;gt;
+        &amp;lt;Label Grid.Row="1" Grid.Column="0" FontSize="24" Content="Surname:" /&amp;gt;
+        &amp;lt;Label Grid.Row="1" Grid.Column="1" FontSize="24" Content="{Binding Surname}" /&amp;gt;
+        &amp;lt;Button Grid.Row="2" FontSize="24" Content="Change" Command="{Binding ChangeCommand}" /&amp;gt;
+    &amp;lt;/Grid&amp;gt;
+&amp;lt;/Window&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Now we can make our ViewModel. It will have FirstName and Surname attributes as well as an instance of our Command object:&lt;/p&gt;&lt;pre class="brush: py;"&gt;class ViewModel(ViewModelBase):
+    def __init__(self):
+        ViewModelBase.__init__(self)
+        self.FirstName = "Joe"
+        self.Surname = "Smith"
+        self.ChangeCommand = Command(self.change)
+    
+    def change(self):
+        self.FirstName = "Dave"
+        self.Surname = "Brown"
+        self.RaisePropertyChanged("FirstName")
+        self.RaisePropertyChanged("Surname")&lt;/pre&gt;
+&lt;p&gt;And finally we are ready to create our application. Simply load the XAML in with the XamlLoader and set the DataContext. I also demonstrate setting the background colour here, to show how easy it is to access named elements in the XAML:&lt;/p&gt;&lt;pre class="brush: py;"&gt;from System.Windows import Application
+from System.Windows.Media import Brushes
+
+xaml = XamlLoader('WpfMvvmDemo.xaml')
+xaml.Root.DataContext = ViewModel()
+xaml.grid1.Background = Brushes.DarkSalmon
+app = Application()
+app.Run(xaml.Root)&lt;/pre&gt;Now we run it and see: 
+&lt;p&gt;&lt;a href="/posts/files/wpf-and-mvvm-in-ironpython-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="mvvm-python-1" border="0" alt="mvvm-python-1" src="/posts/files/wpf-and-mvvm-in-ironpython-1.png" width="454" height="194"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;And click the button to see:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/wpf-and-mvvm-in-ironpython-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="mvvm-python-2" border="0" alt="mvvm-python-2" src="/posts/files/wpf-and-mvvm-in-ironpython-2.png" width="454" height="194"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;And that’s all there is to it. It may even be simpler than doing MVVM from C#.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>IronPython</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="43f7259e-c21d-4867-87ee-2d077cdb6a42">
+      <author>indang-farmer</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02038396637341302709</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-19 05:42:35</date>
+      <content>Thanks for posting this.  I am trying to learn Ironpython with very little previous rigorous programming experience, and it really helps to have code like this to take a look at (I was looking for examples of databinding, Ironpython, and MVVC).&lt;br /&gt;&lt;br /&gt;There seems to be a typo in the xaml. Some HTML snuck in as a hyper-reference where grid1 is defined.&lt;br /&gt;&lt;br /&gt;Removed the HTML and the code worked fine.  Thanks.</content>
+    </comment>
+  </comments>
+</post>

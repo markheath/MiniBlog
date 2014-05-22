@@ -1,0 +1,57 @@
+<post>
+  <title>LINQ to General Election Part 2 – LINQ to XLS</title>
+  <slug>linq-to-general-election-part-2-linq-to</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-05-12 07:31:00</pubDate>
+  <lastModified>2011-07-03 14:35:38</lastModified>
+  <content>&lt;p&gt;In my &lt;a href="/post/linq-to-general-election-part-1-linq-to"&gt;previous post&lt;/a&gt;, I demonstrated how to run LINQ queries against the UK general election data the Guardian newspaper in JSON format. They additionally made a &lt;a href="http://www.guardian.co.uk/news/datablog/2010/may/07/uk-election-results-data-candidates-seats"&gt;Google spreadsheet&lt;/a&gt; available which not only has the winners in every constituency but the number of votes for each candidate that stood. &lt;/p&gt;
+&lt;p&gt;Now it might be possible to run LINQ queries directly against the Google spreadsheet using the &lt;a href="http://code.google.com/p/google-gdata/"&gt;Google Data APIs&lt;/a&gt; (perhaps an experiment for another day), but I chose instead to download the spreadsheet as a Microsoft Excel spreadsheet and run my LINQ queries against that instead.&lt;/p&gt;
+&lt;p&gt;First of all, I needed a LINQ to Excel provider and found &lt;a href="http://code.google.com/p/linqtoexcel/"&gt;linqtoexcel&lt;/a&gt;. Unfortunately, it requires you to reference several DLLs, but once you have done so, it is pretty straightforward to use.&lt;/p&gt;
+&lt;b&gt;Mapping the Spreadsheet&lt;/b&gt;
+&lt;p&gt;One nice feature of linqtoexcel is that it makes it easy to map your spreadsheet data onto a strongly typed class. By default it will simply look for properties matching the column names. Here’s my election result class:&lt;/p&gt;
+&lt;pre class="brush: csharp;"&gt;public class Result
+{
+    public string Seat { get; set; }
+    public string Candidate { get; set; }
+    public string Party { get; set; }
+    public int Vote { get; set; }
+    public double VotePercent { get; set; }
+    public string Winner { get; set; }
+}&lt;/pre&gt;
+&lt;p&gt;Now I can open the XLS file using the &lt;b&gt;ExcelQueryFactory&lt;/b&gt; class and I also need to add a custom mapping since the title of the &lt;b&gt;VotePercent &lt;/b&gt;column is not a valid C# identifier. Note that you don’t have to map all the fields. I have just picked out the six that I needed for my queries.&lt;/p&gt;
+&lt;pre class="brush: csharp;"&gt;var repo = new ExcelQueryFactory();
+repo.FileName = @"..\..\..\Data\General election 2010 results.xls";
+repo.AddMapping&amp;lt;Result&amp;gt;(x =&amp;gt; x.VotePercent, "%Vote");&lt;/pre&gt;
+&lt;b&gt;Querying the Data&lt;/b&gt;
+&lt;p&gt;Having done this, we are now in a position to perform any queries. We can specify the worksheet name from which our data comes (in this case “FULL CONSTITUENCY DATA”). Having the use of strongly typed classes makes the LINQ much more readable than in the JSON example.&lt;/p&gt;
+&lt;pre class="brush: csharp;"&gt;var unluckyLosers = from p in repo.Worksheet&amp;lt;Result&amp;gt;("FULL CONSTITUENCY DATA")
+                       where (p.Party != p.Winner) &amp;amp;&amp;amp; (p.VotePercent &amp;gt; 42)
+                       orderby p.VotePercent ascending
+                       select p;
+Console.WriteLine("Unlucky Losers:");
+foreach (var winner in unluckyLosers)
+{
+    Console.WriteLine(String.Format("{2}%: {0} ({1})", winner.Candidate, winner.Party, winner.VotePercent));
+}&lt;/pre&gt;
+&lt;p&gt;Unfortunately, there seems to be a bug in that the orderby clause seems to be ignored. I tried a few different sort fields but with no success. The output from the above query is as follows:&lt;/p&gt;
+&lt;pre class="brush: plain; gutter: false;"&gt;Unlucky Losers:
+44.52%: King, Nick (C)
+45.51%: Connor, Rodney (Ind)
+43.79%: Kelley, Claire (LD)
+42.11%: Dismore, Andrew (Lab)
+42.01%: Harris, Evan (LD)
+42.81%: Kramer, Susan (LD)
+42.55%: Throup, Maggie (C)
+44.51%: Rees-Mogg, Annunziata (C)
+42.36%: Stroud, Philippa (C)
+42.2%: Formosa, Mark (C)
+42.53%: Heathcoat-Amory, David (C)
+43.08%: Tod, Martin (LD)&lt;/pre&gt;
+&lt;p&gt;Patently, they have not been sorted in the requested order. I have &lt;a href="http://code.google.com/p/linqtoexcel/issues/detail?id=25"&gt;filed a bug&lt;/a&gt; against linqtoexcel. Hopefully it can be resolved soon. &lt;b&gt;Update: &lt;/b&gt;A fix was released shortly after my bug report - linqtoexcel 1.3.70 works fine.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Excel</category>
+    <category>LINQ</category>
+  </categories>
+  <comments />
+</post>

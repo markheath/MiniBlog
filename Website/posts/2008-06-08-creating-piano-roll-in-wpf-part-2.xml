@@ -1,0 +1,125 @@
+<post>
+  <title>Creating a Piano Roll in WPF Part 2</title>
+  <slug>creating-piano-roll-in-wpf-part-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-08 07:42:00</pubDate>
+  <lastModified>2011-07-03 08:35:38</lastModified>
+  <content>&lt;p&gt;In a &lt;a href="/post/creating-piano-roll-control-in-wpf"&gt;previous post&lt;/a&gt;, I demonstrated how easy it was to create a very rudimentary piano roll view in WPF. In this post, I will take things a stage further by giving the piano roll a better background. To achieve this, I have made two changes to the PianoRoll User Control we made previously. First, I have moved the ScrollViewer in so that it now is part of the PianoRoll control itself. Second, I now have three sub-canvases that will build up the data view in the Piano Roll control. Here is the new XAML for the PianoRoll control:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;UserControl x:Class="TestApp.PianoRoll"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Height="Auto" Width="Auto"&amp;gt;
+    &amp;lt;ScrollViewer 
+        x:Name="scrollViewer1"
+        HorizontalScrollBarVisibility="Auto" 
+        VerticalScrollBarVisibility="Auto"&amp;gt;
+    &amp;lt;Canvas x:Name="RootCanvas" Background="White"&amp;gt;
+        &amp;lt;Canvas x:Name="NoteBackgroundCanvas"&amp;gt;
+            &amp;lt;Canvas.RenderTransform&amp;gt;
+                &amp;lt;ScaleTransform 
+                     x:Name="NoteBackgroundRenderScaleTransform" 
+                     ScaleX="1" ScaleY="1" /&amp;gt;
+            &amp;lt;/Canvas.RenderTransform&amp;gt;
+        &amp;lt;/Canvas&amp;gt;
+        &amp;lt;Canvas x:Name="GridCanvas" /&amp;gt;
+        &amp;lt;Canvas x:Name="NoteCanvas" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+    &amp;lt;/ScrollViewer&amp;gt;
+&amp;lt;/UserControl&amp;gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;strong&gt;NoteBackgroundCanvas&lt;/strong&gt; is used for drawing the horizontal lines that divide each of the 128 MIDI notes. We will also shade the lines that represent "black notes" on the piano slightly. Each of these horizontal lines we will simply make one unit wide, and a ScaleTransform will be used to ensure that they stretch the required amount. Here's the code that populates the background canvas.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void CreateBackgroundCanvas()
+{
+    for (int note = 0; note &amp;lt; 128; note++)
+    {
+        if((note % 12 == 1) // C#
+         ||(note % 12 == 3) // Eb
+         ||(note % 12 == 6) // F#
+         ||(note % 12 == 8) // Ab
+         ||(note % 12 == 10)) // Bb
+        {
+            Rectangle rect = new Rectangle();
+            rect.Height = yScale;
+            rect.Width = 1;                    
+            rect.Fill = blackNoteChannelBrush;
+            rect.SetValue(Canvas.TopProperty, GetNoteYPosition(note));
+            NoteBackgroundCanvas.Children.Add(rect);
+        }
+    }
+    for (int note = 0; note &amp;lt; 128; note++)
+    {
+        Line line = new Line();
+        line.X1 = 0;
+        line.X2 = 1;
+        line.Y1 = GetNoteYPosition(note);
+        line.Y2 = GetNoteYPosition(note);
+        line.Stroke = noteSeparatorBrush;
+        NoteBackgroundCanvas.Children.Add(line);
+    }
+}&lt;/pre&gt;
+&lt;p&gt;On top of the background canvas comes the GridCanvas. This contains the vertical lines showing where each measure and beat start. We can't draw this until we have loaded the MIDI events because we need to know how many MIDI ticks are in each quarter note, and also we need to know how many grid lines to draw. Here is the code that draws the grid.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void DrawGrid()
+{
+    GridCanvas.Children.Clear();
+    int beat = 0;
+    for (long n = 0; n &amp;lt; lastPosition; n += midiEvents.DeltaTicksPerQuarterNote)
+    {
+        Line line = new Line();
+        line.X1 = n * xScale;
+        line.X2 = n * xScale;
+        line.Y1 = 0;
+        line.Y2 = 128 * yScale;
+        if (beat % 4 == 0)
+        {
+            line.Stroke = measureSeparatorBrush;
+        }
+        else
+        {
+            line.Stroke = beatSeparatorBrush;
+        }
+        GridCanvas.Children.Add(line);
+        beat++;
+    }
+}&lt;/pre&gt;
+&lt;p&gt;The final change is to the drawing of the notes themselves. They are now drawn onto the &lt;strong&gt;NoteCanvas&lt;/strong&gt;. When drawing is finished, the &lt;strong&gt;RootCanvas &lt;/strong&gt;now must be resized rather than the UserControl because it is the RootCanvas that is the child element of the ScrollViewer. Finally, we need to adjust the scale transform on the NoteBackgroundCanvas to ensure that the horizontal lines and bars extend the whole way across.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private void DrawNotes()
+{
+    NoteCanvas.Children.Clear();
+
+    NoteCanvas.Children.Add(MakeNoteRectangle(0, 0, midiEvents.DeltaTicksPerQuarterNote, 0));
+    for (int track = 0; track &amp;lt; midiEvents.Tracks; track++)
+    {
+        foreach (MidiEvent midiEvent in midiEvents[track])
+        {
+            ...  // create note rectangles
+        }
+    }
+    RootCanvas.Width = lastPosition * xScale;
+    RootCanvas.Height = 128 * yScale;
+    NoteBackgroundRenderScaleTransform.ScaleX = RootCanvas.Width;
+}&lt;/pre&gt;
+&lt;p&gt;And here's what the PianoRoll control looks like now:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-piano-roll-in-wpf-part-2-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-piano-roll-part-2" border="0" alt="WPF Piano Roll" src="/posts/files/creating-piano-roll-in-wpf-part-2-1.png" width="378" height="407"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A nice improvement on before. The next stage will be to add horizontal zooming support and display the piano keyboard on the left.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e3f433fd-8a7a-4a4e-b6f4-a773d9c677dd">
+      <author>Syl</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10107591246648025563</website>
+      <ip />
+      <userAgent />
+      <date>2010-03-16 20:07:43</date>
+      <content>Thanks Mark for the informative post. I am currently developing a small application to be able to &amp;quot;view&amp;quot; all the MIDI pattern I&amp;#39;ve got in my Sonar library, to help selecting the right one. Doing this part time so it&amp;#39;ll probably take a while but your NAudio  library and the two posts on Piano Roll will certainly help!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9fe4e824-5cc7-42d1-9deb-6453631e40bd">
+      <author>Mike Roy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17704838034935898596</website>
+      <ip />
+      <userAgent />
+      <date>2013-03-17 00:57:36</date>
+      <content>I concur with Syl, and will take advantage of this occasion to tip you my (worn out) hat regarding the NAudio piece of work, that I&amp;#39;m trying to use for Midi related applets.&lt;br /&gt;Any chance you could post the working project related to this &amp;#39;piano roll&amp;#39; control? Being an admitted newbie regarding WPF, it would probably supply me loads of enlightning info regarding project structuring.&lt;br /&gt;Thanks, and keep it up!&lt;br /&gt;Regards,</content>
+    </comment>
+  </comments>
+</post>

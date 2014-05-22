@@ -1,0 +1,24 @@
+<post>
+  <title>NAudio and the PDC</title>
+  <slug>naudio-and-pdc</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-26 21:53:00</pubDate>
+  <lastModified>2008-10-26 21:53:02</lastModified>
+  <content>&lt;p&gt;Every time a new version of the .NET framework is due to be announced I always get my hopes up that this will be the year that we are finally given a low-level audio API for .NET. Looking at the &lt;a href="http://www.microsoftpdc.com/Agenda/"&gt;sessions for this year's PDC&lt;/a&gt;, it sadly seems that audio has been overlooked once more. In fact, the only &lt;a href="http://channel9.msdn.com/pdc2008/PC13/"&gt;audio related session&lt;/a&gt; is one from &lt;a href="http://blogs.msdn.com/larryosterman/"&gt;Larry Ostermann&lt;/a&gt;, which seems like it will announce some new Windows 7 API's for writing apps with real-time audio communications (presumably chat / phone apps). &lt;/p&gt;  &lt;p&gt;But there is one piece of news that might prove very useful for &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt;, which is that there are some &lt;a href="http://channel9.msdn.com/pdc2008/TL02/"&gt;upcoming changes in the .NET type system&lt;/a&gt; that promise to make COM interop a lot easier. I'm not getting my hopes up too high, but anything that makes COM and P/Invoke code easier in .NET would be a huge benefit to NAudio. I have been looking at adding a managed wrapper round the Windows Media Format SDK, and the sheer amount of interop code that is required is daunting. Anyway, I'll be watching the PDC sessions with interest this week, and will post back here if there turns out to be anything relevant to NAudio.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="eec0a8c9-54a1-4856-9cf6-6a1df381ddf4">
+      <author>Donn Felker</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blog.donnfelker.com</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-27 02:42:00</date>
+      <content>Agreed. NO love for the Audio portion is kind of a bummer. :(</content>
+    </comment>
+  </comments>
+</post>

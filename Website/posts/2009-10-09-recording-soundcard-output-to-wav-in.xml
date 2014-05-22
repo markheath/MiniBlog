@@ -1,0 +1,313 @@
+<post>
+  <title>Recording the Soundcard Output to WAV in NAudio</title>
+  <slug>recording-soundcard-output-to-wav-in</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-10-09 07:35:00</pubDate>
+  <lastModified>2010-10-04 21:30:35</lastModified>
+  <content>Suppose you want to not just play back some audio, but record what you are playing to a WAV file. This can be achieved in &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt; by creating an IWaveProvider whose read method reads from another IWaveProvider but also writes to disk as it goes. This is very easy to implement, and the WaveRecorder class I present here will be added to NAudio shortly. Our WaveRecorder also needs to be disposable, as we will want to close the WAV file when we are finished.&lt;br&gt;
+&lt;pre class="brush: csharp"&gt;/// &amp;lt;summary&amp;gt;
+/// Utility class to intercept audio from an IWaveProvider and
+/// save it to disk
+/// &amp;lt;/summary&amp;gt;
+public class WaveRecorder : IWaveProvider, IDisposable
+{
+    private WaveFileWriter writer;
+    private IWaveProvider source;
+ 
+    /// &amp;lt;summary&amp;gt;
+    /// Constructs a new WaveRecorder
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name="destination"&amp;gt;The location to write the WAV file to&amp;lt;/param&amp;gt;
+    /// &amp;lt;param name="source"&amp;gt;The source Wave Provider&amp;lt;/param&amp;gt;
+    public WaveRecorder(IWaveProvider source, string destination)
+    {
+        this.source = source;
+        this.writer = new WaveFileWriter(destination, source.WaveFormat);
+    }
+     
+    /// &amp;lt;summary&amp;gt;
+    /// Read simply returns what the source returns, but writes to disk along the way
+    /// &amp;lt;/summary&amp;gt;
+    public int Read(byte[] buffer, int offset, int count)
+    {
+        int bytesRead = source.Read(buffer, offset, count);
+        writer.WriteData(buffer, offset, bytesRead);
+        return bytesRead;
+    }
+ 
+    /// &amp;lt;summary&amp;gt;
+    /// The WaveFormat
+    /// &amp;lt;/summary&amp;gt;
+    public WaveFormat WaveFormat
+    {
+        get { return source.WaveFormat; }
+    }
+ 
+    /// &amp;lt;summary&amp;gt;
+    /// Closes the WAV file
+    /// &amp;lt;/summary&amp;gt;
+    public void Dispose()
+    {
+        if (writer != null)
+        {
+            writer.Dispose();
+            writer = null;
+        }
+    }
+}&lt;/pre&gt;
+&lt;br&gt;
+Now we have our WaveRecorder, we can insert it anywhere in the chain we like. The most obvious place is right at the end of the chain. So we wrap the WaveStream or WaveProvider we would normally pass to the Init method of our IWavePlayer with the WaveRecorder class. To demonstrate, I will extend the &lt;a href="/post/playback-of-sine-wave-in-naudio"&gt;sine wave generating code&lt;/a&gt; I created recently, to save the sine wave you are playing to disk. Only three extra lines of code are required:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;IWavePlayer waveOut;
+WaveRecorder recorder; 
+
+private void button1_Click(object sender, EventArgs e)
+{
+    StartStopSineWave();
+}
+
+void StartStopSineWave()
+{
+    if (waveOut == null)
+    {
+        var sineWaveProvider = new SineWaveProvider16();
+        sineWaveProvider.SetWaveFormat(16000, 1); // 16kHz mono
+        sineWaveProvider.Frequency = 500;
+        sineWaveProvider.Amplitude = 0.1f;
+        recorder = new WaveRecorder(sineWaveProvider, @"C:\Users\Mark\Documents\sine.wav");
+        waveOut = new WaveOut();
+        waveOut.Init(recorder);
+        waveOut.Play();
+    }
+    else
+    {
+        waveOut.Stop();
+        waveOut.Dispose();
+        waveOut = null;
+        recorder.Dispose();
+        recorder = null;                
+    }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="f7d96d30-afc5-42df-803f-cfea12951536">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 18:55:50</date>
+      <content>I have a problem with this.&lt;br /&gt;&amp;quot;LineOutRecorder.WaveRecorder&amp;#39; does not implement interface member &amp;#39;NAudio.Wave.IWaveProvider.Read(NAudio.Wave.IWaveBuffer)&amp;quot;&lt;br /&gt;Source:&lt;br /&gt;http://www.paste.lt/paste/879522bf8c12bb7e6c6a7ab7eaad9d22&lt;br /&gt;Sollution explorer screenshot:&lt;br /&gt;http://i647.photobucket.com/albums/uu198/n2oo/sollution.png</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="122575c4-6e00-4331-b250-aebd6b09bdd4">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 19:05:53</date>
+      <content>hi n20,&lt;br /&gt;have you got the very latest NAudio source code out from Codeplex?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a0934839-47da-4741-8811-6b0370daf95a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 19:05:54</date>
+      <content>This comment has been removed by the author.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="33d9903e-aec0-4722-9d69-3625018ddf2a">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 19:32:35</date>
+      <content>Version that I tried I downloaded today from Codeplex.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b30e8554-a97c-4c8e-b104-18c90f75d369">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 19:43:11</date>
+      <content>You need to go to the source code tab and download the latest and build it. NAudio 1.3 has not yet been released yet.&lt;br /&gt;&lt;br /&gt;Here&amp;#39;s the code for the latest IWaveProvider:&lt;br /&gt;http://naudio.codeplex.com/sourcecontrol/changeset/view/28979?projectName=naudio#258022</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2849f889-2c1e-44e2-ac98-7734d465a4fc">
+      <author>Jelle</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/15856997623929235688</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 20:22:24</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I would like to record only the audio from one single application that plays music. is that possible with the NAUDIO lib ?&lt;br /&gt;&lt;br /&gt;thanks!&lt;br /&gt;&lt;br /&gt;Jelle</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4c96a2d5-5853-483e-b789-36f0400a89ac">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 11:33:46</date>
+      <content>This comment has been removed by the author.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bfa42050-5f11-4075-93c5-5592bfee10a7">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 13:29:47</date>
+      <content>Thank You for replay Mark,&lt;br /&gt;Here I found nice recording application example:&lt;br /&gt;http://opensebj.blogspot.com/2009/04/naudio-tutorial-5-recording-audio.html&lt;br /&gt;&lt;br /&gt;Is it possible to programmicaly select the recording device? (choose between mic, line-in and wave etc.)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="acc4d6cf-d567-40ef-863b-9ffab5de4dbb">
+      <author>n2o</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13671312541131264818</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 13:57:57</date>
+      <content>BTW I am using XP, seems that newest NAudio Demo has that function but as exeption said &amp;quot;This functionality is only supported on Windows Vista or newer.&amp;quot;&lt;br /&gt;&lt;br /&gt;One more question about recorder buffer, it contais bytes, so each audio sample is 8bit or divided into several array elements?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3ea1c8ff-75a5-4ba6-8dfa-38f7d217b582">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-10 14:28:15</date>
+      <content>hi n2o, you can&amp;#39;t use WASAPI capture on XP. Use WaveIn instead. See my voice recorder article on the Coding4Fun website to learn more about recording audio in NAudio.&lt;br /&gt;&lt;br /&gt;http://blogs.msdn.com/coding4fun/archive/2009/10/08/9905168.aspx</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="db16be70-5584-43b0-827a-7dc8849eb7b9">
+      <author>JC</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00480996145824505367</website>
+      <ip />
+      <userAgent />
+      <date>2010-05-20 08:57:29</date>
+      <content>Hi Mark! I&amp;#39;m on Windows 7 and am struggling to get NAudio to record the stereo mix - is this possible, maybe using WASAPI as opposed to WaveIn? I&amp;#39;m not sure how to do this with NAudio if it is.&lt;br /&gt;&lt;br /&gt;I&amp;#39;ve used the tutorial example 5 from Codeplex and clicked the &amp;quot;Record all output from my soundcard&amp;quot; button, but it only records what is coming in from the microphone. Any pointers would be greatly appreciated!! Many thanks.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9eec03d5-7277-4412-a0a6-de91f3070da3">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-05-21 10:56:30</date>
+      <content>hi JC, it probably depends on your sound-card drivers whether any of the WaveIn options can do this programatically. You might need to get the windows mixer up to select your recording source to make it work.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ebc126df-a3d6-41a5-9c0f-fc7b86aa75a7">
+      <author>JIbin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-01 10:17:04</date>
+      <content>HI,&lt;br /&gt;Now i am able to capture sound and at the same time i send it over network like this&lt;br /&gt;&lt;br /&gt; &lt;br /&gt;&lt;br /&gt;private void waveIn_DataAvailable(object sender, WaveInEventArgs e)&lt;br /&gt;        {          &lt;br /&gt;            byte[] buffer = e.Buffer;&lt;br /&gt;&lt;br /&gt;            byte[] dataToWrite = ALawEncoder.ALawEncode(buffer);&lt;br /&gt;&lt;br /&gt;            if (socket_Audio != null)&lt;br /&gt;                socket_Audio.SendTo(dataToWrite, new IPEndPoint(IPAddress.Parse(RemoteIpv6), SoundPort));&lt;br /&gt;       &lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt; &lt;br /&gt;&lt;br /&gt;Now the  problem that i am facing is how to get back this audio at receiving end and and send it to the speaker of the system&lt;br /&gt;&lt;br /&gt;I am just starting a new thread for rxving data from network&lt;br /&gt;&lt;br /&gt;  myAudioThread = new Thread(new ThreadStart(AudioListener));&lt;br /&gt;  myAudioThread.Start();&lt;br /&gt;&lt;br /&gt;And in the AudioListener() i use the following code&lt;br /&gt;&lt;br /&gt; #region for Audio socket Its rxving audio always&lt;br /&gt;          &lt;br /&gt;            try&lt;br /&gt;            {&lt;br /&gt;&lt;br /&gt;                socket_Audio = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp);&lt;br /&gt;&lt;br /&gt;                socket_Audio.Bind(new IPEndPoint(IPAddress.IPv6Any, SoundPort));&lt;br /&gt;                IPEndPoint remoteEP = new IPEndPoint(IPAddress.IPv6Any, SoundPort);&lt;br /&gt;                    //Receive data.&lt;br /&gt;                   &lt;br /&gt;                byte[] byteData;&lt;br /&gt;                while (true)&lt;br /&gt;                {&lt;br /&gt;&lt;br /&gt;                    byteData = new byte[2048];&lt;br /&gt;                    //Receive data.&lt;br /&gt;                    socket_Audio.Receive(byteData);&lt;br /&gt;                    &lt;br /&gt;                    //G711 compresses the data by 50%, so we allocate a buffer of double&lt;br /&gt;                    //the size to store the decompressed data.&lt;br /&gt;                    byte[] byteDecodedData = new byte[byteData.Length * 2];&lt;br /&gt;&lt;br /&gt;                    //Decompress data using the proper vocoder.&lt;br /&gt;                    &lt;br /&gt;                    ALawDecoder.ALawDecode(byteData, out byteDecodedData);&lt;br /&gt;&lt;br /&gt;                  &lt;br /&gt;&lt;br /&gt;                }&lt;br /&gt;&lt;br /&gt;Now the decoded audio is in the byte array byteDecodedData.How i send it to speaker of that system.&lt;br /&gt;&lt;br /&gt;I found only waveOut.Play()  and&lt;br /&gt;&lt;br /&gt; public override int Read(byte[] buffer, int offset, int count)&lt;br /&gt; {&lt;br /&gt;&lt;br /&gt;   //code to process data&lt;br /&gt;&lt;br /&gt; }&lt;br /&gt;&lt;br /&gt;  in the examples&lt;br /&gt;&lt;br /&gt;Pls guide me to the next step....Pls let me know if i am in wrong path.&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;&lt;br /&gt;JIbin&lt;br /&gt;&lt;br /&gt;jibin.mn@hotmail.com</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0774f71b-2edc-469c-aaf1-7e76d6814e87">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-08 08:09:10</date>
+      <content>@Jlbin - have a look at the BufferedWaveProvider in the latest code. This can be used to buffer up your data read from the network and can be used to feed the soundcard</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e1699155-17e5-4706-b4cb-b0b2a46fbbcb">
+      <author>Seingalt</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16456458870858627914</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-11 01:38:07</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Great lib by the way.&lt;br /&gt;&lt;br /&gt;I just want to ask if you have any ideas about recording conversations?&lt;br /&gt;&lt;br /&gt;Is it possible to capture it using WASAPI or, in my case since I&amp;#39;m using win XP, WaveIn? Or do you know any alternatives to that? &lt;br /&gt;&lt;br /&gt;seemenomore1987@gmail.com</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a5157d22-07d2-4938-8a0b-8f27ea670692">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-11 10:13:38</date>
+      <content>@Seingalt what do you mean by conversations? conversations on what program? if you mean skype, then you could look into using the Skype4Com object</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="252fe861-56d5-4068-975a-54fb01838970">
+      <author>Seingalt</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16456458870858627914</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-12 07:22:08</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I&amp;#39;d take a look at skype4com objects. &lt;br /&gt;&lt;br /&gt;Basically, I have a web application that should allow the user to call (for example a Call Center Rep.) from that page and record that conversation.&lt;br /&gt;&lt;br /&gt;I have done some research on skype4com already but somehow I&amp;#39;m still having a hard time on how I could use it on my application.&lt;br /&gt;&lt;br /&gt;If you know or have any articles about it just post it here. Like &amp;quot;Using skype4com objects in your web application for biginners&amp;quot; &lt;br /&gt;&lt;br /&gt;Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ff392cf0-6e22-409d-9c88-ba8ec3302a2f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-15 13:31:20</date>
+      <content>@Seingalt - check my Coding4Fun article and project - &lt;a href="http://skypefx.codeplex.com" rel="nofollow"&gt;SkypeFx&lt;/a&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e131ff15-b42c-41f3-b6b2-eac942fe6afb">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-16 11:10:28</date>
+      <content>Thanks for the great example. I already noticed it at NAudio but since it was not actually used in tehir code, the sample was very helpful.&lt;br /&gt;&lt;br /&gt;One question: I would like to use the WaveRecorder combined with the ASIO4All. The NADIO Asio only has AsioOut.cs. Is there a sample of how the Wave Recorder is used for ASIO?&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;HM</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="33a3179e-1696-4ede-bf1c-b8c8613f4fe2">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-16 11:37:51</date>
+      <content>sadly NAudio ASIO support is very basic and doesn&amp;#39;t work with all soundcards at the moment</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c5a6ded2-67c7-4736-a841-c0d7e75e9fd7">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-16 14:30:58</date>
+      <content>Thanks Mark. I&amp;#39;m still hopefull, and struggeling with adding the ASIO-in interface by myself. I&amp;#39;m  trying to figure out where to fit the WaveRecorder class.&lt;br /&gt;Since WaveRecorder is actually an IWaveProvider, I plan to add AsioIn.cs which has &amp;quot;recordStream&amp;quot; of class WaveRecord (similar to AsioOut). I&amp;#39;m jyust confused wehther or not I need to add IWaveRecorder, similar to IWavePlayer.&lt;br /&gt;&lt;br /&gt;Thanks you very much!&lt;br /&gt;HM</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d4cd272a-b66a-4af9-81a6-e1e5d14194f9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-24 15:07:39</date>
+      <content>@HM, an AsioIn class should implement IWaveIn</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0f6d0a7a-8194-4ac0-819f-a095f4ec6160">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-01-18 14:31:38</date>
+      <content>Can I use that source code on windows mobile? Or do you have a code that record a wave file format on windows mobile? (records in a wave file format ..)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7f2739c7-48aa-4919-903c-ca0f64b6a5e0">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-11-12 12:50:18</date>
+      <content>I want to change the frequency of this sinus wave without interrupting it and quite quickly . You said in your previous posts that I need to do it smoothly , how can I do that ? Sorry but I&amp;#39;m a beginner</content>
+    </comment>
+  </comments>
+</post>

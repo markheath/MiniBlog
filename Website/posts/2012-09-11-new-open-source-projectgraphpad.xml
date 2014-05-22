@@ -1,0 +1,15 @@
+<post>
+  <title>New Open Source Project–GraphPad</title>
+  <slug>new-open-source-projectgraphpad</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-11 18:45:00</pubDate>
+  <lastModified>2012-09-11 18:45:00</lastModified>
+  <content>&lt;p&gt;I’ve open sourced a simple utility I wrote earlier this year, when I was preparing to give a talk on DVCS. It’s called &lt;a href="https://bitbucket.org/markheath/graphpad"&gt;GraphPad&lt;/a&gt;, and it’s a simple tool for visualising Directed Acyclic Graphs, with the ability to define your own with a basic syntax, or import history from a Git or Mercurial repository.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/new-open-source-projectgraphpad-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/new-open-source-projectgraphpad-1.png" width="359" height="216"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;The idea behind it was that I would be able to use it in my talk to show what the DAG would look like for various. The really tricky thing is coming up with a good node layout algorithm, and mine is extremely rudimentary.&lt;/p&gt; &lt;p&gt;What’s more there are some very nice ones being developed now, particularly for Git, such as &lt;a href="http://haacked.github.com/SeeGit/"&gt;SeeGit&lt;/a&gt; or the very impressive “dragon” tool that comes with the &lt;a href="http://gitscc.codeplex.com/"&gt;Git Source Control Provider&lt;/a&gt; for Visual Studio, both of which are also WPF applications. Mine does at least have the distinction of being the only one I know of that also works with Mercurial.&lt;/p&gt; &lt;p&gt;For now, I am not actively developing this project, but I thought I’d open source it in case anyone has a use for it and wants to take it a bit further (the next step was to make the nodes show the commit details in a nice looking tooltip for Git/Hg repositories, as well as showing which nodes the various branch and head/tip labels are pointing at).&lt;/p&gt; &lt;p&gt;You can find it &lt;a href="https://bitbucket.org/markheath/graphpad"&gt;here on bitbucket&lt;/a&gt;.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>git</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments />
+</post>

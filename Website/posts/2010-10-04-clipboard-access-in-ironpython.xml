@@ -1,0 +1,50 @@
+<post>
+  <title>Clipboard Access in IronPython</title>
+  <slug>clipboard-access-in-ironpython</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-04 21:27:00</pubDate>
+  <lastModified>2010-10-04 21:27:40</lastModified>
+  <content>&lt;p&gt;I’m slowly getting into the swing of using IronPython to write small scripts to help me do things quicker. I’ve been updating some of the old posts on this blog to use &lt;a href="http://alexgorbatchev.com/SyntaxHighlighter/"&gt;syntaxhighlighter&lt;/a&gt; which is a much cleaner solution than the old mechanism. However, it did require a little bit of text manipulation of each code sample before updating it on the blog. The code simply reads the code snippet out the clipboard, performs a few basic transforms and then copies the transformed code back to the clipboard.&lt;/p&gt;&lt;pre class="brush: python"&gt;import io
+import clipboard
+code = clipboard.getText()
+brush = 'csharp' if not code[0] == '&amp;lt;' else 'xml'
+substitutions = [('&amp;amp;','&amp;amp;amp;'),('&amp;lt;','&amp;amp;lt;'),('&amp;gt;','&amp;amp;gt;')]
+for a,b in substitutions:
+    code = code.replace(a,b)
+print code
+code = '&amp;lt;pre class="brush: %s"&amp;gt;%s&amp;lt;/pre&amp;gt;' % (brush, code)
+clipboard.setText(code)&lt;/pre&gt;
+&lt;p&gt;The clipboard module is my own very small wrapper, which makes use of the Clipboard object from System.Windows.Forms:&lt;/p&gt;&lt;pre class="brush: python"&gt;import clr
+clr.AddReference('System.Windows.Forms')
+from System.Windows.Forms import Clipboard
+
+def setText(text):
+    Clipboard.SetText(text)
+    
+def getText():
+    return Clipboard.GetText()&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>IronPython</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="872fded9-11ce-45e6-b06f-1458b7baf310">
+      <author>Carl Trachte</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12363048245012413049</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-04 23:49:41</date>
+      <content>You should post this to the IronPython Cookbook at www.IronPython.info.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8b1ce497-a7d8-4157-ad91-9e1b0ba6f2e8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-05 19:07:36</date>
+      <content>thanks for the suggestion Carl, I wasn&amp;#39;t aware of that site</content>
+    </comment>
+  </comments>
+</post>

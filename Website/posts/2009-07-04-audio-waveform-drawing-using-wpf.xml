@@ -1,0 +1,243 @@
+<post>
+  <title>Audio WaveForm Drawing Using WPF</title>
+  <slug>audio-waveform-drawing-using-wpf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-07-04 09:08:00</pubDate>
+  <lastModified>2011-07-03 16:07:24</lastModified>
+  <content>&lt;p&gt;A while ago I blogged about &lt;a href="/post/volume-metering-and-audio-waveform"&gt;how to display audio waveforms in WinForms&lt;/a&gt;. Porting this code to WPF is not as simple as it may first appear. The rendering models are quite different. In Windows Forms, you can draw points or lines using GDI functions. You are responsible for drawing them all every time the window is invalidated and its Paint method is called. However, in WPF, you create objects to put on a Canvas, and WPF manages the rendering and invalidation.&lt;/p&gt; &lt;p&gt;My first attempt was to stay as close to the WinForms model as I could. I have a sample aggregator that looks for the highest sample value over a short period of time. It then uses that to calculate the height of the line it should draw. Every time we calculate a new one, we add a line to our Canvas at the next X position, wrapping round if necessary, and deleting any old lines.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/audio-waveform-drawing-using-wpf-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-waveform-1" border="0" alt="wpf-waveform-1" src="/posts/files/audio-waveform-drawing-using-wpf-1.png" width="323" height="141"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;As can be seen, this gives a reasonable waveform display. I made use of a LinearGradientBrush to try to improve the visual effect a little (although this requires we cheat and keep the waveform symmetrical). There is a big performance problem however - it is very inefficient to keep throwing new lines onto a Canvas and removing old ones. The solution was to start re-using lines once we had wrapped past the right-hand edge of the display.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private Line CreateLine(float value)
+{
+    Line line;
+    if (renderPosition &amp;gt;= lines.Count)
+    {
+        line = new Line();
+        lines.Add(line);
+        mainCanvas.Children.Add(line);
+    }
+    else
+    {
+        line = lines[renderPosition];
+    }
+    line.Stroke = this.Foreground;
+    line.X1 = renderPosition;
+    line.X2 = renderPosition;
+    line.Y1 = yTranslate + -value * yScale;
+    line.Y2 = yTranslate + value * yScale;
+    renderPosition++;
+    line.Visibility = Visibility.Visible;
+    return line;
+}&lt;/pre&gt;
+&lt;p&gt;This solves our performance issue, but I still wasn’t too happy with the visual effect – it is too obviously composed of vertical lines. I tried a second approach. This added two instances of &lt;strong&gt;PolyLine&lt;/strong&gt; to the canvas. Now, we would add a point to each line when a new maximum sample was created. Again the same trick of re-using points when we had scrolled off the right-hand edge was used for performance reasons.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/audio-waveform-drawing-using-wpf-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-waveform-2" border="0" alt="wpf-waveform-2" src="/posts/files/audio-waveform-drawing-using-wpf-2.png" width="398" height="220"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;As nice as this approach is, there is an obvious problem that we are not able to render the bit in between the top and bottom lines. This requires a &lt;strong&gt;Polygon&lt;/strong&gt;. However, we can’t just add new points to the end of the Polygon’s Points collection. We need all of the top line points first, followed by all of the bottom line points in reverse order if we are to create a shape.&lt;/p&gt;
+&lt;p&gt;The trick is that when we get a new sample maximum and minimum in, we have to insert those values into the middle of the existing &lt;strong&gt;Points &lt;/strong&gt;collection, or calculate the position in the points array. Notice that I create a new Point object every time to make sure that the Polygon is invalidated correctly.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private int Points
+{
+    get { return waveForm.Points.Count / 2; }
+}
+
+public void AddValue(float maxValue, float minValue)
+{
+    int visiblePixels = (int)(ActualWidth / xScale);
+    if (visiblePixels &amp;gt; 0)
+    {
+        CreatePoint(maxValue, minValue);
+
+        if (renderPosition &amp;gt; visiblePixels)
+        {
+            renderPosition = 0;
+        }
+        int erasePosition = (renderPosition + blankZone) % visiblePixels;
+        if (erasePosition &amp;lt; Points)
+        {
+            double yPos = SampleToYPosition(0);
+            waveForm.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
+            waveForm.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
+        }
+    }
+}
+
+private int BottomPointIndex(int position)
+{
+    return waveForm.Points.Count - position - 1;
+}
+
+private double SampleToYPosition(float value)
+{
+    return yTranslate + value * yScale;
+}
+
+private void CreatePoint(float topValue, float bottomValue)
+{
+    double topYPos = SampleToYPosition(topValue);
+    double bottomYPos = SampleToYPosition(bottomValue);
+    double xPos = renderPosition * xScale;
+    if (renderPosition &amp;gt;= Points)
+    {
+        int insertPos = Points;
+        waveForm.Points.Insert(insertPos, new Point(xPos, topYPos));
+        waveForm.Points.Insert(insertPos + 1, new Point(xPos, bottomYPos));
+    }
+    else
+    {
+        waveForm.Points[renderPosition] = new Point(xPos, topYPos);
+        waveForm.Points[BottomPointIndex(renderPosition)] = new Point(xPos, bottomYPos);
+    }
+    renderPosition++;
+}&lt;/pre&gt;
+&lt;p&gt;This means that our minimum and maximum lines join together to create a shape, and we can fill in the middle bit.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/audio-waveform-drawing-using-wpf-3.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-waveform-3" border="0" alt="wpf-waveform-3" src="/posts/files/audio-waveform-drawing-using-wpf-3.png" width="440" height="185"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Now we are a lot closer to the visual effect I am looking for, but it is still looking a bit spiky. To smooth the edges, I decided to only add one point every two pixels instead of every one:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/audio-waveform-drawing-using-wpf-4.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-waveform-4" border="0" alt="wpf-waveform-4" src="/posts/files/audio-waveform-drawing-using-wpf-4.png" width="513" height="195"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This tidies up the edges considerably. You can take this a step further and have a point every third pixel, but this highlights another problem – that our polygons have sharp corners as they draw straight lines between each point. The next step would be to try out using Bezier curves, although I am not sure what the performance implications of that would be. Maybe that is a subject for a future post.&lt;/p&gt;
+&lt;p&gt;The code for these waveforms will be made available in &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt; in the near future.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="99d0eac2-342c-40a5-b34e-43d321320d9d">
+      <author>Roland Tomczak</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09424693277534586358</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-04 18:05:08</date>
+      <content>Hi ! I&amp;#39;m not sur that using the high-level geometry figures is the best approach in this particular case. I think that you should have define your custom Visual (Say, WaveformVisual), and override its Render method. This is the &amp;quot;lightweight&amp;quot; approach for drawing in WPF, and often recommanded for dynamic curves &amp;amp; so on ( eg : financial graphs,... ).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="eb9064e2-8378-4c5f-9c82-6f8f7e0b77f1">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-04 18:22:56</date>
+      <content>hi Roland. thanks, that is useful information. Anything that improves performance will be useful. Will need to check that it works for Silverlight too though.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9b2a33bb-fe87-453d-8937-eb3cf35cebf2">
+      <author>Chad</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18404970248928799834</website>
+      <ip />
+      <userAgent />
+      <date>2009-08-09 10:31:38</date>
+      <content>Wow- thanks so much for sharing your efforts! You make it all so clear. Consider me a new loyal viewer</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="412f8146-eca9-4dbc-bceb-c0e384cdd5e1">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-10-01 09:03:26</date>
+      <content>When will you release this Code?&lt;br /&gt;&lt;br /&gt;I&amp;#39;m looking for a Control to draw the Waveform of 8,16 and 24bit mono/stereo wave files.&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t know where to start in WPF.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="56b82143-1466-4c3c-9ef5-ebf7050ac262">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-01 09:32:47</date>
+      <content>hi Anonymous, have a look in the WPFDemo of NAudio.&lt;br /&gt;&lt;br /&gt;Visualisation of entire WAV files is something that I am still working on. You can see a solution that works for short files at my new VoiceRecorder project on CodePlex (voicerecorder.codeplex.com)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d3e45853-7c3d-4426-8f7d-3808fb22da6b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-10-01 12:29:53</date>
+      <content>wow, thank you very much!&lt;br /&gt;this is so much of a help for me :D</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="475be986-03e7-41f3-b187-864a70ec2182">
+      <author>Helmut Obertanner</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.jinglejim.de</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-12 07:04:27</date>
+      <content>Hello Mark,&lt;br /&gt;Nice Post!&lt;br /&gt;In JingleJim we use another approach for displaying waveforms.&lt;br /&gt;We get the numsamples of the canvas. Then we can calculate the numSamples required for onbe pixel. For the num samples we calculate the avg-value. We split the view into let&amp;#39;s say 10 Blocks and we convert the audiodata to a 8 bit waveform in a memory bitmap using a backgroundthread. Then we blitting the bitmap into the display - not drawing directly.&lt;br /&gt;Much faster then drawing into canvas. Currently we are using Winforms, but should work the same for WPF. &lt;br /&gt;NAudio is great!&lt;br /&gt;Greets - Helmut</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bbf9980c-14f5-4503-b891-279f02a4851e">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-12 19:06:51</date>
+      <content>hi Helmut, &lt;br /&gt;yes, in some ways WaveForm drawing is easier in WinForms than WPF. I am wondering whether to try using a writeable bitmap at some point</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4493057b-4d2e-47e8-aa7b-f30cf1f323e9">
+      <author>Helmut Obertanner</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.jinglejim.de</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-13 10:54:01</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;yes - that will be our next aproach - currently we are converting our app to WPF.&lt;br /&gt;I want to try different approaches and come back to you with my solution. Would you be interessted in having an WaveView/Selection Control in the NAudio-Package?&lt;br /&gt;&lt;br /&gt;Greets - Helmut</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f18d3041-cb6f-4640-941e-2f00e634db86">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-13 10:56:40</date>
+      <content>Hi Helmut,&lt;br /&gt;&lt;br /&gt;that would be awesome. I have a selection control I made as part of the voicerecorder project on CodePlex, but it is far from complete&lt;br /&gt;&lt;br /&gt;Mark</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="be418f33-159c-4a68-8ed6-628d34943954">
+      <author>des</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-02-14 08:41:46</date>
+      <content>hey mark,&lt;br /&gt;can you please provide the codes for displaying the waveform from recording(like the one you did in Voice Recorder) in WinForms?&lt;br /&gt;&lt;br /&gt;Thanks a lot.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="513173e8-4fa2-48c6-aea5-c517404f1acb">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-02-14 16:08:35</date>
+      <content>@des - download the NAudio source code for an example of WaveForm drawing in WinForms</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2ddd526d-9b53-44dd-99be-34952e6c23a8">
+      <author>des</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-03 08:13:39</date>
+      <content>thanks for replying mark. i referred to Naudio, but there&amp;#39;s some limitation to it. Like i cannot redraw the waveform(meaning to clear it and draw again), it cant scroll left and right if it gets too long, and it cant work with recording, it only does with playing. Any help? Thanks a lot.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a0e63a96-a077-47d6-990e-150b7905ca5f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-03-03 14:12:39</date>
+      <content>@des, I&amp;#39;m afraid the NAudio winforms waveform drawing doesn&amp;#39;t have those capabilities - you&amp;#39;d have to write that yourself</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bbaa0960-cf5c-421e-8b84-3ecd1e6c2426">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-07 10:33:48</date>
+      <content>Please tell me how to do this:&lt;br /&gt;The way we achieve this is simply by starting recording and displaying the level of audio detected to the user with a volume meter. The waveIn APIs do not write anything to disk, so no audio is actually being ‘recorded&amp;#39; at this point, we are simply examining the input level and then throwing the captured audio samples away.&lt;br /&gt;I just want to know where&amp;#39;s the function for this. Thank you.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="98080d8b-5983-4e79-b97e-d8c5043e0d63">
+      <author>free</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07718052760760740763</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-11 07:26:35</date>
+      <content>Thank you so much for posting this Just months and months for looking for some sort of clue. I had been toiling at a combined Tcl and Maxima application calling on some C scripts to make a fortran file. If any of that interests you have a look at Theo Verelst&amp;#39;s work at wiki.tcl.tk, fascinating stuff I still hope to get it all to work. I have had success with a skinned transparent very simple wav player in VB and used sharpdevelop. I can&amp;#39;t WAIT to get all into exploring this. Again thanx so much. freemenemoryerror@gmail.com</content>
+    </comment>
+  </comments>
+</post>

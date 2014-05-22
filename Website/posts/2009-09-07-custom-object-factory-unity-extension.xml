@@ -1,0 +1,81 @@
+<post>
+  <title>Custom Object Factory Unity Extension</title>
+  <slug>custom-object-factory-unity-extension</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-07 11:24:00</pubDate>
+  <lastModified>2010-09-23 17:12:24</lastModified>
+  <content>&lt;p&gt;Suppose you have an object that cannot be directly created by your IoC container. In my case, it is because that object is a .NET remoting object, so it must be created on a different computer. &lt;/p&gt;  
+&lt;p&gt;One way to solve this would be to register a factory that creates your object. But in my application, there are dozens of objects that need to be created in this special way, and they all inherit from a common base interface. Ideally, I would like it to be completely transparent, so I request the type I want, and the container works out that it needs to be built in a special way.&lt;/p&gt;  
+&lt;p&gt;So I set about making a &lt;a href="http://www.codeplex.com/unity"&gt;Unity&lt;/a&gt; extension, which would allow me to intercept Resolve requests for certain interfaces, and create them using my custom factory method, or return the ones already cached.&lt;/p&gt;  
+&lt;p&gt;The way to accomplish this is to create a Build Strategy, which checks to see if the requested type meets our criteria. If it does, we have a look to see if we have already cached and constructed the object. If not, we call our factory method to construct it, and cache the result. One important thing to notice is that I pass the “Context” from the extension into the build strategy. That is so that if you call Resolve from a child container, it will return the same instance as if you called it from a different child container. Obviously, your requirements may differ.&lt;/p&gt;  
+&lt;p&gt;The if statement in PreBuildUp contains my rule for deciding if this is a Resolve request I want to intercept. Again, this could be customised for any arbitrary logic.&lt;/p&gt;  
+&lt;pre class="brush: csharp;"&gt;public class FactoryMethodUnityExtension&amp;lt;T&amp;gt; : UnityContainerExtension
+{
+    private Func&amp;lt;Type,T&amp;gt; factory;
+
+    public FactoryMethodUnityExtension(Func&amp;lt;Type,T&amp;gt; factory)
+    {
+        this.factory = factory;
+    }
+
+    protected override void Initialize()
+    {
+        var strategy = new CustomFactoryBuildStrategy&amp;lt;T&amp;gt;(factory, Context);
+
+        Context.Strategies.Add(strategy, UnityBuildStage.PreCreation);            
+    }
+}
+
+public class CustomFactoryBuildStrategy&amp;lt;T&amp;gt; : BuilderStrategy
+{
+    private Func&amp;lt;Type,T&amp;gt; factory;
+    private ExtensionContext baseContext;
+
+    public CustomFactoryBuildStrategy(Func&amp;lt;Type,T&amp;gt; factory, ExtensionContext baseContext)
+    {
+        this.factory = factory;
+        this.baseContext = baseContext;
+    }
+
+    public override void PreBuildUp(IBuilderContext context)
+    {
+        var key = (NamedTypeBuildKey)context.OriginalBuildKey;
+
+        if (key.Type.IsInterface &amp;amp;&amp;amp; typeof(T).IsAssignableFrom(key.Type))
+        {
+            object existing = baseContext.Locator.Get(key.Type);
+            if (existing == null)
+            {
+                // create it
+                context.Existing = factory(key.Type);
+                
+                // cache it
+                baseContext.Locator.Add(key.Type, context.Existing);
+            }
+            else
+            {
+                context.Existing = existing;
+            }
+        }
+    }
+}&lt;/pre&gt;
+&lt;p&gt;Using the extension is very simple. Simply give it the delegate to use to create the objects, and register it as an extension:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;WhateverFactory factory = new WhateverFactory();
+container = new UnityContainer();
+container.AddExtension(new FactoryMethodUnityExtension&amp;lt;IWhatever&amp;gt;(factory.Create));&lt;/pre&gt;
+
+&lt;p&gt;Here’s a couple of blog posts I found helpful while trying to learn how to create a Unity extension:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a title="http://www.agileatwork.com/auto-mocking-unity-container-extension/" href="http://www.agileatwork.com/auto-mocking-unity-container-extension/"&gt;Auto-Mocking Unity Container Extension (Michael Valenty)&lt;/a&gt; &lt;/li&gt;
+
+  &lt;li&gt;&lt;a title="http://www.orbifold.net/default/?p=1154" href="http://www.orbifold.net/default/?p=1154"&gt;Unity &amp;amp; ObjectBuilder (The Orbifold)&lt;/a&gt; &lt;/li&gt;
+&lt;/ul&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Unity</category>
+    <category>IoC</category>
+  </categories>
+  <comments />
+</post>

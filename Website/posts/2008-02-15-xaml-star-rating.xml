@@ -1,0 +1,46 @@
+<post>
+  <title>XAML Star Rating</title>
+  <slug>xaml-star-rating</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-02-15 13:31:00</pubDate>
+  <lastModified>2011-07-03 09:29:22</lastModified>
+  <content>&lt;p&gt;And here's another quick XAML file, this time for star ratings like you see on many websites. By the way, I've been fighting with blogger to try to display code nicely, but it seems to insist on truncating it, and ignoring any styling I try to put on it. I'm hoping to move to another blog platform before too long, but if anyone knows of a simple way to make blogger display formatted code, please let me know.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"&amp;gt;
+  &amp;lt;Canvas Canvas.Left="20" Canvas.Top="20"&amp;gt;
+    &amp;lt;Rectangle Width="200" Height="50" Fill="White" RadiusX="5" RadiusY="5" /&amp;gt;
+    &amp;lt;Canvas Canvas.Left="5" Canvas.Top="20"&amp;gt;
+      &amp;lt;Path Stroke="#000080" Fill="#FFFF00" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Data="M 0,0 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt; 
+    &amp;lt;Canvas Canvas.Left="45" Canvas.Top="20"&amp;gt;
+      &amp;lt;Path Stroke="#000080" Fill="#FFFF00" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Data="M 0,0 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+    &amp;lt;Canvas Canvas.Left="85" Canvas.Top="20"&amp;gt;
+      &amp;lt;Path Stroke="#000080" Fill="#FFFF00" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Data="M 0,0 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+    &amp;lt;Canvas Canvas.Left="125" Canvas.Top="20"&amp;gt;
+      &amp;lt;Path Stroke="#808080" Fill="#C0C0C0" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Data="M 0,0 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+    &amp;lt;Canvas Canvas.Left="165" Canvas.Top="20"&amp;gt;
+      &amp;lt;Path Stroke="#808080" Fill="#C0C0C0" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" Data="M 0,0 l 10,0 l 5,-10 l 5,10 l 10,0 l -7,10 l 2,10 l -10,-5 l -10,5 l 2,-10 Z" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+  &amp;lt;/Canvas&amp;gt;
+&amp;lt;/Canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;And this is what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-star-rating-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="XAML Star Rating" src="/posts/files/xaml-star-rating-1.png" width="210" height="51"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="2915906d-7281-4123-b7dc-bf2b77095464">
+      <author>Raju</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04805688344655605099</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-14 18:52:46</date>
+      <content>Thanks a lot for this article. I was looking for mark-up to create star shape</content>
+    </comment>
+  </comments>
+</post>

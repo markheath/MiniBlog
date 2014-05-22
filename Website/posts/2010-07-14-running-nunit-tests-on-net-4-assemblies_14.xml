@@ -1,0 +1,19 @@
+<post>
+  <title>Running NUnit tests on .NET 4 assemblies with MSBuild Part 2</title>
+  <slug>running-nunit-tests-on-net-4-assemblies_14</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-07-14 14:11:00</pubDate>
+  <lastModified>2010-07-14 14:11:56</lastModified>
+  <content>&lt;p&gt;Yesterday, I &lt;a href="/post/running-nunit-tests-on-net-4-assemblies"&gt;posted&lt;/a&gt; a way to run &lt;a href="http://www.nunit.org/index.php" target="_blank"&gt;NUnit&lt;/a&gt; tests on .NET 4 assembles with MSBuild. Although it worked, I was not 100% happy with the way of going about it. Thanks to a comment from Travis Laborde, I can now present a simpler way, making use of the &lt;strong&gt;exec &lt;/strong&gt;task in MSBuild and the &lt;strong&gt;/framework&lt;/strong&gt; switch on nunit-console.exe. Here’s the project file syntax:&lt;/p&gt;  &lt;pre class="brush: xml;"&gt;&amp;lt;Target Name=&amp;quot;Test2&amp;quot; DependsOnTargets=&amp;quot;Build&amp;quot;&amp;gt;
+  &amp;lt;exec 
+     command=&amp;quot;&amp;amp;quot;C:\Program Files\NUnit 2.5.5\bin\net-2.0\nunit-console.exe&amp;amp;quot; /framework=4.0.30319 @(TestAssembly)&amp;quot;&amp;gt;
+     WorkingDirectory=&amp;quot;.&amp;quot;
+  &amp;lt;/exec&amp;gt;
+&amp;lt;/Target&amp;gt;&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MSBuild</category>
+    <category>NUnit</category>
+  </categories>
+  <comments />
+</post>

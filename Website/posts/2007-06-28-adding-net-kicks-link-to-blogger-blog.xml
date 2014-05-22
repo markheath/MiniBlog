@@ -1,0 +1,17 @@
+<post>
+  <title>Adding a .NET kicks link to a Blogger blog</title>
+  <slug>adding-net-kicks-link-to-blogger-blog</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-06-28 12:20:00</pubDate>
+  <lastModified>2010-10-04 11:53:20</lastModified>
+  <content>&lt;p&gt;Here's how you can add a link to &lt;a href="http://dotnetkicks.com/"&gt;.NET kicks&lt;/a&gt; on a blogger hosted blog: &lt;p&gt;Go into your blog settings and select to edit the template. You will need to check the checkbox to expand custom widgets first. Then find the &lt;strong&gt;&amp;lt;data:post-body/&amp;gt;&lt;/strong&gt; section and insert the following code afterwards:&lt;pre class="brush: xml"&gt;&amp;lt;div class=&amp;#39;post-body&amp;#39;&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;data:post.body/&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;div style=&amp;#39;clear: both;&amp;#39;/&amp;gt; &amp;lt;!-- clear for photos floats --&amp;gt;
+&amp;lt;!-- dotnetkicks BEGIN --&amp;gt;
+&amp;lt;p&amp;gt;&amp;lt;a expr:href=&amp;#39;&amp;quot;http://www.dotnetkicks.com/kick/?url=&amp;quot; + data:post.url&amp;#39;&amp;gt;&amp;lt;img border=&amp;#39;0&amp;#39; expr:src=&amp;#39;&amp;quot;http://www.dotnetkicks.com/Services/Images/KickItImageGenerator.ashx?url=&amp;quot; + data:post.url&amp;#39;/&amp;gt;&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+&amp;lt;!-- dotnetkicks END --&amp;gt;
+&amp;lt;/div&amp;gt;&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments />
+</post>

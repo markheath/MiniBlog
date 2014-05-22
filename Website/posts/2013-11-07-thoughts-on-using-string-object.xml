@@ -1,0 +1,48 @@
+<post>
+  <title>Thoughts on using String Object Dictionary for DTOs in C#</title>
+  <slug>thoughts-on-using-string-object</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-11-07 16:18:00</pubDate>
+  <lastModified>2013-11-07 16:18:37</lastModified>
+  <content>&lt;p&gt;When you have a large enterprise system, you end up with a very large number of data transfer objects / business entities that need to get persisted into databases, and serialized over various network interfaces. In C#, these DTOs will usually be represented as strongly typed classes. And its not uncommon to have an inheritance hierarchy of DTOs, with many different “types” of a particular entity needing to be supported.&lt;/p&gt; &lt;p&gt;For the most part, using strongly typed DTOs in C# just works, but as a system grows over time, making changes to these objects or introducing new ones can become very painful. Each change will result in database schema updates, and if cross-version serialization and deserialization is required (where a DTO which was serialized in one version of your application needs to be deserialized in another), could potentially break the ability to load in legacy data.&lt;/p&gt; &lt;p&gt;Here’s a rather contrived example, for a system that needs to let the user configure “Storage Devices”. Several different types of storage device need to be supported, and each one has its own unique properties. Here’s some classes that might be created in C# for such a system:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class StorageDevice { 
+    public int Id { get; set; } 
+    public string Name { get; set; }
+}
+
+class NetworkShare : StorageDevice {
+    public string Path { get; set; }
+    public string LoginName { get; set; }
+    public string Password { get; set; }
+}
+
+class CloudStorage : StorageDevice {
+    public string ServerUri { get; set }
+    public string ContainerName { get; set; }
+    public int PortNumber { get; set; }
+    public Guid ApiKey { get; set; }
+}
+&lt;/pre&gt;
+&lt;p&gt;These types are nice and simple, but already we run into some problems when we want to store them in a relational database. Quite often three tables will be used, one called “StorageDevices” with the ID and Name properties, and then one called “NetworkShares” linking to a storage device ID, and storing the three fields for Network Shares. Then you need to do the same for “CloudStorage”. To add a new type of storage or change an existing one in any way requires a database schema update.&lt;/p&gt;
+&lt;p&gt;Cross-version serialization is also very fragile with this approach. Your codebase can end up littered with obsolete types and properties just to avoid breaking deserialization.&lt;/p&gt;
+&lt;p&gt;This type of object hierarchy can introduce a code smell. We may well end up writing code that breaks the Liskov Substitution Principle, where we need to discover what the concrete type of a base “StorageDevice” actually is before we can do anything useful with it. This is exacerbated by the fact that developers cannot move properties from a derived type down into the base class for fear of breaking serialization.&lt;/p&gt;
+&lt;p&gt;This approach also doesn’t lend itself well to generic extensibility. What if we wanted third parties to be able to extend our application to support new types of StorageDevice, with our code agnostic to what the concrete implementation type actually is? As it stands, those new types would need their own new database table to be stored in, and it would be very hard to write generic code that allowed configuration of those objects.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The String-Object Dictionary&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A potential solution to this problem is to replace the entire inheritance hierarchy with a simple string-object dictionary:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class StorageDevice {         
+    public IDictionary&amp;lt;string, object&amp;gt; Properties { get; set; }
+}
+&lt;/pre&gt;
+&lt;p&gt;The idea behind this approach is that now we never need to modify this type again. It can store any arbitrary properties, and we don’t need to create derived types. It is basically a poor man’s dynamic object, and in theory in C# you could even just use an ExpandoObject. However, having a proper type opens the door to creating extension methods that simplify getting certain key properties in and out of the dictionary. This can mitigate the biggest weakness of this approach, which is losing type safety on the properties of the object.&lt;/p&gt;
+&lt;p&gt;These objects are more robust against version changes. You can tell that an object comes from a previous version of your system by what keys are and aren’t present in the dictionary (you could even have a version property if you wanted to be really safe), and do any conversions as appropriate. And you can successfully use objects from future versions of your system so long as the properties you need to work with are present.&lt;/p&gt;
+&lt;p&gt;Persisting these objects to a database presents something of a challenge, since you’d need to store an arbitrary object into a single field. And that object could itself be a list of objects, or an object of arbitrary complexity. Probably JSON or XML serialization would be a good approach. In many ways, these lend themselves very well to a document database, although for legacy codebases, you may be tied into a relational database. You could still run into deserialization issues if the objects stored as values in the databases were subject to change. So those objects might also need to be string-object dictionaries too. &lt;/p&gt;
+&lt;p&gt;Other issues you might run into is deciding what to do about additional properties you want to add onto the object but not serialize. Many developers will be tempted to put extra stuff into the dictionary for convenience. One possible option would be to use namespacing on the keys. So anything with a key starting with “temp.” wouldn’t be serialized or persisted to the database for example. I’d be interested to know if anyone else has tackled this problem.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;String object dictionaries are a powerful way of avoiding some tricky versioning issues and making your system very extensible. But in many ways they feel like trying to shoehorn a dynamic language approach into a statically typed one. I’ve noticed them cropping up in more and more places though in C# programming, such as the &lt;a href="http://www.asp.net/aspnet/overview/owin-and-katana/an-overview-of-project-katana"&gt;Katana project&lt;/a&gt; which uses one for its “environment dictionary”.&lt;/p&gt;
+&lt;p&gt;I think for one of the very large projects I am working on at the moment, they could be a perfect fit, allowing us to make the system significantly more flexible and extensible than it has been in the past.&lt;/p&gt;
+&lt;p&gt;But I am actively on the lookout at the moment for any articles for or against using this technique, or any significant open source projects that are taking this approach. So let me know in the comments what you think. &lt;/p&gt;
+&lt;p&gt;I did ask a question about this on &lt;a href="http://programmers.stackexchange.com/questions/216791/best-practices-for-serializing-persisting-string-object-dictionary-entities"&gt;Programmers stack exchange&lt;/a&gt; and got the rather predictable (“that’s insane”) replies, but I think there is more mileage in this approach than is immediately apparent. In particular it is the need for generic extensibility without database schema updates, and cross-version deserialization that pushes you in this direction.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Liskov Substitution Principle</category>
+  </categories>
+  <comments />
+</post>

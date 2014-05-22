@@ -1,0 +1,50 @@
+<post>
+  <title>NAudio 1.6 Release Notes (10th Anniversary Edition!)</title>
+  <slug>naudio-16-release-notes-10th</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-10-26 19:31:00</pubDate>
+  <lastModified>2012-10-26 19:31:03</lastModified>
+  <content>&lt;p&gt;I’ve decided it’s time to release &lt;a href="http://naudio.codeplex.com/"&gt;NAudio 1.6&lt;/a&gt;, as there are a whole load of fixes, features and improvements that have been added since I released &lt;a href="/post/naudio-15-released"&gt;NAudio 1.5&lt;/a&gt; which I want to make available to a wider audience (if you’ve been downloading the preview releases on NuGet then you’re already more or less up to date). This marks something of a milestone for the project as it was around this time in 2002 that I first started working on NAudio, using a very early build of &lt;a href="http://www.icsharpcode.net/opensource/sd/"&gt;SharpDevelop&lt;/a&gt; and compiling against .NET 1.0. Some of the code I wrote back then is still in there (the oldest file is MixerInterop.cs, created on 9th December 2002).&lt;/p&gt; &lt;p&gt;NAudio 1.6 can be downloaded from &lt;a href="https://nuget.org/packages/NAudio/"&gt;NuGet&lt;/a&gt; or &lt;a href="http://naudio.codeplex.com/releases/view/96875"&gt;CodePlex&lt;/a&gt;.&lt;/p&gt; &lt;h3&gt;What’s new in NAudio 1.6?&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;WASAPI Loopback Capture&lt;/strong&gt; allowing you to record what your soundcard is playing (only works on Vista and above)  &lt;li&gt;&lt;strong&gt;ASIO Recording&lt;/strong&gt; ASIO doesn’t quite fit with the IWaveIn model used elsewhere in NAudio, so this is implemented in its own special way, with direct access to buffers or easy access to converted samples for most common ASIO configurations. Read more about it &lt;a href="/post/asio-recording-in-naudio"&gt;here&lt;/a&gt;.  &lt;li&gt;&lt;strong&gt;MultiplexingWaveProvider&lt;/strong&gt; and &lt;strong&gt;MultiplexingSampleProvider&lt;/strong&gt; allowing easier handling of multi-channel audio. Read more about it &lt;a href="/post/handling-multi-channel-audio-in-naudio"&gt;here&lt;/a&gt;.  &lt;li&gt;&lt;strong&gt;FadeInOutSampleProvider&lt;/strong&gt; simplifying the process of fading audio in and out  &lt;li&gt;&lt;strong&gt;WaveInEvent&lt;/strong&gt; for more reliable recording on a background thread  &lt;li&gt;&lt;strong&gt;PlaybackStopped&lt;/strong&gt; and &lt;strong&gt;RecordingStopped &lt;/strong&gt;events now include an exception. This is very useful for cases when USB audio devices are removed during playback or record. Now there is no unhandled exception and you can detect this has happened by looking at the EventArgs. (n.b. I’m not sure if adding a property to an EventArgs is a breaking change – recompile your code against NAudio 1.6 to be safe).  &lt;li&gt;&lt;strong&gt;MixingWaveProvider32&lt;/strong&gt; for cases when you don’t need the overhead of WaveMixerStream. &lt;strong&gt;MixingSampleProvider&lt;/strong&gt; should be preferred going forwards though.  &lt;li&gt;&lt;strong&gt;OffsetSampleProvider&lt;/strong&gt; allows you to delay a stream, skip over part of it, truncate it, and append silence. Read about it &lt;a href="/post/naudio-offsetsampleprovider"&gt;here&lt;/a&gt;.  &lt;li&gt;Added a &lt;strong&gt;Readme file &lt;/strong&gt;to recognise contributors to the project. I’ve tried to include everyone, but probably many are missing, so get in touch if you’re name’s not on the list.  &lt;li&gt;&lt;strong&gt;Some code tidyup &lt;/strong&gt;(deleting old classes, some namespace changes. n.b. these are breaking changes if you used these parts of the library, but most users will not notice). This includes retiring &lt;strong&gt;WaveOutThreadSafe&lt;/strong&gt; which was never finished anyway, and &lt;strong&gt;WaveOutEvent&lt;/strong&gt; is preferred to using WaveOut with function callbacks in any case.  &lt;li&gt;NuGet package and CodePlex download now use the &lt;strong&gt;release build &lt;/strong&gt;(No more Debug.Asserts if you forget to dispose stuff)  &lt;li&gt;Lots of &lt;strong&gt;bugfixes&lt;/strong&gt;, including a concerted effort to close off as many issues in the &lt;a href="http://naudio.codeplex.com/workitem/list/basic"&gt;CodePlex issue tracker&lt;/a&gt; as possible.  &lt;li&gt;&lt;strong&gt;Fix to GSM encoding&lt;/strong&gt;  &lt;li&gt;&lt;strong&gt;ID3v2 Tag Creation&lt;/strong&gt;  &lt;li&gt;&lt;strong&gt;ASIO multi-channel playback &lt;/strong&gt;improvements  &lt;li&gt;&lt;strong&gt;MP3 decoder now flushes on reposition&lt;/strong&gt;, fixing a potential issue with leftover sound playing when you stop, reposition and then play again.  &lt;li&gt;&lt;strong&gt;MP3FileReader allows pluggable frame decoders&lt;/strong&gt;, allowing you to choose the DMO one, or use a fully managed decoder (hopefully more news on this in the near future)  &lt;li&gt;&lt;strong&gt;WMA Nuget Package&lt;/strong&gt; (NAudio.Wma) for playing WMA files. Download &lt;a href="https://nuget.org/packages/NAudio.Wma"&gt;here&lt;/a&gt;.  &lt;li&gt;&lt;strong&gt;RF64 read support&lt;/strong&gt;  &lt;li&gt;For the full history, you can read the &lt;a href="http://naudio.codeplex.com/SourceControl/list/changesets"&gt;commit notes on CodePlex&lt;/a&gt;.&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;A big thanks to everyone who has contributed bug fixes, features, bug reports, and even a few donations this year. To date NAudio 1.5 has been downloaded &lt;a href="http://naudio.codeplex.com/releases/view/79035"&gt;34,213 times from CodePlex&lt;/a&gt; and &lt;a href="https://nuget.org/packages/NAudio/1.5"&gt;3,539 times on NuGet&lt;/a&gt;. I’ll be continuing to upload pre-release versions on NuGet, so check for the &lt;a href="https://nuget.org/packages/NAudio/"&gt;latest builds here&lt;/a&gt;.&lt;/p&gt; &lt;h3&gt;What’s coming up next?&lt;/h3&gt; &lt;p&gt;I announced last release that I would finally be moving from .NET 2.0 to 3.5, and was persuaded to delay the move. However, this time I will be upgrading the project. The main reason is to enable extension methods (I know there are hacky ways to do this in .NET 2.0). With extension methods I can make the new ISampleProvider interface much easier to use, and it will become a more prominent part of NAudio. I have some nice ideas for a fluent interface for NAudio, allowing you to construct your audio pipeline much more elegantly.&lt;/p&gt; &lt;p&gt;I also have plans to move my development environment over to Windows 8 in the very near future, and a WinRT version of NAudio is on my priority list. I have already implemented fully managed MP3 decoding for Windows RT, and hope to release that as an open source project soon.&lt;/p&gt; &lt;p&gt;There are lots of other features on my todo list for NAudio. One of the big drivers behind the ISampleProvider interface is my desire to make audio effects easier to implement, so I’m hoping to get a collection of audio effects in the next version. I’ve also got a managed resampler which is almost working, but wasn’t quite ready to go in to NAudio 1.6.&lt;/p&gt; &lt;p&gt;Anyway, hope you find NAudio useful. Do let me know what cool things you have made with it, and I’ll link to you on the NAudio home page.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="7e1d1814-1d17-4c80-a791-3dd6ade2b314">
+      <author>Nicky Vadera</author>
+      <email>noreply@blogger.com</email>
+      <website>http://nickyvadera.com</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-29 15:39:01</date>
+      <content>You are a legend. NAudio is amazing..It&amp;#39;s what allowed me to build a radio playout system as my final project (with credit to you of course). Just wanted to say thanks really.&lt;br /&gt;&lt;br /&gt;I&amp;#39;m going to be using it again for a new project I&amp;#39;ve got lined up, so watch this space! :-P</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f9691849-79de-4b00-84b1-82ed63a86503">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-10-29 16:13:25</date>
+      <content>thanks Nicky, glad it is of use to you</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4a2c0591-7540-4f28-aca7-4c677fb12fe6">
+      <author>Mr Bob</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-01-18 17:43:29</date>
+      <content>Hi&lt;br /&gt;&lt;br /&gt;I like to se OPUS codec, and a example for hi quality low latency voice chat.&lt;br /&gt;&lt;br /&gt;Found this, it may help; https://github.com/JohnACarruthers/Opus.NET</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="df1e7010-7b76-49e9-87f0-8b89cd523595">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-20 15:26:28</date>
+      <content>hi Mr Bob, that Opus.NET library looks good. It looks like it already works with NAudio, so no real need to reproduce the effort.</content>
+    </comment>
+  </comments>
+</post>

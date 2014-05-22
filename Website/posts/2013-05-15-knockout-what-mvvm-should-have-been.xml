@@ -1,0 +1,200 @@
+<post>
+  <title>Knockout - What MVVM should have been like in XAML</title>
+  <slug>knockout-what-mvvm-should-have-been</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-05-15 21:12:00</pubDate>
+  <lastModified>2013-05-15 21:12:55</lastModified>
+  <content>I've not got a lot of JavaScript programming experience, but I've been learning a bit recently, and decided to try&amp;nbsp;&lt;a href="http://knockout.js/"&gt;knockout.js&lt;/a&gt;.&amp;nbsp;I was pleasantly surprised at how quickly I was able to pick it up. In part this is because it follows a MVVM approach very similar to what I am used to with WPF. I've blogged a three-part &lt;a href="/post/modular-wpf-screencast-part-3"&gt;MVVM tutorial&lt;/a&gt; here before as well as occasionally expressing &lt;a href="/post/mvvm-is-it-worth-pain"&gt;my frustrations with MVVM&lt;/a&gt;. So I was interested to see what the MVVM story is like for Javascript developers. What I wasn't expecting, was to find that MVVM in JavaScript using knockout.js is a much nicer experience than I was used to with XAML + C#. In this post I'll run through a few reasons why I was so impressed with knockout.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Clean Data-Binding Syntax&lt;/h3&gt;&lt;br&gt;
+The first impressive thing is how straightforward the binding syntax is. Any HTML element can have a data-bind property attached to it, and that can hold a series of binding expressions. Here's a simple binding expression in knockout that puts text from your viewmodel into a div:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;div data-bind="text: message" &amp;gt;&amp;lt;/div&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+To bind multiple properties, you can just add extra binding statements into the single data-bind attribute as follows:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;button data-bind="click: prev, enable: enablePrev"&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+In XAML the syntax for basic bindings isn't too cumbersome, but a bit more repetitive nonetheless:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;TextBox Text="{Binding Message}" 
+Enabled="{Binding EnableEditMessage}" /&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+&lt;h3&gt;Event Binding&lt;/h3&gt;One frustration with data binding in XAML is that you can't bind a function directly to an event. So for example when an animation finishes, it would be great to be able to call into a method on our ViewModel with something like this:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;Storyboard Completed="{Binding OnFinished}" /&amp;gt;&lt;/pre&gt;&lt;br&gt;
+Sadly, that is invalid XAML, but with knockout.js, binding to any event is trivial:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;div data-bind="click: handleItem"/&amp;gt;&lt;/pre&gt;&lt;br&gt;
+&lt;h3&gt;Arbitrary expressions in binding syntax&lt;/h3&gt;&lt;br&gt;
+XAML data binding does allow you to drill down into members of properties on your ViewModel. For example, you can do this:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;TextBlock Text="{Binding CurrentUser.LastName}" /&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+And it also does give you the ability to do a bit of string formatting, albeit with a ridiculously hard to remember syntax:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;TextBlock Text="{Binding Path=OrderDate, StringFormat='{}{0:dd.MM.yyyy}'}" /&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+But you can't call into a method on your ViewModel, or write expressions like this&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;Button IsEnabled="{Binding Items.Count &amp;gt; 0}" /&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+However, in knockout.js, we have the freedom to write arbitrary bits of JavaScript right there in our binding syntax. It's simple to understand, and it just works:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;button data-bind="click: next, enable: index() &amp;lt; questions.length -1"&amp;gt;Next&amp;lt;/button&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+This is brilliant, and it keeps the ViewModel from having to do unnecessary work just to manipulate data into the exact type and format needed for the data binding expression. (Anyone who's done MVVM with XAML will be all too familiar with the task of of turning booleans into Visibility values using converters)&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Property Changed Notifications&lt;/h3&gt;&lt;br&gt;
+Obviously, knockout needs some way for the ViewModel to report that a property has changed, so that the view can update itself. In the world of XAML this is done via the INotifyPropertyChanged interface, which is cumbersome to implement, even if you have a ViewModelBase class that you can ask to do the raising of the event for you.&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:csharp;"&gt;private bool selected;
+public bool Selected 
+{
+   get { return selected; }
+   set   
+   {
+        if (selected != value)
+        {
+            selected = value;
+            OnPropertyChanged("Selected");
+        }
+   }
+}
+&lt;/pre&gt;&lt;br&gt;
+Contrast this with the gloriously straightforward knockout approach which uses a ko.observable:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:javascript;"&gt;this.selected = ko.observable(false);
+&lt;/pre&gt;&lt;br&gt;
+Now &lt;b&gt;selected&lt;/b&gt; is a function that you call with no arguments to get the current value, and with a boolean argument to set its value. It's delightfully simple. I can't help but wonder if a similar idea could be somehow shoehorned into C#.&lt;br&gt;
+&lt;br&gt;
+To be fair to the XAML MVVM world, you can alleviate some of the pain with Simon Cropp's superb &lt;a href="https://github.com/Fody/Fody"&gt;Fody&lt;/a&gt; extension, which allows you to add in a compile time code weaver to automatically raise PropertyChanged events on your ViewModels. I use this on just about all my WPF projects now. It is a great timesaver and leaves your code looking a lot cleaner to boot. However, in my opinion, if you have to use code weaving its usually a sign that your language is lacking expressivity. I'd rather directly express myself in code.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Computed properties&lt;/h3&gt;&lt;br&gt;
+Computed properties can be a pain in C# as well, as you have to remember to explicitly raise the PropertyChanged notification. (Although Fody is very powerful in this regard and can spot that a property getter on your ViewModel depends on other property getters.) Here's an example of a calculated FullName property in a C# ViewModel:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:csharp;"&gt;private string firstName;
+public string FirstName 
+{
+   get { return firstName; }
+   set   
+   {
+        if (firstName!= value)
+        {
+            firstName= value;
+            OnPropertyChanged("FirstName");
+            OnPropertyChanged("FullName");
+        }
+   }
+}
+
+public string FullName 
+{
+    get { return FirstName + " " + Surname; }
+}
+&lt;/pre&gt;&lt;br&gt;
+Knockout's solution to this is once again elegant and simple. You simply declare a ko.computed type on your ViewModel:&lt;br&gt;
+&lt;pre class="brush:javascript;"&gt;this.fullName = ko.computed(function() {
+     return this.firstName() + " " + this.lastName();
+}, this);
+&lt;/pre&gt;&lt;br&gt;
+&lt;h3&gt;Elegant handling of binding to parent and root data contexts&lt;/h3&gt;&lt;br&gt;
+Another area that causes regular pain for me with XAML databinding is when you need to bind to your parent's context or the root context. I think I've just about got the syntax memorized now, but I must have searched for it on StackOverflow hundreds of times before it finally stuck. You end up writing monstrosities like this:&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;...Binding="{Binding RelativeSource={RelativeSource FindAncestor, 
+AncestorType={x:Type Window}}, Path=DataContext.AllowItemCommand}" ...
+&lt;/pre&gt;&lt;br&gt;
+In knockout, once again, the solution is simple and elegant, allowing you to use $parent to access your parent data context (and grandparents with $parent[1] etc), or $root. Read more about &lt;a href="http://knockoutjs.com/documentation/binding-context.html"&gt;knockout's binding context here&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;pre class="brush:xml;"&gt;&amp;lt;div data-bind="foreach: currentQuestion().answers"&amp;gt;
+    &amp;lt;div data-bind="html: answer, click: $parent.currentQuestion().select"&gt;&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/pre&gt;&lt;br&gt;
+&lt;h3&gt;Custom binding extensions!&lt;/h3&gt;&lt;br&gt;
+Finally, the killer feature. If only we could add custom binding expressions to XAML, then maybe we could work around some of its limitations and upgrade it with powerful capabilities. Whilst I have a feeling that this is in fact technically possible, I don't know of anyone who has actually done it. Once again knockout completely knocks XAML out of the water on this front, with a very straightforward extensibility model for you to create your own powerful extensions. If you run through &lt;a href="http://learn.knockoutjs.com/"&gt;the knockout tutorial&lt;/a&gt;, you'll implement one yourself and be amazed at how easy it is.&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;I've only used knockout.js for a few hours (here's &lt;a href="http://jsfiddle.net/markheath/Y6n8m/10/"&gt;what I made&lt;/a&gt;) and all I can say is I am very jealous of its powers. This is what data binding in XAML ought to have been like. XAML has been around for some time now, but there have been very few innovations in the data-binding space (we have seen the arrival of behaviours, visual state managers, merged dictionaries, format strings, but all of them suffer from the same clunky, hard to remember syntax). And now we have another subtly different flavour of XAML to learn for Windows Store 8 apps, it seems that XAML is here to stay. Maybe it is time for us to put some pressure onto Microsoft to give XAML data binding power to rival what the JavaScript community seem to be able to take for granted. </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>JavaScript</category>
+    <category>XAML</category>
+    <category>knockout</category>
+    <category>Data Binding</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="4238c977-f8f5-47bf-8b04-db0369c5d62c">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-05-16 08:35:46</date>
+      <content>Agreed, knockout is great. Add Durandal to the mix and you have a great foundation for frontend apps.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d1e47892-0fb1-4395-b42a-977d00a24bc4">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-05-16 08:41:08</date>
+      <content>And for wpf/wp development you could also try out another project of Durandal author (clever guy) - Caliburn.Micro - it&amp;#39;s make xaml more readable.&lt;br /&gt;&lt;br /&gt;cheers,&lt;br /&gt;nilphilus</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c783be68-6fbb-4f8f-919d-cb296d33ef46">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-16 09:19:24</date>
+      <content>thanks nilphilus. I&amp;#39;ll add Durandal to my (long) list of javascript frameworks to investigate. I haven&amp;#39;t tried Caliburn yet - I&amp;#39;ve tended to use MVVMLight or roll my own for WPF apps.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="12bb5768-5356-41c9-a486-8b3a21a68573">
+      <author>Slodge</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17827379022934338119</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-19 07:48:28</date>
+      <content>Well said. XAML DataBinding is fabulous, but it was invented 8 years and hasn&amp;#39;t evolved since. That simpler binding expression format is exactly what we&amp;#39;ve tried to do in MvvmCross - we&amp;#39;ve got &lt;a href="http://bit.ly/ZXOXFh" rel="nofollow"&gt;really clear simple binding expressions&lt;/a&gt; for Android and iOS ... and we&amp;#39;re toying with the idea of porting these back to Xaml as well :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4da9e215-4a88-4b98-9b54-80db0eba530c">
+      <author>Hamilton Sellers</author>
+      <email>noreply@blogger.com</email>
+      <website>http://amoskramer.wordpress.com/2013/05/16/net-developers-must-be-proficient-with-object-oriented-programing-and-the-net-platform/</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-21 07:25:39</date>
+      <content>The main benefits is that you can divided the overall look of your program away from the rule, By getting the rule by use of control bindings and activities it allows the business reasoning to be absolutely individual to the GUI.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2e7c1e68-4870-4a15-b371-9a74d306d386">
+      <author>blorq</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16308269163452150701</website>
+      <ip />
+      <userAgent />
+      <date>2013-05-30 18:55:44</date>
+      <content>&amp;quot;But you can&amp;#39;t call into a method on your ViewModel, or write expressions like this&amp;quot;&lt;br /&gt;&lt;br /&gt;GOOD!  You should not be doing that in random places in the view!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="898aeb66-b7c5-4aad-8d05-70079c0ef25d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-03 17:33:54</date>
+      <content>@blorq - not sure I agree. Yes if your binding expressions are complex. But if you look at my very simple knockout example, you&amp;#39;ll see how this saves creating trivial helper functions on the viewmodel. Not much different from using a &amp;quot;converter&amp;quot; with XAML in effect, and certainly much more readable.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="04160afa-ba2d-4c75-9720-3bf3b39341d7">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-07-24 02:10:43</date>
+      <content>Expression is a much better replacement to converters. I ended up writing converters such as TestAllTrue, TestAnyNotNull and SumNumbers etc for Silverlight/WPF. That&amp;#39;s silly!&lt;br /&gt;</content>
+    </comment>
+  </comments>
+</post>

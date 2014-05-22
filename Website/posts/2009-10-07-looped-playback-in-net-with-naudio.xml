@@ -1,0 +1,259 @@
+<post>
+  <title>Looped Playback in .NET with NAudio</title>
+  <slug>looped-playback-in-net-with-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-10-07 14:40:00</pubDate>
+  <lastModified>2010-09-23 15:04:29</lastModified>
+  <content>&lt;p&gt;In this post I will explain how to seamlessly loop audio with &lt;a href="http://www.codeplex.com/naudio" target="_blank"&gt;NAudio&lt;/a&gt;. The first task is to create a WaveStream derived class that will loop for us. This class takes a source WaveStream, and in the override Read method, will loop back to the beginning once the source stream stops returning data. Obviously this requires that the source stream you pass in does in fact stop returning data. Another option would be to use the Length property of the source stream, and go back to the beginning once we have sent Length bytes. Here’s my implementation of LoopStream. I might put this into NAudio for the next release: (&lt;strong&gt;Update&lt;/strong&gt;: have fixed a bug in the Read method, thanks Neverbith for spotting it. I will also possibly add a configuration to allow you to use the Source’s Length property as well)&lt;/p&gt;  &lt;pre class="brush: csharp;"&gt;/// &amp;lt;summary&amp;gt;
+/// Stream for looping playback
+/// &amp;lt;/summary&amp;gt;
+public class LoopStream : WaveStream
+{
+    WaveStream sourceStream;
+
+    /// &amp;lt;summary&amp;gt;
+    /// Creates a new Loop stream
+    /// &amp;lt;/summary&amp;gt;
+    /// &amp;lt;param name=&amp;quot;sourceStream&amp;quot;&amp;gt;The stream to read from. Note: the Read method of this stream should return 0 when it reaches the end
+    /// or else we will not loop to the start again.&amp;lt;/param&amp;gt;
+    public LoopStream(WaveStream sourceStream)
+    {
+        this.sourceStream = sourceStream;
+        this.EnableLooping = true;
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Use this to turn looping on or off
+    /// &amp;lt;/summary&amp;gt;
+    public bool EnableLooping { get; set; }
+
+    /// &amp;lt;summary&amp;gt;
+    /// Return source stream&amp;#39;s wave format
+    /// &amp;lt;/summary&amp;gt;
+    public override WaveFormat WaveFormat
+    {
+        get { return sourceStream.WaveFormat; }
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// LoopStream simply returns
+    /// &amp;lt;/summary&amp;gt;
+    public override long Length
+    {
+        get { return sourceStream.Length; }
+    }
+
+    /// &amp;lt;summary&amp;gt;
+    /// LoopStream simply passes on positioning to source stream
+    /// &amp;lt;/summary&amp;gt;
+    public override long Position
+    {
+        get { return sourceStream.Position; }
+        set { sourceStream.Position = value; }
+    }
+
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        int totalBytesRead = 0;
+
+        while (totalBytesRead &amp;lt; count)
+        {
+            int bytesRead = sourceStream.Read(buffer, offset + totalBytesRead, count - totalBytesRead);
+            if (bytesRead == 0)
+            {
+                if (sourceStream.Position == 0 || !EnableLooping)
+                {
+                    // something wrong with the source stream
+                    break;
+                }
+                // loop
+                sourceStream.Position = 0;
+            }
+            totalBytesRead += bytesRead;
+        }
+        return totalBytesRead;
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now using this to play a looping WAV file is trivial:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;private WaveOut waveOut;
+
+private void buttonStartStop_Click(object sender, EventArgs e)
+{
+    if (waveOut == null)
+    {
+        WaveFileReader reader = new WaveFileReader(@&amp;quot;C:\Music\Example.wav&amp;quot;);
+        LoopStream loop = new LoopStream(reader);
+        waveOut = new WaveOut();
+        waveOut.Init(loop);
+        waveOut.Play();
+     }
+     else
+     {
+         waveOut.Stop();
+         waveOut.Dispose();
+         waveOut = null;
+     }
+}&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="a933ceb1-e92d-4cc1-aeef-bbf4b38a6bbb">
+      <author>Purohit D</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07259067305769918232</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-08 12:21:35</date>
+      <content>Nice post man, Just let me know how to handle a sound file which has been zipped and transferred via LAN. &lt;a href="http://www.aegisisc.com/" rel="nofollow"&gt;.net Developers&lt;/a&gt; or some other suit I think there which can help with this.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c15c9efd-f7ab-4a0c-ad21-bf9d53c4f9a8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-08 12:48:39</date>
+      <content>I&amp;#39;m planning a post on how to play back audio that is streaming over a network in the future, as it is a commonly asked question, and quite easy to do. Zipping audio would not be a good idea though. Better to use MP3.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2f8007e5-8cf5-4eb1-89a5-33c2a078805d">
+      <author>Neverbith</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08029563849523765194</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-03 18:08:45</date>
+      <content>Since this post is a month old my comment may be left unseen, but just saw it today.&lt;br /&gt;&lt;br /&gt;Read has a small error on it:&lt;br /&gt;&lt;br /&gt;if (bytesRead == 0)&lt;br /&gt;&lt;br /&gt;It should be:&lt;br /&gt;&lt;br /&gt;if (bytesRead == 0 || sourceStream.Position &amp;gt; sourceStream.Length)&lt;br /&gt;&lt;br /&gt;For the cases where the stream size is smaller than the initial bytesRequired [on the first iteration].</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bd716b7b-239c-4ad0-87cb-d77068a50bd7">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-03 19:18:20</date>
+      <content>hi neverbith, I do mention this issue at the top of my post. this code assumes that your source stream stops returning data. Sometimes source streams do not have meaningful position / length information. But you are absolutely right, in some cases you will need that check.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dd90561c-b3fb-4ca6-95a3-b796f94c48c5">
+      <author>Neverbith</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08029563849523765194</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-04 11:31:42</date>
+      <content>But I don&amp;#39;t think we talked about the same thing (or at least not from what I understand reading the article). The problem I&amp;#39;m describing is with small files.&lt;br /&gt;&lt;br /&gt;When using them you already read the whole data on the first try, because of it, the offset never changes, but the position of the source stream changes, so bytes are always got, but they are empty.&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t know if I&amp;#39;m explained myself well.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2f90cbf7-00c6-4787-8df7-461d6c1838e5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-04 11:36:06</date>
+      <content>ok I see what you mean. the code needs to update the offset with the total number of bytes read so far.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8db2fc18-5bae-495b-8bbc-96254cf7a95c">
+      <author>iamnotsmart</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09879288181044734250</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-27 11:59:46</date>
+      <content>Hi Mark, this is really neat stuff...&lt;br /&gt;id like to know how i can play sound from mic using wavestream_dataavailable EVENT to sound card without output file...my purpose is to send this buffer to network and client receives that buffer and plays using it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="65384e76-c945-4b46-83bf-5dc8c232e91c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-27 12:24:50</date>
+      <content>hi iamnotsmart,&lt;br /&gt;You need to create a WaveStream (or IWaveProvider) derived class that buffers up the data recieved, and sends it out of its Read method. Then that WaveStream can be used for playback. You should be aware that latency is unlikely to be good</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a4b744fe-22be-48c2-bff3-22b809b9593c">
+      <author>iamnotsmart</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09879288181044734250</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-28 10:26:26</date>
+      <content>Hi Mark,&lt;br /&gt;Thanks for the reply mark. But Im really new to NAudio, id like to know how i can play sound using WAVEOUT from  BUFFER property of &amp;quot;e&amp;quot; on the DataAvailable Event. How do i push that Buffer inside the IWaveProvider derived class  so that i can play that stream on WAVEOUT...or may be what i think is wrong...or should i make IWaveProvider with constructor that accepts buffer? and last what do i have to return from the Read implementation of IWaveProvider..hope im not disturbing you alot...thanks again.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c2e1ad82-7a63-40c2-b8b6-5a3e24951b64">
+      <author>Peter</author>
+      <email>noreply@blogger.com</email>
+      <website>http://mailto_spectrumzz_at_hotmail.com</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-30 07:03:59</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I found a design problem with the LoopStream wrapper.  The problem appears when using it with a Mixer output.  The LoopStream Read() method looks for end of stream to be hit (0 bytes read), and then seeks to the beginning, but with a Mixer, the WaveChannel32 base stream never returns 0 bytes Read() because it is designed to pad the resulting read to always return data. &lt;br /&gt;&lt;br /&gt;The result is that LoopStream can&amp;#39;t loop, because it will not see the end of stream (sourceStream will never Read() and return 0 bytes).  I think the fix is to have LoopStream detect when the Read will pass the end of stream boundary and then cobble together the proper result, but I haven&amp;#39;t coded it up yet.&lt;br /&gt;&lt;br /&gt;Any chance of you fixing this?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1652c413-1d86-4942-a1e2-b6ed4805aaeb">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-30 07:51:39</date>
+      <content>hi Peter,&lt;br /&gt;yes, this is a limitation of this approach, and is why I said that the source stream needs to stop returning data. The WaveChannel32 is designed as a mixer input and so should always return data even when past the end of its input (might reconsider this decision for a future version of NAudio). Looping should therefore be done before going into a WaveChannel32.&lt;br /&gt;&lt;br /&gt;I do have another implementation of the loopstream that uses the Source stream&amp;#39;s length and position to perform looping which I&amp;#39;ll perhaps post at some point, although this approach would not work with an IWaveProvider.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c23be268-4424-40da-aa55-02d9d2dd7eb7">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-12-27 09:48:41</date>
+      <content>The following code for Read in LoopStream together with WaveChannel32 and WaveMixer works, almost, because there&amp;#39;s a strange behaviour:&lt;br /&gt; a sample (duration ca. 4 seconds)  gets looped 4-5 times correctly, but then the Read method is never called again.&lt;br /&gt; &lt;br /&gt; int bytesRequired = (int)Math.Min(count, Length - Position);&lt;br /&gt; int bytesRead = channelStream32.Read(buffer, offset, bytesRequired);&lt;br /&gt; &lt;br /&gt; if (bytesRequired &amp;lt; count)&lt;br /&gt; {&lt;br /&gt;   channelStream32.Position = 0;&lt;br /&gt;   channelStream32.Read(buffer, offset + bytesRead, count - bytesRequired);&lt;br /&gt;  }&lt;br /&gt;  return count;&lt;br /&gt;  &lt;br /&gt;  &lt;br /&gt;  Any idea ?&lt;br /&gt;  fritz</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="524825e4-e557-4c56-887e-2e386326f3b7">
+      <author>Alex</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-03-17 14:09:34</date>
+      <content>Can I change the pitch while playing back?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="011e2f8b-bc51-4c24-93b3-c0659767e982">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-03-21 17:15:15</date>
+      <content>there is no built-in pitch shifting support in NAudio I am afraid. Look at the Skype Voice Changer project for an example of how to do pitch shifting with NAudio</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5e6a57b1-bcf2-478c-8d3f-768acd862283">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-03-09 10:45:53</date>
+      <content>i think we might need to override the dispose method so we can call dispose on sourcestream as well?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5d131669-cb43-4e67-a226-38965fa5f871">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-09 10:48:08</date>
+      <content>@Anonymous, yes you are right. That&amp;#39;s one reason I typically prefer to make IWaveProvider to stop the need to pass through Position and Dispose all the way through the audio playback graph.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c755ecfd-45c1-4e5f-b48b-d51fd31daa62">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-06-12 10:36:25</date>
+      <content>Thank you</content>
+    </comment>
+  </comments>
+</post>

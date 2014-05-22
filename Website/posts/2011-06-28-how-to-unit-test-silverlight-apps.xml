@@ -1,0 +1,65 @@
+<post>
+  <title>How to Unit Test Silverlight Apps</title>
+  <slug>how-to-unit-test-silverlight-apps</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-06-28 18:27:00</pubDate>
+  <lastModified>2011-07-04 16:03:25</lastModified>
+  <content>&lt;p&gt;I recently tried writing some unit tests for a Silverlight 4 project. The first barrier I ran into is that the typical way of creating unit tests – create a DLL, reference NUnit and your assembly to test, doesn’t work, since you can’t mix Silverlight assemblies with standard .NET assemblies.&lt;/p&gt; &lt;p&gt;The next hurdle is that fact that the Silverlight developer tools do not include a unit testing framework, and searching for Silverlight unit testing tools on the web can lead you down a few dead ends. It turns out that the thing you need is the &lt;a href="http://silverlight.codeplex.com/"&gt;Silverlight Toolkit&lt;/a&gt;. If you are just doing Silverlight 4, you only need the April 2010 toolkit.&lt;/p&gt; &lt;p&gt;Once this is installed, you get a template that allows you to add a “Silverlight Unit Test Application” to your project. This is a separate Silverlight application that contains a custom UI just to run unit tests.&lt;/p&gt; &lt;p&gt;Now you can get down to business writing your unit tests. You have to use the Microsoft unit testing attributes, i.e. [TestClass], [TestMethod], [TestInitialize]. You can also use the [Tag] attribute, which is the equivalent of NUnit’s [Category] to group your unit tests, allowing you to run a subset of tests easily.&lt;/p&gt; &lt;p&gt;It has a fairly nice GUI (though not without a few quirks) that displays the outcome of your tests for you, and allows you to copy the test results to your clipboard:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/how-to-unit-test-silverlight-apps-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="image" border="0" alt="image" src="/posts/files/how-to-unit-test-silverlight-apps-1.png" width="511" height="368"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;Unfortunately it doesn’t support Assert.Inconclusive (gets counted as a failure), but apart from that it works as expected.&lt;/p&gt; &lt;h3&gt;Testing GUI Components&lt;/h3&gt; &lt;p&gt;Another interesting capability that the Silverlight Unit Testing framework offers is that it can actually host your user controls and run tests against them.  &lt;p&gt;Unfortunately some of the documentation that is out there is a little out of date, so I’ll run through the basics here.  &lt;p&gt;You start off by creating a test class that inherits from the &lt;strong&gt;SilverlightTest&lt;/strong&gt; base class. Then in a method decorated with the &lt;strong&gt;TestInitialize&lt;/strong&gt; attribute, create an instance of your user control and add it to the TestPanel (a property on the base class, note that it has changed name since a lot of older web tutorials were written).&lt;pre class="brush: csharp;"&gt;[TestInitialize]
+public void SetUp()
+{
+    var control = new MyUserControl();
+    this.TestPanel.Children.Add(control);
+}&lt;/pre&gt;
+&lt;p&gt;Note that if you don’t do this in the TestInitialize method and try to do it in your test method itself, the control won’t have time to actually load. 
+&lt;p&gt;There is a nasty gotcha. If you user control uses something from a resource dictionary, then the creation of your control will fail in the TestInitialize method, but for some reason the test framework ploughs on and calls the TestMethod anyway, resulting in a confusing failure message. You need to get the contents of your app.xaml into the unit test application. 
+&lt;p&gt;I already had my resource dictionaries split out into multiple files, which helped a lot. I added the resource xaml files to the test application as linked files, and then just referenced them as Merged dictionaries in my app.xaml:&lt;pre class="brush: xml;"&gt;&amp;lt;Application.Resources&amp;gt;
+    &amp;lt;ResourceDictionary&amp;gt;
+        &amp;lt;ResourceDictionary.MergedDictionaries&amp;gt;
+            &amp;lt;ResourceDictionary Source="MarkRoundButton.xaml"/&amp;gt;
+        &amp;lt;/ResourceDictionary.MergedDictionaries&amp;gt;
+    &amp;lt;/ResourceDictionary&amp;gt;
+&amp;lt;/Application.Resources&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;Now in your actual test method, you can now perform tests on your user control, knowing that it has been properly created and sized.&lt;pre class="brush: csharp;"&gt;[TestMethod]
+public void DisplayDefaultSize()
+{
+    Assert.IsTrue(tc.ActualWidth &amp;gt; 0);
+}
+&lt;/pre&gt;
+&lt;p&gt;There are also some powerful capabilities in there to allow you to run “asynchronous” tests, but I will save that for a future blog post as I have a few interesting ideas for how they could be used.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>unit testing</category>
+    <category>Silverlight</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="39c978fc-e7fb-4662-ae62-5ffd5e9383a4">
+      <author>Pierre Mengal</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07825797939266737145</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-28 19:44:07</date>
+      <content>This comment has been removed by the author.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3a4223e9-daea-472e-9572-191fa5b09602">
+      <author>Pierre Mengal</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07825797939266737145</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-28 19:45:19</date>
+      <content>Hello Mark, are you working on a music rating tool?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3351622f-a6ca-4441-86aa-13c6d2ced1b0">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-28 19:54:48</date>
+      <content>Yes, I have a simple &lt;a href="https://bitbucket.org/markheath/musicrater" rel="nofollow"&gt;music rating app&lt;/a&gt; I use for listening to the KVR OSC contest entries.</content>
+    </comment>
+  </comments>
+</post>

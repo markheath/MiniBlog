@@ -1,0 +1,32 @@
+<post>
+  <title>Visual Studio Beta 2</title>
+  <slug>visual-studio-beta-2</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-19 11:05:00</pubDate>
+  <lastModified>2008-06-30 15:13:41</lastModified>
+  <content>&lt;p&gt;I wrote a post a while ago &lt;a href="/post/orcas-beta-1-not-ready-for-prime-time"&gt;criticising Orcas Beta 1&lt;/a&gt; so I suppose its only fair that I write about Beta 2. I have been using it for a few months now, and have found it to be excellent. I have only discovered one crash so far (to do with intellisense, and apparently fixed already for RTM).&lt;/p&gt;  &lt;p&gt;The multi-targetting feature is superb, and the WPF designer has improved a lot (you can create a click handler for a button by double-clicking), although I can't seem to find any way of browsing other available events and adding handlers, short of using the intellisense in the XAML file. Some of my other criticisms still hold true - there is no help in setting FontFamily and Ctrl-Click copying of controls doesn't work.&lt;/p&gt;  &lt;p&gt;I was able to attend a presentation by &lt;a href="http://www.danielmoth.com/Blog"&gt;Daniel Moth&lt;/a&gt; last Thursday, who demoed some of the new features for web development. I am not an expert in ASP.NET, but have been doing a bit of learning in the last year, and the new features look excellent, particularly getting better intellisense (even in Javascript) and help with CSS. These features should be very helpful for me getting up to speed.&lt;/p&gt;  &lt;p&gt;&lt;a href="http://11011.net/software/vspaste"&gt;&lt;/a&gt;Silverlight support is sadly not going to be built-in, although to be fair, Silverlight 1.1 has still not been officially released. Having said that, the Silverlight development story is very good in VS2008 compared to the pain of working on it in VS2005.&lt;/p&gt;  &lt;p&gt;Overall though, I'm a lot more enthusiastic about VS2008 having used the Beta 2. What is even more exciting is the possibility of using the new C# 3 language features against .NET 2.0 projects. This is a really compelling reason to upgrade even if you have no intention of using the .NET 3.0 or 3.5 libraries.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Visual Studio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="227bf186-1055-4a44-b7d1-2062cd98087d">
+      <author>David</author>
+      <email>noreply@blogger.com</email>
+      <website>www.commongenius.com</website>
+      <ip />
+      <userAgent />
+      <date>2007-11-28 20:26:00</date>
+      <content>Interesting, I just read your post on Beta 1 and found myself still in complete agreement even after playing with the RTM bits. You seem to have been a lot more encouraged by beta 2 than I was. I would be interested in hearing your opinion on the RTM.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="14b10e2d-63e1-45aa-a54f-27e93dc75244">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2007-11-29 10:47:00</date>
+      <content>hi David,&lt;BR/&gt;To be honest I haven't done too much WPF in Beta 2 and RTM recently, which was the main area of weakness in Beta 1 so perhaps I will still be disappointed when I try the latest WPF designer.&lt;BR/&gt;&lt;BR/&gt;But overall I'm very positive about VS2008, mainly because of the multi-targetting and the new C# language features. I also like the fact that they have made the effort to get more stuff included by default rather than requiring endless addons.</content>
+    </comment>
+  </comments>
+</post>

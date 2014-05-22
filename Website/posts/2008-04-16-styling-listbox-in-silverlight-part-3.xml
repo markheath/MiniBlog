@@ -1,0 +1,484 @@
+<post>
+  <title>Styling a ListBox in Silverlight (Part 3 - Item Style)</title>
+  <slug>styling-listbox-in-silverlight-part-3</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-16 12:06:00</pubDate>
+  <lastModified>2011-07-04 17:12:20</lastModified>
+  <content>&lt;p&gt;&lt;i&gt;This post describes how to style a ListBox in Silverlight 2 beta 1. For an updated version for beta 2, please look &lt;a href="/post/styling-listbox-with-silverlight-2-beta"&gt;here&lt;/a&gt;&lt;/i&gt;&lt;/p&gt; &lt;p&gt;In my &lt;a href="/post/styling-listbox-in-silverlight-part-2"&gt;last post&lt;/a&gt;, I demonstrated how to completely customise the appearance of a ListBox in Silverlight, including the appearance of the ScrollBars. The missing piece though is any kind of indication of which items are selected, or any visual feedback when the mouse hovers over a ListBox item.&lt;/p&gt; &lt;p&gt;To achieve this we need to add some Storyboards to the custom ListBoxItem we created in my first post. There are &lt;a href="http://msdn2.microsoft.com/en-us/library/cc278062(VS.95).aspx"&gt;six states&lt;/a&gt; you can specify Storyboards for. The most important for our purposes are "Normal State", "Normal Selected State", "MouseOver State" and "MouseOver Selected State".&lt;/p&gt; &lt;p&gt;Obviously you can do whatever you like in these Storyboards. I have gone for the simplest option of changing the background. But if you wished to animate some properties on the ContentPresenter itself, then that also would be possible.&lt;/p&gt; &lt;p&gt;Here's the updated ListBoxItem style:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxItemStyle1" TargetType="ListBoxItem"&amp;gt;
+    &amp;lt;Setter Property="Foreground" Value="#BDBC97" /&amp;gt;    
+    &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+            &amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+                &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                    &amp;lt;Grid.Resources&amp;gt;
+                        &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                        &amp;lt;!-- &amp;lt;Storyboard x:Key="Unfocused Selected State"/&amp;gt; --&amp;gt;
+                        &amp;lt;Storyboard x:Key="Normal Selected State"&amp;gt;
+                            &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF397F8F"/&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                        &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                            &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF898A8A"/&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                        &amp;lt;!-- &amp;lt;Storyboard x:Key="MouseOver Unfocused Selected State"/&amp;gt; --&amp;gt;
+                        &amp;lt;Storyboard x:Key="MouseOver Selected State"&amp;gt;
+                            &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF898A8A"/&amp;gt;
+                        &amp;lt;/Storyboard&amp;gt;
+                    &amp;lt;/Grid.Resources&amp;gt;                        
+                
+                    &amp;lt;Border CornerRadius="5" Margin="1"&amp;gt;
+                        &amp;lt;Border.Background&amp;gt;
+                            &amp;lt;SolidColorBrush x:Name="BackgroundBrush" Color="#51615B" /&amp;gt;
+                        &amp;lt;/Border.Background&amp;gt;
+                        &amp;lt;ContentPresenter
+                            Margin="5,1"
+                            Content="{TemplateBinding Content}"
+                            Foreground="{TemplateBinding Foreground}"
+                         /&amp;gt;                    
+                    &amp;lt;/Border&amp;gt;
+                &amp;lt;/Grid&amp;gt;
+            &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+    &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like (item 3 selected, item 5 mouse over):&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-3-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="ListBox style" border="0" alt="ListBox style" src="/posts/files/styling-listbox-in-silverlight-part-3-1.png" width="165" height="166"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;OK, so my choice of colours is awful and there are lots of visual elements that could be improved (and also we await a fix in beta 2 to the vertical scrollbar bug), but hopefully I have demonstrated how it is possible to completely change every visual element of how your ListBox is rendered in Silverlight.&lt;/p&gt;
+&lt;p&gt;Here's the complete XAML for my test application including all the custom styles:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;UserControl
+    xmlns="http://schemas.microsoft.com/client/2007"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Silverlight2BlendApplication.Page"
+    Width="640" Height="480" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Silverlight2BlendApplication="clr-namespace:Silverlight2BlendApplication"&amp;gt;
+    &amp;lt;UserControl.Resources&amp;gt;
+        
+        &amp;lt;Style TargetType="ScrollBar" x:Key="ScrollBarStyle1"&amp;gt;
+            &amp;lt;!-- Any other properties you want to set --&amp;gt;
+            &amp;lt;Setter Property="Template"&amp;gt;
+                &amp;lt;Setter.Value&amp;gt;
+                    &amp;lt;ControlTemplate TargetType="ScrollBar"&amp;gt;
+                        &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                            &amp;lt;!-- States --&amp;gt;
+                            &amp;lt;Grid.Resources&amp;gt;
+                                &amp;lt;!-- Transition to the slider's default state --&amp;gt;
+                                &amp;lt;Storyboard x:Key="Normal State"&amp;gt;
+                                    &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="RootElement" Storyboard.TargetProperty="Opacity" To="1" /&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+
+                                &amp;lt;!-- Transition to the slider's mouseover state --&amp;gt;
+                                &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                    &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="RootElement" Storyboard.TargetProperty="Opacity" To="1" /&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+
+                                &amp;lt;!-- Transition to the slider's disabled state --&amp;gt;
+                                &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                    &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="RootElement" Storyboard.TargetProperty="Opacity" To="0.5" /&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+
+                                &amp;lt;!-- RepeatButton Templates --&amp;gt;
+                                &amp;lt;ControlTemplate x:Key="RepeatButtonTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement" Background="Transparent" /&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;ControlTemplate x:Key="HorizontalIncrementTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement" Background="#00000000"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                                &amp;lt;ColorAnimation Duration="0:0:0.2" Storyboard.TargetName="ButtonColor" Storyboard.TargetProperty="Color" To="#FF557E9A" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ButtonVisual" Storyboard.TargetProperty="Opacity" To=".6" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="30*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+                                        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                                        &amp;lt;Grid.RowDefinitions&amp;gt;
+                                            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="50*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+                                        &amp;lt;/Grid.RowDefinitions&amp;gt;
+                                        &amp;lt;Path x:Name="ButtonVisual" Grid.Column="1" Grid.Row="1" Stretch="Fill" Data="F1 M 511.047,352.682L 511.047,342.252L 517.145,347.467L 511.047,352.682 Z "&amp;gt;
+                                            &amp;lt;Path.Fill&amp;gt;
+                                                &amp;lt;SolidColorBrush x:Name="ButtonColor" Color="#FF313131" /&amp;gt;
+                                            &amp;lt;/Path.Fill&amp;gt;
+                                        &amp;lt;/Path&amp;gt;
+                                        &amp;lt;Rectangle x:Name="FocusVisualElement" Grid.ColumnSpan="3" Grid.RowSpan="3"  Stroke="#666666" Fill="#00000000"  StrokeDashArray=".2 5" StrokeDashCap="Round" IsHitTestVisible="false" Opacity="0" /&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;ControlTemplate x:Key="HorizontalDecrementTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement" Background="#00000000"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                                &amp;lt;ColorAnimation Duration="0:0:0.2" Storyboard.TargetName="ButtonColor" Storyboard.TargetProperty="Color" To="#FF557E9A" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ButtonVisual" Storyboard.TargetProperty="Opacity" To=".6" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="30*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="35*"/&amp;gt;
+                                        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                                        &amp;lt;Grid.RowDefinitions&amp;gt;
+                                            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="50*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="25*"/&amp;gt;
+                                        &amp;lt;/Grid.RowDefinitions&amp;gt;
+                                        &amp;lt;Path Grid.Column="1" Grid.Row="1" Stretch="Fill" Data="F1 M 110.692,342.252L 110.692,352.682L 104.594,347.467L 110.692,342.252 Z "&amp;gt;
+                                            &amp;lt;Path.Fill&amp;gt;
+                                                &amp;lt;SolidColorBrush x:Name="ButtonColor" Color="#FF313131" /&amp;gt;
+                                            &amp;lt;/Path.Fill&amp;gt;
+                                        &amp;lt;/Path&amp;gt;
+                                        &amp;lt;Rectangle x:Name="FocusVisualElement" Grid.ColumnSpan="3" Grid.RowSpan="3"  Stroke="#666666" Fill="#00000000"  StrokeDashArray=".2 5" StrokeDashCap="Round" IsHitTestVisible="false" Opacity="0" /&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;ControlTemplate x:Key="VerticalIncrementTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement" Background="#00000000"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt; 
+                                                &amp;lt;ColorAnimation Duration="0:0:0.2" Storyboard.TargetName="ButtonColor" Storyboard.TargetProperty="Color" To="#FF557E9A" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ButtonVisual" Storyboard.TargetProperty="Opacity" To=".6" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="25*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="50*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="25*"/&amp;gt;
+                                        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                                        &amp;lt;Grid.RowDefinitions&amp;gt;
+                                            &amp;lt;RowDefinition Height="35*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="30*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="35*"/&amp;gt;
+                                        &amp;lt;/Grid.RowDefinitions&amp;gt;
+                                        &amp;lt;Path Grid.Column="1" Grid.Row="1" Stretch="Fill" Data="F1 M 531.107,321.943L 541.537,321.943L 536.322,328.042L 531.107,321.943 Z "&amp;gt;
+                                            &amp;lt;Path.Fill&amp;gt;
+                                                &amp;lt;SolidColorBrush x:Name="ButtonColor" Color="#FF313131" /&amp;gt;
+                                            &amp;lt;/Path.Fill&amp;gt;
+                                        &amp;lt;/Path&amp;gt;
+                                        &amp;lt;Rectangle x:Name="FocusVisualElement" Grid.ColumnSpan="3" Grid.RowSpan="3"  Stroke="#666666" Fill="#00000000"  StrokeDashArray=".2 5" StrokeDashCap="Round" IsHitTestVisible="false" Opacity="0" /&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;ControlTemplate x:Key="VerticalDecrementTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement" Background="#00000000"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                                &amp;lt;ColorAnimation Duration="0:0:0.2" Storyboard.TargetName="ButtonColor" Storyboard.TargetProperty="Color" To="#FF557E9A" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ButtonVisual" Storyboard.TargetProperty="Opacity" To=".6" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="25*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="50*"/&amp;gt;
+                                            &amp;lt;ColumnDefinition Width="25*"/&amp;gt;
+                                        &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                                        &amp;lt;Grid.RowDefinitions&amp;gt;
+                                            &amp;lt;RowDefinition Height="35*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="30*"/&amp;gt;
+                                            &amp;lt;RowDefinition Height="35*"/&amp;gt;
+                                        &amp;lt;/Grid.RowDefinitions&amp;gt;
+                                        &amp;lt;Path Grid.Column="1" Grid.Row="1" Stretch="Fill" Data="F1 M 541.537,173.589L 531.107,173.589L 536.322,167.49L 541.537,173.589 Z "&amp;gt;
+                                            &amp;lt;Path.Fill&amp;gt;
+                                                &amp;lt;SolidColorBrush x:Name="ButtonColor" Color="#FF313131" /&amp;gt;
+                                            &amp;lt;/Path.Fill&amp;gt;
+                                        &amp;lt;/Path&amp;gt;
+                                        &amp;lt;Rectangle x:Name="FocusVisualElement" Grid.ColumnSpan="3" Grid.RowSpan="3"  Stroke="#666666" Fill="#00000000"  StrokeDashArray=".2 5" StrokeDashCap="Round" IsHitTestVisible="false" Opacity="0" /&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;!-- Thumb Templates --&amp;gt;
+                                &amp;lt;ControlTemplate x:Key="VerticalThumbTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;!--Colors --&amp;gt;
+                                            &amp;lt;Color x:Key="ThumbForegroundColor"&amp;gt;#ACAC39&amp;lt;/Color&amp;gt;
+                                            &amp;lt;Color x:Key="ThumbHoverColor"&amp;gt;#73AC39&amp;lt;/Color&amp;gt;
+                                            &amp;lt;!--Storyboards--&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                                &amp;lt;ColorAnimation Duration="0:0:0.1" Storyboard.TargetName="ThumbForeground" Storyboard.TargetProperty="Color" To="{StaticResource ThumbHoverColor}" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ThumbForeground" Storyboard.TargetProperty="Opacity" To="0" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid x:Name="ThumbVisual"&amp;gt;
+                                            &amp;lt;Rectangle x:Name="Background" Margin="3.5,.5,3.5,.5" RadiusX="5" RadiusY="5" &amp;gt;
+                                                &amp;lt;Rectangle.Fill&amp;gt;
+                                                    &amp;lt;SolidColorBrush x:Name="ThumbForeground" Color="{StaticResource ThumbForegroundColor}" /&amp;gt;
+                                                &amp;lt;/Rectangle.Fill&amp;gt;
+                                            &amp;lt;/Rectangle&amp;gt;
+                                        &amp;lt;/Grid&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+
+                                &amp;lt;ControlTemplate x:Key="HorizontalThumbTemplate"&amp;gt;
+                                    &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                                        &amp;lt;Grid.Resources&amp;gt;
+                                            &amp;lt;!--Colors--&amp;gt;
+                                            &amp;lt;Color x:Key="ThumbForegroundColor"&amp;gt;#ACAC39&amp;lt;/Color&amp;gt;
+                                            &amp;lt;Color x:Key="ThumbHoverColor"&amp;gt;#73AC39&amp;lt;/Color&amp;gt;
+                                            &amp;lt;!--Storyboards--&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                            &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                                &amp;lt;ColorAnimation Duration="0:0:0.1" Storyboard.TargetName="ThumbForeground" Storyboard.TargetProperty="Color" To="{StaticResource ThumbHoverColor}" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                            &amp;lt;Storyboard x:Key="Disabled State"&amp;gt;
+                                                &amp;lt;DoubleAnimation Duration="0:0:0" Storyboard.TargetName="ThumbForeground" Storyboard.TargetProperty="Opacity" To="0" /&amp;gt;
+                                            &amp;lt;/Storyboard&amp;gt;
+                                        &amp;lt;/Grid.Resources&amp;gt;
+                                        &amp;lt;Grid x:Name="ThumbVisual"&amp;gt;
+                                            &amp;lt;Rectangle x:Name="Background" Margin=".5,3.5,.5,3.5" RadiusX="5" RadiusY="5" &amp;gt;
+                                                &amp;lt;Rectangle.Fill&amp;gt;
+                                                    &amp;lt;SolidColorBrush x:Name="ThumbForeground" Color="{StaticResource ThumbForegroundColor}" /&amp;gt;
+                                                &amp;lt;/Rectangle.Fill&amp;gt;
+                                            &amp;lt;/Rectangle&amp;gt;
+                                        &amp;lt;/Grid&amp;gt;
+                                    &amp;lt;/Grid&amp;gt;
+                                &amp;lt;/ControlTemplate&amp;gt;
+                            &amp;lt;/Grid.Resources&amp;gt;
+
+                            &amp;lt;!-- Horizontal Template --&amp;gt;
+                            &amp;lt;Grid x:Name="HorizontalRootElement" &amp;gt;
+                                &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="*" /&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="Auto" /&amp;gt;
+                                &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+
+                                &amp;lt;Grid.RowDefinitions&amp;gt;
+                                    &amp;lt;RowDefinition /&amp;gt;
+                                    &amp;lt;RowDefinition /&amp;gt;
+                                &amp;lt;/Grid.RowDefinitions&amp;gt;
+
+                                &amp;lt;!-- Track Layer --&amp;gt;
+                                &amp;lt;Rectangle Margin="0,6,0,6" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3" Fill="#FF404040" RadiusX="3" RadiusY="3" /&amp;gt;
+
+                                &amp;lt;!-- Repeat Buttons + Thumb --&amp;gt;
+                                &amp;lt;RepeatButton x:Name="HorizontalSmallDecreaseElement" Grid.Column="0" Grid.RowSpan="2" Width="16" IsTabStop="False" Interval="50" Template="{StaticResource HorizontalDecrementTemplate}" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="HorizontalLargeDecreaseElement" Grid.Column="1" Grid.RowSpan="2" Width="0" Template="{StaticResource RepeatButtonTemplate}" Interval="50" IsTabStop="False" /&amp;gt;
+                                &amp;lt;Thumb x:Name="HorizontalThumbElement" MinWidth="10" Width="20" Grid.Column="2" Grid.RowSpan="2" Template="{StaticResource HorizontalThumbTemplate}" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="HorizontalLargeIncreaseElement" Grid.Column="3" Grid.RowSpan="2" Template="{StaticResource RepeatButtonTemplate}" Interval="50" IsTabStop="False" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="HorizontalSmallIncreaseElement" Grid.Column="4" Grid.RowSpan="2" Width="16" IsTabStop="False" Interval="50" Template="{StaticResource HorizontalIncrementTemplate}" /&amp;gt;
+                            &amp;lt;/Grid&amp;gt;
+
+                            &amp;lt;!-- Vertical Template --&amp;gt;
+                            &amp;lt;Grid x:Name="VerticalRootElement" Visibility="Collapsed"&amp;gt;
+                                &amp;lt;Grid.RowDefinitions&amp;gt;
+                                    &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+                                    &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+                                    &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+                                    &amp;lt;RowDefinition Height="*" /&amp;gt;
+                                    &amp;lt;RowDefinition Height="Auto" /&amp;gt;
+                                &amp;lt;/Grid.RowDefinitions&amp;gt;
+
+                                &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                    &amp;lt;ColumnDefinition /&amp;gt;
+                                    &amp;lt;ColumnDefinition /&amp;gt;
+                                &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+
+                                &amp;lt;!-- Track Layer --&amp;gt;
+                                &amp;lt;Rectangle Margin="6,0,6,0" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="3" Fill="#FF404040" RadiusX="3" RadiusY="3" /&amp;gt;
+
+                                &amp;lt;!-- Repeat Buttons + Thumb --&amp;gt;
+                                &amp;lt;RepeatButton x:Name="VerticalSmallDecreaseElement" Grid.Row="0" Grid.ColumnSpan="2" Height="16" IsTabStop="False" Interval="50" Template="{StaticResource VerticalDecrementTemplate}" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="VerticalLargeDecreaseElement" Grid.Row="1" Grid.ColumnSpan="2" Height="0" Template="{StaticResource RepeatButtonTemplate}" Interval="50" IsTabStop="False" /&amp;gt;
+                                &amp;lt;Thumb x:Name="VerticalThumbElement" MinHeight="10" Height="20" Grid.Row="2" Grid.ColumnSpan="2" Template="{StaticResource VerticalThumbTemplate}" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="VerticalLargeIncreaseElement" Grid.Row="3" Grid.ColumnSpan="2" Template="{StaticResource RepeatButtonTemplate}" Interval="50" IsTabStop="False" /&amp;gt;
+                                &amp;lt;RepeatButton x:Name="VerticalSmallIncreaseElement" Grid.Row="4" Grid.ColumnSpan="2" Height="16" IsTabStop="False" Interval="50" Template="{StaticResource VerticalIncrementTemplate}" /&amp;gt;
+                            &amp;lt;/Grid&amp;gt;
+                        &amp;lt;/Grid&amp;gt;
+                    &amp;lt;/ControlTemplate&amp;gt;
+                &amp;lt;/Setter.Value&amp;gt;
+            &amp;lt;/Setter&amp;gt;
+        &amp;lt;/Style&amp;gt;        
+        
+        &amp;lt;Style TargetType="ScrollViewer" x:Key="ScrollViewerStyle1"&amp;gt;
+            &amp;lt;Setter Property="Template"&amp;gt;
+                &amp;lt;Setter.Value&amp;gt;
+                    &amp;lt;ControlTemplate TargetType="ScrollViewer"&amp;gt;
+                        &amp;lt;Border&amp;gt;
+                            &amp;lt;Grid Background="{TemplateBinding Background}"&amp;gt;
+                                &amp;lt;Grid.ColumnDefinitions&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="*"/&amp;gt;
+                                    &amp;lt;ColumnDefinition Width="Auto"/&amp;gt;
+                                &amp;lt;/Grid.ColumnDefinitions&amp;gt;
+                                &amp;lt;Grid.RowDefinitions&amp;gt;
+                                    &amp;lt;RowDefinition Height="*"/&amp;gt;
+                                    &amp;lt;RowDefinition Height="Auto"/&amp;gt;
+                                &amp;lt;/Grid.RowDefinitions&amp;gt;
+                                &amp;lt;ScrollContentPresenter
+                                  x:Name="ScrollContentPresenterElement"
+                                  Grid.Column="0"
+                                  Grid.Row="0"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  Cursor="{TemplateBinding Cursor}"
+                                  Background="{TemplateBinding Background}"
+                                  FontFamily="{TemplateBinding FontFamily}"
+                                  FontSize="{TemplateBinding FontSize}"
+                                  FontStretch="{TemplateBinding FontStretch}"
+                                  FontStyle="{TemplateBinding FontStyle}"
+                                  FontWeight="{TemplateBinding FontWeight}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  TextAlignment="{TemplateBinding TextAlignment}"
+                                  TextDecorations="{TemplateBinding TextDecorations}"
+                                  TextWrapping="{TemplateBinding TextWrapping}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Margin="{TemplateBinding Padding}"
+                                   /&amp;gt;
+                                &amp;lt;ScrollBar
+                                  x:Name="VerticalScrollBarElement"
+                                  Grid.Column="1"
+                                  Grid.Row="0"
+                                  Orientation="Vertical"
+                                  Cursor="Arrow"
+                                  Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                  ViewportSize="{TemplateBinding ViewportHeight}"
+                                  Minimum="0"
+                                  Maximum="{TemplateBinding ScrollableHeight}"
+                                  Value="{TemplateBinding VerticalOffset}" 
+                                  Style="{StaticResource ScrollBarStyle1}"
+                                  Width="18"/&amp;gt;
+                                &amp;lt;ScrollBar
+                                  x:Name="HorizontalScrollBarElement"
+                                  Grid.Column="0"
+                                  Grid.Row="1"
+                                  Orientation="Horizontal"
+                                  Cursor="Arrow"
+                                  Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                  ViewportSize="{TemplateBinding ViewportWidth}"
+                                  Minimum="0"
+                                  Maximum="{TemplateBinding ScrollableWidth}"
+                                  Value="{TemplateBinding HorizontalOffset}" 
+                                  Style="{StaticResource ScrollBarStyle1}"
+                                  Height="18"/&amp;gt;
+                            &amp;lt;/Grid&amp;gt;
+                        &amp;lt;/Border&amp;gt;
+                    &amp;lt;/ControlTemplate&amp;gt;
+                &amp;lt;/Setter.Value&amp;gt;
+            &amp;lt;/Setter&amp;gt;
+        &amp;lt;/Style&amp;gt;
+        
+        &amp;lt;Style x:Key="ListBoxItemStyle1" TargetType="ListBoxItem"&amp;gt;
+            &amp;lt;Setter Property="Foreground" Value="#BDBC97" /&amp;gt;    
+            &amp;lt;Setter Property="Template"&amp;gt;
+                &amp;lt;Setter.Value&amp;gt;
+                    &amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+                        &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                            &amp;lt;Grid.Resources&amp;gt;
+                                &amp;lt;Storyboard x:Key="Normal State" /&amp;gt;
+                                &amp;lt;!-- &amp;lt;Storyboard x:Key="Unfocused Selected State"/&amp;gt; --&amp;gt;
+                                &amp;lt;Storyboard x:Key="Normal Selected State"&amp;gt;
+                                    &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF397F8F"/&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+                                &amp;lt;Storyboard x:Key="MouseOver State"&amp;gt;
+                                    &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF898A8A"/&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+                                &amp;lt;!-- &amp;lt;Storyboard x:Key="MouseOver Unfocused Selected State"/&amp;gt; --&amp;gt;
+                                &amp;lt;Storyboard x:Key="MouseOver Selected State"&amp;gt;
+                                    &amp;lt;ColorAnimation Storyboard.TargetName="BackgroundBrush" Storyboard.TargetProperty="Color" Duration="0" To="#FF898A8A"/&amp;gt;
+                                &amp;lt;/Storyboard&amp;gt;
+                            &amp;lt;/Grid.Resources&amp;gt;                        
+                        
+                            &amp;lt;Border CornerRadius="5" Margin="1"&amp;gt;
+                                &amp;lt;Border.Background&amp;gt;
+                                    &amp;lt;SolidColorBrush x:Name="BackgroundBrush" Color="#51615B" /&amp;gt;
+                                &amp;lt;/Border.Background&amp;gt;
+                                &amp;lt;ContentPresenter
+                                    Margin="5,1"
+                                    Content="{TemplateBinding Content}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                 /&amp;gt;                    
+                            &amp;lt;/Border&amp;gt;
+                        &amp;lt;/Grid&amp;gt;
+                    &amp;lt;/ControlTemplate&amp;gt;
+                &amp;lt;/Setter.Value&amp;gt;
+            &amp;lt;/Setter&amp;gt;
+        &amp;lt;/Style&amp;gt;
+        
+        &amp;lt;Style x:Key="ListBoxStyle1" TargetType="ListBox"&amp;gt;
+            &amp;lt;Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemStyle1}" /&amp;gt;            
+            &amp;lt;Setter Property="Template"&amp;gt;
+                &amp;lt;Setter.Value&amp;gt;
+                    &amp;lt;ControlTemplate TargetType="ListBox"&amp;gt;        
+                        &amp;lt;Grid x:Name="LayoutRoot"&amp;gt;
+                            &amp;lt;Border Padding="3" Background="#E6BB8A" CornerRadius="5"&amp;gt;
+                                &amp;lt;ScrollViewer x:Name="ScrollViewerElement" 
+                                    Style="{StaticResource ScrollViewerStyle1}"
+                                    Padding="{TemplateBinding Padding}"&amp;gt;                                
+                                    &amp;lt;ItemsPresenter /&amp;gt;
+                                &amp;lt;/ScrollViewer&amp;gt;
+                            &amp;lt;/Border&amp;gt;
+                        &amp;lt;/Grid&amp;gt;
+                    &amp;lt;/ControlTemplate&amp;gt;
+                &amp;lt;/Setter.Value&amp;gt;
+            &amp;lt;/Setter&amp;gt;
+        &amp;lt;/Style&amp;gt;
+
+    &amp;lt;/UserControl.Resources&amp;gt;
+
+    &amp;lt;Grid x:Name="LayoutRoot" Background="White" &amp;gt;    
+        &amp;lt;ListBox 
+            HorizontalAlignment="Left" 
+            Margin="8,8,0,0" 
+            VerticalAlignment="Top" 
+            Style="{StaticResource ListBoxStyle1}" Width="162" Height="161"    
+            &amp;gt;
+            &amp;lt;ListBoxItem Content="Hello"/&amp;gt;
+            &amp;lt;ListBoxItem Content="World"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 3"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 4 with a really long name"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 5"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 6"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 7"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 8"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 9 out of bounds"/&amp;gt;
+            &amp;lt;ListBoxItem Content="Item 10 out of bounds"/&amp;gt;
+        &amp;lt;/ListBox&amp;gt;
+    &amp;lt;/Grid&amp;gt;
+&amp;lt;/UserControl&amp;gt;&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="68d85681-cd73-44b0-829c-c14cd7940002">
+      <author>James</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-06-20 02:02:00</date>
+      <content>The mouseover / selected etc events as explained above don't seem to work on silverlight 2 Beta 2. I'm guessing now they are using the visual state manager, but how does it hook in to the ListBoxItem...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="01cc09a0-c759-40b7-9f85-5ae62143b919">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-06-20 06:50:00</date>
+      <content>Hi James,&lt;BR/&gt;I'm updating this series for beta 2, so check back in a week or so for a working version</content>
+    </comment>
+  </comments>
+</post>

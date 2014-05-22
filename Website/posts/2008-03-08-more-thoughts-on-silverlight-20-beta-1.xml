@@ -1,0 +1,16 @@
+<post>
+  <title>More thoughts on Silverlight 2.0 beta 1</title>
+  <slug>more-thoughts-on-silverlight-20-beta-1</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-03-08 23:59:00</pubDate>
+  <lastModified>2010-10-04 17:37:28</lastModified>
+  <content>&lt;p&gt;I'm continuing to update my &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt; application in an attempt to try out some of the new features in the latest Silverlight beta. &lt;/p&gt;  &lt;p&gt;In addition to the things I mentioned in my &lt;a href="/post/converting-silvernibbles-to-silverlight"&gt;previous post&lt;/a&gt;, here's some things I liked, and some things I learned:&lt;/p&gt;  &lt;p&gt;Being able to reference UserControls directly in XAML is brilliant. It has greatly simplified a lot of the code in SilverNibbles.&lt;/p&gt;  &lt;p&gt;Intellisense for XAML is great!&lt;/p&gt;  &lt;p&gt;The cursor keys finally work properly. Previously they didn't give any key-down events, only key-up.&lt;/p&gt;  &lt;p&gt;There is a new DispatcherTimer object that can be used for game loops in preference to having to use an animation of an invisible object.&lt;/p&gt;  &lt;p&gt;Buttons can respond to keyboard events even if their container is invisible. You need to set the IsEnabled property to false if you don't want them to be triggered by the space bar or enter key.&lt;/p&gt;  &lt;p&gt;Layout panels are nice, but can actually cause a lot of headaches wondering why your user-control is sizing itself in unusual ways. Sometimes Canvas is still the most straightforward thing to use.&lt;/p&gt;  &lt;p&gt;The app.xaml file is nice in that it lets you set Style and Template resources. What I would really like to do is something like this:&lt;/p&gt;  
+&lt;pre class="brush: xml"&gt;&amp;lt;Application.Resources&amp;gt; 
+&amp;lt;SolidColorBrush x:Name=&amp;quot;BackgroundBrush&amp;quot; Color=&amp;quot;White&amp;quot; /&amp;gt; 
+...&lt;/pre&gt;&lt;p&gt;and then in a user control: &lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Rectangle Fill={StaticResource BackgroundBrush}/&amp;gt;&lt;/pre&gt;&lt;p&gt;I haven't done enough WPF to know whether this would be allowed in WPF, but it would be a very useful feature if you could.&lt;/p&gt;&lt;p&gt;Finally, I have had issues with FireFox and IE not appearing to download the very latest versions of my Silverlight apps from my webserver. I know the latest version is online, but sometimes the previous version appears in my browser. I'm not quite sure exactly why this is happening yet.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

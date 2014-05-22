@@ -1,0 +1,262 @@
+<post>
+  <title>10 Commandments of Inversion of Control Containers</title>
+  <slug>10-commandments-of-inversion-of-control</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-01-10 19:34:00</pubDate>
+  <lastModified>2012-01-10 19:34:00</lastModified>
+  <content>&lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Inversion_of_control"&gt;Inversion of Control containers&lt;/a&gt; can be a very powerful tool for decoupling spaghetti code in large software systems. However, with any power tool, you can hurt yourself badly if you don’t use it correctly. In this post, I present “10 commandments” to help you avoid causing problems with IoC, with a particular focus on very large software systems with many developers and hundreds of interfaces. I am currently using &lt;a href="http://unity.codeplex.com/"&gt;Unity&lt;/a&gt;, but these tips apply to pretty much any IoC container.&lt;/p&gt; &lt;h3&gt;1. Configure everything before your first resolve&lt;/h3&gt; &lt;p&gt;It is possible to ask the IoC container to resolve an interface before you have finished configuring the container. So long as it knows how to make the interface you asked for and its dependencies, it will have no problem fulfilling your request. But if your application hasn’t yet finished configuring the container yet, you run the risk of getting the wrong thing. Consider the following simple example:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;IUnityContainer container = new UnityContainer();
+container.RegisterType&amp;lt;IFoo, Foo&amp;gt;(new ContainerControlledLifetimeManager());
+var f1 = container.Resolve&amp;lt;IFoo&amp;gt;();
+&lt;/pre&gt;
+&lt;p&gt;Fairly straightforward, we ask for IFoo and get an instance of Foo. But what if we hadn’t quite finished configuring the container, and some other part in your app attempts to override the registration for IFoo:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;container.RegisterType&amp;lt;IFoo, Foo2&amp;gt;(new ContainerControlledLifetimeManager());
+&lt;/pre&gt;
+&lt;p&gt;Now, whenever we attempt to resolve IFoo, we get Foo2. But the initial component that did an early resolve is using the wrong implementation. This can make for horrible debugging sessions. Configure your container completely, &lt;em&gt;before &lt;/em&gt;you start to resolve things from it. Which leads us to our second commandment…&lt;/p&gt;
+&lt;h3&gt;2. Don’t pass the container around&lt;/h3&gt;
+&lt;p&gt;What I mean here, is don’t pass around the top-level interface that allows further configuration of the container. In Unity, this is the IUnityContainer interface. It might feel very powerful to send it around, since it allows other parts of your application register new rules, but it opens the door for the kind of bugs we just discussed.&lt;/p&gt;
+&lt;p&gt;But what about just a &lt;a href="http://commonservicelocator.codeplex.com/"&gt;Service Locator interface&lt;/a&gt;. Can I pass one of those around? Onto commandment 3…&lt;/p&gt;
+&lt;h3&gt;3. Avoid passing an IServiceLocator around&lt;/h3&gt;
+&lt;p&gt;Passing a service locator in as a dependency gives your class great power. It can ask for anything it wants, which is super convenient. But it also introduces some problems.&lt;/p&gt;
+&lt;p&gt;First, it means your class no longer advertises what it needs in the constructor. Without examining the code you can’t be sure what needs to be in the container for the class to work correctly. It means that unit tests, or callers of your class that aren’t using a container, will have to mock a container just to instantiate your class.&lt;/p&gt;
+&lt;p&gt;This has been called &lt;a href="http://stackoverflow.com/questions/2045904/dependency-inject-di-friendly-library/2047657#2047657"&gt;the “Hollywood principle”&lt;/a&gt; – Don’t call the DI Container, it’ll call you. Just put the interfaces you really need in your constructor. &lt;/p&gt;
+&lt;h3&gt;4. Avoid making the container a singleton&lt;/h3&gt;
+&lt;p&gt;Making your container a singleton is the quickest route to providing access to all your services everywhere in your application. It can seem like a great idea because wherever you are, you can just do this to get whatever interface you like:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var foo = MyContainer.Instance.Resolve&amp;lt;IFoo&amp;gt;();
+&lt;/pre&gt;
+&lt;p&gt;But there are two big problems. First, this introduces hidden dependencies into your class. Instead of your constructor advertising its dependencies, we again must examine the code to know what needs to be set up in the container.&lt;/p&gt;
+&lt;p&gt;Second, it assumes that all parts of your application will work with the same container, and the same implementations of each interface. This may be true for small applications, but in large enterprise systems, there may well be the need for multiple IoC containers. In our systems, we make use of &lt;a href="http://www.pnpguidance.net/post/UnityNestedContainersIUnityParentContainerCreateChildContainer.aspx"&gt;Unity child containers&lt;/a&gt;, allowing different sections of the application get access to their own implementations of interfaces. With a singleton container, this is impossible.&lt;/p&gt;
+&lt;h3&gt;5. Avoid constructor bloat&lt;/h3&gt;
+&lt;p&gt;One of the great things about IoC containers is that you don’t have to call constructors yourself – the container does the hard work for you. This means you can have a dozen constructor parameters, each representing a different dependency, and yet without ever having to write code that calls it.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public MyClass(IFoo foo, IFoo2 foo2, ILog log, IExporter exporter, IEmailer emailer, ISettings settings, IAudit audit)
+{
+}
+&lt;/pre&gt;
+&lt;p&gt;That is, until you want to test it. Then you have to mock up all of those interfaces. And probably you will find that your class only needs to call one or two methods on each. This is the time to apply the &lt;a href="http://en.wikipedia.org/wiki/Interface_segregation_principle"&gt;Interface Segregation Principle&lt;/a&gt; and replace them with one or two more focussed interfaces that represent the real dependencies of your class under test. &lt;/p&gt;
+&lt;h3&gt;6. Avoid property injection&lt;/h3&gt;
+&lt;p&gt;Most IoC containers offer a way to let you put attributes on properties in order to tell the container that it needs to set that property after constructing the object. In Unity you use the Dependency attribute:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;class Bar
+{
+    [Dependency]
+    public IFoo Foo { get; set; }
+
+    public Bar()
+    {
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Although this seems like a great feature, it has the effect of hiding this dependency from anyone who is constructing your object without an IoC container. At the very least, your class should report a good error message if someone forgets to set up a property dependency.&lt;/p&gt;
+&lt;h3&gt;7. Document your interfaces&lt;/h3&gt;
+&lt;p&gt;If you are using an IoC container, chances are you are working on a large system, and other developers are resolving interfaces that you put in the container.&lt;/p&gt;
+&lt;p&gt;Often developers will add good comments to the concrete implementation of a class, but spend very little time commenting the interface (who likes to write the same comments twice?). So in the concrete class we might have a comment like this:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;/// &amp;lt;summary&amp;gt;
+/// Call this to process all the files in the InputFiles collection, using the rules from the Rules collection
+/// &amp;lt;/summary&amp;gt;
+/// &amp;lt;param name="mode"&amp;gt;Processing mode, 0 = replace, 1 = update, 2 = overwrite, 3 = test only&amp;lt;/param&amp;gt;
+public void Process(int mode)
+
+&lt;/pre&gt;
+&lt;p&gt;but in the interface, we couldn’t be bothered to type that all again (and we hate cutting and pasting anyway) so we just have this:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;/// &amp;lt;summary&amp;gt;
+/// Process
+/// &amp;lt;/summary&amp;gt;
+void Process(int mode);
+&lt;/pre&gt;
+&lt;p&gt;But it is the interface that is the public API for your service. The comments on the interface will be used to display Intellisense to the user. The caller may not even have access to the code for the concrete implementation. If you are going to spend time writing good comments, write them on the interface. Here’s the difference in intellisense experience:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/10-commandments-of-inversion-of-control-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="bad-intellisense" border="0" alt="bad-intellisense" src="/posts/files/10-commandments-of-inversion-of-control-1.png" width="229" height="76"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;versus:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/10-commandments-of-inversion-of-control-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="good-intellisense" border="0" alt="good-intellisense" src="/posts/files/10-commandments-of-inversion-of-control-2.png" width="566" height="84"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;h3&gt;8. Don’t depend on Dispose in a specific order&lt;/h3&gt;
+&lt;p&gt;When you Dispose your IoC container, it will go through all of the IDisposable instances it knows about and call Dispose on them. But this can introduce a problem, because we cannot guarantee the order the services are disposed in. If you make a call into another service in your Dispose method, how do you know that service hasn’t already been Disposed? &lt;/p&gt;
+&lt;p&gt;Instead, design your services in such a way that they can be disposed in any order, and use events or some other form of messaging to report to your system that a shutdown is about to happen, allowing any last minute logging, saving etc to be done beforehand, while all the services are still up and running.&lt;/p&gt;
+&lt;h3&gt;9. Make sure Lifetime Management is communicated&lt;/h3&gt;
+&lt;p&gt;If you call &lt;strong&gt;Resolve&amp;lt;IFoo&amp;gt;&lt;/strong&gt; twice on your IoC container, you &lt;em&gt;might &lt;/em&gt;get two new instances of the Foo class, or you might get the same one twice. Without looking at how your container is configured, you have no way of knowing. But this can be a real headache if IFoo implements IDisposable. How do you know whether you ought to call Dispose on it or not? &lt;/p&gt;
+&lt;p&gt;I don’t know of any slick solution to this, but I would typically avoid instances where a Resolve gives you something you need to Dispose yourself. Instead I would return a factory object that makes it very clear you are building a new instance that you are in control of its lifetime yourself. Whatever approach you use, make sure your whole development team understands it. You don’t want someone Disposing a service too early, resulting in the next person to use it getting a nasty exception.&lt;/p&gt;
+&lt;h3&gt;10. Document your public API&lt;/h3&gt;
+&lt;p&gt;In a large system, a container can easily fill up with a lot of interfaces. The trouble is, not all of these are at the same level. Some are high-level interfaces, allowed to be called from anywhere, whilst other things are only in the container so they can fulfil the dependencies of those high-level interfaces. It means that you run the risk of developers guessing incorrectly about which interface they are supposed to call to achieve a particular task. They will assume that if they can get at it from the container, then they must be allowed to call it.&lt;/p&gt;
+&lt;p&gt;Now there are ways of having interfaces defined in your container that people can’t get at from the wrong place by making good use of assemblies and the &lt;strong&gt;internal &lt;/strong&gt;keyword, but really, you need to make it easy for developers to know what is in the container and how they are intended to use it. This may well involve maintaining an API document, and also means writing good comments on the interface. If you don’t do this, don’t be surprised to see code that inadvertently circumvents key functionality by calling into a component at too low a level, or the wheel being reinvented, simply because a developer didn’t know the container included a service that had the desired behaviour.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Do you have any tips for getting the best out of IoC containers? Please let me know in the comments.&lt;/em&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Interface Segregation Principle</category>
+    <category>Unity</category>
+    <category>Software Development</category>
+    <category>IoC</category>
+    <category>Dependency Inversion Principle</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c5af0a8e-9abf-4ec0-9b83-32e31be74dc0">
+      <author>Thorsten Lorenz</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/11869165877618370852</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-10 20:05:01</date>
+      <content>Concerning 5. (Constructor Bloat), another option is to pass in a Verbs instead of dependencies, as illustrated here: http://thorstenlorenz.wordpress.com/2011/07/23/dependency-injection-is-dead-long-live-verbs/&lt;br /&gt;&lt;br /&gt;This way you only have to mock out the methods themselves instead of the whole dependency. It would also possible to pass all the verbs in as properties of a Config class. That way the constructor is simplified and it is easy to see what the class actually uses (e.g. exactly what methods).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b023d8d9-677b-4be2-8e12-6c3b7bfb7a30">
+      <author>blorq</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16308269163452150701</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-10 23:15:52</date>
+      <content>Good list, with the exception of #7.  That &amp;quot;documentation&amp;quot; adds nothing but noise, with the exception of describing the use of an int which should be a self-documenting enum.  Remove that and the doc just restates the presumed classname and its properties.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b2dbb71a-3711-4da7-bde4-1075116f3ee7">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-11 07:36:50</date>
+      <content>@Thorsten - thanks for the link, it is an interesting article, and have experimented a bit in the past with just passing functions in rather than interfaces as dependencies. However, it doesn&amp;#39;t work great with an IoC container.&lt;br /&gt;&lt;br /&gt;@blorq - I am a big fan of the idea of self-documenting code, and agree that many comments would be unneccessary if we named functions better. However, that one was aimed at very large systems with dozens of developers and hundreds of interfaces where you do need ways of finding out how you are intended to use a component. Often you have no power to change the way an interface has been defined due to dependencies outside your control, but you do need the caller to understand how your method should be called. Comments on the interface (instead of on the concrete class where developers usually put them) are very helpful in this scenario.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ffdeb17f-7c9d-4c2e-a99d-3766693faa6c">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-12 21:10:35</date>
+      <content>Rules 5 and 6 conflict. You either use contructor or property injection. Rules usually are that required dependancies are passed via the constructor.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2e1ce995-1eee-4bb8-8393-c7c746f7ebb6">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-12 21:14:16</date>
+      <content>Rule #8: When you did not use &amp;#39;new&amp;#39; then don&amp;#39;t call dispose and never have an interface inherit from IDisposable. Problem is that not all code bases follow these simple rules.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="66f9ec2e-a804-4aa2-8f0e-7dd3c9550762">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-12 21:16:56</date>
+      <content>Having too many constructor dependancies probably violates seperation of concern and indicates a design error. Just refactor those classes and split that god class in several classes.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d4062c94-72ab-4977-a023-2f477cba7e7f">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-12 21:20:39</date>
+      <content>By the way, I have seen lots of code that only use interface dependancies but when classes are internal you can just as well use class dependancies. This works very well when you have lots of command classes.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8c10ecc0-83cd-4375-adf0-5f0cce5c8c10">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-13 11:31:23</date>
+      <content>@Ramon - I&amp;#39;m not sure why you think rules 5 &amp;amp; 6 conflict - I&amp;#39;m not advocating using both.&lt;br /&gt;&lt;br /&gt;Your thoughts on rule 8 are interesting. There would need to be a way to dispose long-running services that the container has created. Do you have a pattern that you follow on this?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="63429a8b-811d-40b4-b819-d297914e0986">
+      <author>ploeh</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08123428416238770895</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-15 16:26:12</date>
+      <content>This is a good list. It&amp;#39;s always good to see other people arrive at basically the same patterns as the ones I describe in &lt;a href="http://affiliate.manning.com/idevaffiliate.php?id=1150_236" rel="nofollow"&gt;my book&lt;/a&gt;, as this reinforces that they are really &lt;i&gt;patterns&lt;/i&gt; - i.e. solutions that lots of people have arrived at independently of each other.&lt;br /&gt;&lt;br /&gt;The only item on the list where I disagree is #9. Both exposing IDisposable on an interface and/or injecting a factory with the sole purpose of managing lifetime are signs of leaky abstractions.&lt;br /&gt;&lt;br /&gt;A much better way to deal with the decommissioning concern is to employ the &lt;a href="http://blog.ploeh.dk/2010/09/29/TheRegisterResolveReleasePattern.aspx" rel="nofollow"&gt;Register Resolve Release&lt;/a&gt; pattern.&lt;br /&gt;&lt;br /&gt;However, Unity&amp;#39;s Release functionality is broken, so RRR doesn&amp;#39;t work out of the box with it. Still, it&amp;#39;s possible to tweak Unity to make it work, but that&amp;#39;s another story ;)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e2c65249-f0a6-46ef-b7c5-26dbd3a433af">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-15 17:05:36</date>
+      <content>@ploeh, thanks for the feedback. I&amp;#39;ll look into the RRR pattern - sounds like it could be useful.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="af4da99a-b7fe-4ad0-83b9-53768f8a565e">
+      <author>Simon Guindon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17381760680251956190</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-15 18:43:34</date>
+      <content>#6. Another negative side effect of property injection is temporal coupling. You have to create the instance and inject the property before using the method that depends on it.&lt;br /&gt;&lt;br /&gt;It&amp;#39;s not clear from the outside that this class has nuances that have to happen just right for things to work properly.&lt;br /&gt;&lt;br /&gt;I&amp;#39;d like to introduce an 11th commandment ;)&lt;br /&gt;&lt;br /&gt;#11. The IoC container shouldn&amp;#39;t dictate the code base.&lt;br /&gt;&lt;br /&gt;The IoC container is used to compose the application but it shouldn&amp;#39;t infect the code base by dictating how classes are defined.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="75f8c6ba-06a4-4211-bd5f-ba9663d46535">
+      <author>Torbjörn Kalin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-01-17 07:01:37</date>
+      <content>#3 (Service Locators) might be good for web. There you setup your IoC for every request and can (theoretically) predict the whole flow.&lt;br /&gt;&lt;br /&gt;In desktop applications you typically setup the IoC at app start which means you need something in the places that correspond to requests (button clicks). Here I break your rule #3.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4d19ed7b-2693-4895-bd5b-3d30c66c91a9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-17 09:35:29</date>
+      <content>@Torbjörn, there is no requirement that you need access to the service locator to achieve that. There are plenty of approaches allowing your button click handlers to action a command without them needing root level access to everything in the container.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9c8444ff-9817-47f4-9041-f40b9442d6f5">
+      <author>Torbjörn Kalin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-01-17 12:24:20</date>
+      <content>@Mark H: The button click handler shouldn&amp;#39;t have direct access to the container (rule #2). But it needs access to something that can explicitly resolve a type (where that type must implement a certain interface). I call that something a Service Locator.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="09da0477-180c-4584-bc98-40c6d0b78cb6">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-17 12:27:47</date>
+      <content>@Torbjörn why can&amp;#39;t you inject the necessary interface into the the form that contains the button?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="00f52a04-bc54-4222-8c43-6181457ce590">
+      <author>Torbjörn Kalin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-01-17 15:23:59</date>
+      <content>@Mark H: We might be talking past each other here...&lt;br /&gt;&lt;br /&gt;When I click the button I would like to create a new instance of a view. I want the instantiation to happen when I click the button, not at application start up.&lt;br /&gt;&lt;br /&gt;That is, somewhere in the button click handler I need to call resolve. I don&amp;#39;t want the button to have direct access to the container, but want to restrict what it can resolved. The class that handles this restriction (and that has access to the container) is what I call Service Locator.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ea3576a8-09fa-449a-873a-d49f22fc9512">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-17 20:12:43</date>
+      <content>@Torbjörn, OK I see. I wouldn&amp;#39;t call that a ServiceLocator. A service locator has a Resolve() or Resolve(Type t) method, allowing you to get any type from the container. Sounds like you have a simple Func that returns a given type.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c3a4c798-9036-498f-94fe-bf8297b73a4d">
+      <author>Torbjörn Kalin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-01-18 08:01:27</date>
+      <content>@Mark H: So your Service Locator is a read-only abstraction of the container (which isn&amp;#39;t really a Service Locator either :) Now I agree with your rule #3!&lt;br /&gt;&lt;br /&gt;But what is your opinion about my example (where what I called Service Locator is actually more of a View Factory)? Is it ok to have such class?&lt;br /&gt;&lt;br /&gt;The reason I ask is that I&amp;#39;ve heard some people argue that it&amp;#39;s not ok...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dfb9d5fc-748e-482c-89f4-b5c3df72e9bf">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-18 11:07:55</date>
+      <content>@Torbjörn, one of the main goals of dependency injection is loose coupling. Does your view factory end up tightly coupling you to a specific view implementation? Can you change what view you actually get from the outside? Can you unit test without the real view getting created? Assuming those issues are dealt with in some way, I don&amp;#39;t see a problem with injecting a view factory.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1b791de7-6a10-451e-9bdc-ec4591cd76dc">
+      <author>Torbjörn Kalin</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-01-18 14:06:44</date>
+      <content>@Mark H: Cool, then we agree :)</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,88 @@
+<post>
+  <title>Why you should use DVCS for Personal Projects</title>
+  <slug>why-you-should-use-dvcs-for-personal</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-11-02 18:05:00</pubDate>
+  <lastModified>2012-01-06 10:04:05</lastModified>
+  <content>For a long time it bugged me that there wasn’t an easy way for me to use version control for my personal projects. I have over 100 small applications sitting around on my computer. Most of them are just test apps that will probably never be visited again. But others are more useful utilities, or perhaps future open source projects currently in incubation. Some of them are work related, others purely for personal enjoyment or learning. Often I found myself wishing that I could have the benefits of source control, so I could back out of changes that broke something. &lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Pre Distributed Version Control Systems&lt;/h3&gt;&lt;br&gt;
+In the days before DVCS (or, to be more accurate, before I knew about DVCS), at different times, I tried all the following approaches:&lt;br&gt;
+&amp;nbsp;&lt;b&gt;&amp;nbsp;&lt;/b&gt;&lt;br&gt;
+&lt;b&gt;Store projects on my company’s VCS&lt;/b&gt;. This usually involved asking permission to have some space on SourceSafe or TFS for my personal projects. Whilst this has the benefit of meaning that I can share my work with others easily (and it is guaranteed to be backed up), there is the hassle of getting this set up in the first place, plus the fact that some of these projects are very shortlived, while others are “&lt;a href="http://en.wikipedia.org/wiki/Skunkworks_project"&gt;skunkworks&lt;/a&gt;” ideas which you don’t want to give publicity to until they are ready for it.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Run a private VCS server on my dev machine&lt;/b&gt;. It is possible to install Subversion, SourceSafe, TFS etc servers on your local machine, and use them for VCS. However, as well as using up valuable resources on your personal machine, it has a very poor migration story. If you rebuild your PC, need to quickly copy code onto a USB stick and work on it from home, this option ends up being more hassle than it is worth.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Subversion file-based repository&lt;/b&gt;. A few years ago I discovered that you could get Subversion to back up to a file:// path. I thought this would be the answer to all my issues. The reality is, that it was quite fragile, especially since I was storing code on USB sticks, so the drive letter might change. I ended up corrupting my repositories so regularly I gave up on this option pretty quickly.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Make it open source&lt;/b&gt;.&lt;b&gt; &lt;/b&gt;When &lt;a href="http://www.codeplex.com/"&gt;CodePlex&lt;/a&gt; showed up, I immediately moved several of my projects there. This meant I had access to a free central repository, enabling me to work from different computers if I needed to. The downside is that most of my projects weren’t appropriate for making into open source applications.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Don’t bother with version control and make backup zip files&lt;/b&gt;. This ended up being my most common approach. Every now and then I would backup to a zip file. Of course, those backups are few and far between and don’t even exist for most projects. And I almost never had a backup available on those few occasions when I genuinely needed one.&lt;br&gt;
+&lt;br&gt;
+&lt;h3&gt;Advantages of DVCS&lt;/h3&gt;&lt;br&gt;
+But all that has changed after I decided to find out what all the fuss was about with Distributed Version Control systems. Whilst the idea seemed a little crazy to me at first (everyone gets a copy of the &lt;i&gt;entire &lt;/i&gt;repostory?), the obvious advantages for personal projects won me over pretty quickly. I decided to try out &lt;a href="http://mercurial.selenic.com/"&gt;Mercurial&lt;/a&gt;, since it seemed to have slightly better support on Windows, although I’m sure Git is just as good. Here’s some of the top advantages to using it on your personal projects:&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;No Server Required. &lt;/b&gt;This is a huge benefit. I don’t need a central server on the internet, or on my company network. If I want to move to another PC, I can just copy the code folder over (or Sync folders using something like DropBox) and it just works.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Version Control Everything&lt;/b&gt;. It’s now a no-brainer to put a new test project under version control. It takes only a few seconds to do. If for some reason you decide you don’t want version control anymore, just delete the &lt;b&gt;.hg &lt;/b&gt;folder and its gone.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Migrate to a Central Repository Later&lt;/b&gt;. When I added &lt;a href="http://naudio.codeplex.com/"&gt;NAudio&lt;/a&gt; to Codeplex, it already had been in development for several years. However, I have no checkin history up to that point, just a bunch of backup zip files. With Mercurial, you can move to using a centralised repository at any point in the future (whether public or private) and all your checkin history comes along for the ride. &lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Unconstrained branching strategy. &lt;/b&gt;Admittedly, for small personal projects, branching is not often that important. But it can come in handy when are half way through implementing one feature, and then want to work on a different task. Without version control, you have to decide whether to bin the half-finished changes, or to copy them somewhere else and manually merge them back in later. With Mercurial, it becomes trivial to create as many branches as you need. And you can merge directly between any two branches, irrespective of how many intermediate branches were created between them.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Merging divergent copies&lt;/b&gt;. Sometimes I have a copy of a personal project at home and at work and have no idea which one is the latest and greatest. Or maybe after backing it up to a few places, I have inadvertently made changes to two separate copies. One membership application I wrote for a youth group 8 years ago turns out to be still in use and they asked me for new features recently. I had to work out which of several copies was the one I should be using. With Mercurial, it is trivial to ensure that one copy is not missing any changes in another. &lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Little and often checkins&lt;/b&gt;. One really nice feature for my open source projects is that I can check in little changes without needing to immediately push them to the central server. This means I can check in little and often, and only do a push to the server once I have tested and made sure my feature is robust.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;What was I doing?&lt;/b&gt;. Another advantage is that by using a DVCS with my personal projects, if I need to come back to one after a couple of years I can quickly examine the log, looking at diffs to see what I was up to last time I worked on it. This can be handy if I had left it in a state where there were some half-finished new features in progress, and actually I want to discard them and resume from an earlier point.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Trivial rollback&lt;/b&gt; – one of the things that scared me about DVCS was the idea that once I had checked in a file, it lives on in the repository forever. So accidentally checkin several megabytes of compiled binaries and you have an unnecessarily bloated repository. But the reality is that issue only exists if you push that to a central repository (and even then there are usually ways of working round the issue). If you haven’t you can just clone to the prior revision and your mistake is gone. I’ll perhaps do a post later on my thoughts about DVCS in the enterprise, where matters like this are quite important.&lt;br&gt;
+&lt;br&gt;
+If you take anything away from this post, it is &lt;b&gt;learn a DVCS &lt;/b&gt;and use it wherever you can. You will be glad you did.</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>Version Control</category>
+    <category>Subversion</category>
+    <category>TFS</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="d49a96ad-f83e-434e-9243-50f47f86bcb8">
+      <author>blorq</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16308269163452150701</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-02 19:53:25</date>
+      <content>Just as soon as the tooling crawls out of the dark ages...</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="afaae440-9af4-4b23-a8a8-b0c116ce5e60">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-02 21:04:58</date>
+      <content>@blorq - have you tried TortoiseHg? I think the tooling is fine. And to be honest, once you get the hang of using the command line, it quickly becomes very natural.&lt;br /&gt;&lt;br /&gt;There&amp;#39;s also VisualHg for Visual Studio integration if that&amp;#39;s important to you.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4a0f63e4-478f-4f07-be10-9ab7713f6623">
+      <author>yanjost</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.yjost.com/openid/</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 13:17:37</date>
+      <content>and bitbucket.org offers free hosting for mercurial projects, with unlimited users !</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="98cf6d0b-5960-4877-9f62-8052b5d0e453">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 14:03:07</date>
+      <content>@yanjost - yes, bitbucket is brilliant. now don&amp;#39;t need to worry about whether my personal projects can be open sourced or not</content>
+    </comment>
+  </comments>
+</post>

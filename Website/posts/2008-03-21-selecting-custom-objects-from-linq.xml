@@ -1,0 +1,89 @@
+<post>
+  <title>Selecting Custom Objects from LINQ</title>
+  <slug>selecting-custom-objects-from-linq</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-03-21 12:34:00</pubDate>
+  <lastModified>2010-10-05 11:07:15</lastModified>
+  <content>&lt;p&gt;I have been teaching myself WPF and LINQ to XML to objects by working on a very simple game for my children helping them to learn their &amp;quot;key words&amp;quot; and do some basic maths.&lt;/p&gt;  &lt;p&gt;I have the key words stored in a fairly simple XML structure:&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;?xml version="1.0" encoding="utf-8" ?&amp;gt;
+&amp;lt;KeyWords&amp;gt;
+   &amp;lt;Group Name="Level 1"&amp;gt;
+     &amp;lt;KeyWord&amp;gt;and&amp;lt;/KeyWord&amp;gt;
+     &amp;lt;KeyWord&amp;gt;cat&amp;lt;/KeyWord&amp;gt;
+     &amp;lt;KeyWord&amp;gt;he&amp;lt;/KeyWord&amp;gt;
+     &amp;lt;KeyWord&amp;gt;I&amp;lt;/KeyWord&amp;gt;
+...&lt;/pre&gt;
+
+&lt;p&gt;and a KeyWord class to store them in.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;class KeyWord 
+{
+     public string Word { get; set; }
+     public string Group { get; set; }
+}&lt;/pre&gt;
+
+&lt;p&gt;The foreach way of parsing the XML is simple enough:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;foreach (XElement group in xraw.Elements("Group")) 
+{
+     foreach (XElement word in group.Elements("KeyWord"))
+     {
+         wordsList.Add(new KeyWord() 
+             { Word = word.Value, 
+               Group = group.Attribute("Name").Value });
+     }
+}&lt;/pre&gt;
+
+&lt;p&gt;But I wanted to remove the nested foreach loops and do it in one simple LINQ query. It took me a little while to work out how it was done, but once you know it is very simple:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;keyWords = (from keyWord in 
+    xraw.Elements("Group").Elements("KeyWord")
+    select new KeyWord 
+        { Word = keyWord.Value, 
+          Group = keyWord.Parent.Attribute("Name").Value });&lt;/pre&gt;
+
+&lt;p&gt;and that's all there is to it. Remarkably simple.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>LINQ</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="ee59fcd8-7689-4b03-a2b6-a6c1736219b1">
+      <author>vzdesic</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08304551958163504319</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-11 22:08:40</date>
+      <content>Is xraw variable contain loaded xml document?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1a931017-fdd1-40c3-ae6c-fbece05be55a">
+      <author>vzdesic</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08304551958163504319</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-11 22:11:15</date>
+      <content>Class behind this object should implement IEnumerable? Is this true?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="bf94bde5-4ec7-404a-933b-d78da326979a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-11 22:14:06</date>
+      <content>Hi vzdesic, the code to load xraw is simply:&lt;br /&gt;var xraw = XElement.Load(&amp;quot;KeyWords.xml&amp;quot;);</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f2079572-5184-4016-9162-e35fa06e6ed8">
+      <author>James Wilson</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-12-14 23:50:29</date>
+      <content>Very nice!  I had a feeling it was possible to do something like this but had yet to figure it out or find a solution that didn&amp;#39;t involve a foreach loop.  This is impressive, thanks for sharing!</content>
+    </comment>
+  </comments>
+</post>

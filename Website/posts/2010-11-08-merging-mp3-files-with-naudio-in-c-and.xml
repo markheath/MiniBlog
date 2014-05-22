@@ -1,0 +1,121 @@
+<post>
+  <title>Merging MP3 Files with NAudio in C# and IronPython</title>
+  <slug>merging-mp3-files-with-naudio-in-c-and</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-11-08 18:07:00</pubDate>
+  <lastModified>2010-11-08 18:07:00</lastModified>
+  <content>&lt;p&gt;If you would like to concatenate MP3 files using &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;, it is quite simple to do. I recommend getting the very latest source code and building your own copy of NAudio, as this will work best with some of the changes that are in preparation for NAudio 1.4.&lt;/p&gt; &lt;p&gt;Here’s the C# code for a function that takes MP3 filenames, and writes a combined MP3 to the output stream:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static void Combine(string[] inputFiles, Stream output)
+{
+    foreach (string file in inputFiles)
+    {
+        Mp3FileReader reader = new Mp3FileReader(file);
+        if ((output.Position == 0) &amp;amp;&amp;amp; (reader.Id3v2Tag != null))
+        {
+            output.Write(reader.Id3v2Tag.RawData, 0, reader.Id3v2Tag.RawData.Length);
+        }
+        Mp3Frame frame;
+        while ((frame = reader.ReadNextFrame()) != null)
+        {
+            output.Write(frame.RawData, 0, frame.RawData.Length);
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;And here’s an &lt;a href="http://ironpython.net"&gt;IronPython&lt;/a&gt; script (just put NAudio.dll in the same folder as the mp3merge.py script):&lt;/p&gt;&lt;pre class="brush: py;"&gt;import clr
+clr.AddReference('NAudio.dll')
+
+import sys
+from NAudio.Wave import Mp3FileReader
+from System.IO import File
+
+def GetAllFrames(reader):
+    while True:
+        frame = reader.ReadNextFrame()
+        if frame:
+            yield frame
+        else:
+            return
+
+def Merge(files, outputStream):
+    for file in files:
+        with Mp3FileReader(file) as reader:
+            if reader.XingHeader:
+                print 'discarding a Xing header'
+            if not outputStream.Position and reader.Id3v2Tag:
+                outputStream.Write(reader.Id3v2Tag.RawData, 0, reader.Id3v2Tag.RawData.Length)                
+            for frame in GetAllFrames(reader):
+                outputStream.Write(frame.RawData, 0, frame.RawData.Length);
+            
+if __name__ == '__main__':
+    if len(sys.argv) &amp;lt; 3:
+        print "Usage: ipy mp3merge.py output.mp3 File1.mp3 File2.mp3"
+    else:
+        with File.OpenWrite(sys.argv[1]) as outStream:
+            Merge(sys.argv[2:],outStream)
+&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Notes:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I simply copy across the ID3v2 tag from the first MP3 file if present. All other ID3v2 tags are discarded (as are ID3v1 tags). Also, I discard the Xing frame from VBR files. It could easily be re-included if desired, although it’s information will not necessarily be valid about the combined MP3 file. One final thing, I wouldn’t recommend merging MP3 files of different sample rates, or mixing mono with stereo, as it could cause various players issues.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>MP3</category>
+    <category>C#</category>
+    <category>IronPython</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="06c9ee44-b0ae-456b-a657-d82aeb237f09">
+      <author>KOS_MOS</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18226243996821539549</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-27 20:43:07</date>
+      <content>I install Python for .Net, put NAudio.dll to script directory, but when i run script - i have error:&lt;br /&gt;&lt;br /&gt;c:\Temp\pmerge&amp;gt;C:\Python.Net\python.exe mp3merge.py&lt;br /&gt;Traceback (most recent call last):&lt;br /&gt;  File &amp;quot;mp3merge.py&amp;quot;, line 2, in &lt;br /&gt;    clr.AddReference(&amp;#39;NAudio.dll&amp;#39;)&lt;br /&gt;System.IO.FileNotFoundException&lt;br /&gt;&lt;br /&gt;Please help!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4e1b88f4-79c5-4a08-952c-cc423e972d81">
+      <author>KOS_MOS</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18226243996821539549</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-27 20:44:32</date>
+      <content>I&amp;#39;we installed Python for .Net, put NAudio.dll to script directory, but when i run script - i have error:&lt;br /&gt;&lt;br /&gt;c:\Temp\pmerge&amp;gt;C:\Python.Net\python.exe mp3merge.py&lt;br /&gt;Traceback (most recent call last):&lt;br /&gt;  File &amp;quot;mp3merge.py&amp;quot;, line 2, in &lt;br /&gt;    clr.AddReference(&amp;#39;NAudio.dll&amp;#39;)&lt;br /&gt;System.IO.FileNotFoundException&lt;br /&gt;&lt;br /&gt;Please help me!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7c14058f-4009-4f7b-a16e-e2ad683f69ac">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-27 20:53:32</date>
+      <content>I always run IronPython with ipy.exe. Not sure if that is your issue though.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1189e567-a8c4-48da-80cf-4acd4085d2d8">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-03-05 06:45:48</date>
+      <content>I want to merger multiple mp3 files- say 3 files. So i&amp;#39;ve array of 3 mp3 files path. Secong one of these files is Blank file of 20 sec. when i merge these blank file doesnt merge. Any suggestion?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8bccbd2c-933e-4dcb-8d43-39c1c33b4916">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-09-24 16:42:13</date>
+      <content>Using the above code I have merged around 80 files. I have also created an audio marker using following code.&lt;br /&gt;&lt;br /&gt;oStringBuilder.AppendFormat(&amp;quot;&amp;quot;,&lt;br /&gt;                Path.GetFileNameWithoutExtension(file), Math.Round(oCurrentTime,3), Math.Round(oCurrentTime + reader.TotalTime.TotalSeconds,3));&lt;br /&gt;&lt;br /&gt;And then I use these markers to play specific section of the merged MP3 in various browsers.&lt;br /&gt;&lt;br /&gt;The audio markers work alright in chrome but in Safari and IE the markers are inaccurate, any idea?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d4584ac7-9625-4b40-bad2-f6a8a53a0987">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-09-25 08:52:08</date>
+      <content>Using the above code I have merged around 80 files. I have also created an audio marker using following code.&lt;br /&gt;&lt;br /&gt;oStringBuilder.AppendFormat(&amp;quot;&amp;quot;,&lt;br /&gt;                Path.GetFileNameWithoutExtension(file), Math.Round(oCurrentTime,3), Math.Round(oCurrentTime + reader.TotalTime.TotalSeconds,3));&lt;br /&gt;&lt;br /&gt;And then I use these markers to play specific section of the merged MP3 in various browsers.&lt;br /&gt;&lt;br /&gt;The audio markers work alright in chrome but in Safari and IE the markers are inaccurate, any idea?</content>
+    </comment>
+  </comments>
+</post>

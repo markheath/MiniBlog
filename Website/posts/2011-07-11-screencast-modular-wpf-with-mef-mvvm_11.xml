@@ -1,0 +1,88 @@
+<post>
+  <title>Screencast: Modular WPF with MEF &amp; MVVM Tutorial Part 2</title>
+  <slug>screencast-modular-wpf-with-mef-mvvm_11</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-11 18:09:00</pubDate>
+  <lastModified>2011-07-11 18:09:00</lastModified>
+  <content>&lt;p&gt;In &lt;a href="/post/screencast-modular-wpf-with-mef-mvvm"&gt;Part 1&lt;/a&gt;, I showed how to create a very simple modular WPF application, and introduced MEF to allow us to easily add modules without changing any existing code.&lt;/p&gt; &lt;p&gt;In part 2, I introduce the &lt;a href="http://en.wikipedia.org/wiki/Model_View_ViewModel"&gt;MVVM&lt;/a&gt; pattern to show how we can make our applications more easily unit testable, by separating the view from the business logic. I also create some unit tests using the Microsoft unit testing framework and &lt;a href="http://code.google.com/p/moq/"&gt;moq&lt;/a&gt;, and show how to perform code coverage analysis.&lt;/p&gt;&lt;iframe height="300" src="http://player.vimeo.com/video/26202598?title=0&amp;amp;byline=0&amp;amp;portrait=0" frameborder="0" width="400"&gt;&lt;/iframe&gt; &lt;p&gt;&lt;em&gt;Incidentally, I normally use &lt;/em&gt;&lt;a href="http://www.nunit.org/"&gt;&lt;em&gt;NUnit&lt;/em&gt;&lt;/a&gt;&lt;em&gt; and &lt;a href="http://www.testdriven.net/"&gt;TestDriven.NET&lt;/a&gt; instead of the Microsoft unit testing framework, which I find much simpler to use, and also supports code coverage analysis using &lt;a href="http://www.ncover.com/"&gt;NCover&lt;/a&gt; or the Visual Studio code coverage.&lt;/em&gt;&lt;/p&gt; &lt;p&gt;I do plan to follow this up with a third video, in which I replace the modules ListBox with some buttons to switch modules and show some of the typical problems you might run into when using MVVM.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>screencast</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="a84a7130-6e75-4979-bf07-f5a8b480c3a3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-07-12 08:39:47</date>
+      <content>any chance of a downloadable version?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="744601a2-15d4-4236-9a44-c044e60a4731">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-12 09:30:08</date>
+      <content>up can download it off vimeo - or did you mean the source-code? I&amp;#39;ll get my mercurial repository up on bitbucket at some point</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="62720bd8-9690-4143-9585-bafbe03cc69b">
+      <author>Pierre Mengal</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07825797939266737145</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-14 08:42:07</date>
+      <content>I would like to download the source code as well. I&amp;#39;m sure I missed something (how you sync the view with the viewmodel events.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e9eecc2d-d7ef-4103-8476-366e7ba48fb8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-22 17:24:21</date>
+      <content>I&amp;#39;ll try to get the code uploaded when I do part 3</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6d263218-c47c-410e-ac6d-55bea21e9447">
+      <author>Rutix</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16953963273586259428</website>
+      <ip />
+      <userAgent />
+      <date>2011-09-18 17:24:41</date>
+      <content>Hey Mark! Great screencasts :). I was wondering if you were still going do a part 3. If you are not going to do a part 3 could you put the sourcecode online ?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="31d1699a-fb05-4d9e-97cb-15dd115ce3f7">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-09-20 15:13:39</date>
+      <content>sorry, been busy over the summer, but I have planned the next one in this series so it will come eventually</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2574c897-8193-4322-a7e6-334c2ebfb58d">
+      <author>Amino</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12044143629180671350</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-04 05:34:17</date>
+      <content>Nice tutorial and to the point.&lt;br /&gt;any ideas when the 3rd part will be online?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4d8b1615-db6c-409c-bc04-745bc07e4927">
+      <author>Mathias</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blog.mathiaskunto.com</website>
+      <ip />
+      <userAgent />
+      <date>2011-11-05 08:44:26</date>
+      <content>That was great! Helped me getting started with my unit testing. Keep them coming Mark :)</content>
+    </comment>
+  </comments>
+</post>

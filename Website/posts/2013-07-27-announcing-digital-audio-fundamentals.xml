@@ -1,0 +1,25 @@
+<post>
+  <title>Announcing Digital Audio Fundamentals</title>
+  <slug>announcing-digital-audio-fundamentals</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-07-27 12:29:00</pubDate>
+  <lastModified>2013-07-27 12:29:40</lastModified>
+  <content>&lt;p&gt;I get several emails every day asking me for help with NAudio, and often it is clear that the real issue is that many developers only have a rather vague grasp of the concepts of digital audio. So I wanted to create a really good training course that would introduce and clearly explain all the things I think are really important to developers working with digital audio in general, and NAudio in particular.&lt;/p&gt; &lt;p&gt;So I’m really pleased to announce the availability of my &lt;a href="http://pluralsight.com/training/Courses/TableOfContents/digital-audio-fundamentals"&gt;Digital Audio Fundamentals&lt;/a&gt; course on Pluralsight. The course begins by explaining the essential topic of sampling. In particular you need to understand sample rates and bit depths if you are to be successful with NAudio. I then talk about various file formats and lots of different codecs, before looking at several types of effects. The final module may in fact be the most important for NAudio developers as I explain the concept of “signal chains” or “pipelines”. To get things done with NAudio you need to have a clear grasp of the signal chain that you are working with. NAudio tries to make it easy for you to construct a signal chain that does exactly what you need out of many simple components.&lt;/p&gt; &lt;p&gt;So I’d really encourage anyone who wants to use NAudio and is able to view this course to do so. It’s just under 3 hours, but it will be a very worthwhile investment of your time. I’m hoping that maybe later this year there will be a follow-up course focusing specifically on using NAudio.&lt;/p&gt; &lt;p&gt;I know some of you may be disappointed that this is not a free course, but I think you’ll find the Pluralsight pricing to be very reasonable. You could always sign up for just one month to watch this course, and get the added benefit of tapping into their vast library of excellent courses on a wide variety of programming topics.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+    <category>screencast</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="5c41c38c-1536-4b1c-951a-69f50743d200">
+      <author>Doug Taylor</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-08-31 23:07:07</date>
+      <content>Hi Mark -&lt;br /&gt;I&amp;#39;m a c# dev with no experience of audio programming whatsoever. Thanks for your referral to pluralsight. It looks cool and I might well subscribe.&lt;br /&gt;My question is, would NAudio be well suited to developing mobile audio apps using MonoTouch (Xamarin) or is NAudio a Windows only library?&lt;br /&gt;I don&amp;#39;t expect this comment to be published - I&amp;#39;d appreciate a reply on doug.taylor@mweb.co.za&lt;br /&gt;Thanks and regards&lt;br /&gt;Doug Taylor </content>
+    </comment>
+  </comments>
+</post>

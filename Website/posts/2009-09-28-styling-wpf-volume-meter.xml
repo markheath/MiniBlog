@@ -1,0 +1,94 @@
+<post>
+  <title>Styling a WPF Volume Meter</title>
+  <slug>styling-wpf-volume-meter</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-28 08:04:00</pubDate>
+  <lastModified>2011-07-03 15:59:10</lastModified>
+  <content>&lt;p&gt;In WPF, the complete separation of behaviour from appearance means that you can take a control such as the &lt;b&gt;ProgressBar&lt;/b&gt;, and style it to look like any kind of meter. For a recent project, I wanted to make a audio volume meter. The look I wanted was a gradient bar, starting with green for low volumes and going to red for the highest volume:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/styling-wpf-volume-meter-1.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="wpf-volume-meter-1" border="0" alt="wpf-volume-meter-1" src="/posts/files/styling-wpf-volume-meter-1.png" width="219" height="44"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;When the volume is at half way, the progress bar should just show the left hand portion of the gradient:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/styling-wpf-volume-meter-2.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="wpf-volume-meter-2" border="0" alt="wpf-volume-meter-2" src="/posts/files/styling-wpf-volume-meter-2.png" width="218" height="38"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Styling a ProgressBar in WPF is actually very easy. You can start with the very helpful “Simple Style” template that comes with &lt;a href="http://kaxaml.com/"&gt;kaxaml&lt;/a&gt;. You simply need to define the visuals for two parts, called &lt;b&gt;PART_Track&lt;/b&gt; and &lt;b&gt;PART_Indicator&lt;/b&gt;. The first is the background, while the second is the part that dynamically changes size as the current value changes.&lt;/p&gt; &lt;p&gt;At first it would seem trivial to create the look I am after – just create two rectangles on top of each other. The trouble is, that I only want the whole gradient to appear if the value is at maximum. Here’s it incorrectly drawing the entire gradient when the volume is low:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/styling-wpf-volume-meter-3.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="wpf-volume-meter-3" border="0" alt="wpf-volume-meter-3" src="/posts/files/styling-wpf-volume-meter-3.png" width="212" height="32"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;To work around this, I painted the entire gradient on the PART_Track. Then the PART_Indicator was made transparent. This required one further rectangle to cover up the part of the background gradient that I don’t want. I do this with a DockPanel. This allows the PART_Indicator to use its required space, while the masking rectangle fills up the remaining space on the right-hand side, covering up the background gradient.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;style targettype="{x:Type ProgressBar}" x:key="{x:Type ProgressBar}"&amp;gt;
+  &amp;lt;setter property="Template"&amp;gt;
+    &amp;lt;setter.value&amp;gt;
+      &amp;lt;controltemplate targettype="{x:Type ProgressBar}"&amp;gt;
+        &amp;lt;grid minheight="14" minwidth="200"&amp;gt;
+          &amp;lt;rectangle name="PART_Track" stroke="#888888" strokethickness="1"&amp;gt;
+            &amp;lt;rectangle.fill&amp;gt;
+              &amp;lt;lineargradientbrush startpoint="0,0" endpoint="1,0"&amp;gt;
+                &amp;lt;gradientstop offset="0" color="#FF00FF00"/&amp;gt;
+                &amp;lt;gradientstop offset="0.9" color="#FFFFFF00"/&amp;gt;
+                &amp;lt;gradientstop offset="1" color="#FFFF0000"/&amp;gt;
+              &amp;lt;/lineargradientbrush&amp;gt;
+            &amp;lt;/rectangle.fill&amp;gt;
+          &amp;lt;/rectangle&amp;gt;
+          &amp;lt;dockpanel margin="1"&amp;gt;
+            &amp;lt;rectangle name="PART_Indicator"&amp;gt;
+            &amp;lt;/rectangle&amp;gt;
+            &amp;lt;rectangle name="Mask" minwidth="{TemplateBinding Width}" fill="#C0C0C0"/&amp;gt;
+          &amp;lt;/dockpanel&amp;gt;
+        &amp;lt;/grid&amp;gt;
+      &amp;lt;/controltemplate&amp;gt;
+    &amp;lt;/setter.value&amp;gt;
+  &amp;lt;/setter&amp;gt;
+&amp;lt;/style&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;I think there may be an even better way to solve this using a &lt;b&gt;VisualBrush&lt;/b&gt;, but I can’t quite get it working at the moment. I’ll post with the solution once I’ve worked it out.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b14d1c56-44d0-4cc7-9ff5-b8475a6e6499">
+      <author>KenS51</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/12041834306601295651</website>
+      <ip />
+      <userAgent />
+      <date>2010-06-09 16:28:58</date>
+      <content>Were you able to get this working. If so can you provide the xaml code. Thanks. Ken</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="793ccd46-4162-4608-b08f-ee933a0d0f3e">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-06-27 05:48:44</date>
+      <content>Thanks for the tip, spent 20 minutes figuring out how to do it with a visual brush instead of a mask rectangle:</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c95787ca-82a5-4997-be81-d5bcbfbbff78">
+      <author>candritzky</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04674757146904324766</website>
+      <ip />
+      <userAgent />
+      <date>2011-07-01 10:36:26</date>
+      <content>My first idea was to use a LinearGradientBrush for the PART_Indicator and use an Absolute MappingMode. Then bind the EndPoint.X coordinate to the ActualWidth property of the templated ProgressBar.&lt;br /&gt;&lt;br /&gt;Have you tried that already?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1fed48ea-b316-4ef6-96bb-10ec325b33b0">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-10-04 13:49:38</date>
+      <content>You can use a linear gradient brush. You just need to set the mapping mode on the gradient brush to absolute. (default is bounding box)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b1f252b7-52db-40f0-8a73-3ad8e45bf9ad">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-04 13:54:03</date>
+      <content>@Anonymous, the trouble with that is it requires you to know the width of the volume meter</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4fb5e4bb-4ae6-4839-97e2-9f3e4808af1f">
+      <author>will</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08609314309004274369</website>
+      <ip />
+      <userAgent />
+      <date>2012-06-19 16:38:18</date>
+      <content>I used two rectangles. The first one as you did; the whole gradient painted out. The second, a mask box as you had. But I showed more of the color gradient by applying a RenderTransform with the ScaleX property bound to whatever value controls it.&lt;br /&gt;I also had to set flow direction for the mask box from RightToLeft so it would shrink in the correct way to allow more gradient from the bottom verses from the top.</content>
+    </comment>
+  </comments>
+</post>

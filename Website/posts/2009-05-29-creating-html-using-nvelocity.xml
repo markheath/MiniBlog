@@ -1,0 +1,124 @@
+<post>
+  <title>Creating HTML using NVelocity</title>
+  <slug>creating-html-using-nvelocity</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-05-29 14:52:00</pubDate>
+  <lastModified>2010-09-24 15:47:22</lastModified>
+  <content>&lt;p&gt;I recently had need to create some HTML output from a .NET console application. Often in this scenario, I will simply crank out the HTML in code, constructing it bit by bit with a &lt;strong&gt;StringBuilder&lt;/strong&gt;. However, this time round I decided to look for a more elegant solution. I wanted to create a text file with a template, and for my data to be dynamically put into the right place.&lt;/p&gt;  
+
+&lt;p&gt;While this could be done with XLST, or even some custom string replacement code, I decided to try out a .NET templating engine. There are a number of these available, including &lt;a href="http://code.google.com/p/nhaml/"&gt;NHaml&lt;/a&gt;, &lt;a href="http://www.castleproject.org/MonoRail/documentation/trunk/viewengines/brail/index.html"&gt;Brail&lt;/a&gt;, and &lt;a href="http://sparkviewengine.com/"&gt;Spark&lt;/a&gt;, but I chose to go with &lt;a href="http://www.castleproject.org/others/nvelocity/index.html"&gt;NVelocity&lt;/a&gt;, whose syntax seemed to be nice and straightforward, allowing other developers to easily see what is going on and make changes to the templates.&lt;/p&gt;  
+
+&lt;p&gt;&lt;strong&gt;Getting the NVelocity DLL&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;This proved harder than I was expecting. The &lt;a href="http://nvelocity.sourceforge.net/"&gt;original NVelocity project&lt;/a&gt; has not been updated in several years, but over at the Castle Project they have taken the source and are improving it. However, I couldn’t find a Castle Project download that contained a built DLL, so I ended up having to download the entire &lt;a href="http://www.castleproject.org/subversion.html"&gt;Castle Project source&lt;/a&gt; using Subversion, and building it.&lt;/p&gt;  
+
+&lt;p&gt;&lt;strong&gt;Creating a Template&lt;/strong&gt;&lt;/p&gt;  
+
+&lt;p&gt;This is the nice and easy bit. Here you can see I am printing out a HTML table of books in a collection of books. I think the NVelocity syntax is pretty self-explanatory.&lt;/p&gt;  
+&lt;pre class="brush: xml;"&gt;&amp;lt;h3&amp;gt;Books&amp;lt;/h3&amp;gt;
+
+#foreach($book in $books)
+#beforeall
+&amp;lt;table&amp;gt;
+  &amp;lt;tr&amp;gt;
+    &amp;lt;th&amp;gt;Title&amp;lt;/th&amp;gt;
+    &amp;lt;th&amp;gt;Author&amp;lt;/th&amp;gt;
+  &amp;lt;/tr&amp;gt;
+#before
+  &amp;lt;tr&amp;gt;
+#each
+    &amp;lt;td&amp;gt;$book.Title&amp;lt;/td&amp;gt;
+    &amp;lt;td&amp;gt;$book.Author&amp;lt;/td&amp;gt;
+#after
+  &amp;lt;/tr&amp;gt;
+#afterall
+&amp;lt;/table&amp;gt;
+#nodata
+No books found.
+#end&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Applying the Transformation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Now we need to get hold of the template we created and load it into a stream. I embedded my template as a resource. Then we need to set up a VelocityContext, which will contain all the data needed to be injected into our HTML. Then it is a simple matter of creating the VelocityEngine and passing it the context and the template. It returns a string, which can be written to disk if required.&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public static string TransformBooksToHtml(IEnumerable&amp;lt;Book&amp;gt; books, string resourceTemplateName)
+{
+    Stream templateStream = typeof(TemplateEngine).Assembly.GetManifestResourceStream(resourceTemplateName);
+    var context = new VelocityContext();
+    context.Put(&amp;quot;books&amp;quot;, books);
+    return ApplyTemplate(templateStream, context);
+}
+
+public static string ApplyTemplate(Stream templateStream, VelocityContext context)
+{
+    VelocityEngine velocity = new VelocityEngine();
+    ExtendedProperties props = new ExtendedProperties();
+    velocity.Init(props);
+    var writer = new StringWriter();
+    velocity.Evaluate(context, writer, &amp;quot;XYZ&amp;quot;, new StreamReader(templateStream));
+    return writer.GetStringBuilder().ToString();
+}&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Limitations&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;One limitation that comes to mind is that I am not sure what would happen if the data contained characters that needed to be encoded for HTML (e.g. the less than symbol). I haven’t tested this scenario, but I am sure there is some way of working round it (especially as NVelocity is intended specifically for scenarios requiring HTML output).&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>templating engine</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="a63ee773-d763-4b6f-af6b-74ad826e3c98">
+      <author>DFELK</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18414549451193816329</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-02 19:25:52</date>
+      <content>Mark, &lt;br /&gt;&lt;br /&gt;If you really want some super fluid syntax, check out the Spark View Engine. It can also be used as a template engine as well. &lt;br /&gt;&lt;br /&gt;www.sparkviewengine.com&lt;br /&gt;&lt;br /&gt;Donn</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="46b1ecb9-cd4e-40bd-bfea-ab735e9c728c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-02 19:31:56</date>
+      <content>It's one of the ones I had a brief look at. I'd like to try it out properly. I needed the syntax to be friendly to people who were just modifying existing templates, without knowing anything about the templating engine. I thought the NVelocity syntax was nice for that.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3d909181-21e8-4ae6-97a6-38e1db349c5a">
+      <author>Vipin Cherukara</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17184458303089989459</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-08 07:52:16</date>
+      <content>For more Dot net tutorials visit&lt;br /&gt;http://dot-net-factory.blogspot.com/</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c8a60738-4cf2-451d-978b-a4be513fc743">
+      <author>rich</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09465921105068376055</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-19 15:35:43</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Did you manage to build Castle OK using Nant and VS2008 by any chance? Just wondering if you had any problems with not being able to use the .NET v3.5 framework? Trying in vain to extract NVelocity out of the Castle framework but failing miserably!&lt;br /&gt;&lt;br /&gt;Cheers :-)&lt;br /&gt;&lt;br /&gt;Rich</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d463a321-9652-4c68-bf96-409f95eb22f9">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-19 20:49:56</date>
+      <content>hi rich, I had to download the entire huge repository of code from subversion, but I found a batch file that built everything in the end. I was using a machine with VS2008 installed.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="275b002f-cbde-4af8-8a75-36811fbfba48">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-08-01 21:18:41</date>
+      <content>Nvelocity binaries can be downloaded &lt;a href="http://sourceforge.net/projects/castleproject/files/NVelocity/1.1/" rel="nofollow"&gt;here&lt;/a&gt;</content>
+    </comment>
+  </comments>
+</post>

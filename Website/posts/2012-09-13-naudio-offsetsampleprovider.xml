@@ -1,0 +1,19 @@
+<post>
+  <title>NAudio OffsetSampleProvider</title>
+  <slug>naudio-offsetsampleprovider</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-13 18:40:00</pubDate>
+  <lastModified>2012-09-13 18:40:00</lastModified>
+  <content>&lt;p&gt;I’ve added a new class to &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; ready for the 1.6 release called the &lt;strong&gt;OffsetSampleProvider&lt;/strong&gt;, which is another utility class implementing the &lt;strong&gt;ISampleProvider&lt;/strong&gt; interface.&lt;/p&gt; &lt;p&gt;It simply passes through audio from a source ISampleProvider, but with the following options:&lt;/p&gt; &lt;ol&gt; &lt;li&gt;You can delay the start of the source stream by using the &lt;strong&gt;DelayBySamples&lt;/strong&gt; property. So if you want to insert a few seconds of silence, you can use this property.&lt;/li&gt; &lt;li&gt;You can discard a certain number of samples from your source using the &lt;strong&gt;SkipOverSamples&lt;/strong&gt; property&lt;/li&gt; &lt;li&gt;You can limit the number of samples you read from the source using the &lt;strong&gt;TakeSamples&lt;/strong&gt; property. If this is 0, it means take the whole thing. If it is any other value, it will only pass through the specified number of samples from the source.&lt;/li&gt; &lt;li&gt;You can also add a period of silence to the end by using the &lt;strong&gt;LeadOutSamples&lt;/strong&gt; property.&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;You can convert a TimeSpan to a number of samples using the following logic (Remember to multiply by channels). I may add a helper method to OffsetSampleProvider that can do this for you in future.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;int sampleRate = offsetSampleProvider.WaveFormat.SampleRate;
+int channels = offsetSampleProvider.WaveFormat.Channels;
+TimeSpan delay = TimeSpan.FromSeconds(1.7); // set to whatever you like
+int samplesToDelay = (int)(sampleRate * delay.TotalSeconds) * channels;&lt;br&gt;offsetSampleProvider.DelayBySamples = samplesToDelay;
+&lt;/pre&gt;
+&lt;p&gt;It’s a fairly simple class, but it is quite powerful. You might use it for inputs to a mixer, where you want to delay each input by a certain amount to align the audio properly. Or you might use it to cut a piece out of a longer section of audio.&lt;/p&gt;
+&lt;p&gt;Note that the skipping over is implemented by reading from the source because ISampleProvider does not support repositioning. So if your source is (say) an AudioFileReader, it would perhaps be better to use the Position property to get to the right place before handing it to OffsetSampleReader.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments />
+</post>

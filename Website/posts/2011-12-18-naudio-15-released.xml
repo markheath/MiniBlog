@@ -1,0 +1,104 @@
+<post>
+  <title>NAudio 1.5 Released</title>
+  <slug>naudio-15-released</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-12-18 22:15:00</pubDate>
+  <lastModified>2011-12-18 22:15:23</lastModified>
+  <content>&lt;p&gt;I have finally got round to releasing the long overdue version 1.5 of &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt;. There are loads of bugfixes and improvements, so I recommend upgrading if possible. Here’s the highlights.&lt;/p&gt; &lt;ul&gt; &lt;li&gt;Now &lt;a href="https://nuget.org/packages/NAudio/1.5"&gt;available on NuGet&lt;/a&gt;!&lt;/li&gt; &lt;li&gt;Numerous bugfixes mean we are now working fully in x64 as well as x86, so NAudio.dll is now marked as AnyCPU. (&lt;em&gt;You can still force x86 by marking your own executable as x86 only.)&lt;/em&gt;&lt;/li&gt; &lt;li&gt;WaveOutEvent – a new WaveOut mode with event callback, highly recommended instead of WaveOut with function callbacks&lt;/li&gt; &lt;li&gt;24 bit ASIO driver mode (LSB) &lt;/li&gt; &lt;li&gt;Float LSB ASIO driver mode&lt;/li&gt; &lt;li&gt;WaveFileWriter has had a general code review and API cleanup&lt;/li&gt; &lt;li&gt;Preview of new &lt;strong&gt;ISampleProvider&lt;/strong&gt; interface making it much easier to write custom 32 bit IEEE (float) audio pipeline components, without the need to convert to byte[]. Lots of examples in NAudioDemo of using this and more documentation will follow in future.&lt;/li&gt; &lt;li&gt;Several ISampleProvider implementations to get you started. Expect plenty more in future NAudio versions:&lt;/li&gt; &lt;ul&gt; &lt;li&gt;PanningSampleProvider&lt;/li&gt; &lt;li&gt;MixingSampleProvider&lt;/li&gt; &lt;li&gt;MeteringSampleProvider&lt;/li&gt; &lt;li&gt;MonoToStereoSampleProvider&lt;/li&gt; &lt;li&gt;NotifyingSampleProvider&lt;/li&gt; &lt;li&gt;Pcm16BitToSampleProvider&lt;/li&gt; &lt;li&gt;Pcm8BitToSampleProvider&lt;/li&gt; &lt;li&gt;Pcm24BitToSampleProvider&lt;/li&gt; &lt;li&gt;SampleChannel&lt;/li&gt; &lt;li&gt;SampleToWaveProvider&lt;/li&gt; &lt;li&gt;VolumeSampleProvider&lt;/li&gt; &lt;li&gt;WaveToSampleProvider&lt;/li&gt;&lt;/ul&gt; &lt;li&gt;Added AiffFileReader courtesy of Giawa&lt;/li&gt; &lt;li&gt;AudioFileReader to simplify opening any supported file, easy volume control, read/reposition locking&lt;/li&gt; &lt;li&gt;BufferedWaveProvider uses CircularBuffer instead of queue (less memory allocations)&lt;/li&gt; &lt;li&gt;CircularBuffer is now thread-safe&lt;/li&gt; &lt;li&gt;MP3Frame code cleanup&lt;/li&gt; &lt;li&gt;MP3FileReader throws less exceptions&lt;/li&gt; &lt;li&gt;ASIOOut bugfixes for direct 16 bit playback&lt;/li&gt; &lt;li&gt;Some Demos added to NAudioDemo to give simple examples of how to use the library&lt;/li&gt; &lt;ul&gt; &lt;li&gt;NAudioDemo has an ASIO Direct out form, mainly for testing the AsioOut class at different bit depths (still recommended to convert to float before you get there).&lt;/li&gt; &lt;li&gt;NAudioDemo has simple MP3 streaming form (play MP3s while they download)&lt;/li&gt; &lt;li&gt;NAudioDemo has simple network streaming chat application&lt;/li&gt; &lt;li&gt;NAudioDemo playback form uses MEF to make it much more modular and extensible (new output drivers, new file formats etc)&lt;/li&gt; &lt;li&gt;NAudioDemo can play aiff&lt;/li&gt;&lt;/ul&gt; &lt;li&gt;GSM 6.10 ACM codec support&lt;/li&gt; &lt;li&gt;DSP Group TrueSpeech ACM codec support&lt;/li&gt; &lt;li&gt;Fully managed G.711 a-law and mu-law codecs (encode &amp;amp; decode)&lt;/li&gt; &lt;li&gt;Fully managed G.722 codec (encode &amp;amp; decode)&lt;/li&gt; &lt;li&gt;Example of integration with NSpeex&lt;/li&gt; &lt;li&gt;Fix to PlaybackStopped using SyncContext for thread safety&lt;/li&gt; &lt;li&gt;Obsoleted IWavePlayer.Volume (can still set volume on WaveOut directly if you want)&lt;/li&gt; &lt;li&gt;Improved FFT display in WPF demo&lt;/li&gt; &lt;li&gt;WaveFileReader - tolerate junk after data chunk&lt;/li&gt; &lt;li&gt;WaveOut constructor detects if no sync context &amp;amp; choose func callbacks&lt;/li&gt; &lt;li&gt;WaveOut function mode callbacks hopefully chased out the last of the hanging bugs &lt;em&gt;(if in a WaveOutWrite at same time as WaveOutReset, bad things happen - so need locks, but if WaveOutReset called during a previous func callback that is about to call waveOutWrite we deadlock)&lt;/em&gt;&lt;/li&gt; &lt;li&gt;Now has an msbuild script allowing me to more easily create releases, run tests etc&lt;/li&gt; &lt;li&gt;Now using Mercurial for source control, hopefully making bug fixing old releases and accepting user patches easier. n.b. this unfortunately means all old submitted patches are no longer available for download on the CodePlex page.&lt;/li&gt; &lt;li&gt;WPF Demo enhancements:&lt;/li&gt; &lt;ul&gt; &lt;li&gt;WPF Demo is now .NET 4, allowing us to use MEF, and will be updated hopefully with more examples of using NAudio. &lt;/li&gt; &lt;li&gt;WPF Demo uses windowing before FFT for a more accurate spectrum plot &lt;/li&gt; &lt;li&gt;WPF Demo has visualization plugins, allowing me to trial different drawing mechanisms &lt;/li&gt; &lt;li&gt;WPF Demo has a (very basic) drum machine example&lt;/li&gt;&lt;/ul&gt;&lt;/ul&gt; &lt;p&gt;I also intend that this will be the last NAudio that targets .NET 2.0 (1.6 will be .NET 3.5). Let me know if you have any objections. &lt;p&gt;Hope you have fun using it, and do send me the links to any cool stuff you make with it.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="24b18304-d957-43de-b5ed-d8930bcc8172">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-12-19 08:52:06</date>
+      <content>Great! Thank you and please keep up your good work.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d1ed9e65-c250-4deb-b04a-223a087e949e">
+      <author>Mdwf</author>
+      <email>noreply@blogger.com</email>
+      <website>http://sharpmod.codeplex.com</website>
+      <ip />
+      <userAgent />
+      <date>2011-12-20 14:55:41</date>
+      <content>Great job again ! I&amp;#39;ll make a new version of SharpMod with this release to make a full AnyCPU release too :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f62c0b26-4ad1-4041-b8d2-9fdddd2e842c">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-12-20 15:11:25</date>
+      <content>@mdwf awesome, email me when you&amp;#39;ve done it</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b22e0914-8f59-48c0-9916-0f451ae06cd3">
+      <author>David</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-12-23 17:42:17</date>
+      <content>Great work Mark!&lt;br /&gt;Does NAudio currently have capabilities to provide audio onset detection (beat) or conversion of audio to midi?&lt;br /&gt;thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="003e87de-7b44-4f54-82cf-57becd58c0a3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-12-25 00:40:16</date>
+      <content>Does the NAudio can play multiple mp3 file simultaneously to multiple channels of a sound card</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="78932ca4-8569-45eb-8cc2-cd76905a9093">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-12-27 15:27:53</date>
+      <content>@David - I&amp;#39;m afraid not&lt;br /&gt;@Anonymous - NAudio can open as many channels as the sound card driver allows. You will need to write your own multi-channel waveprovider though.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="48afb863-63b2-471a-aed8-c1e1b21899c9">
+      <author>suntzu</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04728602132982395173</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-18 05:36:08</date>
+      <content>+1 for DotNet 2.0 compatibilty. Please keep the compatibilty with DotNet 2.0.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e516395e-209d-4ce5-8cbe-e1463ca8e3a2">
+      <author>suntzu</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/04728602132982395173</website>
+      <ip />
+      <userAgent />
+      <date>2012-01-18 05:38:24</date>
+      <content>NAudio library life is a life saver for our product.&lt;br /&gt;+1 for keeping compatibility with DotNet 2.0.&lt;br /&gt;Please retain NAudio compatibility with DotNet 2.0</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="60c879d5-8a77-4afa-8fdd-f032b5cb6100">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-09-13 05:43:04</date>
+      <content>hi guys.,i have tried using Naudio 1.5 in WinRT(.NetFrameWork 4.5)when i ran my application at very first time i got the output..thereafter i couldn&amp;#39;t get output..&lt;br /&gt; Getting the following error&lt;br /&gt;&lt;br /&gt;Error 1 Cannot resolve Assembly or Windows Metadata file &amp;#39;System.Windows.Forms.dll&amp;#39; C:\Users\umapathi.a\Documents\Visual Studio 2012\Projects\SampleMp3\SampleMp3\SampleMp3.csproj SampleMp3&lt;br /&gt;Error 2 Type universe cannot resolve assembly: System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089. SampleMp3&lt;br /&gt;&lt;br /&gt;Anyhelp would be appreciated..</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="570f4c7e-8e70-427d-8b51-46658841873b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-09-13 07:12:08</date>
+      <content>hi @anonymous, NAudio 1.5 does not support WinRT. It is something I would like to do for a future NAudio, but there are a large number of classes in NAudio that simply won&amp;#39;t work under WinRT as you can&amp;#39;t call into any Windows API you want. What is needed is a new IWavePlayer and a new IWaveIn that works with the new WinRT APIs.</content>
+    </comment>
+  </comments>
+</post>

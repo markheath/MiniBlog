@@ -1,0 +1,73 @@
+<post>
+  <title>Wanted Language Feature: Reinterpret Cast of Byte Arrays</title>
+  <slug>wanted-language-feature-reinterpret</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-05-29 13:25:00</pubDate>
+  <lastModified>2010-10-05 12:11:06</lastModified>
+  <content>&lt;p&gt;I am a huge fan of C#, but one of the most frustrating things about it is dealing with byte arrays which actually represent some other type of data. For example, suppose I have an array of bytes that I know actually contains some floating point numbers. What I would like to be able to do is:&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;byte[] blah = new byte[1024];
+float[] flah = (float[])blah;&lt;/pre&gt;
+
+&lt;p&gt;But of course, this won't compile. There are two options:&lt;/p&gt;
+
+&lt;p&gt;1. Create a new array of floats and copy the contents of the byte array into it, using the &lt;strong&gt;&lt;/strong&gt;&lt;a href="http://msdn.microsoft.com/en-us/library/system.bitconverter.tosingle.aspx"&gt;BitConverter.ToSingle&lt;/a&gt; method. I could then access the contents as floats. The disadvantages are obvious. It requires twice the memory, and copying it across is not free. Also if I modify any values, they may need to be copied back into the original byte array.&lt;/p&gt;
+
+&lt;p&gt;2. Using the &lt;strong&gt;unsafe &lt;/strong&gt;and &lt;strong&gt;fixed &lt;/strong&gt;keywords, pin the byte array where it is and obtain a float pointer. The disadvantages are obvious. First, pinning objects interferes with the garbage collector, reducing performance (and performance is often exactly what you want when you are dealing with arrays of numbers), and second, as the keyword suggests, pointers are unsafe. Here's some example code from my open source audio library &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; that shows me using this method to mix some audio:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;unsafe void Sum32BitAudio(byte[] destBuffer, int offset, byte[] sourceBuffer, int bytesRead)
+{
+    fixed (byte* pDestBuffer = &amp;amp;destBuffer[offset],
+              pSourceBuffer = &amp;amp;sourceBuffer[0])
+    {
+        float* pfDestBuffer = (float*)pDestBuffer;
+        float* pfReadBuffer = (float*)pSourceBuffer;
+        int samplesRead = bytesRead / 4;
+        for (int n = 0; n &amp;lt; samplesRead; n++)
+        {
+            pfDestBuffer[n] += (pfReadBuffer[n] * volume);
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;But does it really need to be this way? Why can't the .NET framework let me consider a byte array to be a float array, without the need for copying, pinning or unsafe code? I've tried to think through whether there would be any showstoppers for a feature like this being added...&lt;/p&gt;
+
+&lt;p&gt;1. The garbage collector shouldn't need any extra knowledge. The float array reference would be just like having another byte array reference, and the garbage collector would know not to delete it until all references were gone. It could be moved around in memory if necessary without causing problems.&lt;/p&gt;
+
+&lt;p&gt;2. Sizing need not be an issue. If my byte array is not an exact multiple of four bytes in length, then the corresponding float array would simply have a length as large as possible. &lt;/p&gt;
+
+&lt;p&gt;3. This would only work for value types which themselves only contained value types. Casting an array of bytes to any type that contained a reference type would of course be unsafe and allow you to corrupt pointers. But there is nothing unsafe about casting say an array of bytes into an array of DateTimes. The worst that could happen would be to create invalid DateTime objects.&lt;/p&gt;
+
+&lt;p&gt;The benefits of adding this as a language feature would go beyond simply playing with numbers. It would be ideal for interop scenarios, removing the need for &lt;a href="http://msdn.microsoft.com/en-us/library/30ex8z62.aspx"&gt;Marshal.PtrToStructure&lt;/a&gt; in many cases. Imagine being able to write code like the following:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;byte[] blah = new byte[1024];
+int x = MyExternalDllFunction(blah);
+if (x == 0)
+{
+    MyStructType myStruct = (MyStructType)blah;
+}
+else
+{
+    MyOtherStructType myOtherStruct = (MyOtherStructType)blah;
+}&lt;/pre&gt;
+
+&lt;p&gt;What do you think? Would you use this feature if it was in C#? It needn't be implemented as a cast. It could be a library function. But the key thing would be to create two different struct or array of struct types that provided views onto the same block of managed memory.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>interop</category>
+    <category>C#</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="639fc035-7079-4493-885b-618b2894ed9b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-06-11 21:36:00</date>
+      <content>Comming from C/C++ world this is an efficent way of coding. I am writing a program where I wanted to do this type of cast. I'm reading several hundred mega bytes and reading all data as bytes and reinterpreting them as floats is very fast.</content>
+    </comment>
+  </comments>
+</post>

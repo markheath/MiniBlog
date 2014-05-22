@@ -1,0 +1,178 @@
+<post>
+  <title>VistaDB Membership Provider for ASP.NET MVC</title>
+  <slug>vistadb-membership-provider-for-aspnet</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-25 12:54:00</pubDate>
+  <lastModified>2010-10-05 11:41:31</lastModified>
+  <content>&lt;p&gt;&lt;strong&gt;The VistaDB Membership Provider&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;Having got my ASP.NET MVC application up and running with a VistaDB database, my next task was to see if I could get the Membership Provider working. VistaDB claims to come with a ready-made ASP.NET membership provider, so I hoped that it would be nice and easy to plug in to a website.&lt;/p&gt;  
+
+&lt;p&gt;Unfortunately, it wasn't quite so simple. The VistaDB help file doesn't explain how to use it at all. The source code for the membership provider is included but doesn't compile due to a missing AssemblyInfo.cs file. And the MembershipSample web site that is supposed to demonstrate how to use it is incomplete - it doesn't contain the necessary Provider configuration in web.config and it doesn't provide a sample database.&lt;/p&gt; 
+
+ &lt;p&gt;&lt;strong&gt;First Attempt&lt;/strong&gt;&lt;/p&gt; 
+
+ &lt;p&gt;After a bit of fishing around I found that the VistaDB 3.3 install directory contains &lt;strong&gt;aspnetdb.vdb3&lt;/strong&gt; which is a blank database for the provider to use. Double-click it to open it in the VistaDB &lt;strong&gt;DataBuilder&lt;/strong&gt; application and you can select &lt;strong&gt;Database | Generate Script &lt;/strong&gt;to create a SQL Script that creates the necessary tables, thereby allowing you to put them into another vdb3 file if you wish.&lt;/p&gt;  
+
+&lt;p&gt;1. Rather than trying to build the incomplete MembershipProvider solution, I simply copy &lt;strong&gt;VistaDB.Web.cs &lt;/strong&gt;file into my project.&lt;/p&gt; 
+
+ &lt;p&gt;2. I copied the aspnetdb.vdb3 into my App_Data folder. I decided against putting the tables in another database for the time being.&lt;/p&gt;  
+
+&lt;p&gt;3. Add a connection string to web.config&lt;/p&gt;  
+
+&lt;pre class="brush: xml"&gt;&amp;lt;connectionStrings&amp;gt;
+    &amp;lt;add name="VistaDBMembershipProvider" connectionString="Data Source=|DataDirectory|\aspnetdb.vdb3;Open Mode=NonexclusiveReadWrite"/&amp;gt;
+&amp;lt;/connectionStrings&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;4. Now add an authentication setting to web.config. Since I am using ASP.NET MVC, I am going to specify that the Login page will be in the Admin controller: &lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;authentication mode="Forms"&amp;gt;
+   &amp;lt;forms loginUrl="Admin/Login"&amp;gt;&amp;lt;/forms&amp;gt;
+&amp;lt;/authentication&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;5. Now tell it what membership provider to use, and configure the membership provider:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;membership defaultProvider="VistaDBMembershipProvider"&amp;gt;
+&amp;lt;providers&amp;gt;
+    &amp;lt;add 
+        name="VistaDBMembershipProvider" 
+        type="VistaDB.Web.Security.VistaDBMembershipProvider"   
+        connectionStringName="VistaDBMembershipProvider" 
+        applicationName="MyApplication" 
+        maxInvalidPasswordAttempts="2"
+        passwordAttemptWindow="10"
+        minRequiredAlphaNumericCharacters="2"
+        minRequiredPasswordLength="8"
+        passwordStrengthRegularExpression="" 
+        enablePasswordReset="true"
+        enablePasswordRetrieval="true"
+        requiresQuestionAndAnswer="true" 
+        requiresUniqueEmail="true"
+        writeExceptionsToEventLog="true"
+        passwordFormat="Encrypted"
+        /&amp;gt;
+&amp;lt;/providers&amp;gt; 
+&amp;lt;/membership&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Securing the Site&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The next normal thing to do would be to use web.config to indicate which pages are not accessible to unauthenticated users. However, in the world of ASP.NET MVC, the approach is slightly different. Rob Conery has a post on &lt;a href="http://blog.wekeroad.com/blog/aspnet-mvc-securing-your-controller-actions/"&gt;adding action filters&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;6. I copied the code for the &lt;strong&gt;RequiresAuthenticationAttribute&lt;/strong&gt; and &lt;strong&gt;RequiresRoleAttribute &lt;/strong&gt;filters. MVC is constantly changing though, and I needed to change instances of &lt;strong&gt;FilterExecutingContext &lt;/strong&gt;to be &lt;strong&gt;ActionExecutingContext &lt;/strong&gt;to get it compiling.&lt;/p&gt;
+
+&lt;p&gt;7. So now I needed to test my authentication by putting this attribute on a controller action. I chose my BlogController's Edit action.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;[RequiresAuthentication()]
+public ActionResult Edit(string id)
+{
+   return RenderView();
+}&lt;/pre&gt;
+
+&lt;p&gt;8. We also need to create the Login action on our Admin controller. Fredrik Norm&amp;#233;n had some &lt;a href="http://weblogs.asp.net/fredriknormen/archive/2008/02/07/asp-net-mvc-framework-using-forms-authentication.aspx"&gt;sample code on his blog&lt;/a&gt; which I used as the basis for my Login controller. Again, I found that changes to the MVC framework meant that his code didn't compile as is. Here is what I ended up with:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public ActionResult Login(string userName, string password, string ReturnUrl)
+{
+    if (this.IsValidLoginArgument(userName, password))
+    {
+        if (Membership.ValidateUser(userName, password))
+            return RedirectFromLoginPage(userName, ReturnUrl);
+        else
+            this.ViewData["LoginFailed"] = "Login failed! Make sure you have entered the right user name and password!";
+    } 
+    return RenderView("Login");
+} 
+
+private ActionResult RedirectFromLoginPage(string userName, string ReturnUrl)
+{
+    FormsAuthentication.SetAuthCookie(userName, false); 
+
+    if (!string.IsNullOrEmpty(ReturnUrl))
+        return Redirect(ReturnUrl);
+    else
+        return Redirect(FormsAuthentication.DefaultUrl);
+} 
+
+private bool IsValidLoginArgument(string userName, string password)
+{
+    return !(string.IsNullOrEmpty(userName) &amp;amp;&amp;amp; string.IsNullOrEmpty(password));
+}&lt;/pre&gt;
+
+&lt;p&gt;9. I was then able to test my site, and sure enough, we were redirected to the Admin/Login page if we tried to access Blog/Edit/nnn. Of course, login always failed as I hadn't any users. So I selected &lt;strong&gt;Project|ASP.NET Configuration &lt;/strong&gt;in Visual Studio to attempt to add a user with the built-in interface. However, it crashed while trying to create the user.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Greg Obleshchuk to the Rescue&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The saga of getting a working ASP.NET Provider for VistaDB was taking up a bit too much of my time for my liking, and I found help in the form of Greg Obleshchuk who had coded his own VistaDB Membership Provider and &lt;a href="http://www.vistadb.net/forums/viewtopic.php?t=2002"&gt;made it available on the VistaDB forums&lt;/a&gt;. Note that you need an account before it will let you download it. The advantage of using his code is that he has also implemented a RolesProvider.&lt;/p&gt;
+
+&lt;p&gt;10. I downloaded Greg's provider code, which is implemented in VB. The first task was to create the database tables. Greg had included the CREATE TABLE commands in comments at the top of the source code. But for some reason, they were in a syntax that the VistaDB DataBuilder application didn't accept. I had to replace Guid with UNIQUEIDENTIFIER, Text with NVARCHAR, YesNo with BIT and Integer with INT, before it would let me add the three tables needed for the membership and roles providers. Here is the corrected SQL:&lt;/p&gt;
+
+&lt;pre class="brush: sql"&gt;CREATE TABLE [Users]
+(
+   PKID UniqueIdentifier NOT NULL PRIMARY KEY,
+   Username NVARCHAR (255) NOT NULL,
+   ApplicationName NVARCHAR (255) NOT NULL,
+   Email NVARCHAR (128) NOT NULL,
+   Comment NVARCHAR (255),
+   Password NVARCHAR (128) NOT NULL,
+   PasswordQuestion NVARCHAR (255),
+   PasswordAnswer NVARCHAR (255),
+   IsApproved BIT, 
+   LastActivityDate DateTime,
+   LastLoginDate DateTime,
+   LastPasswordChangedDate DateTime,
+   CreationDate DateTime, 
+   IsOnLine BIT,
+   IsLockedOut BIT,
+   LastLockedOutDate DateTime,
+   FailedPasswordAttemptCount INT,
+   FailedPasswordAttemptWindowStart DateTime,
+   FailedPasswordAnswerAttemptCount INT,
+   FailedPasswordAnswerAttemptWindowStart DateTime
+ );
+
+CREATE TABLE Roles
+(
+  Rolename NVARCHAR (255) NOT NULL,
+  ApplicationName NVARCHAR (255) NOT NULL,
+    CONSTRAINT PKRoles PRIMARY KEY (Rolename, ApplicationName)
+);
+
+CREATE TABLE UsersInRoles
+(
+  Username NVARCHAR (255) NOT NULL,
+  Rolename NVARCHAR (255) NOT NULL,
+  ApplicationName NVARCHAR (255) NOT NULL,
+  CONSTRAINT PKUsersInRoles PRIMARY KEY (Username, Rolename, ApplicationName)
+);&lt;/pre&gt;
+
+&lt;p&gt;11. My next idea was simply to put the provider VB files into a folder in my website, but for some reason, Visual Studio insisted on compiling them as C# so I was forced to create a separate assembly for the providers.&lt;/p&gt;
+
+&lt;p&gt;12. After creating my new VistaDBProviders assembly (my first ever VB.NET assembly!), I then ran into more problems. My website didn't seem able to create instances of the providers no matter what I did in the web.config. After trying strong naming my assembly, I eventually discovered using Reflector that VB.NET automatically adds the name of your assembly as a namespace prefix to all classes. Once I had that worked out, the relevant lines in my web.config were as follows:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;add assembly="VistaDBProviders, Version=1.0.0.0, Culture=neutral, PublicKeyToken=919ca070305cc370"/&amp;gt; 
+...
+&amp;lt;providers&amp;gt;
+  &amp;lt;add
+      name="VistaDBMembershipProvider"
+      type="VistaDBProviders.VistaDBMembershipProvider" &lt;/pre&gt;
+
+&lt;p&gt;13. My troubles weren't quite over. I discovered I needed to generate a MachineKey to be able to use encrypted passwords. I had had enough of messing around for one day so I decided go with &lt;strong&gt;passwordFormat=&amp;quot;Clear&amp;quot;&lt;/strong&gt; &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Success at Last&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Having done all this, I was finally able create a user using &lt;strong&gt;Project | ASP.NET Configuration&lt;/strong&gt; and additionally could assign some roles. It would be nice if future drops of VistaDB could make this process a lot more streamlined, and include a Roles Provider as well.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET</category>
+    <category>ASP.NET MVC</category>
+    <category>VistaDB</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="bbfc3f3e-9b0d-4427-a2de-073c3c3220e3">
+      <author>briankb</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09423021829391350908</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-25 18:46:00</date>
+      <content>Thanks for this post. Like you I KEEP wanting to use VistaDB for my web projects but the lack of working membership/role providers is very frustrating.&lt;BR/&gt;&lt;BR/&gt;Supposely the lastest versions have providers in the VistaDB.Web.dll but I'm still having serious issues with it working. That after discovering the help file was just completely wrong.</content>
+    </comment>
+  </comments>
+</post>

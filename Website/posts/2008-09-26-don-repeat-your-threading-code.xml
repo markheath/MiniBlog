@@ -1,0 +1,323 @@
+<post>
+  <title>Don't Repeat Your Threading Code</title>
+  <slug>don-repeat-your-threading-code</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-09-26 13:10:00</pubDate>
+  <lastModified>2010-10-05 13:36:41</lastModified>
+  <content>&lt;p&gt;Often when writing Windows Forms applications I will need to perform a long-running action on a background thread. So I write some code that can kick a delegate off in another thread (probably using the ThreadPool) and then some more code that handles when the action has completed. Then there is the code that handles any exceptions that were raised during that background action. Then there is the code that marshals back to the GUI thread so I can actually update controls on the form. Then I often end up adding a framework for reporting progress, and for aborting the action. &lt;/p&gt;  
+
+&lt;p&gt;The end result is that the actual code that implements the task at hand has been obscured by a huge pile of threading related lines of code. And very often this code gets replicated every time a new action that needs to run on a background thread is written.&lt;/p&gt;  &lt;p&gt;So I decided to see how far I could go with a &lt;a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself"&gt;DRY&lt;/a&gt; approach - (&amp;quot;Don't Repeat Yourself&amp;quot;), and decided to create a base &lt;strong&gt;BackgroundAction &lt;/strong&gt;class that would hide a lot of the heavy lifting.&lt;/p&gt;  
+
+&lt;p&gt;The first step was to create an interface, &lt;strong&gt;IBackgroundAction&lt;/strong&gt;. The key components are the &lt;strong&gt;Begin&lt;/strong&gt; method, that starts the action, and the &lt;strong&gt;Finished&lt;/strong&gt; event, which indicates that the action has finished (successfully or not). I also put in a basic &lt;strong&gt;Progress &lt;/strong&gt;reporting mechanism, as well as a way to request a &lt;strong&gt;Cancel &lt;/strong&gt;of the action.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;public interface IBackgroundAction
+{
+    void Begin();
+    event EventHandler&amp;lt;ActionFinishedEventArgs&amp;gt; Finished;
+    event EventHandler&amp;lt;ProgressEventArgs&amp;gt; Progress;
+    void Cancel();
+    ActionState State { get; }
+}
+
+public class ActionFinishedEventArgs : EventArgs
+{
+    public ActionState State { get; set; }
+    public Exception Exception { get; set; }
+}
+
+public class ProgressEventArgs : EventArgs
+{
+    public string Message { get; set; }
+}
+
+public enum ActionState
+{
+    None,
+    InProgress,
+    Success,
+    Cancelled,
+    Error
+}&lt;/pre&gt;
+
+&lt;p&gt;The next step was to create an abstract base class, BackgroundAction that implements the interface, and does as much of the work as is possible:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;abstract class BackgroundAction : IBackgroundAction
+{
+    protected volatile bool cancel;
+    ActionState state = ActionState.None;
+    public event EventHandler&amp;lt;ActionFinishedEventArgs&amp;gt; Finished;
+    public event EventHandler&amp;lt;ProgressEventArgs&amp;gt; Progress;
+
+    public void Begin()
+    {
+        if (state != ActionState.None)
+        {
+            throw new InvalidOperationException("Begin should only be called once");
+        }
+        state = ActionState.InProgress;
+        ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProc));
+    }
+
+    void ThreadProc(object state)
+    {
+        try
+        {
+            PerformBackgroundAction();
+            state = cancel ? ActionState.Cancelled : ActionState.Success;
+            ReportFinished();
+        }
+        catch (Exception e)
+        {
+            state = ActionState.Error;
+            if (Finished != null)
+            {
+                Finished(this, new ActionFinishedEventArgs() { State = State, Exception = e });
+            }
+        }
+    }
+
+    protected abstract void PerformBackgroundAction();
+
+    public void Cancel()
+    {
+        cancel = true;
+    }
+
+    public ActionState State
+    {
+        get { return state; }
+    }
+
+    void ReportFinished()
+    {
+        if (Finished != null)
+        {
+            Finished(this, new ActionFinishedEventArgs() { State = state });
+        }
+    }
+
+    protected void ReportProgress(string message, params object[] args)
+    {
+        if (Progress != null)
+        {
+            Progress(this, new ProgressEventArgs() { Message = String.Format(message, args) });
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;This class manages the launching of the background action and the reporting of its completion (whether successful or not). It also includes a &lt;strong&gt;ReportProgress&lt;/strong&gt; function as a helper for the concrete class to use.&lt;/p&gt;
+
+&lt;p&gt;Moving all this threading related code into a base class means that whenever we create a new action, the code we write is much cleaner, and only has the additional concerns of cancel checking and reporting progress. Here's an example from the project I was trying this out on. All I had to do was override the &lt;strong&gt;PerformBackgroundAction&lt;/strong&gt; function to do the task at hand...&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;class DeserializeAllAction : BackgroundAction
+{
+    IEnumerable&amp;lt;BinarySearchResult&amp;gt; searchResults;
+
+    public DeserializeAllAction(IEnumerable&amp;lt;BinarySearchResult&amp;gt; 
+                                searchResults)
+    {
+        this.searchResults = searchResults;
+    }
+
+    protected override void PerformBackgroundAction()
+    {
+        ReportProgress("Preparing to deserialize");
+        int count = 0;
+        foreach (BinarySearchResult result in searchResults)
+        {
+            if (cancel)
+            {
+                break;
+            }
+            if (++count % 10 == 0)
+            {
+                ReportProgress("Deserialized {0}", count);
+            }
+            result.Deserialize();
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;The next step was to create a Progress Form that could take any IBackgroundAction, and run it, while showing progress updates and allowing the user to cancel. Here's a simple implementation:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public partial class ProgressForm : Form
+{
+    IBackgroundAction backgroundAction;
+    bool finished;
+    
+    public ProgressForm(string title, IBackgroundAction 
+                        backgroundAction)
+    {
+        this.backgroundAction = backgroundAction;
+        backgroundAction.Finished += new 
+            EventHandler&amp;lt;ActionFinishedEventArgs&amp;gt;
+               (backgroundAction_Finished);
+        backgroundAction.Progress += new 
+            EventHandler&amp;lt;ProgressEventArgs&amp;gt;
+                (backgroundAction_Progress);
+        InitializeComponent();
+        this.FormClosing += new 
+            FormClosingEventHandler(ProgressForm_FormClosing);
+        this.labelProgressMessage.Text = String.Empty;
+        this.Text = title;
+    }
+
+    void ProgressForm_FormClosing(object sender, 
+       FormClosingEventArgs e)
+    {
+        if (!finished)
+        {
+            backgroundAction.Cancel();
+            buttonCancel.Enabled = false;
+            e.Cancel = true;
+        }
+    }
+
+    void backgroundAction_Progress(object sender, 
+       ProgressEventArgs e)
+    {
+        if (this.InvokeRequired)
+        {
+            this.BeginInvoke(new 
+               EventHandler&amp;lt;ProgressEventArgs&amp;gt;
+                  (backgroundAction_Progress), sender, e);
+            return;
+        }
+        labelProgressMessage.Text = e.Message;
+    }
+
+    void backgroundAction_Finished(object sender, 
+        ActionFinishedEventArgs e)
+    {
+        if (this.InvokeRequired)
+        {
+            this.BeginInvoke(new  
+               EventHandler&amp;lt;ActionFinishedEventArgs&amp;gt;
+                  (backgroundAction_Finished), sender, e);
+            return;
+        }
+        if(e.State == ActionState.Error)
+        {
+            MessageBox.Show(this, e.Exception.Message,
+                this.Title,
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        finished = true;
+        this.Close();
+    }
+
+    private void ProgressForm_Load(object sender, EventArgs e)
+    {
+        backgroundAction.Begin();
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now the code to create and run my background action becomes trivial:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;private void buttonDeserializeAll_Click(object sender, EventArgs e)
+{
+    DeserializeAllAction deserializer = new DeserializeAllAction(searchResults);
+    ProgressForm progressForm = new ProgressForm("Deserializing all results", deserializer);
+    progressForm.ShowDialog(this);
+}&lt;/pre&gt;
+
+&lt;p&gt;So I was quite pleased with what I had achieved, but I started wondering whether I could take things one step further. In our &lt;strong&gt;PerformBackgroundAction&lt;/strong&gt; function, we still have to perform periodic checks for cancellation and progress updates. These can't be moved down into the base class because it doesn't know when it can check and what it can report.&lt;/p&gt;
+
+&lt;p&gt;But then I considered the fact that most long-running background operations are in fact working their way through some kind of list. If I could insert the progress reporting and cancel checking into the enumerator, the &lt;strong&gt;PerformBackgroundAction&lt;/strong&gt; function could focus entirely on doing the action at hand.&lt;/p&gt;
+
+&lt;p&gt;Here's my ProgressEnumerator class that injects progress reporting and cancel checking into any IEnumerable type. It calls back once every time round the loop, allowing a progress message to be emitted (if required), and allowing cancellation to be signalled (by returning true from the callback):&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;delegate bool ProgressCallback&amp;lt;T&amp;gt;(T value, int count);
+
+class ProgressEnumerator&amp;lt;T&amp;gt;
+{
+    public static IEnumerable&amp;lt;T&amp;gt; Create(IEnumerable&amp;lt;T&amp;gt; items, ProgressCallback&amp;lt;T&amp;gt; callback)
+    {
+        ProgressEnumerator&amp;lt;T&amp;gt; enumerator = new ProgressEnumerator&amp;lt;T&amp;gt;(items, callback);
+        return enumerator.Items;
+    }
+
+    IEnumerable&amp;lt;T&amp;gt; items;
+    ProgressCallback&amp;lt;T&amp;gt; callback;
+    int count;
+
+    public ProgressEnumerator(IEnumerable&amp;lt;T&amp;gt; items, ProgressCallback&amp;lt;T&amp;gt; callback)
+    {
+        this.items = items;
+        this.callback = callback;
+        count = 0;
+    }
+
+    public IEnumerable&amp;lt;T&amp;gt; Items
+    {
+        get
+        {
+            foreach (T item in items)
+            {
+                if(callback(item,++count))
+                    break;
+                yield return item;
+            }
+        }
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now we can revisit our &lt;strong&gt;PerformBackgroundAction&lt;/strong&gt; function and remove the progress reporting and cancellation checking from inside the foreach loop, and moving it out into a separate function.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;protected override void PerformBackgroundAction()
+{
+    ReportProgress("Preparing to deserialize");
+    foreach (BinarySearchResult result in 
+        ProgressEnumerator&amp;lt;BinarySearchResult&amp;gt;.Create(searchResults,ProgressCallback))
+    {
+        result.Deserialize();
+    }
+}
+
+bool ProgressCallback(BinarySearchResult result, int count)
+{
+    if (count % 10 == 0)
+    {
+        ReportProgress("Deserialized {0}", count);
+    }
+    return cancel;
+}&lt;/pre&gt;
+
+&lt;p&gt;Finally I have achieved what I wanted. The GUI code that launches the background action is simple, and the code that performs the background action - the real 'business logic' - is unencumbered with threading related noise.&lt;/p&gt;
+
+&lt;p&gt;I'm sure that both my BackgroundAction and ProgressEnumerator classes have lots of ways in which they can be improved or streamlined further. Feel free to critique them in the comments.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Threading</category>
+    <category>Refactoring</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="6c5ebbaf-cd7e-4525-89c8-bd1064a2fedb">
+      <author>Arian</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05229597156082993185</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-06 18:12:00</date>
+      <content>This is some good looking code, but I'm wondering why you didn't go with the BackgroundWorker class?  This seems to encompass what you need, and even supports progress notifications.  Nice work either way though!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="695cd43a-c201-493e-b489-12efb8e38485">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-06 18:21:00</date>
+      <content>Hi arian, I guess I dismissed the BackgroundWorker quite quickly because it seems to encourage putting all the code right there in the code behind of the GUI. I want to separate out the concerns - the GUI, the threading code, and the actual work to be done. But I did just have a fresh look in MSDN at the BackgroundWorker code and you are right, it is quite full featured. I guess it might give the separation I want if I can use it as a base class.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d26a9983-f8f3-4c1f-899f-9085aa77ee52">
+      <author>Arian</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05229597156082993185</website>
+      <ip />
+      <userAgent />
+      <date>2008-10-06 18:23:00</date>
+      <content>That is somewhat of a limitation, but it does work as a base class and I've used it that way before.  It's pretty clean like that.  I'm all for isolating code too and was pretty pleased by the results.</content>
+    </comment>
+  </comments>
+</post>

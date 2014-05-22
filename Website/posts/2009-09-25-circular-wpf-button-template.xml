@@ -1,0 +1,197 @@
+<post>
+  <title>Circular WPF Button Template</title>
+  <slug>circular-wpf-button-template</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-25 17:40:00</pubDate>
+  <lastModified>2011-07-03 07:35:08</lastModified>
+  <content>&lt;p&gt;Here’s another WPF button template, since my &lt;a href="/post/creating-custom-wpf-button-template-in"&gt;first one&lt;/a&gt; continues to be one of the most popular posts on my blog. This one is in response to a question about how the button could be made circular. The basic background of the button is formed by superimposing three circles on top of each other:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;Grid Width="100" Height="100" Margin="5"&amp;gt;
+   &amp;lt;Ellipse Fill="#FF6DB4EF"/&amp;gt;
+   &amp;lt;Ellipse&amp;gt;
+      &amp;lt;Ellipse.Fill&amp;gt;
+         &amp;lt;RadialGradientBrush&amp;gt;
+            &amp;lt;GradientStop Offset="0" Color="#00000000"/&amp;gt;
+            &amp;lt;GradientStop Offset="0.88" Color="#00000000"/&amp;gt;
+            &amp;lt;GradientStop Offset="1" Color="#80000000"/&amp;gt;
+         &amp;lt;/RadialGradientBrush&amp;gt;
+      &amp;lt;/Ellipse.Fill&amp;gt;
+   &amp;lt;/Ellipse&amp;gt;
+   &amp;lt;Ellipse Margin="10"&amp;gt;
+      &amp;lt;Ellipse.Fill&amp;gt;
+         &amp;lt;LinearGradientBrush&amp;gt;
+            &amp;lt;GradientStop Offset="0" Color="#50FFFFFF"/&amp;gt;
+            &amp;lt;GradientStop Offset="0.5" Color="#00FFFFFF"/&amp;gt;
+            &amp;lt;GradientStop Offset="1" Color="#50FFFFFF"/&amp;gt;
+         &amp;lt;/LinearGradientBrush&amp;gt;
+      &amp;lt;/Ellipse.Fill&amp;gt;
+   &amp;lt;/Ellipse&amp;gt;
+&amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here’s what that looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/circular-wpf-button-template-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="Circular Button" src="/posts/files/circular-wpf-button-template-1.png" width="117" height="112"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Now to turn it into a template, we follow a very similar process to before. We allow the Background colour to be overriden by the user if required. I couldn’t come up with a neat way of forcing the button to be circular, but it is not too much of a chore to set the Height and Width in XAML.&lt;/p&gt;
+&lt;p&gt;The focus rectangle has been made circular. For the IsPressed effect, I simply change the angle of the linear gradient of the inner circle a little, and move the ContentPresenter down a bit, which seems to work OK. I haven’t created any triggers yet for IsMouseOver, IsEnabled or IsFocused, mainly because I’m not quite sure what would create a the right visual effect.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;Page.Resources&amp;gt;
+  &amp;lt;Style x:Key="MyFocusVisual"&amp;gt;
+     &amp;lt;Setter Property="Control.Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+           &amp;lt;ControlTemplate TargetType="{x:Type Control}"&amp;gt;
+              &amp;lt;Grid Margin="8"&amp;gt;
+                 &amp;lt;Ellipse
+                    Name="r1"
+                    Stroke="Black"
+                    StrokeDashArray="2 2"
+                    StrokeThickness="1"/&amp;gt;
+                 &amp;lt;Border
+                    Name="border"
+                    Width="{TemplateBinding ActualWidth}"
+                    Height="{TemplateBinding ActualHeight}"
+                    BorderThickness="1"
+                    CornerRadius="2"/&amp;gt;
+              &amp;lt;/Grid&amp;gt;
+           &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+     &amp;lt;/Setter&amp;gt;
+  &amp;lt;/Style&amp;gt;
+  &amp;lt;Style x:Key="CircleButton" TargetType="Button"&amp;gt;
+     &amp;lt;Setter Property="OverridesDefaultStyle" Value="True"/&amp;gt;
+     &amp;lt;Setter Property="Margin" Value="2"/&amp;gt;
+     &amp;lt;Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisual}"/&amp;gt;
+     &amp;lt;Setter Property="Background" Value="#FF6DB4EF"/&amp;gt;
+     &amp;lt;Setter Property="Template"&amp;gt;
+        &amp;lt;Setter.Value&amp;gt;
+           &amp;lt;ControlTemplate TargetType="Button"&amp;gt;
+              &amp;lt;Grid&amp;gt;
+                 &amp;lt;Ellipse Fill="{TemplateBinding Background}"/&amp;gt;
+                 &amp;lt;Ellipse&amp;gt;
+                    &amp;lt;Ellipse.Fill&amp;gt;
+                       &amp;lt;RadialGradientBrush&amp;gt;
+                          &amp;lt;GradientStop Offset="0" Color="#00000000"/&amp;gt;
+                          &amp;lt;GradientStop Offset="0.88" Color="#00000000"/&amp;gt;
+                          &amp;lt;GradientStop Offset="1" Color="#80000000"/&amp;gt;
+                       &amp;lt;/RadialGradientBrush&amp;gt;
+                    &amp;lt;/Ellipse.Fill&amp;gt;
+                 &amp;lt;/Ellipse&amp;gt;
+                 &amp;lt;Ellipse Margin="10" x:Name="highlightCircle" &amp;gt;
+                    &amp;lt;Ellipse.Fill &amp;gt;
+                       &amp;lt;LinearGradientBrush &amp;gt;
+                          &amp;lt;GradientStop Offset="0" Color="#50FFFFFF"/&amp;gt;
+                          &amp;lt;GradientStop Offset="0.5" Color="#00FFFFFF"/&amp;gt;
+                          &amp;lt;GradientStop Offset="1" Color="#50FFFFFF"/&amp;gt;
+                       &amp;lt;/LinearGradientBrush&amp;gt;
+                    &amp;lt;/Ellipse.Fill&amp;gt;
+                 &amp;lt;/Ellipse&amp;gt;
+                 &amp;lt;ContentPresenter x:Name="content" HorizontalAlignment="Center" VerticalAlignment="Center"/&amp;gt;
+              &amp;lt;/Grid&amp;gt;
+              &amp;lt;ControlTemplate.Triggers&amp;gt;
+                 &amp;lt;Trigger Property="IsPressed" Value="True"&amp;gt;
+                    &amp;lt;Setter TargetName="highlightCircle" Property="Fill"&amp;gt;
+                       &amp;lt;Setter.Value&amp;gt;
+                       &amp;lt;LinearGradientBrush StartPoint="0.3,0" EndPoint="0.7,1"&amp;gt;
+                          &amp;lt;GradientStop Offset="0" Color="#50FFFFFF"/&amp;gt;
+                          &amp;lt;GradientStop Offset="0.5" Color="#00FFFFFF"/&amp;gt;
+                          &amp;lt;GradientStop Offset="1" Color="#50FFFFFF"/&amp;gt;
+                       &amp;lt;/LinearGradientBrush&amp;gt;
+                       &amp;lt;/Setter.Value&amp;gt;
+                    &amp;lt;/Setter&amp;gt;
+                    &amp;lt;Setter TargetName="content" Property="RenderTransform"&amp;gt;
+                       &amp;lt;Setter.Value&amp;gt;
+                          &amp;lt;TranslateTransform Y="0.5" X="0.5"/&amp;gt;
+                       &amp;lt;/Setter.Value&amp;gt;
+                    &amp;lt;/Setter&amp;gt;
+                 &amp;lt;/Trigger&amp;gt;
+              &amp;lt;/ControlTemplate.Triggers&amp;gt;
+           &amp;lt;/ControlTemplate&amp;gt;
+        &amp;lt;/Setter.Value&amp;gt;
+     &amp;lt;/Setter&amp;gt;
+  &amp;lt;/Style&amp;gt;
+&amp;lt;/Page.Resources&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here’s how we declare a few of these buttons of different sizes, and with different background colours:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;WrapPanel&amp;gt;
+  &amp;lt;Button Width="100" Height="100" Style="{StaticResource CircleButton}"&amp;gt;Hello World&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="#FF9F1014"&amp;gt;Button 2&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="#FFD8C618"&amp;gt;Button 3&amp;lt;/Button&amp;gt;      
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="#FF499E1E"&amp;gt;Button 4&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="Orange"&amp;gt;Button 5&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="#FF7C7C7C"&amp;gt;Button 6&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="80" Height="80" Style="{StaticResource CircleButton}" Background="Purple" Foreground="White"&amp;gt;Button 7&amp;lt;/Button&amp;gt;
+  &amp;lt;Button Width="100" Height="100" Style="{StaticResource CircleButton}" Background="#FF3120D4" Foreground="White"&amp;gt;Button 8&amp;lt;/Button&amp;gt;
+&amp;lt;/WrapPanel&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="/posts/files/circular-wpf-button-template-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="Circular Buttons" src="/posts/files/circular-wpf-button-template-2.png" width="365" height="213"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Sadly, the use of ControlTemplate triggers means that this template can’t be used directly in Silverlight. I’ll maybe look into converting them to VisualStates for a future blog post.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0ec097e9-7b15-4ce8-a2f0-848050bc4492">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-09-24 19:29:28</date>
+      <content>Hello Mark,&lt;br /&gt;&lt;br /&gt;awesome work!&lt;br /&gt;&lt;br /&gt;Please continue to put out this kind of stuff on your blog!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="23abf765-648d-42ea-a8e3-692d32c54059">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-02-10 12:20:23</date>
+      <content>Why can&amp;#39;t i move the Buttons around? o.O</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e1a5e413-cfed-4e75-962a-d885370f25b4">
+      <author>Kevin Marois</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16297140031636092799</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-04 18:41:52</date>
+      <content>How do I copy the code off your blog without getting all the line numbers?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f5644671-7f79-42fa-b14f-78235a758fdf">
+      <author>Kevin Marois</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16297140031636092799</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-04 18:42:38</date>
+      <content>How do I copy the code off your blog without the line numbers?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="508fec24-f37b-44dc-aab5-2b1d60257b32">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-05 09:40:53</date>
+      <content>@Kevin - double-click in the code area - it will select the text without the line numbers.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="367d23dd-9eec-4d6b-9250-1de47326e8a4">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-05-10 22:44:41</date>
+      <content>how to wrap the button text</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8666d3fb-6689-41a1-b387-b229be571d44">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-09-28 08:10:20</date>
+      <content>Hi, I am getting this message:&lt;br /&gt;The attached property &amp;#39;Page.Resources&amp;#39; is not defined on or one of its base classes. &lt;br /&gt;&lt;br /&gt;Can you help me, please?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5627d8db-baec-40bd-aaeb-41a8fa9612e8">
+      <author>Phil Ruse</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13040474351783645703</website>
+      <ip />
+      <userAgent />
+      <date>2013-03-01 11:39:19</date>
+      <content>Having switched to WPF end of last year, on the one hand it&amp;#39;s scary how much I have to learn (though that&amp;#39;s what makes it fun too), on the other I am continually grateful for contributions to &amp;#39;the community&amp;#39; (if that doesn&amp;#39;t sound too pompous?!) such as this. Much obliged :)</content>
+    </comment>
+  </comments>
+</post>

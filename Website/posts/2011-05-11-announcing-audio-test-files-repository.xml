@@ -1,0 +1,35 @@
+<post>
+  <title>Announcing Audio Test Files Repository</title>
+  <slug>announcing-audio-test-files-repository</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-11 23:06:00</pubDate>
+  <lastModified>2011-05-13 21:34:21</lastModified>
+  <content>&lt;p&gt;Today I announce what is quite possibly the most exciting new open source project of the millennium. Or at least moderately interesting. If you like listening to the same bit of sound over and over at different sample rates and bit depths that is.&lt;/p&gt; &lt;p&gt;And that is exactly what is on offer in my brand new &lt;a href="http://audiotestfiles.codeplex.com"&gt;Audio Test Files&lt;/a&gt; project on CodePlex. For some time I have wanted to store a collection of brief test files in a wide variety of audio formats for the &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; unit tests to make use of. But since these files would add up to at least 200Mb, I didn’t want to put them in the main NAudio source control.&lt;/p&gt; &lt;p&gt;The repository has only just begun with basic WAV files encoded with PCM 8 bit, 16 bit and 24 bit plus IEEE float all at several sample rates and in mono and stereo. To preview the stunning and original musical composition that is available in multiple encodings, you can have a listen in the embedded player below. Hold onto your hats:&lt;/p&gt;&lt;embed type="application/x-shockwave-flash" flashvars="audioUrl=http://www.wordandspirit.co.uk/audio/test-tone.mp3" src="http://www.google.com/reader/ui/3523697345-audio-player.swf" width="400" height="27" quality="best"&gt;  &lt;p&gt;The future will see such thrilling additions as MP3, MID, AIFF plus a whole smorgasbord of telephony codecs. Also, I plan to add useful test signals such as sine wave sweeps and white noise. There will also be files containing unusual or incorrect data structures.&lt;/p&gt; &lt;p&gt;Having these files will facilitate the quick manual testing that NAudio is still able to play the wide variety of audio that it currently supports. I will also run unit tests to check I can open and successfully read to the end of each file. Sadly with something like audio, the manual element of testing is impossible to avoid, but I would like to automate as much as possible.&lt;/p&gt; &lt;p&gt;I welcome submissions to this project. The files must of course not be copyrighted, and I am not looking for large files, just representative samples of each format. Read the &lt;a href="http://audiotestfiles.codeplex.com/wikipage?title=Submission%20Guidelines"&gt;submission guidelines&lt;/a&gt; first.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>AIFF</category>
+    <category>MP3</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0f4a6178-2171-4a91-9304-852b0690ea35">
+      <author>hver</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05004567240098171061</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-13 23:30:05</date>
+      <content>Hi, &lt;br /&gt;&lt;br /&gt;are you aware of the collection of .wav files at http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html ?&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t know about the copyright situation, but the page is still being actively maintained, so you could contact Prof. Kabal.&lt;br /&gt;&lt;br /&gt;This collection has been very useful to me in developing .wav readers and writers.&lt;br /&gt;&lt;br /&gt;Han</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="01543032-1def-402e-8856-e8405793600b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-14 07:38:56</date>
+      <content>thanks Han,&lt;br /&gt;&lt;br /&gt;I have come across that site in web searches before. There are some useful bits and pieces there. At the moment, I am focusing on the files I need for NAudio testing, but perhaps in the future others might be interested in contributing files for their own needs.</content>
+    </comment>
+  </comments>
+</post>

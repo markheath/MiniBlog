@@ -1,0 +1,76 @@
+<post>
+  <title>Why Static Variables Are Dangerous</title>
+  <slug>why-static-variables-are-dangerous</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-03-18 17:46:00</pubDate>
+  <lastModified>2013-03-18 17:46:00</lastModified>
+  <content>&lt;p&gt;In an application I work on, we need to parse some custom data files (let’s call them XYZ files). There are two versions of the XYZ file format, which have slightly different layouts of the data. You need to know what version you are dealing with to know what sizes the various data structures will be.&lt;/p&gt; &lt;p&gt;We inherited some code which could read XYZ files, and it contained the following snippet. While it was reading the XYZ file header it stored the file version into a static variable, so that later on in the parsing process it could use that to make decisions.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static XyzVersion XyzVersion { get; set; }
+
+public static int MaxSizeToUse
+{
+    get
+    {
+        switch (XyzVersion)
+        {
+            case XyzVersion.First:
+                return 8;
+            case XyzVersion.Second:
+                return 16;
+        }
+
+        throw new InvalidOperationException("Unknown XyzVersion");
+    }
+}
+
+public static int DataSizeToSkip
+{
+    get
+    {
+        switch (XyzVersion)
+        {
+            case XyzVersion.First:
+                return 8;
+            case XyzVersion.Second:
+                return 0;
+        }
+
+        throw new InvalidOperationException("Unknown XyzVersion");
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Can you guess what went wrong? For years this code worked perfectly on hundreds of customer sites worldwide. All XYZ files, of both versions were being parsed correctly. But then, we suddenly started getting customers reporting strange problems to do with their XYZ files. When we investigated it, we discovered that we now had customers whose setup meant they could be dealing with two different versions of the XYZ file. That on its own wasn’t necessarily a problem. The bug occurred when our software, &lt;em&gt;on two different threads simultaneously&lt;/em&gt;, was trying to parse XYZ files of a different version. &lt;/p&gt;
+&lt;p&gt;So one thread started to parse a version 1 XYZ file, and set the static variable to 1. Then the other thread started to parse a version 2 XYZ file and set the static variable to 2. Now, when the first thread carried on, it now incorrectly thought it was dealing with a version 2 XYZ file, and data corruption ensued.&lt;/p&gt;
+&lt;p&gt;What is the moral of this story? Don’t use a static variable to hold state information that isn’t guaranteed to be absolutely global. This is also a reason why &lt;a href="http://blogs.msdn.com/b/scottdensmore/archive/2004/05/25/140827.aspx"&gt;the singleton pattern is so dangerous&lt;/a&gt;. The assumption that “there can only ever be one of these” is very often proved wrong further down the road. Here the assumption was that we would only ever see one version of the XYZ files on a customer site. That was true for several years&amp;nbsp; … until it wasn’t anymore.&lt;/p&gt;
+&lt;p&gt;In this case, the right approach was for each XYZ file reader class to keep track of what version it was dealing with, and pass that through to the bits of code that needed to know it (it wasn’t even a difficult change to make). Static variables get used far too often simply because they are convenient and “save time”. But any time saved coding will be lost further down the road when your “there can only be one” assumption proves false.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="28840215-b13c-40a9-a064-87fbfed65aca">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-03-19 21:55:56</date>
+      <content>How about using the ThreadStatic-Attribute instead?&lt;br /&gt;http://msdn.microsoft.com/en-us/library/system.threadstaticattribute.aspx</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b68a26df-32ce-4e50-9999-9213b51b5f0b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-03-19 21:59:27</date>
+      <content>hi @Anonymous. ThreadStatic probably does have cases when it is useful, but it would not be a good solution here. Consider the following scenario, all played out on a single thread. Create an XyzFileReader, start reading a version 1 file. Then create another XyzFileReader and start reading a version 2 file. Now, on the same thread, read a bit more from the first XyzFileReader. The same bug will occur. The only correct solution here is for each XyzFileReader to maintain knowledge of what version it is reading.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="9ae9e4ff-cf84-4c24-b41d-2507078780c6">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-03-19 22:12:01</date>
+      <content>True, that would also lead to strange results. Plus the person implementing the XyzFileReader would have to know how it&amp;#39;s inner workings are and try to avoid a situation where there are two readers on the same thread.&lt;br /&gt;The Attribute has it&amp;#39;s uses though, this just isn&amp;#39;t one that fits perfect. :)</content>
+    </comment>
+  </comments>
+</post>

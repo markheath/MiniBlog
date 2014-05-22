@@ -1,0 +1,24 @@
+<post>
+  <title>Silverlight Star Rating Control</title>
+  <slug>silverlight-star-rating-control</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-06-13 21:41:00</pubDate>
+  <lastModified>2011-07-01 21:28:08</lastModified>
+  <content>&lt;p&gt;I found myself needing a star rating control for a Silverlight application recently, and although I found a few open source ones, none of them worked quite how I wanted them to. Besides, I designed my own &lt;a href="/post/xaml-star-rating"&gt;star shape in XAML&lt;/a&gt; a while ago and wanted to use that as the basis.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/silverlight-star-rating-control-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="StarRating" border="0" alt="StarRating" src="/posts/files/silverlight-star-rating-control-1.png" width="186" height="97"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;In particular I wanted the ability to have half-star ratings. I thought at first it would require me to use some kind of complicated clipping construct, with a rectangle hidden behind my star, but I realised I could cheat by creating a half-star shape. Each star is a UserControl made up of three shapes – a star fill, a half star on top and then an outline on top. &lt;/p&gt; &lt;p&gt;I also wanted the colours to change as you hovered the mouse over it, indicating what rating would be given were you to click at any moment. This required the background of the control to be painted with a transparent brush, otherwise mouse events are only received while you are over stars and not in between them.&lt;/p&gt; &lt;p&gt;The biggest difficulty was making resize work. Path objects can be a pain to resize. I ended up putting them on a Canvas and using a ScaleTransform to get them the right size. All the brushes are customisable (six of them), plus you can change the number of stars, the line joins (pointy or round edged stars) and the line thicknesses. You can also turn off editing to simply display a star rating.&lt;/p&gt; &lt;p&gt;The &lt;a href="http://starratingcontrol.codeplex.com/"&gt;Silverlight Star Rating Control&lt;/a&gt; is open source and available on CodePlex. The easiest way to install it is &lt;a href="http://nuget.org/List/Packages/MarkHeath.StarRating"&gt;using NuGet&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;To have a play with the star rating control, you can try it in my (rather chaotic looking) test harness below:&lt;/p&gt; &lt;div style="width: 592px; height: 430px" id="silverlightControlHost"&gt;&lt;object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%"&gt;     &lt;param name="source" value="http://www.wordandspirit.co.uk/software/SilverlightStarRatingControl.xap"&gt;     &lt;param name="onError" value="onSilverlightError"&gt;     &lt;param name="background" value="white"&gt;     &lt;param name="minRuntimeVersion" value="4.0.50826.0"&gt;     &lt;param name="autoUpgrade" value="true"&gt;     &lt;a href="/posts/files/silverlight-star-rating-control-2" style="text-decoration:none"&gt;       &lt;img src="/posts/files/silverlight-star-rating-control-2" alt="Get Microsoft Silverlight" style="border-style:none"&gt;     &lt;/a&gt;      &lt;/object&gt;&lt;/div&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="cb1ebd9e-6261-465a-8a9a-917f767f66e3">
+      <author>John Schroedl</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05724631002926932024</website>
+      <ip />
+      <userAgent />
+      <date>2011-06-14 15:18:13</date>
+      <content>Very nice!</content>
+    </comment>
+  </comments>
+</post>

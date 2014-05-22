@@ -1,0 +1,47 @@
+<post>
+  <title>How to Register Two Interfaces as a Singleton in Unity</title>
+  <slug>how-to-register-two-interfaces-as</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-11-23 11:13:00</pubDate>
+  <lastModified>2010-11-23 11:13:23</lastModified>
+  <content>&lt;p&gt;Every now and then I find myself wanting to configure a single implementor for multiple interfaces in Unity. Say I have the following interfaces and I only want one instance of Foo, yet I want to be able to request either IFoo or IFoo2 from the container:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public interface IFoo
+{
+    ...
+}
+
+interface IFoo2 : IFoo
+{
+    ...
+}
+
+public class Foo : IFoo2
+{
+    ...
+}&lt;/pre&gt;
+&lt;p&gt;The way I would previously go about this is:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var foo = container.Resolve&amp;lt;Foo&amp;gt;();
+container.RegisterInstance&amp;lt;IFoo&amp;gt;(foo);
+container.RegisterInstance&amp;lt;IFoo2&amp;gt;(foo);
+&lt;/pre&gt;
+&lt;p&gt;This approach, works, but is less than ideal. First, it requites you to resolve something in the container, possibly before you have completely finished configuring the container (e.g. the dependencies of Foo might not be fully set up yet). Second, the container will dispose foo twice.&lt;/p&gt;
+&lt;p&gt;However, thanks to &lt;a href="http://stackoverflow.com/questions/1394650/unity-register-two-interfaces-as-one-singleton/2737778#2737778"&gt;an answer from Sven Künzler&lt;/a&gt; to a question on Stack Overflow, there is a much better way: &lt;/p&gt;&lt;pre class="brush: csharp;"&gt;container.RegisterType&amp;lt;Foo&amp;gt;(new ContainerControlledLifetimeManager());
+container.RegisterType&amp;lt;IFoo, Foo&amp;gt;();
+container.RegisterType&amp;lt;IFoo2, Foo&amp;gt;();
+Assert.AreSame(container.Resolve&amp;lt;IFoo&amp;gt;(), container.Resolve&amp;lt;IFoo2&amp;gt;());&lt;/pre&gt;
+&lt;p&gt;You simply register the concrete type as a singleton, and then point as many interfaces at that type as you like. &lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Unity</category>
+    <category>IoC</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="4cab942d-1a4e-4809-aeb0-f218cc651f16">
+      <author>Herit Shah</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.herit.co</website>
+      <ip />
+      <userAgent />
+      <date>2011-01-10 04:57:03</date>
+      <content>Mark, I need your very highly urgent help. &lt;br /&gt;although the problem is very small, but only you &amp;amp; you have the answer.&lt;br /&gt;&lt;br /&gt;if the thing works out, that freeware app is gonna distributed to whole india. so please contact me at contact@herit.co, i will then mail you over the stuff.&lt;br /&gt;possibly it would be highly grateful if i can meet you over skype/msn.</content>
+    </comment>
+  </comments>
+</post>

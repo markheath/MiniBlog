@@ -1,0 +1,242 @@
+<post>
+  <title>How to Play Streaming MP3 Using NAudio</title>
+  <slug>how-to-play-back-streaming-mp3-using</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-04 16:27:00</pubDate>
+  <lastModified>2011-07-02 08:15:16</lastModified>
+  <content>&lt;p&gt;One of the most common support requests I get for &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; is how it can be used for streaming MP3. Whilst all the requisite bits and pieces are present in NAudio, there has been no good example of how to do this. For NAudio 1.5 I will be rectifying this to include an example in the NAudioDemo application, and have made a few enhancements to the classes in NAudio to make this easier to implement. In this article I will explain how streaming MP3 playback is implemented in the NAudioDemo application. &lt;/p&gt; &lt;p&gt;&lt;strong&gt;Design Overview&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The basic design for our streaming playback is that one thread will be downloading the audio, while another thread will play it back. One of the issues this raises is which thread should do the decompression. I have chosen that the download thread should do so. This takes work away from the playback thread and so should give additional protection against stuttering playback, but has the down-side that it requires more memory for buffered audio since it is stored in PCM.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Buffering Audio&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The key class that enables us to queue up samples on one thread for playback on another is called the &lt;strong&gt;BufferedWaveProvider&lt;/strong&gt;. The BufferedWaveProvider implements IWaveProvider so it can be used as an input to any Wave Output device. When its &lt;strong&gt;Read &lt;/strong&gt;function is called it returns any bytes buffered, or zeroes the playback buffer if none are available. The &lt;strong&gt;AddSamples&lt;/strong&gt; function is called from the downloader thread to queue up samples as they become available.&lt;/p&gt; &lt;p&gt;Under the hood, the BufferedWaveProvider in NAudio 1.4 used a queue of buffers to store the data. For NAudio 1.5 I am switching to a thread safe circular buffer. This means that memory is allocated once up front, and should result in better performance. By default it buffers enough for five seconds of audio, but this can be easily changed using &lt;strong&gt;BufferDuration &lt;/strong&gt;(although once you start reading, the buffer size is fixed). It also makes more sense to track the number of buffered bytes (a helper method, &lt;strong&gt;BufferedDuration&lt;/strong&gt;, turns this into a TimeSpan) instead of the number of queued buffers.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Parsing MP3 Frames&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;One if the issues that people quickly run into when attempting to play back streaming MP3 is that the MP3Frame class will throw an exception if it can’t read enough bytes to fully load an MP3 frame. Obviously while you are streaming you may well have half an MP3 frame available.&lt;/p&gt; &lt;p&gt;The solution is fairly simple. We wrap our network stream in a &lt;strong&gt;ReadFullyStream&lt;/strong&gt;, which is just a simple class inheriting from System.IO.Stream that will not return from its Read method until it has read the number of bytes requested or the source stream reaches its end. The ReadFullyStream currently resides in the NAudioDemo project, but may be incorporated as a helper utility for NAudio 1.5.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Decompressing Frames&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Once you have parsed a complete MP3 frame, it is time to decompress it so we can buffer the PCM audio. NAudio includes a choice of two MP3 frame decompressors, one using the ACM codecs, which should be present on Windows XP onwards, and one for using the DMO (DirectX Media Object) decoder, which is available with Windows Vista onwards. These two classes were internal with NAudio 1.4, but will be made public for NAudio 1.5. You could alternatively use a fully managed MP3 decoder, such as &lt;a href="http://nlayer.codeplex.com"&gt;NLayer&lt;/a&gt; which is my C# port of the Java MP3 decoder &lt;a href="http://www.javazoom.net/javalayer/javalayer.html"&gt;JavaLayer&lt;/a&gt;. If I get time I will update NAudioDemo to allow you to select between the available frame decompressors.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Decompression Format&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;One of the trickiest design issues to work around is the fact that we don’t know the WaveFormat that the BufferedWaveProvider should output until we have read the first MP3 frame. Most MP3s decompress to stereo 44.1kHz, but some are 48kHz or 22.1kHz, and others are mono. We therefore can’t open the soundcard yet because we don’t know what PCM format we will be supplying it with.&lt;/p&gt; &lt;p&gt;There are two ways you can tackle this problem. First you can choose a PCM format (e.g. 44.1kHz stereo) that you will convert the decompressed MP3 frames to even if they are of a different sample rate or channel count. Alternatively, as I have chosen for the demo, you hold back from creating the BufferedWaveProvider until you have received the first MP3 frame and therefore know what format you will convert to.&lt;/p&gt; &lt;p&gt;In the NAudioDemo project this is handled by a timer running on the form periodically checking to see if we have a BufferedWaveProvider yet. Once the BufferedWaveProvider appears, we can initialise our WaveOut player.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Smooth Playback &lt;/strong&gt;&lt;/p&gt; &lt;p&gt;One of the problems with playing back from a network stream is that we may get stuttering audio if the MP3 file is not downloading fast enough. Although the BufferedWaveProvider will continuously provide data to the soundcard, it could be very choppy if you are experiencing slow download speeds as there would be gaps between each decompressed frame.&lt;/p&gt; &lt;p&gt;For this reason, it is a good idea for the playback thread to go into pause when the buffered audio has run out, but not start playing again until there are at least a couple of seconds of buffered audio. This is accomplished in the NAudioDemo with a simple timer on the GUI thread firing four times a second and deciding if we should go into our come out of pause. &lt;/p&gt; &lt;p&gt;&lt;strong&gt;End of Stream&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;If you are streaming from internet radio, then there is no end of stream, you just keep listening until you have had enough. However, if you are streaming an MP3 file, it will come to an end at some point. &lt;/p&gt; &lt;p&gt;The first consequence is that our MP3Frame constructor will throw an EndOfStream exception because it was trying to read a new MP3Frame and got to the end of the stream. Handling this is straightforward – the downloader thread can capture this exception and exit, knowing we have got everything. I am considering improving the API for the MP3Frame to include a TryParse option so you can deal with this case without the need for catching exceptions.&lt;/p&gt; &lt;p&gt;The other issue is that the playback thread needs to know that the end of the file has been reached, otherwise it will go into pause, waiting for more audio to be buffered that will never arrive. A simple way to deal with this is to set a flag indicating that the whole stream has been read and that we no longer need to go into a buffering state.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Try It Yourself&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The code is all checked in and will be part of NAudio 1.5. To try it yourself, go to the &lt;a href="http://naudio.codeplex.com/SourceControl/list/changesets"&gt;NAudio Source Code tab&lt;/a&gt; and download the latest code. Here’s a screenshot of the NAudioDemo application playing from an internet radio stream:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/how-to-play-back-streaming-mp3-using-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="NAudioStreamingMP3" border="0" alt="NAudio demo playing an internet radio station" src="/posts/files/how-to-play-back-streaming-mp3-using-1.png" width="405" height="147"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>MP3</category>
+    <category>audio</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="564486b0-b2e5-49f9-8d3a-5a3c901b0883">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-10-21 05:47:48</date>
+      <content>I have a couple of questions about streaming mp3 audio using naudio. What is the best method of contacting you and asking you those questions.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7a952c59-628e-4a9f-8a9d-599605400e10">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-21 11:13:23</date>
+      <content>@Anonymous, post them on this blog, or on the NAudio Codeplex discussion forum, or StackOverflow.com tagged with [naudio] if they are general questions that other NAudio users may be able to answer</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d43981ea-5fd3-4d58-bb02-e3e624bbd9a9">
+      <author>1712</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14442259526968606440</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-26 04:13:51</date>
+      <content>Hi Mark. &lt;br /&gt;&lt;br /&gt;I&amp;#39;m trying to set position of this streaming to play but I dont know how to do that. Is there anyway to do that?&lt;br /&gt;&lt;br /&gt;Thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="145d378a-94a5-48f1-97d4-39e30a9535ed">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-26 09:35:43</date>
+      <content>@1712 when you play streaming audio, you just play audio as it arrives. You could buffer what you receive to reposition backwards, but to reposition forwards you would need to skip over data you were receiving.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e2ee4ac9-f230-4b6c-9db6-144ca5df9fb4">
+      <author>1712</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14442259526968606440</website>
+      <ip />
+      <userAgent />
+      <date>2011-10-27 04:36:29</date>
+      <content>Can you show me which code I must change to do that? (V1.5)&lt;br /&gt;&lt;br /&gt;And one more question, when &amp;quot;fullyDownload&amp;quot;, how can I replay without reload data from server?&lt;br /&gt;&lt;br /&gt;Thanks :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d95f91e4-d4a5-408c-9aa9-f6680fc357dc">
+      <author>Gian</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/01503995763959621957</website>
+      <ip />
+      <userAgent />
+      <date>2011-11-14 11:41:15</date>
+      <content>Hi Mark,&lt;br /&gt;I&amp;#39;m new in audio management and in NAudio too.&lt;br /&gt;I&amp;#39;m trying to play an AAC raw audio from an IP cam using NAudio.&lt;br /&gt;Audio has a bitrate=32000, mono.&lt;br /&gt;I tried to create a custom format using Mpeg Format without success).&lt;br /&gt;Using NAudioDemo I&amp;#39;ve seen AAC ACM codec is installed.&lt;br /&gt;I always has &amp;quot;NoDriver calling acmFormatSuggest&amp;quot; exception.&lt;br /&gt;A code snippet:&lt;br /&gt;&lt;br /&gt;   WaveFormat format = WaveFormat.CreateCustomFormat(WaveFormatEncoding.Mpeg, 32000, 1, 32000, 1, 16);&lt;br /&gt;using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new RawSourceWaveStream(ms, format))))&lt;br /&gt;&lt;br /&gt;Thank you in advance for your help.&lt;br /&gt;Gianluca</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b165ab6d-7fcf-4f63-b24a-4327773f271e">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-11-21 15:57:09</date>
+      <content>@Gianluca, AAC could only be played if an AAC ACM codec was installed on your system. Even then you would also need to know what WaveFormat structure it was expecting to be able to select it correctly. &amp;quot;Mpeg&amp;quot; is probably not right.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="767cce3b-fa4d-4494-801b-5c1a410980c6">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-03-19 17:10:00</date>
+      <content>Hi, is it possible to play a stream that isn&amp;#39;t mp3 with this library?? if it is can you point me the right direction to achieve this? Thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="271eb882-b975-49ee-a639-669c34b5896a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-03-20 12:51:47</date>
+      <content>you can only stream formats that NAudio can decompress. So this usually means you need an ACM codec installed for it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="cb6b3561-c827-4d57-832b-89a98a675a12">
+      <author>Dan Cri</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-03-31 01:28:09</date>
+      <content>Hi Mark. Most internet streams use shoutcast/AAC, is there any chance to include an NAudio Demo module to handle this? Thanks.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="638eeca0-1f85-4bec-bdab-090fc2bf52ce">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-02 09:43:25</date>
+      <content>@Dan, NAudio can&amp;#39;t play AAC at the moment. That&amp;#39;s a feature I&amp;#39;d really like to add, but it is not available using ACM codecs, so I&amp;#39;d need to learn how to wrap the Media Foundation Transforms to do this.&lt;br /&gt;&lt;br /&gt;As for Shoutcast, I haven&amp;#39;t got any plans at the moment to support that I&amp;#39;m afraid.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b3dc67dc-08b5-465a-9915-8cacf6e4c7e6">
+      <author>Jonx</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02834446680849610263</website>
+      <ip />
+      <userAgent />
+      <date>2012-04-21 12:38:57</date>
+      <content>Hi Mark,&lt;br /&gt;Thank you for your hard work over all those years ;)&lt;br /&gt;&lt;br /&gt;One question about your comment about playing AAC. You say above that AAC can be played using the ACM codecs but later say the ACM codecs do not permit this. Can you please clarify?&lt;br /&gt;I would like to read from AAC files and transcode them to WAV/PCM. Can this be done with plain Naudio? When existing ACM codecs (where do I get them) or cannot be done?&lt;br /&gt;Thank you for your lights,&lt;br /&gt;John.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e44b2621-11c1-423c-88b2-0f0a3f5d6b24">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-05-31 16:58:48</date>
+      <content>I have been trying to work out how to stream radio and show a waveform. I have been playing around with your streaming demo but can&amp;#39;t get a waveform displaying correctly, the nearest I have got is showing a flat line. Any suggestions on how best to achieve this!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="aa52821f-68a3-4de8-b814-408631d69390">
+      <author>Sajjad Shadow</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16207295166032819111</website>
+      <ip />
+      <userAgent />
+      <date>2012-06-04 14:48:23</date>
+      <content>Thanks so much&lt;br /&gt;I have a more question.&lt;br /&gt;can I save or cache the buffered playing stream?&lt;br /&gt;&lt;br /&gt;thanks again.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2a990b78-c1a3-4092-83af-71c058da826b">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-06-11 11:07:50</date>
+      <content>@sajjad, you could easily also write incoming MP3 frames to a file if you want. The BufferedWaveProvider is effectively an in-memory cache. You can increase its duration if you like.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="fdbd95bc-4049-4626-a8f3-9a6d6e8e8717">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-07-19 15:15:10</date>
+      <content>Hi Mark,&lt;br /&gt;Thank you very much for great library and your hard work.&lt;br /&gt;Can you also please provide some video tutorials for Demo programs which you created, it will be helpful for these who is new in .Net and audio programing to understand the examples.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3528eb46-c69a-425c-8041-d73cbcb2e79e">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-11-11 17:27:01</date>
+      <content>Hi,  &lt;br /&gt;&lt;br /&gt;nice post. Can I play  streaming videos using Naduio. Can I get the source code for  playing streaming mp3 audios.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="eb490a24-8e12-4acd-8cfa-773d7fcf9fd2">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-07-26 11:40:08</date>
+      <content>i have a question:&lt;br /&gt;&lt;br /&gt;if i have a file with 50% downloaded,&lt;br /&gt;can i download/stream only the left 50% while playing it?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="44d18aa2-5eb3-42c1-96c5-5dbf7fa215c8">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-07-26 11:42:58</date>
+      <content>you&amp;#39;d need to buffer what you&amp;#39;d downloaded somewhere, and to save space, I&amp;#39;d buffer the compressed audio</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b5ad928b-d13d-413b-a4c2-dbe309df62b1">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-07-31 10:48:43</date>
+      <content>Hi,&lt;br /&gt;&lt;br /&gt;You mean i buffer the exising 50% mp3 to stream and play, at the same time buffer the network stream and then append it to the player?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2f55e4a9-6e96-4aae-8bb1-2478ce7658db">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-08-01 15:44:59</date>
+      <content>Thank you very much.&lt;br /&gt;Sakis</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="927b0577-e376-4448-a137-59b2a35aabac">
+      <author>Muhammad Sufiyan</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14470238845654280589</website>
+      <ip />
+      <userAgent />
+      <date>2013-09-29 18:37:29</date>
+      <content>please Sir can you give the source code for &amp;quot;How to Play Streaming MP3 Using NAudio&amp;quot; article... atleast reply me SIR :)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3579064d-a649-41a1-ba14-9ddce7f92ae6">
+      <author>Muhammad Sufiyan</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14470238845654280589</website>
+      <ip />
+      <userAgent />
+      <date>2013-09-29 18:50:08</date>
+      <content>please sir at least help me to play, pause, stop a mp3 file from web address...my email is sufiyan@engineer.com... i have used the last answer code from http://stackoverflow.com/questions/184683/play-audio-from-a-stream-using-c-sharp?lq=1 please help me sir.&lt;br /&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b024a288-16e9-498a-b787-a1b9ccc8b852">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-09-29 18:56:00</date>
+      <content>the source code is all on CodePlex, at the NAudio site, inside the NAudioDemo project.&lt;br /&gt;&lt;br /&gt;You might actually find that it is much easier if all you want to do is stream from a URL, to simply use the MediaElement control from WPF, and set the source to point to that URL.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="88e666a5-3bee-4223-b146-9d7fb0786725">
+      <author>Scully</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-11-21 07:29:12</date>
+      <content>@Mark H, can you dynamically update the playlist with NAudio? I would like to add to the playlist dependant on some outside factors as and when it happens</content>
+    </comment>
+  </comments>
+</post>

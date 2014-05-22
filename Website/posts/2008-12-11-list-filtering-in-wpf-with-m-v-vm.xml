@@ -1,0 +1,87 @@
+<post>
+  <title>List Filtering in WPF with M-V-VM</title>
+  <slug>list-filtering-in-wpf-with-m-v-vm</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-12-11 13:33:00</pubDate>
+  <lastModified>2011-07-04 16:15:23</lastModified>
+  <content>&lt;p&gt;The first Windows Forms application I ever wrote was an anagram generator back in 2002. As part of my ongoing efforts to learn WPF and M-V-VM, I have been porting it to WPF, and adding a few new features along the way. Today, I wanted to add a TextBox that would allow you filter the anagram results to only show results that contained a specific sub-string.&lt;/p&gt; &lt;p&gt;The first task is to create a TextBox and a ListBox in XAML and set their binding properties. We want the filter to update every time a user types a character in, so we use the UpdateSourceTrigger to specify this.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;TextBox Margin="5" 
+     Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged}" 
+     Width="150" /&amp;gt;
+...
+&amp;lt;ListBox Margin="5" ItemsSource="{Binding Phrases}" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&amp;gt;Now we need to create the corresponding &lt;strong&gt;Filter &lt;/strong&gt;and &lt;strong&gt;Phrases&lt;/strong&gt; properties in our ViewModel. Then we need to get an &lt;strong&gt;ICollectionView&lt;/strong&gt; based on our ObservableCollection of phrases. Once we have done this, we can attach a delegate to it that will perform our filtering. The final step is to call &lt;strong&gt;Refresh&lt;/strong&gt; on the view whenever the user changes the filter box.&lt;/p&gt;&lt;pre class="brush: csharp"&gt;private ICollectionView phrasesView;
+private string filter;
+
+public ObservableCollection&amp;lt;string&amp;gt; Phrases { get; private set; }
+                    
+public AnagramViewModel()
+{
+   ...
+   Phrases = new ObservableCollection&amp;lt;string&amp;gt;();
+   phrasesView = CollectionViewSource.GetDefaultView(Phrases);
+   phrasesView.Filter = o =&amp;gt; String.IsNullOrEmpty(Filter) ? true : ((string)o).Contains(Filter); 
+}
+
+public string Filter 
+{
+   get
+   {
+      return filter;
+   }
+   set
+   {
+      if (value != filter)
+      {
+         filter = value;
+         phrasesView.Refresh();
+         RaisePropertyChanged("Filter");
+      }
+   }
+}&lt;/pre&gt;
+&lt;p&gt;And that's all there is to it. It can be kept nicely encapsulated within the ViewModel without the need for any code-behind in the view.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/list-filtering-in-wpf-with-m-v-vm-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="List filtering in WPF" border="0" alt="List filtering in WPF" src="/posts/files/list-filtering-in-wpf-with-m-v-vm-1.png" width="470" height="304"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>XAML</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0609e5fc-cd6f-4295-a866-9d5df8e99bec">
+      <author>Faye</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05168761358573346927</website>
+      <ip />
+      <userAgent />
+      <date>2010-07-29 22:01:54</date>
+      <content>How do you get the listbox to refresh?  I put the code in like you have and I see that it is filtering but doesnt show the new data?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="73823d30-7fd3-4ef7-95da-c5f9f274e42f">
+      <author>Faye</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05168761358573346927</website>
+      <ip />
+      <userAgent />
+      <date>2010-07-29 22:02:44</date>
+      <content>How does the listbox get refreshed. I have it where I see that the data is filtered but it doesnt display the new filtered data?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="29f07f36-b79a-45f4-aae3-f3f0c2cf1c1d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-08-11 13:43:01</date>
+      <content>see the code fragment above: phrasesView.Refresh</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8584e9c1-4271-40f1-aeef-79d64f31bdd4">
+      <author>Sander</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-12-19 16:35:09</date>
+      <content>Very useful for my project. Thank you!</content>
+    </comment>
+  </comments>
+</post>

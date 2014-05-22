@@ -1,0 +1,257 @@
+<post>
+  <title>Understanding and Avoiding Memory Leaks with Event Handlers and Event Aggregators</title>
+  <slug>understanding-and-avoiding-memory-leaks</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-10-19 14:16:00</pubDate>
+  <lastModified>2012-10-19 14:16:33</lastModified>
+  <content>&lt;p&gt;If you subscribe to an event in C# and forget to unsubscribe, does it cause a memory leak? Always? Never? Or only in special circumstances? Maybe we should make it our practice to always unsubscribe just in case there is a problem. But then again, the Visual Studio designer generated code doesn’t bother to unsubscribe, so surely that means it doesn’t matter?.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;updater.Finished += new EventHandler(OnUpdaterFinished);
+updater.Begin();
+
+...
+
+// is this important? do we have to unsubscribe?
+updater.Finished -= new EventHandler(OnUpdaterFinished);
+&lt;/pre&gt;
+&lt;p&gt;Fortunately it is quite easy to see for ourselves whether any memory is leaked when we forget to unsubscribe. Let’s create a simple Windows Forms application that creates lots of objects, and subscribe to an event on each of the objects, without bothering to unsubscribe. To make life easier for ourselves, we’ll keep count of how many get created, and how many get deleted by the garbage collector, by reducing a count in their finalizer, which the garbage collector will call. &lt;/p&gt;
+&lt;p&gt;Here’s the object we’ll be creating lots of instances of:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class ShortLivedEventRaiser
+{
+    public static int Count;
+    
+    public event EventHandler OnSomething;
+
+    public ShortLivedEventRaiser()
+    {
+        Interlocked.Increment(ref Count);
+    }
+
+    protected void RaiseOnSomething(EventArgs e)
+    {
+        EventHandler handler = OnSomething;
+        if (handler != null) handler(this, e);
+    }
+
+    ~ShortLivedEventRaiser()
+    {
+        Interlocked.Decrement(ref Count);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;and here’s the code we’ll use to test it:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private void OnSubscribeToShortlivedObjectsClick(object sender, EventArgs e)
+{
+    int count = 10000;
+    for (int n = 0; n &amp;lt; count; n++)
+    {
+        var shortlived = new ShortLivedEventRaiser();
+        shortlived.OnSomething += ShortlivedOnOnSomething;
+    }
+    shortlivedEventRaiserCreated += count;
+}
+
+private void ShortlivedOnOnSomething(object sender, EventArgs eventArgs)
+{
+    // just to prove that there is no smoke and mirrors, our event handler will do something involving the form
+    Text = "Got an event from a short-lived event raiser";
+}
+&lt;/pre&gt;
+&lt;p&gt;I’ve added a background timer on the form, which reports every second how many instances are still in memory. I also added a garbage collect button, to force the garbage collector to do a full collect on demand.&lt;/p&gt;
+&lt;p&gt;So we click our button a few times to create 80,000 objects, and quite soon after we see the garbage collector run and reduce the object count. It doesn’t delete all of them, but this is not because we have a memory leak. It is simply that the garbage collector doesn’t always do a full collection. If we press our garbage collect button, we’ll see that the number of objects we created drops down to 0. So no memory leaks! We didn’t unsubscribe and there was nothing to worry about.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/understanding-and-avoiding-memory-leaks-1.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/understanding-and-avoiding-memory-leaks-1.png" width="357" height="36"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;But let’s try something different. Instead of subscribing to an event on my 80,000 objects, I’ll let them subscribe to an event on my Form. Now when we click our button eight times to create 80,000 of these objects, we see that the number in memory stays at 80,000. We can click the Garbage Collect button as many times as we want, and the number won’t go down. We’ve got a memory leak!&lt;/p&gt;
+&lt;p&gt;Here’s the second class:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class ShortLivedEventSubscriber
+{
+    public static int Count;
+
+    public string LatestText { get; private set; }
+
+    public ShortLivedEventSubscriber(Control c)
+    {
+        Interlocked.Increment(ref Count);
+        c.TextChanged += OnTextChanged;
+    }
+
+    private void OnTextChanged(object sender, EventArgs eventArgs)
+    {
+        LatestText = ((Control) sender).Text;
+    }
+
+    ~ShortLivedEventSubscriber()
+    {
+        Interlocked.Decrement(ref Count);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;and the code that creates instances of it:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private void OnShortlivedEventSubscribersClick(object sender, EventArgs e)
+{
+    int count = 10000;
+    for (int n = 0; n &amp;lt; count; n++)
+    {
+        var shortlived2 = new ShortLivedEventSubscriber(this);
+    }
+    shortlivedEventSubscriberCreated += count;
+}
+&lt;/pre&gt;
+&lt;p&gt;and here’s the result:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/understanding-and-avoiding-memory-leaks-2.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/understanding-and-avoiding-memory-leaks-2.png" width="375" height="71"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;So why does this leak, when the first doesn’t? The answer is that &lt;strong&gt;event publishers keep their subscribers alive&lt;/strong&gt;. If the publisher is short-lived compared to the subscriber, this doesn’t matter. But if the publisher lives on for the life-time of the application, then every subscriber will also be kept alive. In our first example, the 80,000 objects were the publishers, and they were keeping the main form alive. But it didn’t matter because our main form was supposed to be still alive. But in the second example, the main form was the publisher, and it kept all 80,000 of its subscribers alive, long after we stopped caring about them.&lt;/p&gt;
+&lt;p&gt;The reason for this is that under the hood, the .NET events model is simply an implementation of the observer pattern. In the observer pattern, anyone who wants to “observe” an event registers with the class that raises the event. It keeps hold of a list of observers, allowing it to call each one in turn when the event occurs. So the observed class holds references to all its observers.&lt;/p&gt;
+&lt;h3&gt;What does this mean?&lt;/h3&gt;
+&lt;p&gt;The good news is that in a lot of cases, you are subscribing to an event raised by an object whose lifetime is equal or shorter than that of the subscribing class. That’s why a Windows Forms or WPF control can subscribe to events raised by child controls without the need to unsubscribe, since those child controls will not live beyond the lifetime of their container.&lt;/p&gt;
+&lt;p&gt;When it goes wrong is when you have a class that will exist for the lifetime of your application, raising events whose subscribers were supposed to be transitory. Imagine your application has a order service which allows you to submit new orders and also has an event that is raised whenever an order’s status changes.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;orderService.SubmitOrder(order);
+// get notified if an order status is changed
+orderService.OrderStatusChanged += OnOrderStatusChanged;
+
+&lt;/pre&gt;
+&lt;p&gt;Now this could well cause a memory leak, as whatever class contains the OnOrderStatusChanged event handler will be kept alive for the duration of the application run. And it will also keep alive any objects it holds references to, resulting in a potentially large memory leak. This means that if you subscribe to an event raised by a long-lived service, you must remember to unsubscribe.&lt;/p&gt;
+&lt;h3&gt;What about Event Aggregators?&lt;/h3&gt;
+&lt;p&gt;Event aggregators offer an alternative to traditional C# events, with the additional benefit of completely decoupling the publisher and subscribers of events. Anyone who can access the event aggregator can publish an event onto it, and it can be subscribed to from anyone else with access to the event aggregator.&lt;/p&gt;
+&lt;p&gt;But are event aggregators subject to memory leaks? Do they leak in the same way that regular event handlers do, or do the rules change? We can test this out for ourselves, using the same approach as before.&lt;/p&gt;
+&lt;p&gt;For this example, I’ll be using an extremely elegant &lt;a href="http://joseoncode.com/2010/04/29/event-aggregator-with-reactive-extensions/"&gt;event aggregator&lt;/a&gt; built by José Romaniello using Reactive Extensions. The whole thing is implemented in about a dozen of code thanks to the power of the Rx framework.&lt;/p&gt;
+&lt;p&gt;First, we’ll simulate many short-lived publishers with a single long-lived subscriber (our main form). Here’s our short-lived publisher object:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class ShortLivedEventPublisher
+{
+    public static int Count;
+    private readonly IEventPublisher publisher;
+
+    public ShortLivedEventPublisher(IEventPublisher publisher)
+    {
+        this.publisher = publisher;
+        Interlocked.Increment(ref Count);
+    }
+
+    public void PublishSomething()
+    {
+        publisher.Publish("Hello world");
+    }
+
+    ~ShortLivedEventPublisher()
+    {
+        Interlocked.Decrement(ref Count);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;And we’ll also try many short-lived subscribers with a single long-lived publisher (our main form):&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class ShortLivedEventBusSubscriber
+{
+    public static int Count;
+    public string LatestMessage { get; private set; }
+
+    public ShortLivedEventBusSubscriber(IEventPublisher publisher)
+    {
+        Interlocked.Increment(ref Count);
+        publisher.GetEvent&amp;lt;string&amp;gt;().Subscribe(s =&amp;gt; LatestMessage = s);
+    }
+
+    ~ShortLivedEventBusSubscriber()
+    {
+        Interlocked.Decrement(ref Count);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;What happens when we create thousands of each of these objects?&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/understanding-and-avoiding-memory-leaks-3.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/understanding-and-avoiding-memory-leaks-3.png" width="374" height="61"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;We have exactly the same memory leak again – publishers can be garbage collected, but subscribers are kept alive. Using an event aggregator hasn’t made the problem any better or worse. Event aggregators should be chosen for the architectural benefits they offer rather than as a way to fix your memory management problems (although as we shall see shortly, they encapsulate one possible fix).&lt;/p&gt;
+&lt;h3&gt;How can I avoid memory leaks?&lt;/h3&gt;
+&lt;p&gt;So how can we write event-driven code in a way that will never leak memory? There are two main approaches you can take. &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. Always remember to unsubscribe if you are a short-lived object subscribing to an event from a long-lived object.&lt;/strong&gt; The C# language support for events is less than ideal. The C# language offers the += and -= operators for subscribing and unsubscribing, but this can be quite confusing.Here’s how you would unsubscribe from a button click handler…&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;button.Clicked += new EventHandler(OnButtonClicked)
+...
+button.Clicked –= new EventHandler(OnButtonClicked)
+&lt;/pre&gt;
+&lt;p&gt;It’s confusing because the object we unsubscribe with is clearly a different object to the one we subscribed with, but under the hood .NET works out the right thing to do. But if you are using the lambda syntax, it is a lot less clear what goes on the right hand side of the –= (see &lt;a href="http://stackoverflow.com/questions/5274987/unsubscribe-lambda-event-handler-with-closure"&gt;this stack overflow question&lt;/a&gt; for more info). You don’t exactly want to keep trying to replicate the same lambda statement in two places. &lt;/p&gt;&lt;pre class="brush: csharp;"&gt;button.Clicked += (sender, args) =&amp;gt; MessageBox.Show(“Button was clicked”);
+// how to unsubscribe?
+&lt;/pre&gt;
+&lt;p&gt;This is where event aggregators can offer a slightly nicer experience. They will typically have an “unregister” or an “unsubscribe” method. The Rx version I used above returns an IDisposable object when you call subscribe. I like this approach as it means you can either use it in a using block, or store the returned value as a class member, and make your class Disposable too, implementing the standard .NET practice for resource cleanup and flagging up to users of your class that it needs to be disposed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. Use weak references.&lt;/strong&gt; But what if you don’t trust yourself, or your fellow developers to always remember to unsubscribe? Is there another solution? The answer is yes, you can use weak references. A &lt;a href="http://msdn.microsoft.com/en-us/library/system.weakreference.aspx"&gt;weak reference&lt;/a&gt; holds a reference to a .NET object, but allows the garbage collector to delete it if there are no other regular references to it. &lt;/p&gt;
+&lt;p align="left"&gt;The trouble is, how do you attach a weak event handler to a regular .NET event? The answer is, with great difficulty, although some clever people have come up with &lt;a href="http://stackoverflow.com/questions/1747235/weak-event-handler-model-for-use-with-lambdas"&gt;ingenious ways of doing this&lt;/a&gt;. Event aggregators have an advantage here in that they can offer weak references as a feature if wanted, hiding the complexity of working with weak references from the end user. For example, the “Messenger” class that comes with &lt;a href="http://mvvmlight.codeplex.com/"&gt;MVVM Light&lt;/a&gt; uses weak references.&lt;/p&gt;
+&lt;p&gt;So for my final test, I’ll make an event aggregator that uses weak references. I could try to update the Rx version, but to keep things simple, I’ll just make my own basic (and not threadsafe) event aggregator using weak references. Here’s the code:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class WeakEventAggregator
+{
+    class WeakAction
+    {
+        private WeakReference weakReference;
+        public WeakAction(object action)
+        {
+            weakReference = new WeakReference(action);
+        }
+
+        public bool IsAlive
+        {
+            get { return weakReference.IsAlive; }
+        }
+
+        public void Execute&amp;lt;TEvent&amp;gt;(TEvent param)
+        {
+            var action = (Action&amp;lt;TEvent&amp;gt;) weakReference.Target;
+            action.Invoke(param);
+        }
+    }
+
+    private readonly ConcurrentDictionary&amp;lt;Type, List&amp;lt;WeakAction&amp;gt;&amp;gt; subscriptions
+        = new ConcurrentDictionary&amp;lt;Type, List&amp;lt;WeakAction&amp;gt;&amp;gt;();
+
+    public void Subscribe&amp;lt;TEvent&amp;gt;(Action&amp;lt;TEvent&amp;gt; action)
+    {
+        var subscribers = subscriptions.GetOrAdd(typeof (TEvent), t =&amp;gt; new List&amp;lt;WeakAction&amp;gt;());
+        subscribers.Add(new WeakAction(action));
+    }
+
+    public void Publish&amp;lt;TEvent&amp;gt;(TEvent sampleEvent)
+    {
+        List&amp;lt;WeakAction&amp;gt; subscribers;
+        if (subscriptions.TryGetValue(typeof(TEvent), out subscribers))
+        {
+            subscribers.RemoveAll(x =&amp;gt; !x.IsAlive);
+            subscribers.ForEach(x =&amp;gt; x.Execute&amp;lt;TEvent&amp;gt;(sampleEvent));
+        }
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;Now let’s see if it works by creating some short-lived subscribers that subscribe to events on the WeakEventAggregator. Here are the objects, we’ll be using in this last example:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public class ShortLivedWeakEventSubscriber
+{
+    public static int Count;
+    public string LatestMessage { get; private set; }
+
+    public ShortLivedWeakEventSubscriber(WeakEventAggregator weakEventAggregator)
+    {
+        Interlocked.Increment(ref Count);
+        weakEventAggregator.Subscribe&amp;lt;string&amp;gt;(OnMessageReceived);
+    }
+
+    private void OnMessageReceived(string s)
+    {
+        LatestMessage = s;
+    }
+
+    ~ShortLivedWeakEventSubscriber()
+    {
+        Interlocked.Decrement(ref Count);
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;And we create another 80,000, do a garbage collect, and finally we can have event subscribers that don’t leak memory:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/understanding-and-avoiding-memory-leaks-4.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/understanding-and-avoiding-memory-leaks-4.png" width="356" height="33"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;My example application is available for &lt;a href="https://bitbucket.org/markheath/eventmemoryleakexample/overview"&gt;download on BitBucket&lt;/a&gt; if you want &lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/understanding-and-avoiding-memory-leaks-5.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/understanding-and-avoiding-memory-leaks-5.png" width="412" height="231"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;Although many (possibly most) use cases of events do not leak memory, it is important for all .NET developers to understand the circumstances in which they might leak memory. I’m not sure there is a single “best practice” for avoiding memory leaks. In many cases, simply remembering to unsubscribe when you are finished wanting to receive messages is the right thing to do. But if you are using an event aggregator you’ll be able to take advantage of the benefits of weak references quite easily.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b3f29fe7-d7f5-4487-9d72-87ca6b1dd524">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-01-14 20:43:44</date>
+      <content>Which VS version your sln and csproj files belong to? I am trying to open it with VS 2010 and getting compatibility errors. &lt;br /&gt;- John</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="82b52c47-bb11-4df4-90db-d40104f74d89">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-01-15 16:48:01</date>
+      <content>might be VS2012, although you should be able to load the csproj files into VS2010. I don&amp;#39;t think I was using .NET 4.5</content>
+    </comment>
+  </comments>
+</post>

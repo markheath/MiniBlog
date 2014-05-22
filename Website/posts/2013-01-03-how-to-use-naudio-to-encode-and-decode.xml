@@ -1,0 +1,13 @@
+<post>
+  <title>How to use NAudio to encode and decode audio files</title>
+  <slug>how-to-use-naudio-to-encode-and-decode</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-01-03 18:45:00</pubDate>
+  <lastModified>2013-01-03 18:45:00</lastModified>
+  <content>&lt;p&gt;Last month I wrote &lt;a href="http://www.codeproject.com/Articles/501521/How-to-convert-between-most-audio-formats-in-NET"&gt;an article on CodeProject&lt;/a&gt; explaining how you can use &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; to encode or decode audio in any format for which you have a codec. I’m linking to it here, as it’s one of the topics I get asked about regularly. If you want to know how to decode or encode MP3, WMA, AAC, GSM, a-law or any other formats, then head over there. The article includes a lot of background information that will help you understand why some conversions can’t be done in a single step. I wrote it to give me something to point people to when they have questions about various encoding or decoding tasks with NAudio.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments />
+</post>

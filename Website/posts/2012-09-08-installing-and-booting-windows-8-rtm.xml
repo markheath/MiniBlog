@@ -1,0 +1,67 @@
+<post>
+  <title>Installing and Booting Windows 8 RTM off a VHD (Virtual Hard Disk)</title>
+  <slug>installing-and-booting-windows-8-rtm</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-09-08 19:04:00</pubDate>
+  <lastModified>2012-09-10 16:09:06</lastModified>
+  <content>I discovered this week that simply having Visual Studio 2012 is not enough to write WinRT applications (Metro/Windows Store apps); you also need to have Windows 8 as your Operating System. Although the RTM Windows 8 is available now from MSDN, I’m not quite ready yet to switch my main laptop over to it, so a virtual machine is the way forward. Unfortunately though, Windows Virtual PC refuses to install Windows 8 and while &lt;a href="https://www.virtualbox.org/"&gt;Oracle VirtualBox&lt;/a&gt; can run it, performance isn’t exactly brilliant.&lt;br&gt;
+&lt;br&gt;
+Fortunately, about a year ago, Scott Hanselman wrote &lt;a href="http://www.hanselman.com/blog/GuideToInstallingAndBootingWindows8DeveloperPreviewOffAVHDVirtualHardDisk.aspx"&gt;a brilliant blog post&lt;/a&gt; describing how to use the boot to VHD functionality in Windows 7 to install Windows 8 as an alternative boot option, only running off a VHD you create. I was too nervous to try this out when he originally posted it, but I finally plucked up the courage and did my first Win 8 booting from VHD install today.&lt;br&gt;
+&lt;br&gt;
+The instructions Scott gives are for the Windows 8 developer preview, so I thought I’d briefly review the steps, noting a couple of very small differences for the RTM and a few other things I noticed along the way:&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 1&lt;/b&gt; – Create a bootable USB stick&lt;br&gt;
+The instructions in Scott Hanselman’s post are very easy to follow if you have the Win 8 RTM ISO. Just download the utility and away you go. The space requirements are smaller – you should be able to get away with a 4GB USB stick, although I used a 16GB one.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 2&lt;/b&gt; – Make a VHD&lt;br&gt;
+This is nice and easy using the “Disk Management” tool in Windows (or follow Scott’s instructions to use the DISKPART command-line). I went for an 80GB dynamically expanding VHD.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 3 &lt;/b&gt;– Write stuff down&lt;br&gt;
+Remember exactly where you put that VHD, and you might also want to have a Windows 8 product key handy. You’ll probably need a bunch of other passwords too, most notably your Windows Live one, and your wireless network.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 4 &lt;/b&gt;– Boot from the USB stick&lt;br&gt;
+Scott says F12 is the key you need to press to select a boot device, and it worked for me on my DELL XPS laptop.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 5 – &lt;/b&gt;Select new install&lt;br&gt;
+The Windows 8 RTM setup offers an upgrade option that the developer preview didn’t, so you need to say that you are doing a fresh install.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 6 – &lt;/b&gt;Attach the VHD within setup&lt;br&gt;
+Scott’s instructions are very good here. The keyboard shortcut you need to remember to get to a command prompt is Shift-F10. The other thing I noticed was that my Win 7 C drive was actually called the E drive, so if you have multiple disk partitions, find out which one your VHD is in before using DISKPART.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 7 – &lt;/b&gt;Select the VHD partition to install to&lt;br&gt;
+After you have refreshed the list of available partitions to install to, your VHD ought to be obvious (e.g. mine was the 80GB one), but take great care that you choose the right one. Scott’s instructions say that you will get a warning message before you proceed, but I didn’t, leaving me worried that I might have chosen the wrong one!&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 8&lt;/b&gt; – Let it reboot and finish setting up Windows 8&lt;br&gt;
+The process creates a very nice looking new boot menu when your computer starts up, which Scott shows screenshots of. This gives me the choice between Windows 8 and 7. Windows 8 is set the default, but you get to change the defaults if you like, so I set mine back to default to Win 7. &lt;b&gt;Update&lt;/b&gt;: After a few reboots, my computer has switched back to using the boring Windows 7 text based boot menu. I'm not quite sure why this happened, but possibly was after I had a audio driver crash in Windows 7.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 9 &lt;/b&gt;– Accessing data between Win 7 and Win 8&lt;br&gt;
+One nice thing is that when you boot from the VHD, your Windows 7 drive containing the VHD gets mounted as a drive within Windows 8, making it easy to access any data (although you do need to let it change the folder permissions to look into your User folder). And vice-versa, on Win 7 you can easily use the Disk Management tool to mount the Windows 8 VHD and copy files on or off it as you wish.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Step 10 – &lt;/b&gt;Cleaning up&lt;br&gt;
+This is the step I haven’t done yet, but probably at some point I will decide I don’t want to use this VHD anymore. Obviously you wouldn’t want to just delete the VHD as you’d end up with an entry in your boot menu that won’t work anymore. Hopefully there is a way to take the Win 8 VHD out of the boot menu. I’ll update this blog post with a link if I find instructions somewhere.&lt;br&gt;
+From beginning to end, the process of setting up my laptop to boot to Win 8 from a VHD took me just over an hour, and I would recommend it to anyone wanting to get started with Win 8 development.</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Windows 8</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c11efdd8-fd31-42ab-a91c-cd9897ad29dd">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2012-09-08 19:41:42</date>
+      <content>To remove your VHD from the boot path, use bcdedit or EasyBCD to remove the boot entry, then delete the vhd file.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4b6cc90e-cb0c-4566-a6c8-1432c7fe6f44">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-09-08 20:56:29</date>
+      <content>thanks anonymous, was hoping I might get a comment with the answer, but wasn&amp;#39;t expecting one quite this quick ;)</content>
+    </comment>
+  </comments>
+</post>

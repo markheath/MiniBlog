@@ -1,0 +1,32 @@
+<post>
+  <title>Announcing “Audio Programming with NAudio”</title>
+  <slug>announcing-audio-programming-with-naudio</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-11-04 22:26:00</pubDate>
+  <lastModified>2013-11-04 22:26:26</lastModified>
+  <content>&lt;p&gt;I’m really excited to announce the release of my latest Pluralsight course “&lt;a href="http://pluralsight.com/training/Courses/Discussion/audio-programming-naudio"&gt;Audio Programming with NAudio&lt;/a&gt;”. This is the follow-on course to my introductory “&lt;a href="http://pluralsight.com/training/Courses/TableOfContents/digital-audio-fundamentals"&gt;Digital Audio Fundamentals&lt;/a&gt;” course, and is intended to give a thorough and systematic run-through of how to use all the major features of NAudio. &lt;/p&gt; &lt;p&gt;The modules are as follows:&lt;/p&gt; &lt;ul&gt; &lt;li&gt;&lt;strong&gt;Introducing NAudio&lt;/strong&gt; in which I go through all the things you can find in NAudio, and explain what the demo applications do as well. This module also introduces the three base classes/interfaces for all signal chain components in NAudio (IWaveProvider, WaveStream and ISampleProvider), which are crucial to understanding how to work with NAudio.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Audio File Playback &lt;/strong&gt;explains how to decide which of NAudio’s playback classes you should use, and how they are configured. I cover lots of important playback related tasks such as how to change volume, reposition, and even how to stop (yes, that can require more thought than you might imagine).&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Working with Files&lt;/strong&gt; deals with the various file readers in NAudio, as well as showing how to create wave files with WaveFileWriter.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Changing Audio Formats&lt;/strong&gt; might seem longwinded and a bit boring, but is actually one of the most important modules in the course. It explains how to change the sample rate, bit depth and channel count of PCM audio. This is something that you need to do regularly when dealing with sampled audio, and there are lots of different approaches you can take.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Working with Codecs&lt;/strong&gt; explains how you can use the ACM and MediaFoundation codecs on your computer, and also gives a couple of other techniques for working with codecs that you might find helpful.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Recording Audio&lt;/strong&gt; shows how to use the various NAudio recording classes, including loopback capture, and a brief demo of high performance low level capture using ASIO.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Visualizations&lt;/strong&gt; is not really about NAudio, but gives some useful strategies for creating peak meters, waveform displays and spectrum analyzers in both WinForms and WPF. I included it because this is something lots of NAudio users wanted to know how to do.&lt;/li&gt; &lt;li&gt;&lt;strong&gt;Mixing and Effects&lt;/strong&gt; is probably my favourite module in the course. To show how to do mixing and effects I create a software piano, and turn it into a software synthesizer. &lt;/li&gt; &lt;li&gt;&lt;strong&gt;Audio Streaming&lt;/strong&gt; covers another topic that NAudio doesn’t directly address, but that lots of NAudio users are interested in. This module shows how you can implement playback of streaming media, and how you would go about creating a network chat application. &lt;/li&gt;&lt;/ul&gt; &lt;p&gt;I really hope that everyone planning to create a serious application with NAudio will take the time to watch this course (and the previous one if necessary). You’ll find you will be a lot more productive once you know the basics of digital audio, and understand the design philosophy behind the NAudio library. &lt;/p&gt; &lt;p&gt;I know Pluralsight is not free, but receiving some financial compensation for the time I put into this course enabled me to spend a lot more time on it than I would have been able to otherwise. The Pluralsight library is ridiculously well stocked with courses on all kinds of development technologies and practices, so you can’t fail to get good value for the monthly subscription fee. Having said that, please be assured that I remain committed to provide good training materials on NAudio, and I plan to keep blogging and updating the main site with more documentation.&lt;/p&gt; &lt;p&gt;I have actually reached the point with NAudio that I am getting far more requests for help than I can keep up with. I’m averaging 10 questions/emails per day, and so if I miss even a few days I get hopelessly behind. If I’ve failed to answer your question, please accept my apologies, and part of the goal in creating this course is having something I can point people to. So if I answer your question with a link to this course, please don’t be offended.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="69ddde28-ece4-4258-883c-710d7c07e8c9">
+      <author>Timo S.</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16464409079311222905</website>
+      <ip />
+      <userAgent />
+      <date>2013-12-09 18:48:30</date>
+      <content>Hello,&lt;br /&gt;Is it possible to change the pitch if a sound with NAudio?&lt;br /&gt;&lt;br /&gt;Best Regards&lt;br /&gt;Timo S</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5be383b2-c6a5-45d7-bdd2-a9b70142d6dd">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-12-09 19:04:16</date>
+      <content>yes, although NAudio does not include a pitch shifting effect. My Pluralsight code includes a demo of how to do this</content>
+    </comment>
+  </comments>
+</post>

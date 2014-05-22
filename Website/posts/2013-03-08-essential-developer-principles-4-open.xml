@@ -1,0 +1,24 @@
+<post>
+  <title>Essential Developer Principles #4 – Open Closed Principle</title>
+  <slug>essential-developer-principles-4-open</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-03-08 11:47:00</pubDate>
+  <lastModified>2013-03-08 11:47:41</lastModified>
+  <content>&lt;p&gt;The “Open Closed Principle” is usually summarised as code should be “open to extension” but “closed to modification”. The way I often express it is that when I am adding a new feature to an application, I want to as much as possible be writing new code, rather than changing existing code.  &lt;p&gt;However, I noticed there has been some &lt;a href="https://twitter.com/jonskeet/status/309911260701552640"&gt;pushback&lt;/a&gt; on this concept from none other than the legendary Jon Skeet. His objection seems to be based on the understanding that OCP dictates that you should never change existing code. And I agree; that would be ridiculous. It would encourage an approach to writing code where you added extensibility points at every conceivable juncture – all methods virtual, events firing before and after everything, XML configuration allowing any class to be swapped out, etc, etc. Clearly this would lead to code so flexible that no one could work out what it was supposed to do. It would also violate another well-established principle – YAGNI (You ain’t gonna need it). I (usually) don’t know in advance in what way I’ll need to extend my system, so why complicate matters by adding numerous extensibility points that will never be used (or more likely, still need to be modified before they can be used)? &lt;p&gt;So in a nutshell, here’s my take on OCP. When I’m writing the initial version of my code, I simply focus on writing clean maintainable code, and don’t add extensibility points unless I know for sure they are needed for an upcoming feature. (so yes, I write code that doesn’t &lt;i&gt;yet&lt;/i&gt; adhere to OCP). &lt;p&gt;But when I add a new feature that requires a modification to that original code, instead of just sticking all the new code in there alongside the old, I refactor the original class to add the extensibility points I need. Then the new feature can be added in an isolated way, without adding additional responsibilities to the original class. The benefit of this approach is that you get extensibility points that are actually useful (because they are being used), and they are more likely to enable further new features in the future. &lt;p&gt;OCP encourages you to make your classes extensible, but doesn’t stipulate how you do so. Here’s some of the most common techniques: &lt;ul&gt; &lt;li&gt;Pass dependencies as interfaces into your class allowing callers to provide their own implementations&lt;/li&gt; &lt;li&gt;Add events to your class to allow people to hook in and insert steps into the process&lt;/li&gt; &lt;li&gt;Make your class suitable as a base class with appropriate virtual methods and protected fields&lt;/li&gt; &lt;li&gt;Create a “plug-in” architecture which can discover plugins using reflection or configuration files&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;It is clear that OCP is in fact very closely related to SRP (Single Responsibility Principle). Violations of OCP result in violations of SRP. If you can’t extend the class from outside, you will end up sticking more and more code inside the class, resulting in an ever-growing list of responsibilities. &lt;p&gt;In summary, for me OCP shouldn’t mean you’re not allowed to change any code after writing it. Rather, it’s about &lt;i&gt;how&lt;/i&gt; you change it when a new feature comes along. First, refactor to make it extensible, then extend it. Or to put it another way that I’ve &lt;a href="/post/mitigating-merge-headaches"&gt;said before&lt;/a&gt; on this blog, “the only real reasons to change the existing code are to fix bugs, and to make it more extensible”.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Open Closed Principle</category>
+    <category>Developer Principles</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="f3b98d1f-de1c-400c-8cb7-369ffbff3d34">
+      <author>Power Cords</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.americord.com/</website>
+      <ip />
+      <userAgent />
+      <date>2013-03-12 10:24:49</date>
+      <content>OCP... I never heard it before but I believe that if any developer follow your described principles then he can be a successful developer in the market.</content>
+    </comment>
+  </comments>
+</post>

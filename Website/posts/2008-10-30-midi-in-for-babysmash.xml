@@ -1,0 +1,137 @@
+<post>
+  <title>MIDI In for BabySmash</title>
+  <slug>midi-in-for-babysmash</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-10-30 22:36:00</pubDate>
+  <lastModified>2010-10-05 13:50:16</lastModified>
+  <content>&lt;p&gt;I watched &lt;a href="http://www.hanselman.com/blog/"&gt;Scott Hanselman's&lt;/a&gt; &lt;a href="http://channel9.msdn.com/pdc2008/TL49/"&gt;presentation at the PDC&lt;/a&gt; on &lt;a href="http://www.hanselman.com/babysmash/"&gt;BabySmash&lt;/a&gt; this afternoon, and was very impressed both with the quality of his presentation skills as well as the sheer coolness of all the new technologies he was using.&lt;/p&gt;  
+
+&lt;p&gt;As I watched it, I thought to myself how easy it would be to add MIDI in to this application using the &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; open source .NET audio toolkit I have written. I downloaded the &lt;a href="http://www.codeplex.com/babysmash"&gt;BabySmash source code&lt;/a&gt; from CodePlex and it only took about 10 minutes for me to add MIDI in support.&lt;/p&gt;  
+
+&lt;p&gt;The first thing to do was to listen for MIDI in events on the default device. Thanks to NAudio, this is just a couple of lines of code, called after InitializeComponent.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp"&gt;private void StartMonitoringMidi()
+{
+    midiIn = new MidiIn(0); // default device
+    midiIn.MessageReceived += midiIn_MessageReceived;
+    midiIn.Start();
+}&lt;/pre&gt;
+
+&lt;p&gt;Next we needed to handle the MIDI in messages. I only care about NoteOn messages, and need to switch to the despatcher thread before interacting with the GUI:&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;void midiIn_MessageReceived(object sender, MidiInMessageEventArgs e)
+{
+    if (this.Dispatcher.Thread == Thread.CurrentThread)
+    {
+        NoteOnEvent noteOnEvent = e.MidiEvent as NoteOnEvent;
+        if (noteOnEvent != null)
+        {
+            controller.ProcessMidiNoteOn(this, noteOnEvent);
+        }
+    }
+    else
+    {
+        Dispatcher.BeginInvoke(new EventHandler&amp;lt;MidiInMessageEventArgs&amp;gt;
+            (midiIn_MessageReceived), sender, e);
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;The final step is for the new Controller method to somehow convert the note on event into something to be displayed. Obviously we could have lots of fun here, but for this initial demo I wanted to keep it really simple.&lt;/p&gt;
+
+&lt;pre class="brush: csharp"&gt;public void ProcessMidiNoteOn(FrameworkElement uie, NoteOnEvent noteOn)
+{
+    AddFigure(uie, new string((char)('A' + noteOn.NoteNumber - 30), 1));
+}&lt;/pre&gt;
+
+&lt;p&gt;And that's all there is to it. Less than 20 lines of code. Here's a brief video of me demonstrating it:&lt;/p&gt;
+
+&lt;p&gt;
+  &lt;div class="wlWriterSmartContent" id="scid:5737277B-5D6D-4f48-ABFC-DD9C333F4C5D:2ec488cb-4336-448e-99f5-2660988f29e0" style="padding-right: 0px; display: inline; padding-left: 0px; float: none; padding-bottom: 0px; margin: 0px; padding-top: 0px"&gt;&lt;div&gt;&lt;object width="425" height="355"&gt;&lt;param name="movie" value="http://www.youtube.com/v/TiI2AyT5sxA&amp;amp;hl=en&amp;amp;fs=1"&gt;&lt;param name="wmode" value="transparent"&gt;&lt;embed src="http://www.youtube.com/v/TiI2AyT5sxA&amp;amp;hl=en&amp;amp;fs=1" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"&gt;&lt;/object&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Some notes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The existing audio playback in BabySmash seems problematic and caused hanging on my laptop. I might see if I can replace it with the audio playback mechanism from NAudio. This would allow me to put some drum / musical sounds in and manage the number of concurrent sounds.&lt;/li&gt;
+
+  &lt;li&gt;I didn't change the graphics at all. I had hoped that the MEF plugin architecture demoed in the PDC talk would be there for me to create my own &amp;quot;SmashPack&amp;quot;, but it looks like that code hasn't made it onto CodePlex just yet. One advantage of MIDI in is that each input has a velocity (how hard you smashed it) as well as what note you hit. I would like to try out using colour or initial size to indicate velocity.&lt;/li&gt;
+
+  &lt;li&gt;BabySmash seemed to cope very well with the speed of new notes coming at it. It probably would feel a bit more responsive if the shapes appeared instantaneously rather than animating in.&lt;/li&gt;
+
+  &lt;li&gt;Apologies for the very poor sound quality on the video. I sound like I am speaking with a lisp, and the piano sounds dreadful. As for the drums, well the less said the better. I am not a drummer and there is something badly wrong when you can hear the sticks louder than the drum sounds themselves. &lt;/li&gt;
+
+  &lt;li&gt;Earlier this week two keys on my piano actually got &amp;quot;smashed&amp;quot; for real by one of my children, which means I have an expensive repair bill coming my way. There's no way I'm going to let any of them have a go at smashing on my laptop!&lt;/li&gt;
+
+  &lt;li&gt;Also apologies for the difficulty of seeing what's on the screen in the video. My laptop screen viewing angles aren't that great (and my cheap camera isn't exactly the greatest either, having suffered yet another &amp;quot;baby smash&amp;quot; incident of its own).&lt;/li&gt;
+&lt;/ul&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="df1e16a3-7498-472e-b263-e4ac1f859548">
+      <author>Scott</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.hanselman.com/blog/</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-01 06:12:00</date>
+      <content>Fantastic! I'll get the CodePlex code up this week. I love what you've done with it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="ab7659f9-d753-4f15-83de-781f968abc87">
+      <author>Sergey</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-23 11:57:53</date>
+      <content>Can you post full source in archive. I&amp;#39;m beginner... trying to connect naudio and XNA.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="36c2a74d-7205-44b1-a0bc-70f82f74827d">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-23 15:48:01</date>
+      <content>Hi Sergy, I&amp;#39;m afraid there is no more code than that (I no longer have the source available). Get the latest BabySmash code from CodePlex, and you should be able to add my code quite easily.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="395293e0-c8c0-4c10-a2c5-050bf690adbd">
+      <author>Sergey</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-11-23 16:06:05</date>
+      <content>Thx, buh I have a questions not in BabySmash.&lt;br /&gt;In XNA no GUIForms. I wanna connect dll only to catch MidiInput. Can&amp;#39;t understand Dispatcher, and how to connect Thread.&lt;br /&gt;If you have a time, make an example naudio + XNA (just like this - Letters on display).&lt;br /&gt;Biggy biggy thx.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="94febaf0-8355-439c-84eb-2850b2582898">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-24 09:44:51</date>
+      <content>Hi Sergey,&lt;br /&gt;I haven&amp;#39;t used NAudio with XNA before. You don&amp;#39;t need to use a Dispatcher though - that is just for WPF. You will need a window handle to process the message queue. Don&amp;#39;t know if that is possible with XNA?&lt;br /&gt;&lt;br /&gt;Mark</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="75cd1012-1687-4beb-8bc0-549d51c8121a">
+      <author>Wouter</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10868589970989174810</website>
+      <ip />
+      <userAgent />
+      <date>2010-08-02 12:52:45</date>
+      <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;is it possible to use the midi interface to map certain buttons in your app to the incoming midi?&lt;br /&gt;&lt;br /&gt;So let,s say I hit a button on my interface and then it runs the code of a button in my app.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f9d38f05-ac46-42c7-88d5-ca336da637ed">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-08-11 13:44:22</date>
+      <content>wouter - I don&amp;#39;t see why not although you would need to write the infrastructure code yourself</content>
+    </comment>
+  </comments>
+</post>

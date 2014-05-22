@@ -1,0 +1,96 @@
+<post>
+  <title>IronPython Codebreaker Katacast</title>
+  <slug>ironpython-codebreaker-katacast</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-09-28 07:42:00</pubDate>
+  <lastModified>2010-09-28 07:42:18</lastModified>
+  <content>&lt;p&gt;As promised I recorded a quick katacast of myself using the &lt;a href="/post/autotest-for-ironpython"&gt;IronPython continuous testing script&lt;/a&gt; I blogged about while I solve the codebreaker kata in Python. Don’t expect super fast coding or best practices – I’m still very much an IronPython newbie, but I have improved the solution slightly over my &lt;a href="/post/getting-started-with-ironpython"&gt;original offering&lt;/a&gt;. There were a few other refactorings I intended to make but I decided that 10 minutes was long enough.&lt;/p&gt;  &lt;p&gt;I’m afraid I haven’t dubbed any classical music onto the recording (it would be incongruous to combine beautiful music with my ugly code). I used Expression Encoder 3 for the screen recording – for some reason Expression Encoder 4 doesn’t work on my computer (makes the recorded area go white making it completely impossible to do anything). You may notice ValueError come up on occasions after I save. I still don't know what causes this, but I simply save again and IronPython successfully reloads and runs the tests. Sadly it looks like the aspect ratio has somehow got squashed in the process of uploading to Vimeo, but it’s still readable.&lt;/p&gt; &lt;iframe height="300" src="http://player.vimeo.com/video/15329417" frameborder="0" width="400"&gt;&lt;/iframe&gt;  &lt;p&gt;Here’s the code:&lt;/p&gt;  &lt;pre class="brush: py;"&gt;import unittest
+
+class MarkerTests(unittest.TestCase):
+    def testNoMatch(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xxxx')
+        self.assertEqual('', mark)
+
+    def testOneImperfectMatch(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xrxx')
+        self.assertEqual('m', mark)
+
+    def testTwoImperfectMatches(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xrgx')
+        self.assertEqual('mm', mark)
+
+    def testImperfectMatchNotDoubleCounted(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xrrx')
+        self.assertEqual('m', mark)
+
+    def testOnePerfectMatch(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xgxx')
+        self.assertEqual('p', mark)
+
+    def testOnePerfectOneImperfectMatch(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('xgxb')
+        self.assertEqual('pm', mark)
+
+    def testOnePerfectOnly(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('rrrr')
+        self.assertEqual('p', mark)
+
+    def testAllPerfect(self):
+        marker = Marker('rgby')
+        mark = marker.Mark('rgby')
+        self.assertEqual('pppp', mark)
+
+        
+class Marker:
+    def __init__(self, answer):
+        self.answer = answer
+        
+    def Mark(self, guess):
+        perfectMatches = self.CountPerfectMatches(guess)
+        anyPositionMatches = self.CountAnyPositionMatches(guess)
+        return perfectMatches * 'p' + (anyPositionMatches - perfectMatches) * 'm'
+        
+    def CountPerfectMatches(self, guess):
+        return sum([a == b for (a,b) in zip(guess, self.answer)])
+
+    def CountAnyPositionMatches(self, guess):
+        count = 0
+        answerList = list(self.answer)
+        for c in guess:
+            if c in answerList:
+                count += 1
+                answerList.remove(c)
+        return count&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>IronPython</category>
+    <category>Python</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0ad398db-e9b2-4890-8e16-b5aad2947671">
+      <author>Antonio Lucca</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13458215940711528728</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-27 12:33:43</date>
+      <content>Hi, have you seen this new F# version? http://www.vimeo.com/16177730</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c95e9732-c127-425d-b5df-7eab09df6745">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-27 12:47:40</date>
+      <content>@antonio - thanks for the link. I&amp;#39;ve yet to see anything done in F# that has really made me want to learn the language. I&amp;#39;ll see if this video helps</content>
+    </comment>
+  </comments>
+</post>

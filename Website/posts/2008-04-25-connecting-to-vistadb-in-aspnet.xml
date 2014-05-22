@@ -1,0 +1,47 @@
+<post>
+  <title>Connecting to VistaDB in ASP.NET</title>
+  <slug>connecting-to-vistadb-in-aspnet</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-25 07:23:00</pubDate>
+  <lastModified>2010-10-05 11:34:31</lastModified>
+  <content>&lt;p&gt;I have been looking at the &lt;a href="http://www.codeplex.com/aspnet"&gt;ASP.NET MVC extensions&lt;/a&gt; recently, and as a database for my test project, I decided to check out &lt;a href="http://www.vistadb.net/"&gt;VistaDB&lt;/a&gt;. &lt;strong&gt;VistaDB&lt;/strong&gt; is a fully managed lightweight alternative to SQL Server, and is available in a free express edition.&lt;/p&gt;  &lt;p&gt;The benefits of VistaDB are that it the SQL is compatible with SQL-Server, and you can deploy your database as a single file in your App_Data folder. This is a big benefit for me, as it makes backing up a site trivial. It comes with a reasonably well featured utility for you to explore and modify your vdb3 files.&lt;/p&gt;  &lt;p&gt;The only slight disappointment was the documentation was lacking a quickstart for absolute beginners, so it required a few google searches to get me up and running.&lt;/p&gt;  &lt;p&gt;To use VistaDB with your website:&lt;/p&gt;  &lt;ol&gt;   &lt;li&gt;Add references to &lt;strong&gt;VistaDB.NET20&lt;/strong&gt; and &lt;strong&gt;VistaDB.Web&lt;/strong&gt; (I also copied them to my bin folder, but I think VS would have done this automatically) &lt;/li&gt;    &lt;li&gt;Create a &lt;strong&gt;vdb3&lt;/strong&gt; file and put it in your App_Data folder &lt;/li&gt;    &lt;li&gt;Now you can open a connection and query it using code similar to the following: &lt;/li&gt; &lt;/ol&gt;  
+
+&lt;pre class="brush: csharp"&gt;string connectionString = "Data Source=|DataDirectory|\\Database.vdb3;Open Mode = NonexclusiveReadWrite;";
+
+using (VistaDBConnection connection = new VistaDBConnection(connectionString))
+{
+    connection.Open();
+    VistaDBCommand command = new VistaDBCommand("SELECT * FROM Posts", connection);
+    VistaDBDataReader reader = command.ExecuteReader();
+    while (reader.Read())
+    {
+        Post post = new Post
+        {
+            Body = (string)reader["Body"],
+            Author = (string)reader["AuthorName"],
+            Published = (DateTime)reader["PublishedDate"],
+            Status = (PublishStatus)reader["PublishState"],
+            Title = (string)reader["Title"]
+        };
+        yield return post;
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;And that was all there was to it. My next task is to work out how to use the VistaDB MembershipProvider, which is another area that is somewhat lacking in documentation. I'll post a how-to here once I have got things up and running.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET</category>
+    <category>VistaDB</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="6a0750be-7503-4d52-b638-03609c7a8f88">
+      <author>skii779</author>
+      <email>noreply@blogger.com</email>
+      <website>http://openid.aol.com/skii779</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-18 00:43:17</date>
+      <content>Try EffiPRoz Database (www.EffiProz.com).&lt;br /&gt;EffiProz is a database written entirely in C#. EffiProz has full-blown SQL support, including SQL Stored Procedures, Functions, and Triggers.  Ideal for embedding in .Net applications. Support Silverlight 3 and .Net compact framework as well.&lt;br /&gt;Comes with Visual Studio ad-in, ADO.Net provider, Entity Framework</content>
+    </comment>
+  </comments>
+</post>

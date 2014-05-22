@@ -1,0 +1,136 @@
+<post>
+  <title>Where are you going to put that code?</title>
+  <slug>where-are-you-going-to-put-that-code</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-07-02 14:07:00</pubDate>
+  <lastModified>2010-09-24 15:43:32</lastModified>
+  <content>&lt;p&gt;Often we want to modify existing software by inserting an additional step. Before we do operation X, we want to do operation Y. Consider a simple example of a &lt;strong&gt;LabelPrinter&lt;/strong&gt; class, with a &lt;strong&gt;Print&lt;/strong&gt; method. Suppose a new requirement has come in that before it prints a label for a customer in Sweden, it needs to do some kind of postal code transformation.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Approach 1 – Last Possible Moment&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;Most developers would immediately gravitate towards going to the &lt;strong&gt;Print&lt;/strong&gt; method, and putting their new code in there. This seems sensible – we run the new code at the last possible moment before performing the original task.&lt;/p&gt;  
+
+&lt;pre class="brush: csharp;"&gt;public void Print(LabelDetails labelDetails)
+{
+    if (labelDetails.Country == &amp;quot;Sweden&amp;quot;)
+    {
+        FixPostalCodeForSweden(labelDetails);
+    }
+    // do the actual printing....
+}&lt;/pre&gt;
+
+&lt;p&gt;Despite the fact that it works, this approach has several problems. We have broken the &lt;strong&gt;Single Responsibility Principle&lt;/strong&gt;. Our &lt;strong&gt;LabelPrinter&lt;/strong&gt; class now has an extra responsibility. If we allow ourselves to keep coding this way, before long, the &lt;strong&gt;Print &lt;/strong&gt;method will become a magnet for special case features:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public void Print(LabelDetails labelDetails)
+{
+    if (labelDetails.Country == &amp;quot;Sweden&amp;quot;)
+    {
+        FixPostalCodeForSweden(labelDetails);
+    }
+    if (printerType == &amp;quot;Serial Port Printer&amp;quot;)
+    {
+        if (!CanConnectToSerialPrinter())
+        {
+            MessageBox.Show(&amp;quot;Please attach the printer to COM1&amp;quot;);
+            return;
+        }
+    }
+    // do the actual printing....
+}&lt;/pre&gt;
+
+&lt;p&gt;And before we know it, we have a class where the original functionality is swamped with miscellaneous concerns. Worse still, it tends to become untestable, as bits of GUI code or hard dependencies on the file system etc creep in.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Approach 2 – Remember to Call This First&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Having seen that the &lt;strong&gt;LabelPrinter&lt;/strong&gt; class was not really the best place for our new code to be added, the fallback approach is typically to put the new code in the calling class &lt;em&gt;before &lt;/em&gt;it calls into the original method:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;private void DoPrint()
+{
+    LabelDetails details = GetLabelDetails();
+    // remember to call this first before calling Print
+    DoImportantStuffBeforePrinting(details);
+    // now we are ready to print
+    labelPrinter.Print(details);
+}&lt;/pre&gt;
+
+&lt;p&gt;This approach keeps our &lt;strong&gt;LabelPrinter &lt;/strong&gt;class free from picking up any extra responsibilities, but it comes at a cost. Now we have to remember to always call our &lt;strong&gt;DoImportantStuffBeforePrinting&lt;/strong&gt; method before anyone calls the &lt;strong&gt;LabelPrinter.Print&lt;/strong&gt; method. We have lost the guarantee we had with approach 1 that no one call call &lt;strong&gt;Print &lt;/strong&gt;without the pre-requisite tasks getting called.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Approach 3 – Open – Closed Principle&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;So where should our new code go? The answer is found in what is known as the “&lt;strong&gt;Open Closed Principle&lt;/strong&gt;”, which states that classes should be &lt;em&gt;closed for modification&lt;/em&gt;, but &lt;em&gt;open for extension&lt;/em&gt;. In other words, we want to make &lt;strong&gt;LabelPrinter &lt;/strong&gt;extensible, but not for it to change every time we come up with some new task that needs to be done before printing.&lt;/p&gt;
+
+&lt;p&gt;There are several ways this can be done including inheritance or the use of the facade pattern. I will just describe one of the simplest – using an event. In the &lt;strong&gt;LabelPrinter&lt;/strong&gt; class, we create a new &lt;strong&gt;BeforePrint&lt;/strong&gt; event. This will fire as soon as the &lt;strong&gt;Print&lt;/strong&gt; function is called. As part of its event arguments, it will have a &lt;strong&gt;CancelPrint&lt;/strong&gt; boolean flag to allow event handlers to request that the print is cancelled:&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;public void Print(LabelDetails labelDetails)
+{
+    if (BeforePrint != null)
+    {
+        var args = new BeforePrintEventArgs();
+        BeforePrint(this, args);
+        if (args.CancelPrint)
+        {
+            return;
+        }
+    }
+    // do the actual printing....
+}&lt;/pre&gt;
+
+&lt;p&gt;This approach means that our &lt;strong&gt;LabelPrinter &lt;/strong&gt;class keeps to its &lt;em&gt;single responsibility&lt;/em&gt; of printing labels (and thus remains maintainable and testable). It is now &lt;em&gt;open&lt;/em&gt; for any future enhancements that require an action to take place before printing.&lt;/p&gt;
+
+&lt;p&gt;There are a couple of things to watch out for with this approach. First, you would want to make sure that whenever a &lt;strong&gt;LabelPrinter &lt;/strong&gt;is created, all the appropriate events were hooked up (otherwise you run into the same problems as with approach 2). One solution would be to put a &lt;strong&gt;LabelPrinter &lt;/strong&gt;into your IoC container ready set up.&lt;/p&gt;
+
+&lt;p&gt;Another potential problem is the ordering of the event handlers. For example, checking if you have permission to print would make sense as the first operation. The simplest approach is to add the handlers in the right order.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Always think about &lt;em&gt;where&lt;/em&gt; you are putting the new code you write. Does it really belong there? Can you make a small modification to the class you want to change so that it is &lt;em&gt;extensible&lt;/em&gt;, and then implement your new feature as an extension to that class? If you do, you will not only keep the original code maintainable, but your new code is protected from accidental breakage, as it is isolated off in a class of its own.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Open Closed Principle</category>
+    <category>Software Development</category>
+    <category>Single Responsibility Principle</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="631dd0ef-aa2a-4a42-a3ba-65ffa3184fab">
+      <author>Hainesy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14064063520681427915</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-02 15:27:15</date>
+      <content>All good. Talking of events... I really like Udi Dahn&amp;#39;s take on Domain Events, it&amp;#39;s really elegant.&lt;br /&gt;&lt;br /&gt;http://www.udidahan.com/2009/06/14/domain-events-salvation/&lt;br /&gt;&lt;br /&gt;Could you see a similar approach working for your example?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3f44614b-6569-4897-a7b0-800d332d024a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-02 15:37:05</date>
+      <content>That&amp;#39;s a nice approach, and also very useful for a Command model for a client app. The only down-side is having to have all your objects able to get at the DomainEvents class (and running the risk of people raising events from innapropriate places). So I&amp;#39;m not sure I would want all my events to work in that way, but for the example I gave it would be a powerful approach. It would let you set up your event handlers before the LabelPrinter class was even created.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="e24e6d8c-e923-45f8-a426-0ecad91ebb4c">
+      <author>Hainesy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14064063520681427915</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-02 16:50:38</date>
+      <content>Taking this kind of approach then actually starts to look - albeit on a smaller scale - like a well built composite application, a la &amp;quot;prism&amp;quot; (http://msdn.microsoft.com/en-us/magazine/dd943055.aspx)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="296499d8-a7b4-4c4a-af1d-df69ed480f53">
+      <author>sjobak</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/13070497200526296018</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-03 09:55:27</date>
+      <content>I do like the idea of using events, better known as the observer pattern, to decouple objects. However you shouldn&amp;#39;t overdo it as it makes it more difficult to follow the control flow within your code. It may also lead to slightly more housekeeping where you need to take care to de-register the event handler from the event in order to prevent zombie objects eating up your memory.&lt;br /&gt;&lt;br /&gt;http://www.martinfowler.com/eaaDev/OrganizingPresentations.html#observer-gotchas</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b2c3c9e3-6567-42b0-b430-67e7826d378f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-07-03 10:31:02</date>
+      <content>thanks sjobak. Yes, the unsubscribing thing can be a problem if the object that raises the events is long-lived, and the objects that listen are short-lived.</content>
+    </comment>
+  </comments>
+</post>

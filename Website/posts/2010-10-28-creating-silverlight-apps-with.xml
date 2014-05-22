@@ -1,0 +1,80 @@
+<post>
+  <title>Creating Silverlight Apps with IronPython</title>
+  <slug>creating-silverlight-apps-with</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-28 14:36:00</pubDate>
+  <lastModified>2011-07-01 14:40:52</lastModified>
+  <content>&lt;p&gt;Using &lt;a href="http://ironpython.net"&gt;IronPython&lt;/a&gt; to create Silverlight applications is a little different from using C#. With C# you are building a &lt;strong&gt;.xap&lt;/strong&gt; file, which contains all the compiled code for your application. However, in IronPython, the recommended way is not to create a &lt;strong&gt;.xap&lt;/strong&gt; file at all. Instead you simply write Python script in your HTML page, or in &lt;strong&gt;.py &lt;/strong&gt;files hosted on your web server.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Getting Started&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The easiest way to get started is by using the latest IronPython (currently 2.7 beta 1) which comes with Visual Studio 2010 integration. This enables you to simply create a new “&lt;strong&gt;IronPython Silverlight Web Page&lt;/strong&gt;” project. However, don’t worry if you don’t have or want to use VS2010 – the process is almost the same without it.&lt;/p&gt; &lt;p&gt;When you create your new Silverlight project, it creates two files for you. The first is a simple HTML page:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&amp;gt;
+
+&amp;lt;html xmlns="http://www.w3.org/1999/xhtml"&amp;gt;
+&amp;lt;head&amp;gt;
+    &amp;lt;script type="text/javascript"&amp;gt;
+        window.DLR = { settings: { console: true } }
+    &amp;lt;/script&amp;gt;
+    &amp;lt;script src="http://gestalt.ironpython.net/dlr-latest.js" type="text/javascript"&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;title&amp;gt;SilverlightPage1&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+    &amp;lt;input id="Button1" type="button" value="Say, Hello!" /&amp;gt;
+    &amp;lt;script type="text/python" src="SilverlightPage1.py"&amp;gt;&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Including the DLR&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There are a few interesting points of note in the &lt;strong&gt;&amp;lt;head&amp;gt; &lt;/strong&gt;section of this page. First is the &lt;strong&gt;dlr-latest.js &lt;/strong&gt;script file. This is all that is needed to enable python (and xaml) scripting directly in HTML. The &lt;strong&gt;settings: { console: true }&lt;/strong&gt; section enables a very cool debugging feature in your web page, whereby you get an IronPython interactive interpreter that you can pop up from the bottom of your web page:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-silverlight-apps-with-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IronPython Interactive Interpreter" border="0" alt="IronPython Interactive Interpreter" src="/posts/files/creating-silverlight-apps-with-1.png" width="513" height="245"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Running a .py Script&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Then we have the Python script itself. The project template includes a Python file containing some basic code to subscribe to the button onclick event and show an alert.&lt;/p&gt;&lt;pre class="brush: py;"&gt;def SayHello(s,e):
+    window.Alert("Hello, World!")
+document.Button1.events.onclick += SayHello&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Embedding Python in the HTML&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;There is in fact no need for our Python script to be in a .py file if we don’t want to. We can put Python code directly in the HTML inside a &lt;strong&gt;&amp;lt;script&amp;gt;&lt;/strong&gt; block if we want:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;body&amp;gt;
+    &amp;lt;input id="Button1" type="button" value="Say, Hello!" /&amp;gt;
+    &amp;lt;script type="text/python"&amp;gt;
+    def SayHello(s,e):
+        window.Alert("Hello from HTML")
+ 
+    document.Button1.events.onclick += SayHello
+    &amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Running the Page&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;When you run the page from Visual Studio, it starts the “Chiron Development Server” to host your page. You don’t need this to develop for IronPython, but one thing I discovered is that you do need the MIME type to be set up correctly for .py files. For example, if you are using WebMatrix you need to put a web.config file in your application root folder with the following content:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;configuration&amp;gt;
+    &amp;lt;system.webServer&amp;gt;
+        &amp;lt;staticContent&amp;gt;
+            &amp;lt;mimeMap fileExtension=".py" mimeType="text/python" /&amp;gt;
+        &amp;lt;/staticContent&amp;gt;
+    &amp;lt;/system.webServer&amp;gt;
+&amp;lt;/configuration&amp;gt;
+
+&lt;/pre&gt;
+&lt;p&gt;Sadly I couldn’t work out a way of getting Visual Studio to break on specific lines of Python script despite trying attaching to Chiron and to my Web Browser. I guess it may be possible to step through the script with a debugger for the browser, but I haven’t tried that yet.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Using XAML&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Obviously XAML is very important for Silverlight applications and it is very easy to use with the DLR. We can start by adding a simple XAML file to our project. Annoyingly, the Visual Studio add item dialog filters out all the templates except the IronPython ones. Hopefully that will be fixed in a future release.&lt;/p&gt;
+&lt;p&gt;We’ll create a MainForm.xaml file with the following basic content:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;UserControl 
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
+    &amp;lt;StackPanel Background="BurlyWood"&amp;gt;
+        &amp;lt;TextBlock Margin="5" Text="Enter your name:"/&amp;gt;
+        &amp;lt;TextBox Margin="5" x:Name="textBoxName"/&amp;gt;
+        &amp;lt;Button Margin="5" x:Name="buttonOK" Content="OK" /&amp;gt;
+    &amp;lt;/StackPanel&amp;gt;
+&amp;lt;/UserControl&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Now in our HTML page, all that is needed is to specify the XAML and the size of the Silverlight object that will host it:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;script id="MainForm" type="application/xml+xaml" width="200" height="100" src="MainForm.xaml"&amp;gt;&amp;lt;/script&amp;gt;&lt;/pre&gt;
+&lt;h6&gt;&lt;/h6&gt;
+&lt;p&gt;As before, there is no need for the XAML to be in a separate file. We can put it directly within the script block if needed. Here’s our app running:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/creating-silverlight-apps-with-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IronPython Silverlight App" border="0" alt="IronPython Silverlight App" src="/posts/files/creating-silverlight-apps-with-2.png" width="306" height="119"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Now suppose we want to write some Python code to run when the OK button is clicked instead of the “Say, Hello!” button. We can use Python script in the way already shown, but need to mark the &amp;lt;script&amp;gt; tag with class=”MainForm” in order to ensure that it runs against the correct Silverlight object that contains our MainForm UserControl. This is because the DLR supports multiple Silverlight controls on your page at a time, and by default will create a new one for each xaml script. The &lt;strong&gt;xaml &lt;/strong&gt;variable is pre-loaded with the root element of the loaded xaml – in our case, a UserControl.&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;script class="MainForm" type="text/python"&amp;gt;
+def SayHello(s,e):
+    window.Alert("Hello " + xaml.textBoxName.Text)
+
+xaml.buttonOK.Click += SayHello
+&amp;lt;/script&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Now when we run this, it works (sort of). In FireFox, the alert appears but you have to wait several minutes before it lets you click on it. I have no idea why. IE8 works OK so long as you are running against the latest gestalt (otherwise the xaml is None so the subscription to the button click event fails).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Going Further&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Obviously this only covers the absolute basics. Visit &lt;a title="http://www.ironpython.net/ironpython/browser/" href="http://www.ironpython.net/ironpython/browser/"&gt;http://www.ironpython.net/ironpython/browser/&lt;/a&gt; for more documentation and instructions. I may blog a bit more on this at a later date.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Silverlight</category>
+    <category>IronPython</category>
+  </categories>
+  <comments />
+</post>

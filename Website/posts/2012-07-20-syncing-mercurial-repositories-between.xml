@@ -1,0 +1,26 @@
+<post>
+  <title>Syncing Mercurial repositories between computers using hg serve</title>
+  <slug>syncing-mercurial-repositories-between</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-07-20 10:12:00</pubDate>
+  <lastModified>2012-07-20 10:12:36</lastModified>
+  <content>&lt;p&gt;Occasionally I will copy a Mercurial repository onto another computer using a USB key (e.g. to work from home, or when I am giving a presentation). What happens when the two computers get out of sync? How do I bring them back in line? As always with DVCS there are several ways to deal with it. &lt;/p&gt; &lt;ul&gt; &lt;li&gt;If you know that changes have only been made in one repo, you could simply use the USB key again to copy the most up to date repo over the older one. This isn’t a recommended way to work, but in simple cases it does the trick. &lt;li&gt;Slightly safer would be to copy the newer repo onto the old computer in a different folder, then set that folder up as a new remote location and pull from that. If changes were made on both computers, you’d need to do this both ways, which would be cumbersome. &lt;li&gt;If you have a public server you can create repos on, then you can push to the server and pull from the other computer. &lt;a href="https://bitbucket.org/"&gt;Bitbucket&lt;/a&gt; is excellent for this, with its unlimited free private repos.&lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;However, Mercurial also comes with a handy utility that allows you to sync repos between two computers without the need for a USB key or a central server. All you need is for them to be on the same network.&lt;/p&gt; &lt;p&gt;If you have &lt;a href="http://tortoisehg.bitbucket.org/"&gt;TortoiseHg&lt;/a&gt; installed (which I highly recommend for Mercurial development), then you can simply right-click on any Mercurial repository and select &lt;strong&gt;TortoiseHg | Web Server&lt;/strong&gt;.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/syncing-mercurial-repositories-between-1.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/syncing-mercurial-repositories-between-1.png" width="486" height="478"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;This launches a very simple web server that underneath is using the &lt;strong&gt;&lt;a href="http://mercurial.selenic.com/wiki/hgserve"&gt;hg serve command&lt;/a&gt;&lt;/strong&gt; (e.g. hg serve --port 8000 --debug -R C:\Users\Mark\Code\MyApp). &lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/syncing-mercurial-repositories-between-2.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/syncing-mercurial-repositories-between-2.png" width="517" height="441"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;You can visit this web site in your browser and view the changesets or browse the code.&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/syncing-mercurial-repositories-between-3.png"&gt;&lt;img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/syncing-mercurial-repositories-between-3.png" width="680" height="400"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;Now, on your other computer, all you need to do is open up the &lt;strong&gt;.hg\hgrc&lt;/strong&gt; file in your repository in a text editor (you might need to create it), and set up a new path. For example:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;[paths]
+default = http://cpu-1927482d:8000/&lt;/pre&gt;
+&lt;p&gt;Now you can call &lt;strong&gt;hg pull -u &lt;/strong&gt;to get bring in all the changes from your other computer. It is a very simple and quick way to sync a repo between two development computers.&lt;/p&gt;
+&lt;p&gt;Another great use for this feature is for two developers on a team to share in progress changes with one another that they are not yet ready to submit to the central repository.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="eb031539-afaf-47a7-9c96-eacbc3e35fcb">
+      <author>johangi</author>
+      <email>noreply@blogger.com</email>
+      <website>http://johangi.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2012-09-20 07:06:35</date>
+      <content>You can also use something like this (it works for me).&lt;br /&gt;http://stackoverflow.com/questions/7916528/how-can-i-create-a-patch-file-in-mercurial-that-contains-also-the-changes-from-c </content>
+    </comment>
+  </comments>
+</post>

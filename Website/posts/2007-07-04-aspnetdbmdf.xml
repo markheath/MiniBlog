@@ -1,0 +1,77 @@
+<post>
+  <title>ASPNETDB.MDF?</title>
+  <slug>aspnetdbmdf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-07-04 10:28:00</pubDate>
+  <lastModified>2007-07-04 10:28:37</lastModified>
+  <content>&lt;p&gt;One of the first things I tried to get my head around while learning ASP.NET 2.0 recently was the user and membership system. Its a nice idea - Visual Studio can go off and create a database for you with all the tables ready to go. It certainly saves a lot of design and implementation time by providing a solution for a common problem.&lt;/p&gt; &lt;p&gt;The only strange thing is where it puts this data. As far as I can tell, it never asks you where you want to store the data. It simply creates a new SQL Express file called ASPNETDB.MDF. In fact, it uses a connection string that is hidden away in your machine.config file, which I found quite confusing at first, as I couldn't work out how my web application knew how to connect to this database.&lt;/p&gt; &lt;p&gt;The trouble with this is obvious. If you already have a database, then you now have two databases. This not only is a problem for those whose web hosting provider charges them for multiple databases, but more seriously doesn't allow you to have a foreign key in one of your data tables pointing at the user table.&lt;/p&gt; &lt;p&gt;Now you might say that I am making a fuss about nothing. Surely I can just move these tables into my existing database. And I probably will. But I noticed that the SubSonic starter site has its data still separated into two databases. Why is this? The CMS database simply stores "user name" and has no hard link to the ASPNETDB database. Of course, you could write some code to look up user details (such as display name, email etc) from the user name, but you have lost the ability to get all your data with one request. What's worse, if a user is allowed to change their user name, all relationships will be broken.&lt;/p&gt; &lt;p&gt;So my question is, why are people doing this? Is there any&amp;nbsp;benefit to having the databases separate?&amp;nbsp;Or is it just because that's what Visual Studio does by default and it is a pain to change?&lt;/p&gt; &lt;p&gt;(not that I'm expecting an answer. I don't think this blog actually has any readers yet!)&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>ASP.NET</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="22497346-868d-45a4-9ee2-93ad37cbd3a8">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2007-12-04 04:01:00</date>
+      <content>I support your idea. I think this is a shortcoming of Visual Studio. It makes things complecated.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a7a6e4c5-a89d-4c3d-b8b3-7e8287b28541">
+      <author>Heath</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05751833337222951460</website>
+      <ip />
+      <userAgent />
+      <date>2007-12-09 01:49:00</date>
+      <content>In regards to integrating membership into an existing SQL database this is an inherent part of the membership design. There is a handy tool made available: %windir%\Microsoft.NET\Framework\v2.0.50727\aspnet_regsql.exe (where v2.0.50727 is the version of .NET you are using) that will run you through a wizard that allows you to plug in the information for the SQL server you wish to specify. This creates the aspnetdb database on the server and prepares the table for use.&lt;BR/&gt;&lt;BR/&gt;To prepare your application for use with this setup, setup a connection string that will connect to your SQL server with aspnetdb as its initial catalog. With your database setup and your connection string to the database ready all you need to do now is notify your application you will be using an independent datasource for storing this information by specifying a Membership Provider in the &lt; system.web &gt; portion of your web.config file. A basic membership provider looks like this:&lt;BR/&gt;&lt;BR/&gt;&lt; membership defaultProvider="samplemembership" &gt;&lt;BR/&gt;        &lt; providers &gt;&lt;BR/&gt;          &lt; add name="samplemembership"               type="System.Web.Security.SqlMembershipProvider"               connectionStringName="LocalSqlServer"                            applicationName="/"/ &gt;&lt;BR/&gt;        &lt; /providers &gt;&lt;BR/&gt;      &lt; /membership &gt;&lt;BR/&gt;&lt;BR/&gt;Make sure to specify your application name, else when you deploy it you could see some errors or the entire login system not work. There are a lot of fields in the membership provider that are very useful. Things that specify password length and complexity. Set the requirement of unique email addresses, etc. &lt;BR/&gt;&lt;BR/&gt;There is a whole lot under the hood and the entire system is very configurable. It's also very complex and confusing, so try not to get discouraged if it bucks during the course of development.&lt;BR/&gt;&lt;BR/&gt;Good luck!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="93b1dc88-62ad-4436-9521-6281005d8e18">
+      <author>yyilmaz</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02579217870160811817</website>
+      <ip />
+      <userAgent />
+      <date>2008-05-27 03:52:00</date>
+      <content>Hi;&lt;BR/&gt;I read and found you succesfull.&lt;BR/&gt;Keep on writing&lt;BR/&gt;Regards from Türkiye</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="d332cc9a-3ddd-4113-b1a5-602a28d3324b">
+      <author>Thomas</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/11106650969505865513</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-02 14:40:00</date>
+      <content>Hi,&lt;BR/&gt;&lt;BR/&gt;I now have a better understanding of how Visual Studio implements usernames and password for .asp applications.&lt;BR/&gt;&lt;BR/&gt;I have a small question, i have locked myself out and was wondering how i can reset the usernames/password or get back in?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="12b950ff-621b-421c-b5e1-787e344b8de5">
+      <author>colinkng</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07655636737448145506</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-09 00:00:45</date>
+      <content>Thanks for the original article, and for Heath&amp;#39;s helpful instructions. This solved my problem!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1700d55d-9889-4d78-a431-3f8755c91b6e">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-12-29 03:39:22</date>
+      <content>You cannot unlock the account by code (could be wrong on this). &lt;br /&gt;It has to be done through &amp;quot;ASP.NET Configuration&amp;quot; also reffered as &amp;quot;Web Site Administration Tool&amp;quot; (the online system where you make user and roles).&lt;br /&gt;----------------&lt;br /&gt;Original blog is talking about &amp;quot;Membership Provider&amp;quot;.&lt;br /&gt;by Default it makes a seperate ASPNETDB.MDF , you can integrate it into the existing one if you want. Google for step by step instructions. &lt;br /&gt;Beauty of ASP2.0 is that doesn&amp;#39;t matter how it is setup (in web.config) file, you access it the exact same way and it will know automatically (through web.config) file how / what to do.&lt;br /&gt;Hope this helps.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8e3e3352-5cbc-4294-a404-c116c742ca0c">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-06-14 18:39:18</date>
+      <content>Hi,&lt;br /&gt;&lt;br /&gt;Thanks for this, worked straight away. Used the method to create the database on an SQL Express instance.&lt;br /&gt;&lt;br /&gt;ta&lt;br /&gt;Tim</content>
+    </comment>
+  </comments>
+</post>

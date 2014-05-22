@@ -1,0 +1,14 @@
+<post>
+  <title>The Challenges of Maintaining Successful Software Projects</title>
+  <slug>the-challenges-of-maintaining</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-05-19 07:57:00</pubDate>
+  <lastModified>2014-05-19 09:58:14</lastModified>
+  <content>&lt;p&gt;Have you ever found yourself wishing that the software project you’re working on would hurry up and die? The trouble with successful software projects is that you have to keep maintaining the same codebase year after year, as it grows larger and larger. Rather than getting a chance to start afresh like you do with greenfield development, you’re forced to live with the architectural mistakes of the past, and work with legacy technologies. And that’s just two of the &lt;a href="http://blog.pluralsight.com/getting-out-of-technical-debt"&gt;problems that developers working on successful software projects can run into&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;Of course it is possible to evolve your codebase over time to fix the architectural inadequacies, and migrate to newer technologies. But it’s not easy, and it’s easy to become disheartened in the battle against mounting technical debt. My own experiences in this area led to me creating my &lt;a href="http://pluralsight.com/training/courses/TableOfContents?courseName=understanding-eliminating-technical-debt"&gt;“Understanding and Eliminating Technical Debt” Pluralsight course&lt;/a&gt;, in which I explain some of the strategies and techniques I’ve found most helpful as I’ve worked to keep some very large and successful software products as maintainable as possible. &lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>clean code</category>
+    <category>Technical Debt</category>
+  </categories>
+  <comments />
+</post>

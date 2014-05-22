@@ -1,0 +1,59 @@
+<post>
+  <title>.NET Gotcha – Static Initialiser Ordering</title>
+  <slug>net-gotcha-static-initialiser-ordering</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-11-17 12:36:00</pubDate>
+  <lastModified>2010-05-12 10:45:09</lastModified>
+  <content>&lt;p&gt;Last week I had to troubleshoot a strange problem. A developer had broken up the source code for a large class of constants (defining various colours) into separate files using the &lt;strong&gt;partial&lt;/strong&gt; keyword, and all of a sudden our Windows Forms controls were painting themselves black instead of the correct colour. Put them back into one file again and the problem went away.&lt;/p&gt;  &lt;p&gt;Eventually we tracked the problem down due to the order in which the fields were being initialised by the static constructor. Consider the following code and unit test (which passes):&lt;/p&gt;  &lt;pre class="brush: csharp;"&gt;static class MyConstants
+{
+    public static readonly int MyNumber = 5;
+    public static readonly int MyOtherNumber = MyNumber;
+}
+
+[TestFixture]
+public class MyConstantsTests
+{
+    [Test]
+    public void ConstantsAreInitialisedCorrectly()
+    {
+        Assert.AreEqual(5, MyConstants.MyNumber);
+        Assert.AreEqual(5, MyConstants.MyOtherNumber);
+    }
+}&lt;/pre&gt;
+
+&lt;p&gt;Now if we simply change the ordering of the statements in MyConstants…&lt;/p&gt;
+
+&lt;pre class="brush: csharp;"&gt;static class MyConstants
+{
+    public static readonly int MyOtherNumber = MyNumber;
+    public static readonly int MyNumber = 5;
+}&lt;/pre&gt;
+
+&lt;p&gt;… the test will fail as MyOtherNumber will be 0. Obviously if the two definitions exist in different source files, this type of problem is much harder to spot. The test does pass if we use the &lt;strong&gt;const &lt;/strong&gt;keyword instead of &lt;strong&gt;static readonly&lt;/strong&gt;, but since we were initialising using the &lt;strong&gt;Color.FromArgb &lt;/strong&gt;function, this was not an option for us.&lt;/p&gt;
+
+&lt;p&gt;The moral of the story is to avoid setting static read-only fields to values dependent on other fields. Or at least be aware of the problems that can arise from doing so.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="be9ea2d5-a133-4d42-b02c-62fe0b1fb59f">
+      <author>Ramon</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00751856858346108012</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-17 14:24:06</date>
+      <content>Why are you even using the partial keyword? Only use it for (partial) generated code. If you need the partial keyword you probably need to refactor to several classes.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="891e0498-000a-47ed-bc5e-924a74070a94">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-11-17 14:29:14</date>
+      <content>I wasn&amp;#39;t using it. My recommendation was to create separate classes as you suggest. The developer thought it would be &amp;quot;safer&amp;quot; to do partial classes, because this would require no code changes elsewhere.</content>
+    </comment>
+  </comments>
+</post>

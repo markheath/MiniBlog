@@ -1,0 +1,243 @@
+<post>
+  <title>Styling a ListBox with Silverlight 2 Beta 2 (Part 3) - ListBoxItem Style</title>
+  <slug>styling-listbox-with-silverlight-2-beta</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-07-12 09:01:00</pubDate>
+  <lastModified>2011-07-03 08:02:22</lastModified>
+  <content>&lt;p&gt;This is the third and final part of my updated series on how to style a ListBox in Silverlight 2 Beta 2. Here are the links to &lt;a href="/post/styling-listbox-with-silverlight-2-beta"&gt;part 1&lt;/a&gt; and &lt;a href="/post/styling-listbox-with-silverlight-2-beta_21"&gt;part 2&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;So far we have customised the appearance of a ListBox, including the ScrollBars. The one remaining missing piece is some kind of indication of which items are selected, and visual feedback when the mouse hovers over a ListBox item.&lt;br&gt;To achieve this we need to add some Storyboards to the custom ListBoxItem we created in my first post. There are &lt;a href="http://msdn2.microsoft.com/en-us/library/cc278062%28VS.95%29.aspx"&gt;eight states&lt;/a&gt; you can specify Storyboards for. The most important for our purposes are "Normal", "Selected", and "MouseOver". Note that we need to use two Visual State Groups. One will define Normal and MouseOver, while the other will define Selected and Unselected. This gives us the flexibility to combine animations if we require to show combined states such as Selected and MouseOver.&lt;/p&gt; &lt;p&gt;Unfortunately it can also mean conflict of interests. With the beta 1 model, I quite easily specified one colour for Normal, one colour for Selected and one colour for MouseOver. However, with the new model, the MouseOver and Unselected states compete to set the background colour. The solution I eventually came up with was to have two borders and control their opacity (partly inspired by this &lt;a href="http://silverlight.net/forums/t/18008.aspx"&gt;forum post&lt;/a&gt;). One border is used to show MouseOver state, and the other to show Selected state. Here is the updated ListBoxItem style containing the new border elements (without Visual State Groups):&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxItemStyle1" TargetType="ListBoxItem"
+    xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"&amp;gt;
+  &amp;lt;Setter Property="Foreground"
+      Value="{StaticResource ListBoxItemForegroundBrush}" /&amp;gt;
+  &amp;lt;Setter Property="Template"&amp;gt;
+  &amp;lt;Setter.Value&amp;gt;
+  &amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+  &amp;lt;Grid x:Name="Root"&amp;gt;
+    &amp;lt;vsm:VisualStateManager.VisualStateGroups&amp;gt;
+       ...
+    &amp;lt;/vsm:VisualStateManager.VisualStateGroups&amp;gt;
+  
+    &amp;lt;Border CornerRadius="5" Margin="1"
+      x:Name="HoverBorder"&amp;gt;
+      &amp;lt;Border.Background&amp;gt;
+        &amp;lt;SolidColorBrush
+        x:Name="HoverBorderBackgroundBrush"
+        Color="#51615B" /&amp;gt;
+      &amp;lt;/Border.Background&amp;gt;
+    &amp;lt;/Border&amp;gt;
+    &amp;lt;Border CornerRadius="5" Margin="1"
+      x:Name="SelectedBorder"&amp;gt;
+      &amp;lt;Border.Background&amp;gt;
+        &amp;lt;SolidColorBrush
+        x:Name="SelectedBorderBackgroundBrush"
+        Opacity="0"
+        Color="#397F8F" /&amp;gt;
+      &amp;lt;/Border.Background&amp;gt;
+    &amp;lt;/Border&amp;gt;
+    &amp;lt;ContentPresenter
+        Margin="4,1"                  
+        Content="{TemplateBinding Content}"
+        Foreground="{TemplateBinding Foreground}" /&amp;gt;
+    &amp;lt;/Grid&amp;gt;                      
+    &amp;lt;/ControlTemplate&amp;gt;
+    &amp;lt;/Setter.Value&amp;gt;
+  &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;I have chosen to prioritise the Selected background above the MouseOver background, but you can easily change that by swapping the order of the borders.&lt;/p&gt;
+&lt;p&gt;The VisualStateGroups specify the two ColorAnimations I need - one for Selected and one for MouseOver. I also needed to add a DoubleAnimation for the opacity of the SelectedBorder.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;vsm:VisualStateManager.VisualStateGroups&amp;gt;
+
+&amp;lt;vsm:VisualStateGroup x:Name="SelectionStates"&amp;gt;
+&amp;lt;vsm:VisualState x:Name="Unselected" /&amp;gt;
+&amp;lt;vsm:VisualState x:Name="Selected"&amp;gt;
+  &amp;lt;Storyboard&amp;gt;
+    &amp;lt;DoubleAnimation
+     Storyboard.TargetName="SelectedBorderBackgroundBrush"
+     Storyboard.TargetProperty="Opacity"
+     Duration="0"
+     To="1.0"/&amp;gt;
+   &amp;lt;ColorAnimation
+     Storyboard.TargetName="SelectedBorderBackgroundBrush"
+     Storyboard.TargetProperty="Color"
+     Duration="0"
+     To="#FF397F8F"/&amp;gt;
+  &amp;lt;/Storyboard&amp;gt;
+&amp;lt;/vsm:VisualState&amp;gt;
+&amp;lt;/vsm:VisualStateGroup&amp;gt;
+
+&amp;lt;vsm:VisualStateGroup x:Name="CommonStates"&amp;gt;
+&amp;lt;vsm:VisualState x:Name="Normal" /&amp;gt;
+&amp;lt;vsm:VisualState x:Name="MouseOver"&amp;gt;
+  &amp;lt;Storyboard&amp;gt;
+    &amp;lt;ColorAnimation
+      Storyboard.TargetName="HoverBorderBackgroundBrush"
+      Storyboard.TargetProperty="Color"
+      Duration="0"
+      To="#898A8A"/&amp;gt;
+  &amp;lt;/Storyboard&amp;gt;
+&amp;lt;/vsm:VisualState&amp;gt;
+&amp;lt;/vsm:VisualStateGroup&amp;gt;
+&amp;lt;/vsm:VisualStateManager.VisualStateGroups&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like (item 3 selected, item 5 mouse over):&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-with-silverlight-2-beta-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="sl2-listbox-mouse-over" border="0" alt="Silverlight 2 ListBox Style with Mouse Over and Selected Item" src="/posts/files/styling-listbox-with-silverlight-2-beta-1.png" width="167" height="167"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;OK, so my choice of colours is awful and there are lots of visual elements that could be improved (and we still await a fix for the vertical scrollbar bug), but hopefully I have demonstrated how it is possible to completely change every visual element of how your ListBox is rendered in Silverlight 2 beta 2.&lt;br&gt;I have uploaded my test project &lt;a href="http://www.wordandspirit.co.uk/software/TestListBoxStyle.zip"&gt;here&lt;/a&gt; which you can load in Expression Blend 2.5 or Visual Studio 2008.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="1a1298d3-c1a7-404a-9cc0-3d6b6398a73e">
+      <author>Charles</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06102972521212987224</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-25 14:36:00</date>
+      <content>Hello,&lt;BR/&gt;&lt;BR/&gt;Your article is really interesting. I have needed to know how customize my Listbox (and specially the scrollbar), and with your help i can do it!&lt;BR/&gt;&lt;BR/&gt;However I have a problem with your solution. In fact, if I open it with Visual Studio 2008, it works (Designer and Test Page). But, when I open it with Blend, I can't view the design result, the exception is :&lt;BR/&gt;&lt;BR/&gt;Error HRESULT E_FAIL has been returned from a call to a COM component.&lt;BR/&gt;&lt;BR/&gt;After some search, I find the line which raise the problem :&lt;BR/&gt;&lt;BR/&gt; ScrollBar     &lt;BR/&gt;x:Name="HorizontalScrollBar"       &lt;B&gt;Style="{StaticResource ScrollBarStyle1}"&lt;/B&gt;&lt;BR/&gt;{...}&lt;BR/&gt;/&amp;gt;&lt;BR/&gt;&lt;BR/&gt;If I delete the Style propertie&lt;BR/&gt;ScrollBar     &lt;BR/&gt;x:Name=&amp;quot;HorizontalScrollBar&amp;quot;       &lt;BR/&gt;{...}&lt;BR/&gt;/&amp;gt;&lt;BR/&gt;It works but I lost the bar style ...!! I don&amp;#39;t understand because the VerticalScrollbar Works fine while it uses the same style !!&lt;BR/&gt;&lt;BR/&gt;I want to know if you are the same problem.&lt;BR/&gt;&lt;BR/&gt;Thanks</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="556916e6-1c32-4409-89e9-9f14307e1c22">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-25 14:49:00</date>
+      <content>Hi Charles,&lt;BR/&gt;yes I have the same issue in Blend. Hopefully Microsoft will address this in a future preview release.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="17e2d0fd-53e6-4ff9-8e47-363e071d0675">
+      <author>Charles</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06102972521212987224</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-25 15:00:00</date>
+      <content>Thanks for your answer. I hope too that the next Blend's version will fix some bugs.&lt;BR/&gt;&lt;BR/&gt;However this bug is strange because we can change the Vertical Style but not the Horizontal without bug!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a37a67ec-239b-4d39-bc71-0577556c0229">
+      <author>Charles</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06102972521212987224</website>
+      <ip />
+      <userAgent />
+      <date>2008-07-25 15:28:00</date>
+      <content>I find a solution to bypass the problem :&lt;BR/&gt;&lt;BR/&gt;We must create 2 style for the 2 scrollbar (even if the style must be the same)&lt;BR/&gt;&lt;BR/&gt;In this case, Blend can draw your control.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f8105fc1-a1c4-4f1f-9e48-364215f76dfd">
+      <author>Rick</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/01182455933991473741</website>
+      <ip />
+      <userAgent />
+      <date>2008-09-05 20:30:00</date>
+      <content>Mark,&lt;BR/&gt;&lt;BR/&gt;Thanks for your articles about styling a Silverlight ListBox.  I am trying to incorporate your code into a demo that I am preparing.  I took your styles from app.xaml and copied them into mine, and copied the ListBox from your app into mine.  Everything works except that the list item foreground text is black, instead of the color that is specified in the style (NoodleLove, I believe).  I've been beating my head on this for a couple of hours without success...Any thoughts?&lt;BR/&gt;&lt;BR/&gt;Thanks,&lt;BR/&gt;Rick</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dae72682-3a09-4be6-910c-c8336a93fd1e">
+      <author>tanios</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16590543782050816901</website>
+      <ip />
+      <userAgent />
+      <date>2008-12-16 08:24:00</date>
+      <content>Hello,&lt;BR/&gt;Very interesting article!&lt;BR/&gt;The sample "TestListBoxStyle.zip" is not available anymore for download. Could you re-post it?&lt;BR/&gt;Thank you,</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4c1f7049-9ad1-4eef-bdec-36abc7d16a15">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-12-16 21:16:00</date>
+      <content>hi tanios,&lt;BR/&gt;I have posted a new link</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c294a5d4-ab1f-4fd7-aa5b-63fe2f96a02e">
+      <author>ghkj</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09132300810330379086</website>
+      <ip />
+      <userAgent />
+      <date>2009-02-06 01:25:00</date>
+      <content>This comment has been removed by a blog administrator.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1e0e765c-4843-4221-a8a9-3d5ebab66bc0">
+      <author>Jason Grigely</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10634061365549977853</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-25 18:20:00</date>
+      <content>I was wondering if you could help me. I'm trying specifically to isolate the color that appears as the result of mousing over a selectable item. I want it to be selectable, but I'd like for the color to not be displayed, Thanks!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7ae75d37-2948-4002-905a-6e3435d30f41">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-26 12:46:00</date>
+      <content>Hi Jason,&lt;BR/&gt;that's the HoverBorderBackgroundBrush. Simply get rid of the animation</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b58f6738-d3c7-451a-9b3b-2b6d0a4549a2">
+      <author>Jason Grigely</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10634061365549977853</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-26 13:07:00</date>
+      <content>Thanks Mark, so how would I go about applying this to every element in my page? Sorry I'm somewhat new to Silverlight.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="8c3aa94b-2e93-4f01-aa37-c72c4ba28fce">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-03-26 13:09:00</date>
+      <content>The style should be put in app.xaml&lt;BR/&gt;Then you can reference it as a StaticResource to set the Style on any ListBoxes you use</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="761d53e7-eda0-4397-92fc-73544c4e0084">
+      <author>Jason Grigely</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10634061365549977853</website>
+      <ip />
+      <userAgent />
+      <date>2009-04-24 16:11:00</date>
+      <content>This comment has been removed by the author.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5416256a-fae3-426d-b732-1f13576bf2a5">
+      <author>Jason Grigely</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10634061365549977853</website>
+      <ip />
+      <userAgent />
+      <date>2009-04-24 16:38:00</date>
+      <content>nevermind!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="979f259d-e38e-4e3e-871f-1c3e81af4deb">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2009-10-26 18:36:45</date>
+      <content>Hello &lt;br /&gt; This link is not working i mean the download link</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c54e0048-9434-4c13-858f-e4c3799f2d10">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2009-10-28 14:19:55</date>
+      <content>Hi Anonymous, I&amp;#39;ve updated the download link</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="602909de-63b8-4a43-938c-4bc9c5965ae0">
+      <author>Ondrej</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08784981473108127012</website>
+      <ip />
+      <userAgent />
+      <date>2010-01-10 13:42:12</date>
+      <content>Awesome work, this is exactly what I was trying to figure out since WPF styles do not copy well due to SL restrictions.&lt;br /&gt;&lt;br /&gt;Works with SL3 flawlessly!</content>
+    </comment>
+  </comments>
+</post>

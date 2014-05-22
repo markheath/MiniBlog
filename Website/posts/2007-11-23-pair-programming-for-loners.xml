@@ -1,0 +1,42 @@
+<post>
+  <title>Pair Programming for Loners</title>
+  <slug>pair-programming-for-loners</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-11-23 12:36:00</pubDate>
+  <lastModified>2008-05-31 07:48:48</lastModified>
+  <content>&lt;p&gt;I first heard about &lt;a href="http://www.extremeprogramming.org/rules/pair.html"&gt;pair programming&lt;/a&gt; years ago while reading some articles on Extreme Programming. My initial reaction was &amp;quot;That sounds like an interesting idea. It might just work&amp;quot; followed very quickly by &amp;quot;I can think of a few people I would &lt;em&gt;not&lt;/em&gt; like to work in a pair with&amp;quot;.&lt;/p&gt;  &lt;p&gt;The most obvious benefits are:&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;Having someone to bounce ideas off &lt;/li&gt;    &lt;li&gt;Having someone watch you while you code and make constructive suggestions &lt;/li&gt;    &lt;li&gt;Watching someone else code and learning from their approach &lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;Obviously if you develop alone, the first two benefits are largely unavailable. The best you can hope for is to get some feedback from people on user forums.&lt;/p&gt;  &lt;p&gt;But the third option is perhaps not as out of reach for the lone developer as it may seem. Where can you go to watch other developers at work on real projects and learn from them?&lt;/p&gt;  &lt;p&gt;  &lt;p&gt;The answer is open source websites like CodePlex or SourceForge. The value of looking at &lt;em&gt;real &lt;/em&gt;code (as opposed to sample applications) should not be underestimated. &lt;/p&gt;  &lt;p&gt;As I have been slowly learning ASP.NET over the last year I have been frustrated with the numerous options for doing things - different project types, different data access approaches, different theming mechanisms etc etc. Before I could even start a project I was left with a thousand questions about whether I should use Web Site or Web Application, or whether to use DataGrid or GridView, or whether to use custom business objects or SqlDataSource.&lt;/p&gt;  &lt;p&gt;So the great thing about downloading some open source projects is that it gives a great chance to see how other people have chosen to do things. The main three I have been looking at to help me with ASP.NET are &lt;a href="http://dotnetblogengine.net/"&gt;BlogEngine.NET&lt;/a&gt;, &lt;a href="http://www.subtextproject.com/"&gt;SubText&lt;/a&gt; and &lt;a href="http://www.dotnetkicks.com/"&gt;DotNetKicks&lt;/a&gt;. Just spending a few hours browsing the code can teach you a lot about how to structure a project, as well as demonstrating various real-world examples of usage of the different approaches to data access. &lt;/p&gt;  &lt;p&gt;The developers of each of these projects are all people who are not only experienced ASP.NET projects but clearly have a passion for best-practices in the way they design and structure their code. These are people who I would want to be pair programming with if I could, asking them questions about why they did things certain ways. But for now, I'll have to content myself with silently looking over their shoulders and working out what's going on for myself.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Software Development</category>
+    <category>ASP.NET</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="a09c55a2-4a3f-4372-8f07-c06fef70d387">
+      <author>Jax</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-01-08 17:00:00</date>
+      <content>Any chance you can inform us of which of the choices you made after seeing the code?&lt;BR/&gt;&lt;BR/&gt;I'm always particularly interested to hear how you thought the code bases looked depending on the Data / Business objects approach.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6250553f-2ba5-4246-b542-d21529552d8a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2008-01-11 11:46:00</date>
+      <content>hi jax,&lt;BR/&gt;I'm still keeping an eye on Subsonic, although I want to check out the new LINQ to entities stuff as well now. I've also been looking into the ASP.NET MVC framework, so there has been a lot to take in. I don't think the provider model is that important unless you are writing an application that will need to support multiple providers. An open source blog platform would but most business applications are pretty much tied down to one database format.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="21bdd381-ab55-4377-8a2b-6383cd64bed2">
+      <author>Jax</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-01-23 14:06:00</date>
+      <content>The provider can change things depending on the type of objects it returns.&lt;BR/&gt;A dataset for example is very different to a collection of business objects and changes the look and feel of the code across the board.&lt;BR/&gt;&lt;BR/&gt;I'm interested in the LINQ to Entities too but i'm not planning on switching until at least version two as they'll have some bugs to fix, as it's their first proper ORM (and they failed with the last one).&lt;BR/&gt;Although I might just stick with NHibernate forever (much love to NHibernate!)</content>
+    </comment>
+  </comments>
+</post>

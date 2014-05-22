@@ -1,0 +1,32 @@
+<post>
+  <title>Silverlight 1.1 Alpha Refresh "Catastrophic Failure"</title>
+  <slug>silverlight-11-alpha-refresh-failure</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-07-30 15:06:00</pubDate>
+  <lastModified>2010-10-04 17:17:38</lastModified>
+  <content>&lt;p&gt;Microsoft have recently released&amp;nbsp;the second&amp;nbsp;beta of Visual Studio 2008. Along with this there are new "refreshes" of Silverlight 1.1 Alpha and Blend 2. There is a new (and much larger) Silverlight 1.1 SDK, and you will need to also download the new Sliverlight tools to develop projects in Visual Studio 2008. Links to all the downloads are provided &lt;a href="http://silverlight.net/GetStarted/"&gt;here&lt;/a&gt;.&lt;/p&gt; &lt;p&gt;I have been updating my &lt;a href="http://www.codeplex.com/nibbles"&gt;SilverNibbles&lt;/a&gt; application to run against the new 1.1 Alpha, which was fairly straight-forward. I just needed to replace the Silverlight.js and update the createSilverlight method slightly and everything ran as expected.&lt;/p&gt; &lt;p&gt;There was however one nasty bug resulting in an exception with "Catastrophic Failure" as its error message!&lt;/p&gt; &lt;p&gt;The problem was with the hack I was using (along with many other Silverlight users) to create a timer. Previously, I could simply create a storyboard with a double animation using the following XAML:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Canvas.Resources&amp;gt;
+&amp;lt;Storyboard x:Name="timer"&amp;gt;
+&amp;lt;DoubleAnimation Duration="00:00:0.08" /&amp;gt;
+&amp;lt;/Storyboard&amp;gt;
+&amp;lt;/Canvas.Resources&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately, when you call timer.Begin() in the new Alpha refresh you will get the "catastrophic failure" exception. The problem is that the DoubleAnimation needs a name and a target. This is easily fixed by creating a hidden rectangle for it to control:&lt;/p&gt;
+
+&lt;pre class="brush: xml"&gt;&amp;lt;Canvas.Resources&amp;gt;
+   &amp;lt;Storyboard x:Name="timer"&amp;gt;
+      &amp;lt;DoubleAnimation x:Name="animation" 
+         Duration="00:00:0.08"   
+         Storyboard.TargetName="InvisibleRect" 
+         Storyboard.TargetProperty="Width" /&amp;gt;
+   &amp;lt;/Storyboard&amp;gt;
+&amp;lt;/Canvas.Resources&amp;gt;
+&amp;lt;Rectangle Visibility="Collapsed" x:Name="InvisibleRect" /&amp;gt;&lt;/pre&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

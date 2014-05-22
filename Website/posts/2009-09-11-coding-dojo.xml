@@ -1,0 +1,42 @@
+<post>
+  <title>Coding Dojo</title>
+  <slug>coding-dojo</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-11 08:34:00</pubDate>
+  <lastModified>2009-09-11 08:34:04</lastModified>
+  <content>&lt;p&gt;I went to my first “coding dojo” last night, which was also the first one run to be run in Southampton by &lt;a href="http://blogs.imeta.co.uk/tquinn/archive/2009/09/10/first-coding-dojo.aspx"&gt;Tom Quinn&lt;/a&gt;. You can read about what a coding dojo is &lt;a href="http://codingdojo.org/"&gt;here&lt;/a&gt;, but the basic idea is that a group of people collaboratively work on solving a basic programming problem, using TDD. To ensure everyone participates, developers are paired and work together for five minutes, before one leaves the pair and another joins.&lt;/p&gt;  &lt;p&gt;The task we attempted was to create a calculator that worked with Roman numerals. We started by listing some tests we wanted to pass. This I think was a good way to start, but we actually made very little progress in the first round of coding. Perhaps it was partly the awkwardness of coding in front of a group – fear of looking stupid, or fear of looking like a show-off - so no one was initially willing to stamp their own design onto the problem. The second time round the table it was a different story, with people eager to get the keyboard to implement their ideas.&lt;/p&gt;  &lt;p&gt;The other real problem was that we didn’t agree our overall approach to the problem. This was silly, because it was clear that we were going to have to make something to convert Roman numerals to integers, and something to convert integers back to Roman numerals. But because we hadn’t agreed that, we started off making the tests pass with hard coded results.&lt;/p&gt;  &lt;p&gt;It meant we ended up with 7 or 8 tests for the top-level object – the calculator, when really we needed some lower-level tests for Roman numeral conversion. It highlighted a TDD anti-pattern: doing “the simplest thing that could make the test pass” should not mean, “hard code return values for &lt;em&gt;all&lt;/em&gt; the test cases”. If you do that, you may have passing tests but you are no closer to solving your problem.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Positives:&lt;/strong&gt; It was good to see everyone getting involved, and the idea of pairing worked well. It was also interesting to see how different people tackled the same problem.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Suggestions:&lt;/strong&gt; Perhaps enforce the “&lt;a href="http://jamesshore.com/Blog/Red-Green-Refactor.html"&gt;red-green-refactor&lt;/a&gt;” rule a bit more, so that the there is more focus on getting a single test passing before you hand on, and more emphasis on refactoring, rather than just passing tests. Five minutes is surprisingly short, and lots of pairs had to take over with the code in a non-compiling, non-working state. You could perhaps increase the timeslot to 7 minutes, although if there are more than 7 or 8 people present, you would be hard pressed to go twice round the room in a two hour meeting. If you had 10 or more people, it might make sense to break into two groups.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>coding dojo</category>
+    <category>TDD</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="3bd504cf-f207-4e17-ba4e-8fc23cfa3976">
+      <author>Tom Peplow</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blogs.imeta.co.uk/tpeplow</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-11 10:07:56</date>
+      <content>Nice summary Mark, agree with your comments.  Look forward to doing it again!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="5953f765-b992-4eab-8390-6222a0b5686a">
+      <author>Tom Quinn</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blogs.imeta.co.uk/tquinn</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-11 11:54:42</date>
+      <content>Mark, great write up. Hope to see you next time ;-)</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="849667ae-ac3a-4b79-9813-e4a223f7d62a">
+      <author>Dargs</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/05142815591815744142</website>
+      <ip />
+      <userAgent />
+      <date>2009-09-22 15:10:16</date>
+      <content>Interesting idea! :-)</content>
+    </comment>
+  </comments>
+</post>

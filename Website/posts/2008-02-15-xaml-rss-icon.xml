@@ -1,0 +1,27 @@
+<post>
+  <title>XAML RSS Icon</title>
+  <slug>xaml-rss-icon</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-02-15 12:36:00</pubDate>
+  <lastModified>2011-07-03 09:31:50</lastModified>
+  <content>&lt;p&gt;I haven't had the time to blog much recently, but I thought I would just share a quick RSS Icon I made in XAML recently:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" &amp;gt;
+  &amp;lt;Canvas Canvas.Left="20" Canvas.Top="20"&amp;gt;
+    &amp;lt;Rectangle Width="50" Height="50" Fill="Orange" RadiusX="5" RadiusY="5" /&amp;gt;
+    &amp;lt;Canvas Canvas.Left="-1" Canvas.Top="1"&amp;gt;
+      &amp;lt;Ellipse Width="10" Height="10" Fill="White" Canvas.Left="10" Canvas.Top="30" /&amp;gt;
+      &amp;lt;Path Stroke="White" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 15,20 a 15,15 90 0 1 15,15" /&amp;gt;
+      &amp;lt;Path Stroke="White" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Data="M 15,10 a 25,25 90 0 1 25,25" /&amp;gt;
+    &amp;lt;/Canvas&amp;gt;
+  &amp;lt;/Canvas&amp;gt;
+&amp;lt;/Canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-rss-icon-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="xaml-rss-icon" border="0" alt="XAML RSS Icon" src="/posts/files/xaml-rss-icon-1.png" width="66" height="67"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Obviously if you are a graphic designer you could give it some cool gradient effects to make it look 3D.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments />
+</post>

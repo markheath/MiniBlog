@@ -1,0 +1,41 @@
+<post>
+  <title>Lunchtime LINQ Challenge</title>
+  <slug>lunchtime-linq-challenge</slug>
+  <author>Mark Heath</author>
+  <pubDate>2013-06-26 15:44:00</pubDate>
+  <lastModified>2013-06-26 15:44:52</lastModified>
+  <content>&lt;p&gt;I do regular lunchtime developer training sessions at my work, and this week I created a short quiz for the developers to try out their LINQ skills. They are not too hard (although number 5 is quite tricky) and most are based on actual problems I needed to solve recently. I thought I’d post them here too in case anyone fancies a short brain-teaser. If you attempt it, why not post your answers to a &lt;a href="https://github.com/"&gt;Github&lt;/a&gt; gist and link to them in the comments. I’ll hopefully do a followup post with some thoughts on how I would attempt these. Also, feel free to suggest additional interesting LINQ problems of your own…&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Challenge…&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;Each of these problems can be solved using a single C# statement by making use of chained LINQ operators (although you can use more statements if you like). You'll find the String.Split function helpful to get started on each problem. Other functions you might need to use at various points are String.Join, Enumerable.Range, Zip, Aggregate, SelectMany. &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt; would be a good choice to try out your ideas. &lt;p&gt;1. Take the following string "Davis, Clyne, Fonte, Hooiveld, Shaw, Davis, Schneiderlin, Cork, Lallana, Rodriguez, Lambert" and give each player a shirt number, starting from 1, to create a string of the form: "1. Davis, 2. Clyne, 3. Fonte" etc &lt;p&gt;2. Take the following string "Jason Puncheon, 26/06/1986; Jos Hooiveld, 22/04/1983; Kelvin Davis, 29/09/1976; Luke Shaw, 12/07/1995; Gaston Ramirez, 02/12/1990; Adam Lallana, 10/05/1988" and turn it into an IEnumerable of players in order of age (bonus to show the age in the output) &lt;p&gt;3. Take the following string "4:12,2:43,3:51,4:29,3:24,3:14,4:46,3:25,4:52,3:27" which represents the durations of songs in minutes and seconds, and calculate the total duration of the whole album &lt;p&gt;4. Create an enumerable sequence of strings in the form "x,y" representing all the points on a 3x3 grid. e.g. output would be: 0,0 0,1 0,2 1,0 1,1 1,2 2,0 2,1 2,2 &lt;p&gt;5. Take the following string "00:45,01:32,02:18,03:01,03:44,04:31,05:19,06:01,06:47,07:35" which represents the times (in minutes and seconds) at which a swimmer completed each of 10 lengths. Turn this into an enumerable of timespan objects containing the time taken to swim each length (e.g. first length was 45 seconds, second was 47 seconds etc) &lt;p&gt;6. Take the following string "2,5,7-10,11,17-18" and turn it into an IEnumerable of integers: 2 5 7 8 9 10 11 17 18&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>LINQ</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e724e853-4c45-4899-b627-8c6864c6235f">
+      <author>nilp</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-06-26 22:27:49</date>
+      <content>1: http://ideone.com/nDGY5r&lt;br /&gt;2: http://ideone.com/FrcODC&lt;br /&gt;3: http://ideone.com/jaZpOD&lt;br /&gt;4: http://ideone.com/qmG5cp&lt;br /&gt;5: http://ideone.com/QZxpcQ&lt;br /&gt;6: http://ideone.com/IEXDK1 //ok, too tired to thinkg about merging it </content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6f287ac8-5a17-4546-9560-d8689c5e36e0">
+      <author>Mark Jones</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/10336741517872792765</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-26 22:44:50</date>
+      <content>1-4 here https://gist.github.com/orangutanboy/5870892&lt;br /&gt;&lt;br /&gt;I&amp;#39;m happy with 1 and 4 but the others feel clunky.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="043cdb75-6282-42a5-a8a9-4e1d9754e076">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2013-06-27 16:06:42</date>
+      <content>thanks for joining in nilp and Mark, I&amp;#39;ve done a followup post with answers to them all.</content>
+    </comment>
+  </comments>
+</post>

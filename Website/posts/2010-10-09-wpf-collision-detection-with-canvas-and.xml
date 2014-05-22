@@ -1,0 +1,63 @@
+<post>
+  <title>WPF Collision Detection with Canvas and ScaleTransform</title>
+  <slug>wpf-collision-detection-with-canvas-and</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-09 23:08:00</pubDate>
+  <lastModified>2011-07-02 08:25:48</lastModified>
+  <content>&lt;p&gt;As part of my continuing exercise learning &lt;a href="http://ironpython.net/"&gt;IronPython&lt;/a&gt;, I ported an old Windows Forms game I had up on CodePlex to WPF. The game is called &lt;a href="http://asterisk.codeplex.com"&gt;Asterisk&lt;/a&gt;, and was a favourite of mine when I was about 8 years old on the &lt;a href="http://en.wikipedia.org/wiki/BBC_Micro"&gt;BBC Micro&lt;/a&gt;. The objective is simply to avoid the stars and get through the gap on the right hand side. The only control is to hold down a key to make the line go up instead of down.&lt;/p&gt; &lt;p&gt;Here’s what the current WPF version looks like:&lt;/p&gt; &lt;p&gt;&lt;a href="/posts/files/wpf-collision-detection-with-canvas-and-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="WPFAsterisk" border="0" alt="WPF Asterisk" src="/posts/files/wpf-collision-detection-with-canvas-and-1.png" width="364" height="372"&gt;&lt;/a&gt;&lt;/p&gt; &lt;p&gt;One of the challenges was implementing collision detection. I needed to check if the current point intersected with a star or not. I initially hoped I could use &lt;a href="http://www.andybeaulieu.com/Home/tabid/67/EntryID/160/Default.aspx"&gt;Andy Beaulieu’s Silverlight collision detection code&lt;/a&gt;, but sadly that uses &lt;a href="http://msdn.microsoft.com/en-us/library/system.windows.media.visualtreehelper.findelementsinhostcoordinates%28VS.95%29.aspx"&gt;VisualTreeHelper.FindElementsInHostCoordinates&lt;/a&gt;, which isn’t available in WPF.&lt;/p&gt; &lt;p&gt;However, a solution was readily at hand with &lt;a href="http://msdn.microsoft.com/en-us/library/ms608753.aspx"&gt;VisualTreeHelper.HitTest&lt;/a&gt;. I rather stupidly failed to notice that there was a much simpler overload than the first search result on MSDN, so my initial Python code was over-complicated:&lt;/p&gt;&lt;pre class="brush: python"&gt;def CheckCollisionPoint(point, control):
+    hits = []
+    def callbackFunc(hit):
+        hits.append(hit.VisualHit)
+        return HitTestResultBehavior.Stop
+    callback = HitTestResultCallback(callbackFunc)
+    VisualTreeHelper.HitTest(control, None, callback,
+        PointHitTestParameters(point))    
+    return len(hits) &amp;gt; 0&lt;/pre&gt;
+&lt;p&gt;Using a more appropriate HitTest overload simplifies things greatly:&lt;/p&gt;&lt;pre class="brush: python"&gt;def CheckCollisionPoint(point, control):
+    hit = VisualTreeHelper.HitTest(control, point)
+    return hit != None&lt;/pre&gt;
+&lt;p&gt;However, there were still two difficulties. First was that &lt;strong&gt;point &lt;/strong&gt;was coordinates relative to the canvas, whilst the control was a star object placed onto that canvas. This was simple enough to fix – I just needed to offset the coordinates by the Canvas.Top and Canvas.Left attached properties of the star.&lt;/p&gt;
+&lt;p&gt;However, problems came when I attempted to change the size of the stars with a scale transform:&lt;/p&gt;&lt;pre class="brush: xml;"&gt;&amp;lt;Path xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  Stroke="White" 
+  StrokeThickness="2" 
+  StrokeStartLineCap="Round" 
+  StrokeEndLineCap="Round" 
+  StrokeLineJoin="Round" 
+  Data="M 0,0 l 5,0 l 2.5,-5 l 2.5,5 l 5,0 l -3.5,5 l 1,5 l -5,-2.5 l -5,2.5 l 1,-5 Z"&amp;gt;
+  &amp;lt;Path.RenderTransform&amp;gt;
+    &amp;lt;ScaleTransform ScaleX="0.8" ScaleY="0.8" /&amp;gt;
+  &amp;lt;/Path.RenderTransform&amp;gt;
+&amp;lt;/Path&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;This caused collision detection to break because HitTest does not take the RenderTransform into account. I initially fixed this by dividing the point coordinates by the scale factor from the XAML. However, I then came across &lt;a href="http://www.walms.co.uk/c-net-articles/hit-testing-wpf-the-easy-way-collision-detection/"&gt;this blog post&lt;/a&gt; which demonstrates a better approach that will cope with any kind of transforms, including rotations. You can get an inverse transform from the render transform, and apply that to your point. So the final version of my WPF hit-test function in IronPython is as follows:&lt;/p&gt;&lt;pre class="brush: py;"&gt;def CheckCollisionPoint(point, control):
+    transformPoint = control.RenderTransform.Inverse.Transform(point)
+    hit = VisualTreeHelper.HitTest(control, transformPoint)
+    return hit != None
+&lt;/pre&gt;
+&lt;p&gt;If you have IronPython installed, &lt;a href="http://asterisk.codeplex.com/SourceControl/list/changesets"&gt;download the code&lt;/a&gt; and try it yourself.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>IronPython</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="25e1d224-5c7f-45ed-b6f0-75df5e218af8">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-10-12 18:11:37</date>
+      <content>nice, but it might be easier with CompositionTarget.Render Event</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4e62d2f6-5f29-49d4-9e28-51a7006b9dab">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-10-12 19:03:05</date>
+      <content>thanks @anonymous, but I don&amp;#39;t understand - how does CompositionTarget.Rendering event help me to do collision detection?</content>
+    </comment>
+  </comments>
+</post>

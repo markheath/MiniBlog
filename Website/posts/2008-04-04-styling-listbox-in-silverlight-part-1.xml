@@ -1,0 +1,142 @@
+<post>
+  <title>Styling a ListBox in Silverlight (Part 1)</title>
+  <slug>styling-listbox-in-silverlight-part-1</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-04-04 16:55:00</pubDate>
+  <lastModified>2011-07-04 17:07:03</lastModified>
+  <content>&lt;p&gt;&lt;i&gt;This post describes how to style a ListBox in Silverlight 2 beta 1. For an updated version for beta 2, please look &lt;a href="/post/styling-listbox-with-silverlight-2-beta"&gt;here&lt;/a&gt;.&lt;/i&gt;&lt;/p&gt; &lt;p&gt;One of the challenges of styling a control like the ListBox in Silverlight is the sheer number of subcomponents it uses. A ListBox has its own template which includes a ScrollViewer and an ItemPresenter. The ScrollViewer contains Scrollbars which contain RepeatButtons, Thumbs etc.&lt;/p&gt; &lt;p&gt;My original idea was to make copies of the default styles and slowly change them to look how I wanted, but I soon realised that the sheer quantity of XAML would get very confusing. So I decided to take the opposite approach. Start with a very basic template and slowly add features until it looks right. So here is the most basic of all ListBox templates:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;UserControl.Resources&amp;gt;
+  &amp;lt;ControlTemplate x:Key="ListBoxTemplate1"&amp;gt;      
+      &amp;lt;Grid x:Name="LayoutRoot"&amp;gt;
+          &amp;lt;ItemsPresenter /&amp;gt;
+      &amp;lt;/Grid&amp;gt;
+  &amp;lt;/ControlTemplate&amp;gt;
+&amp;lt;/UserControl.Resources&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This simply presents the items, with no outline of any sort displayed. To test our template, let's add some items to a ListBox:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox HorizontalAlignment="Stretch"
+         Margin="160,81,318,238"
+         VerticalAlignment="Stretch"
+         Template="{StaticResource ListBoxTemplate1}"&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Hello&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;World&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 3&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 4 with a really long name&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 5&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 6&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 7&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 8&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 9 out of bounds&amp;lt;/ListBoxItem&amp;gt;
+      &amp;lt;ListBoxItem&amp;gt;Item 10 out of bounds&amp;lt;/ListBoxItem&amp;gt;
+&amp;lt;/ListBox&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This is what it looks like so far:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-1-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 1" border="0" alt="Styling a ListBox step 1" src="/posts/files/styling-listbox-in-silverlight-part-1-1.png" width="196" height="189"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Next step is the border for our listbox. I want all the listbox items to be drawn on top of a filled rounded rectangle. To do this, I have added a Border control. I have given it some padding so we can actually see it, because the ListBoxItem template is currently drawing white rectangles over the top of it.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Grid x:Name="LayoutRoot"&amp;gt;
+  &amp;lt;Border Padding="5" Background="#E6BB8A" CornerRadius="5"&amp;gt;
+      &amp;lt;ItemsPresenter /&amp;gt;
+  &amp;lt;/Border&amp;gt;
+&amp;lt;/Grid&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This is what it looks like now:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-1-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 2" border="0" alt="Styling a ListBox step 2" src="/posts/files/styling-listbox-in-silverlight-part-1-2.png" width="178" height="175"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;So before we go doing anything further to the ListBox template itself (like adding scrollbars), let's sort out the item templates.&lt;/p&gt;
+&lt;p&gt;For this we need to create a new style - ListBoxItemStyle1. (n.b. I should really have created a style with a template in rather than just a template for the ListBox itself - see further down in this post.)&lt;/p&gt;
+&lt;p&gt;So here is a minimal ListBoxItem style:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxItemStyle1" TargetType="ListBoxItem"&amp;gt;
+  &amp;lt;Setter Property="Foreground" Value="#FF000000" /&amp;gt;  
+  &amp;lt;Setter Property="Template"&amp;gt;
+      &amp;lt;Setter.Value&amp;gt;
+          &amp;lt;ControlTemplate TargetType="ListBoxItem"&amp;gt;
+              &amp;lt;Grid x:Name="RootElement"&amp;gt;
+                  &amp;lt;ContentPresenter
+                      Content="{TemplateBinding Content}"
+                      Foreground="{TemplateBinding Foreground}"
+                   /&amp;gt;                  
+              &amp;lt;/Grid&amp;gt;
+          &amp;lt;/ControlTemplate&amp;gt;
+      &amp;lt;/Setter.Value&amp;gt;
+  &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, it is a little more involved than the basic ListBox template. We needed to have the Foreground property set to a sensible default value (Black) for anything to appear. And we have simply used one ContentPresenter control to show the contents of each ListBox item.&lt;/p&gt;
+&lt;p&gt;We can tell our ListBox to use it by setting its ItemContainerStyle as follows:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox
+  HorizontalAlignment="Stretch"
+  Margin="160,81,318,238"
+  VerticalAlignment="Stretch"
+  Template="{StaticResource ListBoxTemplate1}"  
+  ItemContainerStyle="{StaticResource ListBoxItemStyle1}"      
+  &amp;gt;&lt;/pre&gt;
+&lt;p&gt;Now we have got rid of those white backgrounds:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-1-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 3" border="0" alt="Styling a ListBox step 3" src="/posts/files/styling-listbox-in-silverlight-part-1-3.png" width="176" height="173"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;For the final step for this post, I will switch from using a Template to a style for the main ListBox control. This allows me to specify which ItemContainerStyle I want it to use. The only caveat is that ListBoxItemStyle1 must be defined before ListBoxStyle1 or Silverlight will throw one of its characteristically unhelpful errors.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ListBoxStyle1" TargetType="ListBox"&amp;gt;
+  &amp;lt;Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemStyle1}" /&amp;gt;          
+  &amp;lt;Setter Property="Template"&amp;gt;
+      &amp;lt;Setter.Value&amp;gt;
+          &amp;lt;ControlTemplate TargetType="ListBox"&amp;gt;      
+              &amp;lt;Grid x:Name="LayoutRoot"&amp;gt;
+                  &amp;lt;Border Padding="5" Background="#E6BB8A" CornerRadius="5"&amp;gt;
+                      &amp;lt;ItemsPresenter /&amp;gt;
+                  &amp;lt;/Border&amp;gt;
+              &amp;lt;/Grid&amp;gt;
+          &amp;lt;/ControlTemplate&amp;gt;
+      &amp;lt;/Setter.Value&amp;gt;
+  &amp;lt;/Setter&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This allows the style to be specified much more simply:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ListBox
+  HorizontalAlignment="Stretch"
+  Margin="160,81,318,238"
+  VerticalAlignment="Stretch"
+    Style="{StaticResource ListBoxStyle1}"  
+  &amp;gt;&lt;/pre&gt;
+&lt;p&gt;Finally then we will make the item template just a little more interesting. I've added a border to the item presenter, and modified some margins and colours:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Border CornerRadius="5" Background="#51615B" Margin="1"&amp;gt;
+&amp;lt;ContentPresenter
+  Margin="1"
+  Content="{TemplateBinding Content}"
+  Foreground="{TemplateBinding Foreground}"
+/&amp;gt;                  
+&amp;lt;/Border&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This leaves us with something looking like this:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/styling-listbox-in-silverlight-part-1-4.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Styling a ListBox step 4" border="0" alt="Styling a ListBox step 4" src="/posts/files/styling-listbox-in-silverlight-part-1-4.png" width="176" height="173"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;So that is at least a reasonable start. Our ListBox is missing at least three crucial features though, which I hope to tackle in a future blog-post:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scrollbars 
+&lt;li&gt;Selected Item Rendering 
+&lt;li&gt;Mouse Over Rendering &lt;/li&gt;&lt;/li&gt;&lt;/li&gt;&lt;/ul&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c2e335a3-cda7-4587-993c-cf8d85d7b57d">
+      <author>Richard Binnington</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-06-03 22:29:00</date>
+      <content>This is an awesome series!  I have not seen anything else like this.  Thank you for your work&lt;BR/&gt;&lt;BR/&gt;Richard</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c6bb0f1c-992b-4f2a-addb-670406982b16">
+      <author>Karine</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-06-18 10:54:00</date>
+      <content>Thank you for this wonderful step by step series! It really helped met out!&lt;BR/&gt;Karine</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="7e69996c-8092-4081-be71-97da0a4ad29c">
+      <author>Tess</author>
+      <email>noreply@blogger.com</email>
+      <website>http://catinainsurance.blogspot.com</website>
+      <ip />
+      <userAgent />
+      <date>2008-11-10 11:26:00</date>
+      <content>This comment has been removed by a blog administrator.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="aa873df1-9173-4a9d-a2c9-de6e4df272ff">
+      <author>ghkj</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/09132300810330379086</website>
+      <ip />
+      <userAgent />
+      <date>2009-02-06 01:24:00</date>
+      <content>This comment has been removed by a blog administrator.</content>
+    </comment>
+  </comments>
+</post>

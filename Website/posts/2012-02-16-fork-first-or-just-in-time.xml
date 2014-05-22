@@ -1,0 +1,45 @@
+<post>
+  <title>Fork First or Just in Time?</title>
+  <slug>fork-first-or-just-in-time</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-02-16 07:45:00</pubDate>
+  <lastModified>2012-02-16 08:45:41</lastModified>
+  <content>&lt;p&gt;I’ve been following the progress of &lt;a href="http://code52.org/"&gt;Code 52&lt;/a&gt; a bit over recent weeks. It is an audacious attempt to create a new open source project every week for a year. They also seem willing to accept code contributions, so I was tempted to download a few of their projects and make some minor improvements.&lt;/p&gt; &lt;p&gt;I’ve been using Mercurial for &lt;a href="http://www.codeplex.com/site/users/view/markheath"&gt;my projects at CodePlex&lt;/a&gt; for some time now, but I hadn’t used git in anger, and since Code52 store all their projects on the very impressive &lt;a href="https://github.com/Code52"&gt;github&lt;/a&gt;, it gave me a good excuse to learn.&lt;/p&gt; &lt;p align="left"&gt;I read up a few tutorials on how to fork a repository in github. The &lt;a href="http://help.github.com/fork-a-repo/"&gt;official guide&lt;/a&gt; is good, and Scott Hanselman wrote a great post on &lt;a href="http://www.hanselman.com/blog/GetInvolvedInOpenSourceTodayHowToContributeAPatchToAGitHubHostedOpenSourceProjectLikeCode52.aspx"&gt;how to contribute to Code 52 projects&lt;/a&gt;. But one thing they all have in common, is a workflow of Fork, Clone, Commit, [optional: Pull &amp;amp; Merge], Push, Pull Request. This has always struck me as being the wrong way round. (CodePlex recommends essentially the &lt;a href="http://codeplex.codeplex.com/wikipage?title=Forks"&gt;same workflow&lt;/a&gt; for Mercurial). &lt;/p&gt; &lt;h3 align="left"&gt;Fork First&lt;/h3&gt; &lt;p&gt;The reason I don’t like this workflow, is that it assumes the first thing I want to do is create a fork. But that’s not how I typically interact with an open source project. My workflow goes like this:&lt;/p&gt; &lt;ol&gt; &lt;li&gt;I come across a new open source project and &lt;em&gt;maybe&lt;/em&gt; I find it interesting&lt;/li&gt; &lt;li&gt;Often I will just want to download compiled binaries, but &lt;em&gt;maybe &lt;/em&gt;I want to explore the code to see how it was implemented&lt;/li&gt; &lt;li&gt;I clone it (git/hg clone) and &lt;em&gt;maybe &lt;/em&gt;I will get round to playing with it later&lt;/li&gt; &lt;li&gt;I attempt to build it locally and &lt;em&gt;maybe&lt;/em&gt; it succeeds on my machine (surprising how often it doesn’t)&lt;/li&gt; &lt;li&gt;I attempt to use it and &lt;em&gt;maybe &lt;/em&gt;I find a bug or I wish it had a new feature&lt;/li&gt; &lt;li&gt;I report the bug or feature to the developers, and &lt;em&gt;maybe&lt;/em&gt; I think I could fix it myself&lt;/li&gt; &lt;li&gt;I explore the source code, and &lt;em&gt;maybe &lt;/em&gt;I understand it well enough to make a change&lt;/li&gt; &lt;li&gt;I begin coding a fix/feature, and &lt;em&gt;maybe &lt;/em&gt;I get it working&lt;/li&gt; &lt;li&gt;I realise my code needs cleaning up before I issue a pull request, and &lt;em&gt;maybe &lt;/em&gt;I get round to doing so&lt;/li&gt; &lt;li&gt;If I have made it this far, now is the time I am ready to push to a public fork and issue a pull request. I estimate I get to this step on less than 1 percent of open source projects I come across.&lt;/li&gt;&lt;/ol&gt; &lt;p&gt;As you can see, it is only at step 10 that I need to have a fork, but the tutorials all want me to make my fork at step 3. This results in lots of projects having multiple forks that have never been pushed to. Or have been pushed to but no pull request ever submitted, leaving you wondering what the status of the changes is.&lt;/p&gt; &lt;h3&gt;Just in time fork&lt;/h3&gt; &lt;p&gt;In my opinion, forks (which are really just publicly visible clones), should be made just in time. Currently, Code 52’s Pretzel project has &lt;a href="https://github.com/Code52/pretzel/network/members"&gt;47 forks&lt;/a&gt;, and as far as I can tell, many (most?) of them have had no changes pushed to them at all. (In fact, a nice github feature would be to hide forks that have not been pushed to yet, and to highlight forks that have pull requests outstanding).&lt;/p&gt; &lt;p&gt;The just in time fork workflow isn’t difficult. First clone from the main repository. Think of this clone as your private fork if that helps.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;git clone https://github.com/Code52/pretzel.git
+&lt;/pre&gt;
+&lt;p&gt;Once you decide to make some changes to your repo, you can make a branch to work on (not strictly necessary, but recommended).&lt;/p&gt;&lt;pre class="brush: plain;"&gt;git checkout –b my-new-feature
+&lt;/pre&gt;
+&lt;p&gt;Now work away on your feature. You can pull in changes from the master repository, and optionally merge them into your working branch whenever you like.&lt;/p&gt;
+&lt;p&gt;Once you are sure that you want to contribute to the project, at this point, you create your public fork on github. Now you add it as a remote:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;git remote add myfork https://myname@github.com/myfork/pretzel.git
+&lt;/pre&gt;
+&lt;p&gt;You can now easily push to your github fork. I think it is probably best to also have a feature branch on your github fork, which means that if you wanted to contribute another unrelated feature, you could do that in another branch, and have two pull requests outstanding that weren’t dependent on each other.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;git push myfork my-new-feature
+&lt;/pre&gt;
+&lt;p&gt;The github gui makes it very easy to issue a pull request from a branch.&lt;/p&gt;
+&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;p&gt;Why create dozens of unused forks when it is straightforward to create them at the point they are needed? Am I missing some important reason why you shouldn’t work like this? Let me know in the comments.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>git</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="c1c09fcf-b687-48e1-af6e-03a3cfdbae78">
+      <author>Hainesy</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/14064063520681427915</website>
+      <ip />
+      <userAgent />
+      <date>2012-02-16 15:42:45</date>
+      <content>Can I get a knife around here or are we all eating spaghetti?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="390da1c2-da43-4340-a2c2-0782979a846f">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-02-16 15:46:39</date>
+      <content>@hainesy, over 5000 forkfulls of spooks and knives available &lt;a href="https://github.com/octocat/Spoon-Knife" rel="nofollow"&gt;here&lt;/a&gt;.</content>
+    </comment>
+  </comments>
+</post>

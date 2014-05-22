@@ -1,0 +1,62 @@
+<post>
+  <title>XAML Animation Differences Between WPF and Silverlight 2</title>
+  <slug>xaml-animation-differences-between-wpf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-03-20 14:03:00</pubDate>
+  <lastModified>2010-10-04 17:38:13</lastModified>
+  <content>&lt;p&gt;I was working recently on adding some basic animations to a WPF application, and assumed I would simply be able to utilise the same syntax that I would if I was doing the same animation in Silverlight. Wrong!&lt;/p&gt;  &lt;p&gt;I started by adding a couple of &lt;strong&gt;Storyboard&lt;/strong&gt;s to a &lt;strong&gt;Grid.Resources&lt;/strong&gt; section:&lt;/p&gt;  &lt;pre class="brush: xml"&gt;&amp;lt;Page x:Class="LearningGames.NumbersPage"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+     Title="NumbersPage" Height="260"&amp;gt;
+     &amp;lt;Grid&amp;gt;
+         &amp;lt;Grid.Resources&amp;gt;
+          &amp;lt;Storyboard x:Name="storyboardWrong"&amp;gt;
+             &amp;lt;DoubleAnimation x:Name="da1" Storyboard.TargetName="labelWrong" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" /&amp;gt;
+             &amp;lt;DoubleAnimation x:Name="da2" Storyboard.TargetName="labelWrong" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:1" Duration="0:0:0.5" /&amp;gt;
+         &amp;lt;/Storyboard&amp;gt;
+         &amp;lt;Storyboard x:Name="storyboardRight"&amp;gt;
+             &amp;lt;DoubleAnimation x:Name="da3" Storyboard.TargetName="labelRight" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" /&amp;gt;
+             &amp;lt;DoubleAnimation x:Name="da4" Storyboard.TargetName="labelRight" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:1" Duration="0:0:0.5" /&amp;gt;
+         &amp;lt;/Storyboard&amp;gt;
+         &amp;lt;/Grid.Resources&amp;gt;&lt;/pre&gt;
+
+&lt;p&gt;In Silverlight 2, this would be enough. You could simply call storyboardWrong.Begin() in the code behind. But in WPF, things are a bit more complicated:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You need to specify x:Key for each &lt;strong&gt;Storyboard&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;The XAML compiler doesn't auto-generate member variables for each Storyboard.&lt;/li&gt;
+  &lt;li&gt;Storyboards must be found using &lt;strong&gt;TryFindResource&lt;/strong&gt;:
+    &lt;br&gt;storyboardWrong = (Storyboard)TryFindResource(&amp;quot;storyboardWrong&amp;quot;);&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;TryFindResource&lt;/strong&gt; will only work if the &lt;strong&gt;Storyboard&lt;/strong&gt; is in the &lt;strong&gt;Page.Resources&lt;/strong&gt; section of the XAML&lt;/li&gt;
+  &lt;li&gt;When you get round to running the &lt;strong&gt;Storyboard&lt;/strong&gt;, it will need a parameter to the begin method. You can pass the &amp;quot;this&amp;quot; pointer:
+    &lt;br&gt;storyboardWrong.Begin(this);&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So rather counter-intuitively, Silverlight actually makes some things easier than its more fully featured desktop counterpart WPF. Or am I missing some easier way of doing animation in WPF?&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="36ad8e16-ca5e-447c-b1e0-2069107c6b4b">
+      <author>Sam</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-03-28 21:02:00</date>
+      <content>I came upon your page while searching for tutorials on creating buttons with the glass look. &lt;BR/&gt;&lt;BR/&gt;The TryFindResource method searches up the visual tree, not down. For example, let's say you had a button on the page named "Button1" that was a child of the Page. In the code-behind, if you called Button1.TryFindResource("storyboardWrong"), you will be able to find the Storyboard that was placed in the Button's ResourceDictionary or in any of its parent's ResourceDictionaries.&lt;BR/&gt;&lt;BR/&gt;Other than this small fact, I don't think there is an easier way to do animations in WPF.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="99d21aed-22c6-4fe1-8cc3-b4f87b6ad7f4">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-05-03 01:51:00</date>
+      <content>try assigning it an x:Name&lt;BR/&gt;(having xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml")&lt;BR/&gt;and rebuilding the project&lt;BR/&gt;seems to work for me</content>
+    </comment>
+  </comments>
+</post>

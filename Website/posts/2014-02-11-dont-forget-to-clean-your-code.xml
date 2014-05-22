@@ -1,0 +1,32 @@
+<post>
+  <title>Don’t Forget to Clean Your Code</title>
+  <slug>dont-forget-to-clean-your-code</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-02-11 21:49:00</pubDate>
+  <lastModified>2014-02-11 21:49:53</lastModified>
+  <content>&lt;p&gt;I really love the idea of “Clean Code”. Keeping our classes and methods short, naming things well, and making sure our comments are actually helpful all makes a whole lot of sense. What’s even better about it is that its not a particularly complicated idea. It could be explained in a couple of hours, and even the most junior of developers shouldn’t have a problem grasping the main principles. It also doesn’t usually take too long to clean up dirty code. Rename some variables, extract some short methods out of long methods, and review the comments. The only slightly tricky bit is extracting a helper class out of a class that has grown too big.&lt;/p&gt; &lt;p&gt;So why don’t I write clean code all the time? Why isn’t all the code I’ve written since I heard about clean code a shining example of code cleanliness?&lt;/p&gt; &lt;p&gt;Well the brutal truth is, when I’m writing code, I’m not thinking about cleanness. I’m completely focused on what can I do to get the feature implemented. So at the point that I’m “done” in the sense of having working code and passing tests, my code is probably in a mess.&lt;/p&gt; &lt;p&gt;The trouble is, there is a huge temptation to skip the “cleaning” phase. After all, there’s always plenty of new development tasks waiting that I’m itching to get started on. But if we really believe that we spend ten times the amount of time reading code compared to writing it, then spending fifteen minutes cleaning our code before we move on will actually make us go much faster in the long-run.&lt;/p&gt; &lt;p&gt;Clean code is a habit you need to force yourself to learn. Clean before moving on to the next task. When the test goes green its time to clean. Clean before commit. If it’s not clean, it’s not complete.&lt;/p&gt; &lt;p&gt;&lt;em&gt;PS: be sure to check out Corey House’s excellent Pluralsight course on &lt;/em&gt;&lt;a href="http://pluralsight.com/training/Courses/TableOfContents/writing-clean-code-humans"&gt;&lt;em&gt;Clean Code&lt;/em&gt;&lt;/a&gt;&lt;em&gt;. &lt;/em&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>clean code</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="348fac12-c2c5-46de-8e43-94e200789362">
+      <author>DAve</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/07524890697045473232</website>
+      <ip />
+      <userAgent />
+      <date>2014-02-12 13:31:08</date>
+      <content>Good post.&lt;br /&gt;&lt;br /&gt;I find the best opportunity for cleaning code is at the point of checking into source control, since at that point you can run a diff to see your changes in isolation. &lt;br /&gt;&lt;br /&gt;In fact I tend to diff to see the changes, check this in, and then tidy and checkin again, in case my tidying breaks anything.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="77b1031f-301e-44cb-aa49-7a2b92987166">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2014-02-12 15:11:51</date>
+      <content>thanks Dave. With Git or Mercurial I&amp;#39;d definitely do a commit before cleaning, just wouldn&amp;#39;t push it. Also, in an ideal world, your unit tests should be protecting you from breaking things while cleaning</content>
+    </comment>
+  </comments>
+</post>

@@ -1,0 +1,36 @@
+<post>
+  <title>Storing Large Files in DVCS</title>
+  <slug>storing-large-files-in-dvcs</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-01-14 19:34:00</pubDate>
+  <lastModified>2014-01-14 19:34:00</lastModified>
+  <content>&lt;p&gt;I’m hoping to release a new Pluralsight course shortly on Distributed Version Control. It’s a generalised course, not specifically about Git or Mercurial, although I use those two as my main examples. &lt;/p&gt; &lt;p&gt;One of the topics I briefly touch on is the issue of storing large files within a DVCS repository. If you have used a centralized version control system, you may be used to putting all kinds of huge binary files into source control, such as test data, installers, dependencies. But this is generally not recommended in the world of DVCS. Why?&lt;/p&gt; &lt;p&gt;Well its not because it doesn’t work. If you want to put files that are hundreds of megabytes in size into a DVCS, it will have no problem doing so. &lt;/p&gt; &lt;h3&gt;Slow Clone&lt;/h3&gt; &lt;p&gt;One of the main reasons is the fact that with distributed version control, &lt;strong&gt;clone gets everything&lt;/strong&gt;. It gets all the files and folders in your repository. This is quite different from the way that centralized systems work. With centralized version control, you can usually ask just to get the latest version of a single folder within a repository, and work with that. So you can avoid having to download large files if you know you don’t need them.&lt;/p&gt; &lt;p&gt;With DVCS clone not only gets the latest versions of all files in your repository, but all historical versions too. This means that if you add a huge file, then delete it in a future commit, you won’t make clone any quicker. It will still need to download that huge file, in case you want to go back in history to that version.&lt;/p&gt; &lt;p&gt;So storing huge files in a DVCS repo will make clone slow. Of course, once you’ve done the clone, everyday operations will be nice and quick again. So you may decide you can put up with a slow clone in order to store all the files you want to in your repository.&lt;/p&gt; &lt;h3&gt;Memory Usage&lt;/h3&gt; &lt;p&gt;Another issue is that some DVCS may be written assuming that they can load individual files into memory. So Mercurial for example will warn you when you add a file over about 10MB that it can sometimes cause it to use 3-4 times the size of the file in RAM. So if you were adding a 500MB file, then you could quite easily run into an out of memory error. Git doesn’t give you any warnings, so it may not suffer from the same problem, although I have read reports of people having memory issues when dealing with huge files.&lt;/p&gt; &lt;h3&gt;Not Source Code&lt;/h3&gt; &lt;p&gt;There are other reasons not to store huge files in repositories. They are typically binary files, which are rarely mergable and very hard to diff. It may be better to recognise that these assets are not source code, and to store them elsewhere on a server. There are a number of extensions for DVCS tools like Git and Mercurial that make it easier to host properly versioned copies of large binary files on a centralized server, allowing you to create a hybrid distributed/centralized system. (e.g. see &lt;a href="http://git-annex.branchable.com/"&gt;git-annex&lt;/a&gt;)&lt;/p&gt; &lt;p&gt;One approach is for a large files server to make the files available over http, with a separate URL not just for each file, but for each version of the file. This is important, as if you go back to build a historical version of your product, you will want the big file in the state that it was at the time.&lt;/p&gt;&lt;pre class="brush: plain;"&gt;http://mylargefilesserver/biginstaller.exe/v1/
+http://mylargefilesserver/welcome_video.mp4/v1/
+http://mylargefilesserver/welcome_video.mp4/v2/
+&lt;/pre&gt;
+&lt;p&gt;It’s up to you whether the inconvenience of having to manage a separate large files server is worth the advantage of keeping your main repository size small. It probably also depends on whether these large files are essential for developers to be able to hotfix old versions, or whether they can do without them, and only the build machine actually needs everything.&lt;/p&gt;
+&lt;h3&gt;Erasing a Large File from Repository History&lt;/h3&gt;
+&lt;p&gt;If you inadvertently checked a large file into your repository, and now wish you hadn’t, it can be really hard to get rid of, especially if new commits have been made since you added it. The usual approach to fixing this is to rewrite history, creating a brand new repository with all the same changes but with the large file explicitly excluded.&lt;/p&gt;
+&lt;p&gt;In Mercurial you can do this quite easily with the &lt;a href="http://mercurial.selenic.com/wiki/ConvertExtension"&gt;convert extension&lt;/a&gt;. You need to create a filemap (e.g. filemap.txt), which indicates what files you want to exclude (the filemap can also be used to rename or move things). Here I simply want to remove a large SDK that shouldn’t have been added to source control, so my filemap contains a single line:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;exclude "DXSDK_Jun10.exe"
+&lt;/pre&gt;
+&lt;p&gt;Now we can run the convert extension to create a new repository that excludes DXSDK_Jun10.exe:&lt;/p&gt;&lt;pre class="brush: plain;"&gt;hg convert --filemap filemap.txt original_repo new_repo
+&lt;/pre&gt;
+&lt;p&gt;And now you have a new repository without the problematic large file. One word of caution though. While the hashes of all the revisions before the large file was added will stay the same, all the hashes of revisions afterwards will change. So &lt;em&gt;everyone &lt;/em&gt;needs to clone the new repository and base their new work off that. If anyone is using an old clone containing the large file, there is a chance it could end up getting pulled back into the main repository (it’s the same problem you can run into if you &lt;a href="/post/to-rebase-or-not-to-rebase-that-is"&gt;rebase published commits&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Hopefully in the future we’ll see some innovation in DVCS tools for making large file support a smoother experience. I think there is some scope for a lazy clone, where large files (particularly deleted ones) don’t have to come down as part of the initial clone, but are pulled down on demand if needed.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>DVCS</category>
+    <category>Mercurial</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="03740a17-1609-4fcf-9db2-d369f4919c93">
+      <author>Jakub Narebski</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/11847202568800326989</website>
+      <ip />
+      <userAgent />
+      <date>2014-01-24 19:59:42</date>
+      <content>If you want to remove large file from Git repository history, there is specialized third party &lt;a href="http://rtyley.github.io/bfg-repo-cleaner/" rel="nofollow"&gt;BFG Repo Cleaner&lt;/a&gt; tool.  Or you can use &lt;i&gt;git filter-branch&lt;/i&gt; command.</content>
+    </comment>
+  </comments>
+</post>

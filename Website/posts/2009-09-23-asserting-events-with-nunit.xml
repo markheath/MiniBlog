@@ -1,0 +1,147 @@
+<post>
+  <title>Asserting events with NUnit</title>
+  <slug>asserting-events-with-nunit</slug>
+  <author>Mark Heath</author>
+  <pubDate>2009-09-23 15:41:00</pubDate>
+  <lastModified>2010-09-23 15:16:10</lastModified>
+  <content>Suppose we want to write unit tests for a class that raises events. We want to check that the right events are raised, the right number are raised, and that they have the correct parameters. Here’s an example of a class that we might want to test:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;class Blah
+{
+    public event EventHandler Closed;
+    public event EventHandler&amp;lt;OpenedEventArgs&amp;gt; Opened;
+
+    public void RaiseClosed(int count)
+    {
+        for(int n = 0; n &amp;lt; count; n++)
+        {
+            Closed(this, EventArgs.Empty);
+        }
+    }
+
+    public void RaiseOpened(int count)
+    {
+        for(int n = 0; n &amp;lt; count; n++)
+        {
+            Opened(this, new OpenedEventArgs() { Message = String.Format(&amp;quot;Message {0}&amp;quot;, n + 1) });
+        }
+    }
+}
+
+class OpenedEventArgs : EventArgs
+{
+    public string Message { get; set; }
+}&lt;/pre&gt;
+
+&lt;br&gt;
+To write &lt;a href="http://www.nunit.org/index.php" target="_blank"&gt;NUnit&lt;/a&gt; test cases for this class, I would usually end up writing an event handler, and storing the parameters of the event in a field like follows:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;EventArgs blahEventArgs;
+
+[Test]
+public void TestRaisesClosedEvent()
+{
+    Blah blah = new Blah();
+    blahEventArgs = null;
+    blah.Closed += new EventHandler(blah_Closed);
+    blah.RaiseClosed(1);
+    Assert.IsNotNull(blahEventArgs);
+}
+
+void blah_Closed(object sender, EventArgs e)
+{
+    blahEventArgs = e;
+}&lt;/pre&gt;
+While this approach works, it doesn’t feel quite right to me. It is fragile – forget to set blahEventArgs back to null and you inadvertently break other tests. I was left wondering what it would take to create an &lt;b&gt;Assert.Raises&lt;/b&gt; method that removed the need for a private variable and method for handling the event. &lt;br&gt;
+My ideal syntax would be the following:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;Blah blah = new Blah();
+var args = Assert.Raises&amp;lt;OpenedEventArgs&amp;gt;(blah.Opened, () =&amp;gt; blah.RaiseOpened(1));
+Assert.AreEqual(&amp;quot;Message 1&amp;quot;, args.Message);&lt;/pre&gt;
+&lt;br&gt;
+The trouble is, you can’t specify “blah.Opened” as a parameter – this will cause a compile error. So I have to settle for second best and pass the object that raises the event, and the name of the event. So here’s my attempt at creating Assert.Raise, plus an Assert.RaisesMany method that allows you to see how many were raised and examine the EventArgs for each one:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;public static EventArgs Raises(object raiser, string eventName, Action function)
+{
+    return Raises&amp;lt;EventArgs&amp;gt;(raiser, eventName, function);
+}
+
+public static T Raises&amp;lt;T&amp;gt;(object raiser, string eventName, Action function) where T:EventArgs
+{
+    var listener = new EventListener&amp;lt;T&amp;gt;(raiser, eventName);
+    function.Invoke();
+    Assert.AreEqual(1, listener.SavedArgs.Count);
+    return listener.SavedArgs[0];
+}
+
+public static IList&amp;lt;T&amp;gt; RaisesMany&amp;lt;T&amp;gt;(object raiser, string eventName, Action function) where T : EventArgs
+{
+    var listener = new EventListener&amp;lt;T&amp;gt;(raiser, eventName);
+    function.Invoke();
+    return listener.SavedArgs;
+}
+
+class EventListener&amp;lt;T&amp;gt; where T : EventArgs
+{
+    private List&amp;lt;T&amp;gt; savedArgs = new List&amp;lt;T&amp;gt;();
+
+    public EventListener(object raiser, string eventName)
+    {
+        EventInfo eventInfo = raiser.GetType().GetEvent(eventName);
+        var handler = Delegate.CreateDelegate(eventInfo.EventHandlerType, this, &amp;quot;EventHandler&amp;quot;);
+        eventInfo.AddEventHandler(raiser, handler);            
+    }
+
+    private void EventHandler(object sender, T args)
+    {
+        savedArgs.Add(args);
+    }
+
+    public IList&amp;lt;T&amp;gt; SavedArgs { get { return savedArgs; } }
+}&lt;/pre&gt;
+This allows us to dispense with the private field and event handler method in our test cases, and have nice clean test code:&lt;br&gt;
+&lt;pre class="brush: csharp;"&gt;[Test]
+public void TestCanCheckRaisesEventArgs()
+{
+    Blah blah = new Blah();
+    AssertExtensions.Raises(blah, &amp;quot;Closed&amp;quot;, () =&amp;gt; blah.RaiseClosed(1));
+}
+
+[Test]
+public void TestCanCheckRaisesGenericEventArgs()
+{
+    Blah blah = new Blah();
+    var args = AssertExtensions.Raises&amp;lt;OpenedEventArgs&amp;gt;(blah, &amp;quot;Opened&amp;quot;, () =&amp;gt; blah.RaiseOpened(1));
+    Assert.AreEqual(&amp;quot;Message 1&amp;quot;, args.Message);
+}
+
+[Test]
+public void TestCanCheckRaisesMany()
+{
+    Blah blah = new Blah();
+    var args = AssertExtensions.RaisesMany&amp;lt;OpenedEventArgs&amp;gt;(blah, &amp;quot;Opened&amp;quot;, () =&amp;gt; blah.RaiseOpened(5));
+    Assert.AreEqual(5, args.Count);
+    Assert.AreEqual(&amp;quot;Message 3&amp;quot;, args[2].Message);
+}&lt;/pre&gt;
+&lt;br&gt;
+There are a couple of non-optimal features to this solution:&lt;br&gt;
+&lt;ul&gt;
+&lt;li&gt;Having to specify the event name as a string is ugly, but there doesn’t seem to be a clean way of doing this.&lt;/li&gt;
+&lt;li&gt;It expects that your events are all of type EventHandler or EventHandler&amp;lt;T&amp;gt;. Any other delegate won’t work.&lt;/li&gt;
+&lt;li&gt;It throws away the sender parameter, but you might want to test this.&lt;/li&gt;
+&lt;li&gt;You can only test on one particular event being raised in a single test (e.g. can’t test that a function raises both the Opened and Closed events), but this may not be a bad thing as tests are not really supposed to assert more than one thing.&lt;/li&gt;
+&lt;/ul&gt;
+I would be interested to know if anyone has a better way of testing that objects raise events. Am I missing a trick here? Any suggestions for how I can make my Raises function even better?&lt;br&gt;
+Download full source code &lt;a href="http://pastie.org/pastes/627592/download"&gt;here&lt;/a&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NUnit</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="8ff6c802-2655-4c5b-828c-4d32bf49437b">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-01-18 10:16:20</date>
+      <content>Another problem is that the RaiseClosed and RaiseOpened must be public.</content>
+    </comment>
+  </comments>
+</post>

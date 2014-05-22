@@ -1,0 +1,94 @@
+<post>
+  <title>How to Drag Shapes on a Canvas in WPF</title>
+  <slug>how-to-drag-shapes-on-canvas-in-wpf</slug>
+  <author>Mark Heath</author>
+  <pubDate>2012-11-21 14:48:00</pubDate>
+  <lastModified>2012-11-21 14:48:10</lastModified>
+  <content>&lt;p&gt;I recently needed to support dragging shapes on a Canvas in WPF. There are a few detailed articles on this you can read over at CodeProject (see &lt;a href="http://www.codeproject.com/Articles/15354/Dragging-Elements-in-a-Canvas"&gt;here&lt;/a&gt; and &lt;a href="http://www.codeproject.com/Articles/387977/Dragging-Elements-in-a-Canvas"&gt;here&lt;/a&gt; for example). However, I just needed something very simple, so here’s a short code snippet that you can try out using my favourite prototyping tool &lt;a href="http://www.linqpad.net/"&gt;LINQPad&lt;/a&gt;:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var w = new Window();
+w.Width = 600;
+w.Height = 400;
+var c = new Canvas();
+
+Nullable&amp;lt;Point&amp;gt; dragStart = null;
+
+MouseButtonEventHandler mouseDown = (sender, args) =&amp;gt; {
+    var element = (UIElement)sender;
+    dragStart = args.GetPosition(element); 
+    element.CaptureMouse();
+};
+MouseButtonEventHandler mouseUp = (sender, args) =&amp;gt; {
+    var element = (UIElement)sender;
+    dragStart = null; 
+    element.ReleaseMouseCapture();
+};
+MouseEventHandler mouseMove = (sender, args) =&amp;gt; {
+    if (dragStart != null &amp;amp;&amp;amp; args.LeftButton == MouseButtonState.Pressed) {    
+        var element = (UIElement)sender;
+        var p2 = args.GetPosition(c);
+        Canvas.SetLeft(element, p2.X - dragStart.Value.X);
+        Canvas.SetTop(element, p2.Y - dragStart.Value.Y);
+    }
+};
+Action&amp;lt;UIElement&amp;gt; enableDrag = (element) =&amp;gt; {
+    element.MouseDown += mouseDown;
+    element.MouseMove += mouseMove;
+    element.MouseUp += mouseUp;
+};
+var shapes = new UIElement [] {
+    new Ellipse() { Fill = Brushes.DarkKhaki, Width = 100, Height = 100 },
+    new Rectangle() { Fill = Brushes.LawnGreen, Width = 200, Height = 100 },
+};
+
+
+foreach(var shape in shapes) {
+    enableDrag(shape);
+    c.Children.Add(shape);
+}
+
+w.Content = c;
+w.ShowDialog();
+&lt;/pre&gt;
+&lt;p&gt;The key is that for each draggable shape, you handle MouseDown (to begin a mouse “capture”), MouseUp (to end the mouse capture), and MouseMove (to do the move). Obviously if you need dragged objects to come to the top in the Z order, or to be able to auto-scroll as you drag, you’ll need to write a bit more code than this. The next obvious step would be to turn this into an “attached behaviour” that you can add to each object you put onto your canvas.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="f45cdb82-94ef-4b37-8724-e08422081e31">
+      <author>blorq</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/16308269163452150701</website>
+      <ip />
+      <userAgent />
+      <date>2012-11-21 17:58:09</date>
+      <content>You also have to deal with losing the mouse outside of the window and capture loss. &lt;br /&gt;&lt;br /&gt;I have also found this method to be poorly performing, as those properties effect layout. I might suggest trying with a render transform. </content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="46a4d3b2-8053-40da-83e0-599c7f27048a">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2012-11-21 18:12:38</date>
+      <content>Yes, this method lets you move things out of visible space. In what situations are you getting capture loss?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="437535de-6563-4f3d-b3b5-d4063d8fab4e">
+      <author>Cortran</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-03-21 23:59:32</date>
+      <content>Great!!!!!!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3a4d620f-e6ba-4976-87c9-3a7564c51969">
+      <author>Unknown</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/01649683732217694480</website>
+      <ip />
+      <userAgent />
+      <date>2014-01-10 10:04:00</date>
+      <content>Very nice - simple and elegant. I like your use of the Action&amp;lt;&amp;gt; to encapsulate &amp;quot;dragability&amp;quot; and apply it to arbitrary elements.&lt;br /&gt;Thanks, you&amp;#39;ve nudged me in a very good direction!</content>
+    </comment>
+  </comments>
+</post>

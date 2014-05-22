@@ -1,0 +1,21 @@
+<post>
+  <title>New Version of MIDI File Mapper</title>
+  <slug>new-version-of-midi-file-mapper</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-08-03 10:38:00</pubDate>
+  <lastModified>2007-08-03 10:38:13</lastModified>
+  <content>&lt;p&gt;I've updated &lt;a href="http://www.codeplex.com/midifilemapper"&gt;MIDI File Mapper&lt;/a&gt; to a new version, which is mainly a bug-fix release. I'm building it now with Visual Studio 2008 beta 2, which is looking much more like a finished product than beta 1. I'm still building against .NET 2.0 of course. The multi-targetting feature in VS2008&amp;nbsp;is superb.&lt;/p&gt; &lt;p&gt;I'm also trying to add unit tests whenever I do a bugfix. MIDI File Mapper is one of those rare projects that lends itself really well to unit testing. I still can't bring myself to go the whole TDD approach though. Mads Kristensen has some good thoughts about &lt;a href="http://blog.madskristensen.dk/post/Testing-your-code.aspx"&gt;when to unit test&lt;/a&gt;&amp;nbsp;which I think gets the balance about right.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories />
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="0780368d-1902-4ae0-bf26-bbc04fd74919">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2007-09-10 02:23:00</date>
+      <content>Mark;&lt;BR/&gt;I can't find your email address anywhere.  Back in July you blogged about gel buttons - XAML Gel Buttons in WPF &amp; Silverlight.  I was wondering if you could also do an adaptation to render gel buttons in the W3C's XML-based User-Interface Language: XUL (also known as Mozilla XUL and is different than, for instance, the Luxor Xul Toolkit).  My email is gene@viewtouch.com</content>
+    </comment>
+  </comments>
+</post>

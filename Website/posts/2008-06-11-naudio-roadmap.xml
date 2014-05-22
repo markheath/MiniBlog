@@ -1,0 +1,24 @@
+<post>
+  <title>NAudio Roadmap</title>
+  <slug>naudio-roadmap</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-06-11 07:29:00</pubDate>
+  <lastModified>2008-06-11 07:30:06</lastModified>
+  <content>&lt;p&gt;My &lt;a href="http://www.codeplex.com/naudio"&gt;NAudio&lt;/a&gt; open source .NET audio library project has made some good progress in the past few weeks. I have successfully got playback with &lt;strong&gt;WASAPI &lt;/strong&gt;working, and the Resampler DirectX Media object is also working (albeit with an annoying limitation that you cannot create it on one thread and use it on another). Also, for the first time in the history of this six year long project, I have someone very interested in joining the development team.&lt;/p&gt;  &lt;p&gt;This marks an interesting new phase in the project, as when it is just me, I can keep all my plans in my head, but when the team expands then there needs to be proper planning and discussion of what we are doing. So here is my ideas for the near future (all time-dependent of course).&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Version 1.2 - ASIO, WASAPI and Resampler DMO 'Tech Preview'&lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;This will be released very soon as we do not yet have a public release demonstrating these technologies, and people are asking me to release a version that can do what I demonstrated in my &lt;a href="/post/screencast-creating-wav-file-resampler"&gt;resampler screencast&lt;/a&gt; a while ago.&lt;/p&gt;  &lt;p&gt;&lt;strong&gt;Version 1.3 &lt;/strong&gt;&lt;/p&gt;  &lt;p&gt;This will be a consolidation release, looking to raise the quality of the features we already are using.&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;A more full WASAPI implementation including audio capture and event-driven mode&lt;/li&gt;    &lt;li&gt;Look into the possibility of wrapping some additional DMOs&lt;/li&gt;    &lt;li&gt;More code in the NAudioDemo to demonstrate how the library is meant to be used, and also to ensure we can easily test features. Here's some of the features I want to add to this little project:&lt;/li&gt;    &lt;ul&gt;     &lt;li&gt;Use of the mixer stream&lt;/li&gt;      &lt;li&gt;Use of ACM for format conversion&lt;/li&gt;      &lt;li&gt;MP3 file reader (assuming it still works)&lt;/li&gt;      &lt;li&gt;Wave File Writer&lt;/li&gt;      &lt;li&gt;Use of simple DSP&lt;/li&gt;      &lt;li&gt;A realtime FM Synth&lt;/li&gt;   &lt;/ul&gt;    &lt;li&gt;Increase our unit test coverage. I think this will be important with extra developers that we can write unit tests to ensure that behaviour we are relying on for our applications is not broken by other features&lt;/li&gt;    &lt;li&gt;Documentation - I want to write a few more blog entries here, as well as update the Wiki at CodePlex&lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;&lt;strong&gt;Version 1.5&lt;/strong&gt;&lt;/p&gt;  &lt;ul&gt;   &lt;li&gt;A design review of our core interfaces such as WaveStream, to see if we can come up with a more intuitive for all types of developers&lt;/li&gt;    &lt;li&gt;Investigation of whether we can increase performance by using IntPtrs or unsafe pointers (while trying to remain friendly to VB programmers)&lt;/li&gt;    &lt;li&gt;Introduction of some WPF controls&lt;/li&gt;    &lt;li&gt;Reliable reader and writer streams for WMA, MP3, OGG (if possible)&lt;/li&gt;    &lt;li&gt;Investigate possibility of using ASIO input&lt;/li&gt;    &lt;li&gt;Investigate possibility of creating a VstHostWaveStream (possibly building on the work from &lt;a href="http://www.codeplex.com/vstnet"&gt;VST.NET&lt;/a&gt;)&lt;/li&gt;    &lt;li&gt;I am also considering whether we should move from the MS community license to the MS permissive license, to make using NAudio in commercial projects an easier decision for people.&lt;/li&gt; &lt;/ul&gt;  &lt;p&gt;Please feel free to add your own wishlist and ideas for the future of NAudio to this post.&lt;/p&gt;</content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>audio</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="2f6b317b-d073-45f1-a830-8b120a9a5dee">
+      <author>John Mertus</author>
+      <email>noreply@blogger.com</email>
+      <website>http://mertus.org</website>
+      <ip />
+      <userAgent />
+      <date>2009-06-12 15:35:25</date>
+      <content>Brief comment.  Drop DirectX support.  Microsoft has killed it for 64 bit systems. You are dooming NAudio to be a 32 bit system.  &lt;br /&gt;&lt;br /&gt;I do thank you for all the ACM work you did, it was a real help.</content>
+    </comment>
+  </comments>
+</post>

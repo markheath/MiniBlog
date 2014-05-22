@@ -1,0 +1,135 @@
+<post>
+  <title>MVVM – Is it Worth the Pain?</title>
+  <slug>mvvm-is-it-worth-pain</slug>
+  <author>Mark Heath</author>
+  <pubDate>2010-10-29 17:01:00</pubDate>
+  <lastModified>2010-10-29 17:01:23</lastModified>
+  <content>&lt;p&gt;After finding it &lt;a href="/post/wpf-and-mvvm-in-ironpython"&gt;very easy&lt;/a&gt; to get MVVM working in WPF with &lt;a href="http://ironpython.net"&gt;IronPython&lt;/a&gt;, I thought it would be trivial to achieve the same thing in Silverlight. Unfortunately, my bindings didn’t work at all after porting a simple game to Silverlight. The problem may have something to do with the issues described in this &lt;a href="http://gui-at.blogspot.com/2009/11/inotifypropertychanged-and-databinding.html"&gt;blog post&lt;/a&gt;, but since I needed to demo my code for a local user group event, I abandoned MVVM and went back to just talking directly to the controls from within my ViewModel, which worked perfectly, and simplified my code considerably. It made me wonder why I was using MVVM in the first place.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Pain of MVVM&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;I jumped on the bandwagon fairly early and have been writing the majority of my WPF and Silverlight code using MVVM. But to be honest, it has not been plain sailing. There is a real elegance to it that I like, and I love the testability, but there have been plenty of pain points.&lt;/p&gt; &lt;p&gt;For example, triggering animations and discovering when they have finished from the ViewModel has been a nightmare. I’ve tried various solutions, finding one that works with Silverlight and one with WPF but none that work with both, and have managed to &lt;a href="https://connect.microsoft.com/VisualStudio/feedback/details/556025/vs2010-crashes-opening-wpf-designer-when-using-storyboard-static-resource-with-attached-properties"&gt;crash Visual Studio&lt;/a&gt; dozens of times in the process. &lt;/p&gt; &lt;p&gt;Even simple things like setting the focus to the appropriate controls requires a rather convoluted system of “behaviours”, to do something that is a single line of code with access to the controls themselves. And every time I create a behaviour I seem to spend ages debugging my dependency properties, trying to work out why they aren’t doing what I expected.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;The Purpose of MVVM&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;So if MVVM is so painful for non-trivial applications, why use it at all? What’s the point of MVVM? I think there are three answers. &lt;/p&gt; &lt;p&gt;&lt;strong&gt;1. Testability&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The first driver for using MVVM is testability. If we put our logic in the C# “code-behind” of a XAML class, then running unit tests on that logic becomes very difficult. But with IronPython, that consideration is irrelevant. Since it is a dynamic language, and we are not using “code-behind” in any case, my non-MVVM version of my ViewModel is just as testable as the one that used data binding exclusively.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;2. Data Binding&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The second motivation for using MVVM is that the pattern encourages the use of data binding, and simplifies it considerably by removing the need for data converters or complicated binding expressions. But why is data-binding to a TextBox better than just getting or setting its Text property? &lt;/p&gt; &lt;p&gt;One of the key benefits of data-binding comes when we want to bind the same thing to more than one property. A Command object is a good example. One Command object could be bound to a drop-down menu and a toolbar button. So setting the Command’s IsEnabled state can be used to enable and disable both views. But most of the time, binding is a one-to-one relationship.&lt;/p&gt; &lt;p&gt;Data binding also saves a bunch of code in CRUD type applications where you are binding directly to properties on an existing model type, but I don’t tend to write applications like that anyway. I think you can use it to make magical things happen with input validation too, but again, it’s not something I’ve ever needed.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;3. Designability&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;The third driver behind MVVM is the goal of designer / developer separation. The idea is that a designer can create a XAML file and bind it to test data, and then the developer can come along and create the real DataContext at a later date. The idea certainly sound impressive, but I can’t help but think that the designer will run into all the problems mentioned above if he actually wants to give his XAML GUI a real workout. And the truth is that I’ve never worked with a designer writing XAML and will not be doing so in the foreseeable future. The graphic designers we use send us bitmaps and Flash mockups.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;A Hybrid Approach&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;I am now wondering whether I should think of my ViewModel more as a “Presenter”. It could still be the DataContext of the object defined in XAML to enable data-binding where required, but it would also have access directly to any properties on that XAML object. For testability in statically typed languages, you could define an interface with methods like StartAnimation or SetFocusToTextBox – a little cumbersome perhaps, but probably no more so than the hoops you have to jump through to make these things happen from your ViewModel using nothing but data binding.&lt;/p&gt; &lt;p&gt;Anyway, looks like I’m not alone in questioning MVVM. Here’s a good &lt;a href="http://odetocode.com/blogs/scott/archive/2010/02/02/thoughts-on-an-mvvm-rant.aspx"&gt;post&lt;/a&gt; from K Scott Allen. What do you think? Does MVVM fail a cost-benefit analysis for the types of application you work on? &lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>MVVM</category>
+    <category>WPF</category>
+    <category>C#</category>
+    <category>Silverlight</category>
+    <category>IronPython</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="b74ed13a-34ed-42c1-97b8-6c521721ac05">
+      <author>Jeremy Likness</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18407945801671553594</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 10:46:36</date>
+      <content>I wanted to provide a perspective from &amp;quot;the real world&amp;quot; having worked on several LARGE Silverlight projects and even ones that used code-behind and talked to controls vs. ones that were more traditional MVVM. &lt;br /&gt;&lt;br /&gt;Triggering animations - this is straightforward with a delegate that has a callback parameter. The animation can fire and then callback when done, and in testing you can mock your own callback. Typically we just use a visual state transition for this.&lt;br /&gt;&lt;br /&gt;I think you struggling with behaviors is hardly a valid reason to condemn them - we use tons of them without issue and from a developers pespective it might be &amp;quot;the behavior is code&amp;quot; but from a designer it&amp;#39;s, &amp;quot;I can drag and drop and I&amp;#39;m done.&amp;quot; &lt;br /&gt;&lt;br /&gt;As for testing, I&amp;#39;ve worked with several projects that were a nightmare to test because the views had too much logic in the code-behind so the only way to effectively test was to spin up a view and do stuff with it. When refactored to cleanly separate to the view model, the view model unit tests were straightforward and now could be used anywhere regardless of the view.&lt;br /&gt;&lt;br /&gt;Data-binding - the point here is that you can build your entire business logic without knowing how the view is implemented. In small projects it might not matter, but for large ones this is huge. I literally just expose a boolean or a string and I&amp;#39;m done - whether the designer implements as TextBlock or TextBox or CheckBox or button doesn&amp;#39;t matter to me. &lt;br /&gt;&lt;br /&gt;Probably the most important item here is designability. On small projects you&amp;#39;re right, probably doesn&amp;#39;t matter. On large projects this is key and yes, there ARE designers who write XAML - very good designers. We&amp;#39;ve built huge Silverlight applications with completely independent developer and designer workflows and they converge nicely because of proper use of the pattern.&lt;br /&gt;&lt;br /&gt;Again, I&amp;#39;m not a fan of MVVM just because I choose to be or because I want to make life hard. I&amp;#39;ve done it with, and without, and we do it faster, better, and have a much better designer/developer workflow when using MVVM. &lt;br /&gt;&lt;br /&gt;If you are writing small applications or are the only developer (or one of a few) then I can see where it might not seem valuable, but when you work on larger line of business applications it becomes the key to running a scalable, successful project.&lt;br /&gt;&lt;br /&gt;Again, that&amp;#39;s not an &amp;quot;here is my opinion because I think it&amp;#39;s better&amp;quot; but a fact were encountered based on experience working with MVVM and non-MVVM projects and comparing speed to production, stability, and maintainability of the appplications.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="6416878f-f7de-4d5a-b5d0-bb76ffe6fbd5">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 11:14:04</date>
+      <content>hi Jeremy,&lt;br /&gt;Thanks for responding. Seems like your comment got marked as spam - shall I delete the first?&lt;br /&gt;&lt;br /&gt;After posting this I realised I had been overly harsh on data-binding. I completely forgot about how useful it is for filling up collections. In any case, I don&amp;#39;t plan to stop using it wherever I can. It&amp;#39;s just that in some places it has felt like it is more hassle than its worth.&lt;br /&gt;&lt;br /&gt;I&amp;#39;d love to see your solution for animations. The key for me is that I must get notified on storyboard completion - most solutions I have found overlook this need. Here&amp;#39;s where I&amp;#39;m at &lt;a href="http://learninggames.codeplex.com/SourceControl/changeset/view/ec19f0af442f#LearningGames.Framework%2fStoryboardHelpers.cs" rel="nofollow"&gt;currently&lt;/a&gt;.&lt;br /&gt;(and like I said, the number of times I crashed Visual Studio while developing this was horrible - at one stage I couldn&amp;#39;t open my XAML in design view without crashing VS). Even now, I get wierd errors about can&amp;#39;t unfreeze a frozen storyboard when I attempt to reuse the UserControl (although this is a WPF-only issue - Silverlight works just fine).&lt;br /&gt;&lt;br /&gt;Really what I needed was a ready-made reliable, robust Animation behaviour that worked for both WPF and Silverlight, rather than wasting days simply trying to make something work with MVVM, that I could achieve quite simply without MVVM.&lt;br /&gt;&lt;br /&gt;As for having graphic designers that give you XAML - I&amp;#39;m very jealous!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="1109f4e0-7de1-444c-898d-1c65bf94692c">
+      <author>Jeremy Likness</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/18407945801671553594</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 13:05:56</date>
+      <content>Sure, you can delete the first one. :) &lt;br /&gt;&lt;br /&gt;As for the animations ... I&amp;#39;ll have to create an example when I get time, but here&amp;#39;s the short and long. &lt;br /&gt;&lt;br /&gt;1. Attached property (can be a behavior if you like) that gives a story board a &amp;quot;tag&amp;quot; you want to use to for it. This puts the storyboard in a static dictionary with tag/storyboard and wires into the completed&lt;br /&gt;2. On the storyboard completed, an event aggregator message is published with the tag. For example, create a &amp;quot;StoryboardCompleted&amp;quot; message and the value in that message is the tag. &lt;br /&gt;&lt;br /&gt;So now you fire the storyboard however you like - a click, a behavior, whatever. The attached property registered it and when the story board finishes, it raises the event aggregator message.&lt;br /&gt;&lt;br /&gt;Whatever ViewModel needs to respond simply registers for that message and when it receives it, does what it needs to do.&lt;br /&gt;&lt;br /&gt;Does that make sense?&lt;br /&gt;&lt;br /&gt;But I guess the question is also - what is the purpose for waiting for it to complete? If it&amp;#39;s to chain other animations, I&amp;#39;d use the visual state aggregator instead:&lt;br /&gt;&lt;br /&gt;http://csharperimage.jeremylikness.com/2010/03/introducing-visual-state-aggregator.html&lt;br /&gt;&lt;br /&gt;If it&amp;#39;s to delay an action, for example, I &amp;quot;click&amp;quot; and then an animation happens and THEN I fire a comcmand, I&amp;#39;d use a behavior that simply chains the command to the click. Basically, behavior has three dependency properties: a storyboard (you can bind by {ElementName=storyboardname}), a command, and a commandparameter. When fired, it kicks of the storyboard and waits for completed. When completed, it calls the command.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f5500808-f2e7-4ee3-ba0b-59ca72ce46fc">
+      <author>Rui</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/08025730369312815002</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 13:25:44</date>
+      <content>i sometimes struggle with some points specially things like focus a textbox on the view after something happens on the vm. for that i simply create a event , and subscribe to it in the view. when it&amp;#39;s fire i set the focus. &lt;br /&gt;&lt;br /&gt;remember that the thing that&amp;#39;s improtat is that you should not have conditional code in code behind just strait forward things. &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Assumign that you can&amp;#39;t have any code on .cs of your view is wrong, if u need it put it there.. just try that is always silpy straight with if or cases or anything like that. &lt;br /&gt;&lt;br /&gt;For things liek storyboards i normally use states to contol data, and bind the states to propertys in my VM.. this was trickry at first but after you get the feeling is easy.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="b7c117d3-a85d-42af-aacf-03f7484646bf">
+      <author>Colin Blair</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.riaservicesblog.net</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 14:07:55</date>
+      <content>I have seen performance recommendations for WP7 that have said that data binding can hurt performance, so I think there are definite instances where MVVM doesn&amp;#39;t apply. I write LOB applications myself, not games, and that is where I think MVVM makes the most sense.&lt;br /&gt;&lt;br /&gt;One correction though, a ViewModel already is a presenter, MVVM and MVP are synonymous. I think the term you are looking for is Controller.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="92605bde-5ed2-4422-b54d-5a43f3222af0">
+      <author>David Seruyange</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/02586023781945095350</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 15:05:00</date>
+      <content>Another note from the field, MVVM is to me like saving up and paying for something outright versus going on credit and building a lot of technical debt. It&amp;#39;s painful at first but over the long term it is more extensible and maintainable. &lt;br /&gt;&lt;br /&gt;I will admit that our application is not &amp;quot;testable&amp;quot; or &amp;quot;test driven&amp;quot; in an automated way so this is the smallest factor - we hope to get there one day but at present it&amp;#39;s not a factor. It&amp;#39;s the maintainability and stability that we like. &lt;br /&gt;&lt;br /&gt;With that said, I think MVVM has been victim of too much hype (and consultingware e.g. selling people on a new way to do things that will change their life, but that&amp;#39;s another story). People have made it seem like if you aren&amp;#39;t using it you&amp;#39;re somehow doing things &amp;quot;wrong&amp;quot; even if your application is not data binding heavy or a part of some test heavy process. &lt;br /&gt;&lt;br /&gt;I also think it would be nice for Microsoft to push really hard at bringing some of the MVVM functionality right into the main Silverlight SDK. I understand that there&amp;#39;s Prism but there&amp;#39;s a lot of stuff there for a person simply trying to use some MVVM concepts - I think it&amp;#39;s interesting that most people use MVVM Light (e.g. John Papa) because it&amp;#39;s so much more focused with less cruft. (We have really enjoyed using MVVM light on my current project).</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4fbbaaea-d3c0-4621-93c2-d690bd939275">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-03 15:50:13</date>
+      <content>@Jeremy - thanks, that&amp;#39;s very helpful - it&amp;#39;s the latter - do something, then fire a command. What you suggest is quite close to what I have ended up with. I&amp;#39;ll have to revisit.&lt;br /&gt;&lt;br /&gt;@Rui - I assume you mean you are using an event aggregator? You wouldn&amp;#39;t want the view to know the concrete type of the ViewModel would you?&lt;br /&gt;&lt;br /&gt;@David - yes, I am using MVVM Light on a lot of apps too. I like how it is lightweight. As you say, it would be nice to have a few MVVM helper behaviours baked into the framework to stop us all reinventing the wheel badly.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="2b1a76b1-0e33-4d02-8e08-524ed3d35d8e">
+      <author>Eric Wroolie</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.wroolie.co.uk</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 06:43:39</date>
+      <content>I&amp;#39;ve been doing Silverlight for a little while and decided to start with MVVM early on.  I knew when I started with Silverlight that I didn&amp;#39;t want to make all the mistakes I make with C#, VB, etc.  I too love the elegance of it, but it&amp;#39;s difficult to get others on-board when I haven&amp;#39;t really used simpler methods  (like direct text binding).  To be honest, despite the fact that testability is big in the industry, I haven&amp;#39;t really worked in many places where they didn&amp;#39;t see it to be a waste of time.  &lt;br /&gt;&lt;br /&gt;I like this post because it makes me think of whether I rushed into MVVM or not.  But the big selling point for me is dividing the code into manageable areas.  The xaml (and code behind) only worries about user-interaction while the viewmodel is concerned with building collections, communicating with the host, etc.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="68abc9ee-1095-4183-9d0d-9bb1191224fc">
+      <author>Gustavo</author>
+      <email>noreply@blogger.com</email>
+      <website>http://thegsharp.wordpress.com</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 13:42:56</date>
+      <content>I think the interesting part of your question is whether it&amp;#39;s a pain or not for small straight forward applications. I haven&amp;#39;t used MVVM but the symptoms you are describing are the same symptoms I had when using the CAB (composite application block) from Enterprise Library.&lt;br /&gt;&lt;br /&gt;The amount of things you get solved by these patterns when used in small applications, can sometimes not be worth the restrictions/limitations these patterns impose.&lt;br /&gt;&lt;br /&gt;That&amp;#39;s why I can totally see Jeremy being happy when using MVVM in LARGE projects.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0162bbe0-ac68-4af1-b74f-9dfcc09ea5de">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 14:06:52</date>
+      <content>@Gustavo - good point. Over time, I have no doubt that I will build up enough useful helper classes, techniques and behaviours to make MVVM really quick and productive for small projects. But it does take a while to get to that point.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="c06694cc-d097-4f53-b226-cca8389d8212">
+      <author>Geoff</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/06301277916621262964</website>
+      <ip />
+      <userAgent />
+      <date>2010-11-04 17:15:40</date>
+      <content>The only problem I see with using MVVM on large-scale projects is that on the user control level it becomes burdensome to maintain the pattern, which means collapsing the separation between business logic (ViewModel) and UI (View). We&amp;#39;ve gone back and forth between keeping &amp;quot;control-specific&amp;quot; business logic in the ViewModel and having a lot of repeated code, and putting said logic in the usercontrol itself.&lt;br /&gt;&lt;br /&gt;There is also a particular issue with the DataGrid control in Silverlight, in that none of the properties on the DataGridColumns (most importantly, Header and Visibility) can be bound, meaning that the ViewModel has to interact directly with the View if any of these properties need to be dynamic.&lt;br /&gt;&lt;br /&gt;Despite these problems, using MVVM with a DI framework makes testability and scalability a breeze. Also, like Jeremy said, we&amp;#39;ve been able to have a designer work in parallel with development without any conflicts for the most part. Overall I&amp;#39;m happy we chose to use the MVVM pattern on my current project.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="f74fa625-bf9b-4d49-bd40-cf3095fa1b0a">
+      <author>Chris W</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-11-05 00:17:41</date>
+      <content>We develop most applications in MVVM (although we just stick to plain desktop WPF at the moment) and it works quite well. I think most people are taking the &amp;quot;ViewModel&amp;quot; name to literally. I tend to see the VM more as the glue between the view and the model whereas the VM only has an abstracted knowledge of the view (if any).&lt;br /&gt;&lt;br /&gt;Usually the pattern we use is to have a presenter as the datacontext which then exposes the view models for data binding. If the presenter needs to interact with the view then the view becomes an interface which gets passed into the presenter.&lt;br /&gt;&lt;br /&gt;So essentially it more like a MVPVM pattern. From experience when you munch around directly with the controls from you view models then it&amp;#39;s very likely to go and bite you later (at least it has bitten me everytime I went down that path as quick hack). Just not worth it.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="a391e40e-e9a1-4918-be5f-937a58a4fba8">
+      <author>Alex Angas</author>
+      <email>noreply@blogger.com</email>
+      <website>https://arangas.myopenid.com/</website>
+      <ip />
+      <userAgent />
+      <date>2011-01-12 20:19:45</date>
+      <content>You may like to read Davy Brion&amp;#39;s &amp;quot;MVP in Silverlight/WPF Series&amp;quot;. http://davybrion.com/blog/2010/08/mvp-in-silverlightwpf-series/&lt;br /&gt;&lt;br /&gt;It promotes a greater separation of concerns and therefore maintainability that I think will work better than MVVM, at least for larger projects. I&amp;#39;m going to try on my next one.</content>
+    </comment>
+  </comments>
+</post>

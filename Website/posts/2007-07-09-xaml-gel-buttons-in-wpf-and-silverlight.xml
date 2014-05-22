@@ -1,0 +1,81 @@
+<post>
+  <title>XAML Gel Buttons in WPF and Silverlight</title>
+  <slug>xaml-gel-buttons-in-wpf-and-silverlight</slug>
+  <author>Mark Heath</author>
+  <pubDate>2007-07-09 10:49:00</pubDate>
+  <lastModified>2011-07-03 10:06:24</lastModified>
+  <content>&lt;p&gt;I found a nice tutorial on how to create gel buttons using &lt;a href="http://www.inkscape.org/"&gt;Inkscape&lt;/a&gt;, and converted the technique to XAML.&lt;/p&gt; &lt;p&gt;The basic idea is that you create three rounded rectangles. The main one goes from a dark colour at the top to a bright colour at the bottom. In this case, dark green to bright green. &lt;/p&gt; &lt;p&gt;Then there is a transparent highlight rectangle, which goes from white at the top to transparent black at the bottom. This rectangle is marginally smaller than the main rectangle, which gives us a small border. You can make it smaller using a ScaleTransform, but I found it easier to simply modify the size and corner radius.&lt;/p&gt; &lt;p&gt;Finally there is a drop shadow which is a transparent black rectangle (so it appears grey on a white background). Unfortunately, because Silverlight does not support the BitmapEffect property from WPF, we cannot blur this rectangle, so the effect isn't quite as nice as it could be.&lt;/p&gt; &lt;p&gt;Here's the code:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  Width="400" Height="200" Background="White"&amp;gt;
+
+&amp;lt;!-- drop shadow - needs to be blurred for correct effect --&amp;gt;
+&amp;lt;Rectangle Fill="#80000000" Width="200" Height="50" Canvas.Top="52" Canvas.Left="52" RadiusX="15" RadiusY="15"&amp;gt;
+&amp;lt;/Rectangle&amp;gt;
+
+
+&amp;lt;!-- main rect --&amp;gt;
+&amp;lt;Rectangle Width="200" Height="50" Canvas.Top="50" Canvas.Left="50" RadiusX="15" RadiusY="15"&amp;gt;
+&amp;lt;Rectangle.Fill&amp;gt;
+   &amp;lt;LinearGradientBrush StartPoint="0,0" EndPoint="0,1"&amp;gt;
+     &amp;lt;GradientStop Offset="0" Color="#006700"/&amp;gt;
+     &amp;lt;GradientStop Offset="1" Color="#00ef00"/&amp;gt;
+   &amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;/Rectangle.Fill&amp;gt;
+&amp;lt;/Rectangle&amp;gt;
+
+&amp;lt;!-- transparent rect --&amp;gt;
+&amp;lt;Rectangle Width="198" Height="48" Canvas.Top="51" Canvas.Left="51" RadiusX="14" RadiusY="14"&amp;gt;
+&amp;lt;Rectangle.Fill&amp;gt;
+   &amp;lt;LinearGradientBrush StartPoint="0,0" EndPoint="0,1"&amp;gt;
+     &amp;lt;GradientStop Offset="0" Color="#FFFFFFFF"/&amp;gt;
+     &amp;lt;GradientStop Offset="1" Color="#00000000"/&amp;gt;
+   &amp;lt;/LinearGradientBrush&amp;gt;
+&amp;lt;/Rectangle.Fill&amp;gt;
+&amp;lt;/Rectangle&amp;gt;
+&amp;lt;/Canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like in Silverlight:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="silverlight-gel-button" border="0" alt="silverlight-gel-button" src="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-1.png" width="219" height="66"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Very nice! But now look what exactly the same XAML looks like in WPF:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-2.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-gel-button" border="0" alt="wpf-gel-button" src="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-2.png" width="219" height="65"&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Yuck! I spent a while trying to work out how come the same XAML rendered differently in Silverlight and WPF. I eventually found that if I changed the bottom gradient stop in the WPF XAML to transparent &lt;strong&gt;white&lt;/strong&gt; instead of transparent black, I got the same appearance as Silverlight. In fact, it looks to me like it may be the Silverlight rendering that is at fault here rather than WPF.&lt;/p&gt;
+&lt;p&gt;Anyway, if we combine this information with the blurring of the drop shadow in WPF, we can get a nice gel button in WPF as well.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Rectangle.BitmapEffect&amp;gt;
+&amp;lt;BlurBitmapEffect Radius="3" /&amp;gt;
+&amp;lt;/Rectangle.BitmapEffect&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Here's what it looks like:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-3.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="wpf-gel-button-drop-shadow" border="0" alt="wpf-gel-button-drop-shadow" src="/posts/files/xaml-gel-buttons-in-wpf-and-silverlight-3.png" width="218" height="66"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="74678d81-6593-4ab8-9800-78dd4cb166df">
+      <author>Seema Ramchandani [msft]</author>
+      <email>noreply@blogger.com</email>
+      <website>http://blogs.msdn.com/seema</website>
+      <ip />
+      <userAgent />
+      <date>2007-07-12 00:59:00</date>
+      <content>Hi Mark,&lt;BR/&gt;thank you for reporting, I filed this bug.&lt;BR/&gt;-Seema</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="0810602b-88aa-48da-a98e-03dffbe4abb3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2007-07-12 12:16:00</date>
+      <content>Thanks for posting about this rendering difference.  I've raised this issue to the WPF 2d and Silverlight teams...&lt;BR/&gt;&lt;BR/&gt;Thanks, &lt;BR/&gt;Rob Relyea, Program Manager, WPF Team&lt;BR/&gt;&lt;A HREF="http://robrelyea.com" REL="nofollow"&gt;http://robrelyea.com&lt;/A&gt;</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="85bb27c1-6e02-4a07-a48c-99ce9be4bb48">
+      <author>&lt;a href="http://courses.cvcc.vccs.edu/ENG112_GROSS/_Chat_Room/000008fd.htm"&gt;Anonimous&lt;/a&gt;</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2007-09-09 23:59:00</date>
+      <content>Excellent website. Good work. Very useful. I will bookmark!</content>
+    </comment>
+  </comments>
+</post>

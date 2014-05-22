@@ -1,0 +1,133 @@
+<post>
+  <title>Python Equivalents of LINQ Methods</title>
+  <slug>python-equivalents-of-linq-methods</slug>
+  <author>Mark Heath</author>
+  <pubDate>2014-03-07 13:05:00</pubDate>
+  <lastModified>2014-03-07 13:05:43</lastModified>
+  <content>&lt;p&gt;In my &lt;a href="/post/python-list-comprehensions-and"&gt;last post&lt;/a&gt;, I looked at how Python’s list comprehensions and generators allow you to achieve many of the same tasks that you would use LINQ for in C#. In this post, we’ll look at Python equivalents for some of the most popular &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspx"&gt;LINQ extension methods&lt;/a&gt;. We’ll mostly be looking at Python’s &lt;a href="http://docs.python.org/3/library/functions.html"&gt;built-in functions&lt;/a&gt; and &lt;a href="http://docs.python.org/3/library/itertools.html"&gt;itertools&lt;/a&gt; module.&lt;/p&gt; &lt;p&gt;For these examples, our test data will be a list of fruit. But all of these techniques work with any interable, including the output of generator functions. Here’s our Python test data&lt;/p&gt;&lt;pre class="brush: py;"&gt;fruit = ['apple', 'orange', 'banana', 'pear', 
+         'raspberry', 'peach', 'plum']
+&lt;/pre&gt;
+&lt;p&gt;Which of course in C# is&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;var fruit = new List&amp;lt;string&amp;gt;() { "apple", "orange",
+ "banana", "pear", "raspberry", "peach", "plum" };
+&lt;/pre&gt;
+&lt;h3&gt;Any &amp;amp; All&lt;/h3&gt;
+&lt;p&gt;LINQ’s &lt;a href="http://msdn.microsoft.com/en-us/library/bb534972(v=vs.110).aspx"&gt;Any&lt;/a&gt; method allows you to test whether any of the items in a sequence fulfil a certain requirement, while &lt;a href="http://msdn.microsoft.com/en-us/library/bb548541(v=vs.110).aspx"&gt;All&lt;/a&gt; checks if all of them do. Python’s built-in functions are named the same, so it’s really straightforward. Let’s see if any of our fruit contain the letter “e”, then see if all of them do:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; any("e" in f for f in fruit)
+True
+&amp;gt;&amp;gt;&amp;gt; all("e" in f for f in fruit)
+False
+&lt;/pre&gt;
+&lt;p&gt;in LINQ:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;fruit.Any(f =&amp;gt; f.Contains("e"));
+fruit.All(f =&amp;gt; f.Contains("e"));
+&lt;/pre&gt;
+&lt;h3&gt;Min &amp;amp; Max&lt;/h3&gt;
+&lt;p&gt;Again, Python has built-in functions similarly named to LINQ. Let’s find the minimum and maximum fruit lengths:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; max(len(f) for f in fruit)
+9
+&amp;gt;&amp;gt;&amp;gt; min(len(f) for f in fruit)
+4
+&lt;/pre&gt;
+&lt;p&gt;which are the equivalents of:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;fruit.Max(f =&amp;gt; f.Length);
+fruit.Min(f =&amp;gt; f.Length);
+&lt;/pre&gt;
+&lt;h3&gt;Take, Skip, TakeWhile &amp;amp; SkipWhile&lt;/h3&gt;
+&lt;p&gt;LINQ’s &lt;a href="http://msdn.microsoft.com/en-us/library/bb503062(v=vs.110).aspx"&gt;Take&lt;/a&gt; and &lt;a href="http://msdn.microsoft.com/en-us/library/bb358985(v=vs.110).aspx"&gt;Skip&lt;/a&gt; methods are very useful for paging data, or limiting the amount you process, and &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.takewhile(v=vs.110).aspx"&gt;TakeWhile&lt;/a&gt; and &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.skipwhile(v=vs.110).aspx"&gt;SkipWhile&lt;/a&gt; come in handy from time to time as well (TakeWhile can be a good way of checking for user cancellation). &lt;/p&gt;
+&lt;p&gt;Take and Skip can be implemented using the &lt;a href="http://docs.python.org/2/library/itertools.html#itertools.islice"&gt;itertools islice&lt;/a&gt; function. We can specify an end index, or a start and end index. If the end index is None, that means keep going to the end of the iterable. I’d prefer methods actually called “skip” and “take” as I think that makes for more readable code, but they could be easily created if needed. &lt;/p&gt;
+&lt;p&gt;Here’s Take(2) and Skip(2) implemented with Python. Since islice returns a generator function, I turn it into a list for debugging purposes:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; from itertools import islice
+&amp;gt;&amp;gt;&amp;gt; list(islice(fruit, 2))
+['apple', 'orange']
+&amp;gt;&amp;gt;&amp;gt; list(islice(fruit, 2, None))
+['banana', 'pear', 'raspberry', 'peach', 'plum']
+&lt;/pre&gt;
+&lt;p&gt;islice does have the benefit though of letting you combine a skip and a take into one step rather than chaining them like you would in C#:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;fruit.Skip(2).Take(2);
+&lt;/pre&gt;
+&lt;p&gt;with islice:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; list(islice(fruit, 2, 4))
+['banana', 'pear']
+&lt;/pre&gt;
+&lt;p&gt;The itertools module does include a “&lt;a href="http://docs.python.org/3.3/library/itertools.html#itertools.takewhile"&gt;takewhile&lt;/a&gt;” method and for LINQ’s SkipWhile, it’s “&lt;a href="http://docs.python.org/3.3/library/itertools.html#itertools.dropwhile"&gt;dropwhile&lt;/a&gt;”. With these functions, you might want to use Python’s lambda syntax, which is a rare example of where the Python is less succinct than C#.&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; from itertools import takewhile
+&amp;gt;&amp;gt;&amp;gt; list(takewhile(lambda c: len(c) &amp;lt; 7, fruit))
+['apple', 'orange', 'banana', 'pear']
+&amp;gt;&amp;gt;&amp;gt; from itertools import dropwhile
+&amp;gt;&amp;gt;&amp;gt; list(dropwhile(lambda c: len(c) &amp;lt; 7, fruit))
+['raspberry', 'peach', 'plum']
+&lt;/pre&gt;
+&lt;p&gt;Here’s the same TakeWhile and SkipWhile in C#:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;fruit.TakeWhile (f =&amp;gt; f.Length &amp;lt; 7);
+fruit.SkipWhile (f =&amp;gt; f.Length &amp;lt; 7);
+&lt;/pre&gt;
+&lt;h3&gt;First, FirstOrDefault, &amp;amp; Last&lt;/h3&gt;
+&lt;p&gt;With LINQ you can easily get the first item from an IEnumerable. This throws an exception if the sequence is empty, so &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault(v=vs.110).aspx"&gt;FirstOrDefault&lt;/a&gt; can be used alternatively. With Python, the “&lt;a href="http://docs.python.org/3/library/functions.html#next"&gt;next&lt;/a&gt;” method can be used on an iterable (but not on a list). Let’s use Python to get the first fruit starting with “p” and to return a default value when our generator looking for the first fruit starting with “q” doesn’t find any elements.&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; next(f for f in fruit if f.startswith("p"))
+'pear'
+&amp;gt;&amp;gt;&amp;gt; next((f for f in fruit if f.startswith("q")), "none")
+'none'
+&lt;/pre&gt;
+&lt;p&gt;There does not seem to be any built-in Python function to implement LINQ’s “&lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.last(v=vs.110).aspx"&gt;Last&lt;/a&gt;” or “&lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault(v=vs.110).aspx"&gt;LastOrDefault&lt;/a&gt;” methods, but you could quite easily create one. Here’s a fairly rudimentary one:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; def lastOrDefault(sequence, default=None):
+...     lastItem = default
+...     for s in sequence:
+...         lastItem = s
+...     return lastItem
+...
+&amp;gt;&amp;gt;&amp;gt; lastOrDefault((f for f in fruit if f.endswith("e")))
+'orange'
+&amp;gt;&amp;gt;&amp;gt; lastOrDefault((f for f in fruit if f.startswith("x")), "no fruit found")
+'no fruit found'
+&lt;/pre&gt;You could do the same if you really needed the LINQ “&lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.single(v=vs.110).aspx"&gt;Single&lt;/a&gt;” or “&lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.singleordefault(v=vs.110).aspx"&gt;SingleOrDefault&lt;/a&gt;” methods, which also have no direct equivalent.
+&lt;h3&gt;Count&lt;/h3&gt;
+&lt;p&gt;The LINQ &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.count(v=vs.110).aspx"&gt;Count&lt;/a&gt; extension method lets you count how many items are in a sequence. For example, how many fruit begin with ”p”?&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;fruit.Count(f =&amp;gt; f.StartsWith("p"))
+&lt;/pre&gt;Probably the most logical expectation would be that Python’s “&lt;a href="http://docs.python.org/3/library/functions.html#len"&gt;len&lt;/a&gt;” function would do the same, but you can’t call len on an iterable. There is a neat trick though you can use with the “&lt;a href="http://docs.python.org/3/library/functions.html#sum"&gt;sum&lt;/a&gt;” built-in function.&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; sum(1 for f in fruit if f.startswith("p"))
+3
+&lt;/pre&gt;
+&lt;h3&gt;Select &amp;amp; Where&lt;/h3&gt;
+&lt;p&gt;We saw in the &lt;a href="/post/python-list-comprehensions-and"&gt;last blog post&lt;/a&gt; that a list comprehension already includes the capabilities of LINQ’s &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.select(v=vs.110).aspx"&gt;Select&lt;/a&gt; and &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.where(v=vs.110).aspx"&gt;Where&lt;/a&gt;, but there may be times you want to them to be available as functions. Python’s “&lt;a href="http://docs.python.org/3/library/functions.html#map"&gt;map&lt;/a&gt;” and “&lt;a href="http://docs.python.org/3/library/functions.html#filter"&gt;filter&lt;/a&gt;” function take an iterable and a lamba and return an iterator (this is Python 3 only – in Python 2 they returned lists). Here’s a couple of simple examples of them in action, with the output turned into a list for debug purposes:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; list(map(lambda x: x.upper(), fruit))
+['APPLE', 'ORANGE', 'BANANA', 'PEAR', 'RASPBERRY', 'PEACH', 'PLUM']
+&amp;gt;&amp;gt;&amp;gt; list(filter(lambda x: "n" in x, fruit))
+['orange', 'banana']
+&lt;/pre&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;h3&gt;GroupBy&lt;/h3&gt;
+&lt;p&gt;At first glance it might appear that itertools &lt;a href="http://docs.python.org/3.3/library/itertools.html#itertools.groupby"&gt;groupby&lt;/a&gt; method behaves the same as LINQ’s &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx"&gt;GroupBy&lt;/a&gt;, but there is a gotcha. Python’s groupby expects the incoming data to be sorted by the key, so you have to call &lt;a href="http://docs.python.org/3/library/functions.html#sorted"&gt;sorted&lt;/a&gt; first. This example shows us first trying to group without sorting (resulting in two “p” groups), and then doing it the right way. We’re grouping by first letter of the fruit, and I’m using a helper method to print out the contents of the grouped data:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; def printGroupedData(groupedData):
+...     for k, v in groupedData:
+...         print("Group {} {}".format(k, list(v)))
+...
+&amp;gt;&amp;gt;&amp;gt; from itertools import groupby
+&amp;gt;&amp;gt;&amp;gt; keyFunc = lambda f: f[0]
+&amp;gt;&amp;gt;&amp;gt; printGroupedData(groupby(fruit, keyFunc))
+Group a ['apple']
+Group o ['orange']
+Group b ['banana']
+Group p ['pear']
+Group r ['raspberry']
+Group p ['peach', 'plum']
+&amp;gt;&amp;gt;&amp;gt; sortedFruit = sorted(fruit, key=keyFunc)
+&amp;gt;&amp;gt;&amp;gt; printGroupedData(groupby(sortedFruit, keyFunc))
+Group a ['apple']
+Group b ['banana']
+Group o ['orange']
+Group p ['pear', 'peach', 'plum']
+Group r ['raspberry']
+&lt;/pre&gt;
+&lt;h3&gt;OrderBy&lt;/h3&gt;
+&lt;p&gt;As we saw above, the “&lt;a href="http://docs.python.org/3/library/functions.html#sorted"&gt;sorted&lt;/a&gt;” built-in function in Python can be used to order a sequence. It returns a list, but this is understandable since to implement &lt;a href="http://msdn.microsoft.com/en-us/library/system.linq.enumerable.orderby(v=vs.110).aspx"&gt;OrderBy&lt;/a&gt; it must iterate through the entire sequence first. Here we sort the fruit by their string length:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; sorted(fruit, key=lambda x:len(x))
+['pear', 'plum', 'apple', 'peach', 'orange', 'banana', 'raspberry']
+&lt;/pre&gt;
+&lt;h3&gt;Distinct&lt;/h3&gt;
+&lt;p&gt;As far as I can tell there isn’t a built-in function in Python to emit a distinct iterable sequence, but the easiest way is probably to just construct a set. If you wanted to create a generator function, allowing you to abort early before reaching the end of a sequence, you could create your own helper method:&lt;/p&gt;&lt;pre class="brush: py;"&gt;def distinct(sequence):
+    seen = set()
+    for s in sequence:
+        if not s in seen:
+            seen.add(s)
+            yield s
+&lt;/pre&gt;
+&lt;h3&gt;Zip&lt;/h3&gt;
+&lt;p&gt;The last example I’ll look at is the &lt;a href="http://msdn.microsoft.com/en-us/library/dd267698(v=vs.110).aspx"&gt;Zip&lt;/a&gt; method. In Python there is an equivalent &lt;a href="http://docs.python.org/3/library/functions.html#zip"&gt;zip&lt;/a&gt; function, and it is actually a little simpler as it assumes you want a tuple, rather than LINQ’s where you need to explicitly create a result selector function. It actually supports zipping more than two sequences together which is nice. As with LINQ’s Zip, the resulting sequence is the length of the shortest. Here’s a quick example of the Python zip function in action:&lt;/p&gt;&lt;pre class="brush: py;"&gt;&amp;gt;&amp;gt;&amp;gt; recipes = ['pie','juice','milkshake']
+&amp;gt;&amp;gt;&amp;gt; list(zip(fruit,recipes))
+[('apple', 'pie'), ('orange', 'juice'), ('banana', 'milkshake')]
+&amp;gt;&amp;gt;&amp;gt; list(f + " " + r for f,r in zip(fruit,recipes))
+['apple pie', 'orange juice', 'banana milkshake']
+&lt;/pre&gt;
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;As can be seen, most of the main LINQ extension methods have fairly close Python equivalents, and those that don’t could be quite easily recreated. I don’t pretend to be an expert on Python, so if I’ve missed any cool tricks, let me know in the comments.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>C#</category>
+    <category>Python</category>
+  </categories>
+  <comments />
+</post>

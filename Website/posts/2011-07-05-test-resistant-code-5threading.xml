@@ -1,0 +1,134 @@
+<post>
+  <title>Test Resistant Code #5–Threading</title>
+  <slug>test-resistant-code-5threading</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-07-05 22:04:00</pubDate>
+  <lastModified>2011-07-05 22:04:58</lastModified>
+  <content>&lt;p&gt;I want to wrap up my test-resistant code series with one final type of code that proves hard to test, and that is multi-threaded code. We’ll just consider two scenarios, one that proves easy to test, another that proves very complex.&lt;/p&gt; &lt;p&gt;&lt;strong&gt;Separate out thread creation&lt;/strong&gt;&lt;/p&gt; &lt;p&gt;A common mistake is to include the code that creates a thread (or queues a background worker) in the same class that contains the code for the actual work to be performed by the thread. This is a violation of “separation of concerns” In the following trivial example, the function we really need to unit test, &lt;strong&gt;DoStuff&lt;/strong&gt;, is private, and the public interface is not helpful for unit testing.&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public void BeginDoStuff()
+{
+    ThreadPool.QueueUserWorkItem((o) =&amp;gt; DoStuff("hello world"));
+}
+
+private void DoStuff(string message)
+{
+    Console.WriteLine(message);
+}&lt;/pre&gt;
+&lt;p&gt;Fixing this is not hard. We separate the concerns by making the DoStuff method a public member of a different class, leaving the original class simply to manage the asynchronous calling and reporting of results (which you may find can be refactored into a more &lt;a href="/post/don-repeat-your-threading-code"&gt;generic threading helper class&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Locks and race conditions&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;But what about locking? Consider a very simple circular buffer class I wrote for NAudio. In the normal use case, one thread writes bytes to it while another reads from it. Here’s the current code for the Read and Write methods (which I’m sure could be refactored down to something much shorter):&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;/// &amp;lt;summary&amp;gt;
+/// Write data to the buffer
+/// &amp;lt;/summary&amp;gt;
+/// &amp;lt;param name="data"&amp;gt;Data to write&amp;lt;/param&amp;gt;
+/// &amp;lt;param name="offset"&amp;gt;Offset into data&amp;lt;/param&amp;gt;
+/// &amp;lt;param name="count"&amp;gt;Number of bytes to write&amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;number of bytes written&amp;lt;/returns&amp;gt;
+public int Write(byte[] data, int offset, int count)
+{
+    lock (lockObject)
+    {
+        int bytesWritten = 0;
+        if (count &amp;gt; buffer.Length - this.byteCount)
+        {
+            count = buffer.Length - this.byteCount;
+        }
+        // write to end
+        int writeToEnd = Math.Min(buffer.Length - writePosition, count);
+        Array.Copy(data, offset, buffer, writePosition, writeToEnd);
+        writePosition += writeToEnd;
+        writePosition %= buffer.Length;
+        bytesWritten += writeToEnd;
+        if (bytesWritten &amp;lt; count)
+        {
+            // must have wrapped round. Write to start
+            Array.Copy(data, offset + bytesWritten, buffer, writePosition, count - bytesWritten);
+            writePosition += (count - bytesWritten);
+            bytesWritten = count;
+        }
+        this.byteCount += bytesWritten;
+        return bytesWritten;
+    }
+}
+
+/// &amp;lt;summary&amp;gt;
+/// Read from the buffer
+/// &amp;lt;/summary&amp;gt;
+/// &amp;lt;param name="data"&amp;gt;Buffer to read into&amp;lt;/param&amp;gt;
+/// &amp;lt;param name="offset"&amp;gt;Offset into read buffer&amp;lt;/param&amp;gt;
+/// &amp;lt;param name="count"&amp;gt;Bytes to read&amp;lt;/param&amp;gt;
+/// &amp;lt;returns&amp;gt;Number of bytes actually read&amp;lt;/returns&amp;gt;
+public int Read(byte[] data, int offset, int count)
+{
+    lock (lockObject)
+    {
+        if (count &amp;gt; byteCount)
+        {
+            count = byteCount;
+        }
+        int bytesRead = 0;
+        int readToEnd = Math.Min(buffer.Length - readPosition, count);
+        Array.Copy(buffer, readPosition, data, offset, readToEnd);
+        bytesRead += readToEnd;
+        readPosition += readToEnd;
+        readPosition %= buffer.Length;
+
+        if (bytesRead &amp;lt; count)
+        {
+            // must have wrapped round. Read from start
+            Array.Copy(buffer, readPosition, data, offset + bytesRead, count - bytesRead);
+            readPosition += (count - bytesRead);
+            bytesRead = count;
+        }
+
+        byteCount -= bytesRead;
+        return bytesRead;
+    }
+}
+&lt;/pre&gt;
+&lt;p&gt;The fact that I take a lock for the entirety of both methods makes me confident that the internal state will not get corrupted by one thread calling Write while another calls Read; the threads simply have to take it in turns. But what if I had a clever idea for optimising this code that only involved me locking for part of the time. Maybe I want to do the Array.Copy’s outside the lock since they potentially take the longest. How could I write a unit test that ensured my code remained thread-safe?&lt;/p&gt;
+&lt;p&gt;Short of firing up two threads reading and writing with random sleep times inserted here and there, I’m not sure I know how best to prove the correctness of this type of code. Locking issues and race conditions can be some of the hardest to track down bugs. I once spent a couple of weeks locating a bug that only manifest itself on a dual processor system (back in the days when those were few and far between). The code had been thoroughly reviewed by all the top developers at the company and yet no one saw the problem.&lt;/p&gt;
+&lt;p&gt;Here’s another example, based on some code I saw in a product I worked on. A method kicks off two threads to do some long-running tasks and attempts to fire a finished event when both have completed. We want to ensure that the SetupFinished event always fires, and only fires once. You might be able to spot a race condition by examining the code, but how would we write a unit test to prove we had fixed it?&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;private volatile bool eventHasBeenRaised;
+
+public void Init()
+{    
+    ThreadPool.QueueUserWorkItem((o) =&amp;gt; Setup1());
+    ThreadPool.QueueUserWorkItem((o) =&amp;gt; Setup2());    
+}
+
+private void Setup1()
+{
+    Thread.Sleep(500);
+    RaiseSetupFinishedEvent();
+}
+
+private void Setup2()
+{
+    Thread.Sleep(500);
+    RaiseSetupFinishedEvent();
+}
+
+private void RaiseSetupFinishedEvent()
+{
+    if (!eventHasBeenRaised)
+    {
+        eventHasBeenRaised = true;
+        SetupFinished(this, EventArgs.Empty);
+    }
+}&lt;/pre&gt;
+&lt;p&gt;The only tool for .NET I have heard of that might begin to address this shortcoming is &lt;a href="http://research.microsoft.com/en-us/projects/chess/"&gt;Microsoft CHESS&lt;/a&gt;. It seems a very promising tool although it seems to have stalled somewhat – the only integration is with VS2008; VS2010 is not supported. I’d love to hear of other tools or clever techniques for unit testing multi-threaded code effectively. I haven’t delved too much into the C# 5 async stuff yet, but I’d be interested to know how well it plays with unit tests.&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>Threading</category>
+    <category>unit testing</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="dddcf287-77c3-44fb-8b5c-08698d2213d3">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2013-04-11 09:30:06</date>
+      <content>Any luck since this was posted? I am in the Sam dilemma and can&amp;#39;t find any tools to help me. Thanks. </content>
+    </comment>
+  </comments>
+</post>

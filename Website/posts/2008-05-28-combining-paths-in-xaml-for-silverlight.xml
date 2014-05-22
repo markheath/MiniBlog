@@ -1,0 +1,119 @@
+<post>
+  <title>Combining Paths in XAML for Silverlight</title>
+  <slug>combining-paths-in-xaml-for-silverlight</slug>
+  <author>Mark Heath</author>
+  <pubDate>2008-05-28 17:28:00</pubDate>
+  <lastModified>2011-07-04 16:41:28</lastModified>
+  <content>&lt;p&gt;&lt;a href="/posts/files/combining-paths-in-xaml-for-silverlight-1.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Play button in XAML" border="0" alt="Play button in XAML" src="/posts/files/combining-paths-in-xaml-for-silverlight-1.png" width="117" height="117"&gt;&lt;/a&gt; &lt;/p&gt; &lt;p&gt;I have been attempting to make some nice looking buttons to use with my &lt;a href="http://www.codeplex.com/slaudioplayer"&gt;Silverlight Audio Player&lt;/a&gt;, and came up with a basic design in XAML, borrowing some colour ideas from &lt;a href="http://itweek.deviantart.com/art/Knob-Buttons-Toolbar-icons-73463960"&gt;iTweek's icons on deviantart&lt;/a&gt;. The XAML for the basic play button with drop shadow is:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Ellipse Canvas.Left="53" Canvas.Top="76" Width="26" Height="8" Fill="#40000000" /&amp;gt;
+&amp;lt;Ellipse Canvas.Left="50" Canvas.Top="50" Stroke="#396C15" Width="32" Height="32"&amp;gt;  
+  &amp;lt;Ellipse.Fill&amp;gt;
+    &amp;lt;LinearGradientBrush EndPoint="0,1"&amp;gt;
+      &amp;lt;GradientStop Color="#1070B434" Offset="0.0" /&amp;gt;
+      &amp;lt;GradientStop Color="#70B434" Offset="0.5" /&amp;gt;
+      &amp;lt;GradientStop Color="#FFAFD855" Offset="1.0" /&amp;gt;
+    &amp;lt;/LinearGradientBrush&amp;gt;      
+  &amp;lt;/Ellipse.Fill&amp;gt;
+&amp;lt;/Ellipse&amp;gt;
+&amp;lt;Path Canvas.Left="50" Fill="#FFFFFF" Stroke="#396C15" Data="M 13,58 l 10,8 l -10,8 Z" StrokeLineJoin="Round" /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Things got a bit more interesting when I tried to make a fast-forward icon by overlapping two triangles. Simply drawing two triangles over the top of each other does not give the desired result: &lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Canvas.Left="80" Fill="#FFC0C0" Stroke="#396C15" Data="M 13,58 l 10,8 l -10,8 Z "
+  StrokeLineJoin="Round"  /&amp;gt;
+&amp;lt;Path Canvas.Left="80" Fill="#FFC0C0" Stroke="#396C15" Data="M 18,58 l 10,8 l -10,8 Z " 
+  StrokeLineJoin="Round"  /&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="/posts/files/combining-paths-in-xaml-for-silverlight-2.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Overlapping Triangles" border="0" alt="XAML Overlapping Triangles" src="/posts/files/combining-paths-in-xaml-for-silverlight-2.png" width="68" height="87"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;The Path Data property allows you to specify more than one closed shape, but this results in the strokes of both triangles being visible rather than combining to form one outline. This happens whether you use the Path syntax or create a GeometryGroup and add PathGeometrys. Rather annoyingly PathGeometry does not have a Data Property, which makes for some cumbersome XAML:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Canvas.Left="105" Fill="#FFC0FF" Stroke="#396C15" Data="F 1 M 13,58 l 10,8 l -10,8 Z M 18,58 l 10,8 l -10,8 Z"
+  StrokeLineJoin="Round"  /&amp;gt;
+
+&amp;lt;Path Canvas.Left="130" Fill="#FFFFC0" Stroke="#396C15" Data="M 13,58 l 10,8 l -10,8 Z M 18,58 l 10,8 l -10,8 Z" 
+  StrokeLineJoin="Round"  /&amp;gt;
+
+&amp;lt;Path Canvas.Left="155" Fill="#C0FFC0" Stroke="#396C15" StrokeLineJoin="Round"&amp;gt;
+  &amp;lt;Path.Data&amp;gt;
+    &amp;lt;GeometryGroup FillRule="NonZero"&amp;gt;
+        &amp;lt;PathGeometry&amp;gt;
+          &amp;lt;PathFigure StartPoint="13,58" IsClosed="True"&amp;gt;
+            &amp;lt;LineSegment Point="23,66"  /&amp;gt;
+            &amp;lt;LineSegment Point="13,74"  /&amp;gt;
+          &amp;lt;/PathFigure&amp;gt;
+        &amp;lt;/PathGeometry&amp;gt;
+        &amp;lt;PathGeometry&amp;gt;
+        &amp;lt;PathFigure StartPoint="18,58" IsClosed="True" &amp;gt;
+            &amp;lt;LineSegment Point="28,66"  /&amp;gt;
+            &amp;lt;LineSegment Point="18,74"  /&amp;gt;
+          &amp;lt;/PathFigure&amp;gt;
+        &amp;lt;/PathGeometry&amp;gt;
+    &amp;lt;/GeometryGroup&amp;gt;                  
+  &amp;lt;/Path.Data&amp;gt;
+&amp;lt;/Path&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="/posts/files/combining-paths-in-xaml-for-silverlight-3.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Path Geometries" border="0" alt="XAML Path Geometries" src="/posts/files/combining-paths-in-xaml-for-silverlight-3.png" width="228" height="87"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;This is still not the effect I want, irrespective of the FillRule used. The solution in WPF is to use a &lt;strong&gt;CombinedGeometry&lt;/strong&gt;. This allows two PathGeometrys to be specified that can be combined as a union to create one shape. Again we have very verbose XAML because we can't use the Path mini language:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Canvas.Left="180" Fill="#C0C0FF" Stroke="#396C15" StrokeLineJoin="Round"&amp;gt;
+  &amp;lt;Path.Data&amp;gt;
+    &amp;lt;CombinedGeometry GeometryCombineMode="Union"&amp;gt;
+      &amp;lt;CombinedGeometry.Geometry1&amp;gt;
+        &amp;lt;PathGeometry&amp;gt;
+          &amp;lt;PathFigure StartPoint="13,58" IsClosed="True"&amp;gt;
+            &amp;lt;LineSegment Point="23,66"  /&amp;gt;
+            &amp;lt;LineSegment Point="13,74"  /&amp;gt;
+          &amp;lt;/PathFigure&amp;gt;
+        &amp;lt;/PathGeometry&amp;gt;
+      &amp;lt;/CombinedGeometry.Geometry1&amp;gt;
+      &amp;lt;CombinedGeometry.Geometry2&amp;gt;
+        &amp;lt;PathGeometry&amp;gt;
+          &amp;lt;PathFigure StartPoint="18,58" IsClosed="True" &amp;gt;
+            &amp;lt;LineSegment Point="28,66"  /&amp;gt;
+            &amp;lt;LineSegment Point="18,74"  /&amp;gt;
+          &amp;lt;/PathFigure&amp;gt;
+        &amp;lt;/PathGeometry&amp;gt;
+      &amp;lt;/CombinedGeometry.Geometry2&amp;gt;
+    &amp;lt;/CombinedGeometry&amp;gt;
+  &amp;lt;/Path.Data&amp;gt;
+&amp;lt;/Path&amp;gt;&lt;/pre&gt;
+&lt;p&gt;This produces the shape I wanted:&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/files/combining-paths-in-xaml-for-silverlight-4.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="XAML Combined Geometry" border="0" alt="XAML Combined Geometry" src="/posts/files/combining-paths-in-xaml-for-silverlight-4.png" width="79" height="87"&gt;&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;But now we run into another problem. The Silverlight 2 beta does not support &lt;strong&gt;CombinedGeometry&lt;/strong&gt;, and I have no idea if this is going to be supported as part of the full release of Silverlight 2.&lt;/p&gt;
+&lt;p&gt;So how can we get this in Silverlight? At the moment I know of only two solutions:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. Do the maths yourself&lt;/strong&gt;. For two triangles as in my example, this wouldn't be too hard, but it would be a real pain if your combined shape involved any curves or ellipses.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. Get Expression Blend to do it for you&lt;/strong&gt;. Draw the two shapes, select them, then select &lt;strong&gt;Object | Combine | Unite&lt;/strong&gt;. This will create a single path you can use in a Silverlight application. It doesn't leave the XAML quite how I would like it (adding margins and using absolute coordinates in the path, rather than relative).&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Path Height="17" 
+  HorizontalAlignment="Left" 
+  Margin="138.5,91.5,0,0" 
+  VerticalAlignment="Top" 
+  Width="16" Fill="#C0C0FF" Stretch="Fill" 
+  Stroke="DarkGreen" 
+  StrokeLineJoin="Round"
+  Data="M0.5,0.5 L5.5,4.5 L5.5,0.5 L15.5,8.5 L5.5,16.5 L5.5,12.5 L0.5,16.5 L0.5,0.5 z"/&amp;gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="/posts/files/combining-paths-in-xaml-for-silverlight-5.png"&gt;&lt;img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="Expression Blend Combined Shape" border="0" alt="Expression Blend Combined Shape" src="/posts/files/combining-paths-in-xaml-for-silverlight-5.png" width="66" height="72"&gt;&lt;/a&gt;&lt;/p&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>WPF</category>
+    <category>XAML</category>
+    <category>Silverlight</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="e4148dc1-22f2-4d93-867d-a43c66d0f155">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2008-11-18 16:39:00</date>
+      <content>Good article dude!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="4bef7a00-9124-4dc9-99df-623856881d4f">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2010-10-21 18:05:32</date>
+      <content>can you suggest how to achieve something like this shown in this website?&lt;br /&gt;&lt;br /&gt;http://www.web-demographics.com:8085/&lt;br /&gt;&lt;br /&gt;I want to have similar menu bar (both horizantal and vertical) which I want to hide when mouse is away but not the ellipse.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="be6f8446-8dea-4c28-9659-85b0e15a028a">
+      <author>Barthélémy NOËL-PIERRE</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/00267929287230723151</website>
+      <ip />
+      <userAgent />
+      <date>2013-11-21 10:01:18</date>
+      <content>Thanks for this tip !&lt;br /&gt;If you have the first path filled in red, and the second in yellow, then the combined path is filled in yellow... the red color is lost !&lt;br /&gt;Do you have an idea pleaese ?&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</content>
+    </comment>
+  </comments>
+</post>

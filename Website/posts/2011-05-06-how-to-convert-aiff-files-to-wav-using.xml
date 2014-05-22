@@ -1,0 +1,68 @@
+<post>
+  <title>How to Convert AIFF files to WAV using NAudio 1.5</title>
+  <slug>how-to-convert-aiff-files-to-wav-using</slug>
+  <author>Mark Heath</author>
+  <pubDate>2011-05-06 23:33:00</pubDate>
+  <lastModified>2011-05-06 23:33:53</lastModified>
+  <content>&lt;p&gt;Thanks to Giawa, the latest &lt;a href="http://naudio.codeplex.com"&gt;NAudio&lt;/a&gt; source code (to be released with NAudio 1.5) has an AIFF File Reader. This makes it very easy to convert from AIFF files to WAV (or simply into PCM format for inputs to other NAudio streams). Here’s how to do it:&lt;/p&gt;&lt;pre class="brush: csharp;"&gt;public static void ConvertAiffToWav(string aiffFile, string wavFile)
+{
+    using (AiffFileReader reader = new AiffFileReader(aiffFile))
+    {
+        using (WaveFileWriter writer = new WaveFileWriter(wavFile, reader.WaveFormat))
+        {
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            do
+            {
+                bytesRead = reader.Read(buffer, 0, buffer.Length);
+                writer.Write(buffer, 0, bytesRead);
+            } while (bytesRead &amp;gt; 0);
+        }
+    }
+}
+&lt;/pre&gt;  </content>
+  <ispublished>true</ispublished>
+  <categories>
+    <category>NAudio</category>
+    <category>AIFF</category>
+    <category>HOWTO</category>
+  </categories>
+  <comments>
+    <comment isAdmin="false" isApproved="true" id="83c88766-3d30-4bb1-8c53-4182e08507e2">
+      <author>TriFu</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-05-07 00:14:51</date>
+      <content>Hi there,&lt;br /&gt;&lt;br /&gt;I apologize I don&amp;#39;t know where to send you this question,&lt;br /&gt;&lt;br /&gt;but I was trying to build a web based music visualizer and needed a way to read the mp3 data so I can analyze the volumn and frequency so I can visualize on it. I&amp;#39;ve been searching your blog and also googling online but haven&amp;#39;t found a tutorial on how to use NAudio to read the sound values? &lt;br /&gt;&lt;br /&gt;Do you think you could post up a example of how one could do this? Thank you so much for your time.</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="3d518b1d-4636-4ccd-85f0-0692d449d419">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-05-07 05:59:13</date>
+      <content>great article!</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="91f1df4d-dbc3-404a-bbea-458f83111682">
+      <author>Anonymous</author>
+      <email>noreply@blogger.com</email>
+      <website />
+      <ip />
+      <userAgent />
+      <date>2011-05-07 06:02:27</date>
+      <content>Can you show an article on how to read sound from an mp3?&lt;br /&gt;&lt;br /&gt;Specifically, how to read volume so that one can make visualizations based on the change in volume of the music playing?</content>
+    </comment>
+    <comment isAdmin="false" isApproved="true" id="dd3d7ec4-7db6-4294-8c68-3f55ada5d110">
+      <author>Mark H</author>
+      <email>noreply@blogger.com</email>
+      <website>http://www.blogger.com/profile/17900587357903273800</website>
+      <ip />
+      <userAgent />
+      <date>2011-05-07 10:47:30</date>
+      <content>@Anonymous, with the NAudio source code there is an NAudio demo app that will show you how to play MP3 and show waveform.</content>
+    </comment>
+  </comments>
+</post>
