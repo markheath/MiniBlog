@@ -48,25 +48,28 @@ namespace BloggerImporter
                         var hrefAttribute = linkNode.Attributes["href"];
                         if (hrefAttribute != null)
                         {
-                            var href = new Uri(hrefAttribute.Value); //new Uri(linkNode.GetAttributeValue("href", "?"));
-                            var authority = href.GetLeftPart(UriPartial.Authority);
-                            if (authority.Contains("mark-dot-net.blogspot"))
+                            var href = new Uri(hrefAttribute.Value, UriKind.RelativeOrAbsolute); //new Uri(linkNode.GetAttributeValue("href", "?"));
+                            if (href.IsAbsoluteUri)
                             {
-                                string newLink;
-                                if (hrefAttribute.Value.Contains("/search/label/"))
+                                var authority = href.GetLeftPart(UriPartial.Authority);
+                                if (authority.Contains("mark-dot-net.blogspot"))
                                 {
-                                    var cat = hrefAttribute.Value.Split('/').Last();
-                                    newLink = "/category/" + cat.ToLower().Replace(' ', '+');
-                                }
-                                else
-                                {
-                                    // assume a regular post
-                                    newLink = "/post/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
-                                }
+                                    string newLink;
+                                    if (hrefAttribute.Value.Contains("/search/label/"))
+                                    {
+                                        var cat = hrefAttribute.Value.Split('/').Last();
+                                        newLink = "/category/" + cat.ToLower().Replace(' ', '+');
+                                    }
+                                    else
+                                    {
+                                        // assume a regular post
+                                        newLink = "/post/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
+                                    }
 
-                                Console.WriteLine("Link to {0} fixing to {1}", href, newLink);
-                                hrefAttribute.Value = newLink;
-                                updated = true;
+                                    Console.WriteLine("Link to {0} fixing to {1}", href, newLink);
+                                    hrefAttribute.Value = newLink;
+                                    updated = true;
+                                }
                             }
                         }
                     }
@@ -143,6 +146,16 @@ namespace BloggerImporter
                     DownloadImage(imageSource, downloadPath);
                 }
                 srcAttribute.Value = "/posts/files/" + newFileName;
+
+                if (img.ParentNode.Name == "a")
+                {
+                    var imageRef = img.ParentNode.Attributes["href"];
+
+                    if (imageRef != null && imageRef.Value.EndsWith(extension))
+                    {
+                        imageRef.Value = srcAttribute.Value;
+                    }
+                }
             }
         }
 
