@@ -52,7 +52,17 @@ namespace BloggerImporter
                             var authority = href.GetLeftPart(UriPartial.Authority);
                             if (authority.Contains("mark-dot-net.blogspot"))
                             {
-                                var newLink = "/post/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
+                                string newLink;
+                                if (hrefAttribute.Value.Contains("/search/label/"))
+                                {
+                                    var cat = hrefAttribute.Value.Split('/').Last();
+                                    newLink = "/category/" + cat.ToLower().Replace(' ', '+');
+                                }
+                                else
+                                {
+                                    // assume a regular post
+                                    newLink = "/post/" + Utils.GetSlugFromUrl(hrefAttribute.Value);
+                                }
 
                                 Console.WriteLine("Link to {0} fixing to {1}", href, newLink);
                                 hrefAttribute.Value = newLink;
@@ -120,14 +130,19 @@ namespace BloggerImporter
             foreach (var img in imageNodes)
             {
                 postImageNumber++;
-                var imageSource = img.GetAttributeValue("src", "?");
+
+                var srcAttribute = img.Attributes["src"];
+                var imageSource = srcAttribute.Value;
                 var extension = VirtualPathUtility.GetExtension(new Uri(imageSource).GetLeftPart(UriPartial.Path));
                 var newFileName = post.GetSlug() + "-" + postImageNumber + extension;
 
-                Console.WriteLine("Downloading {0} to {1}", imageSource, newFileName);
-
-                DownloadImage(imageSource, Path.Combine(postsPath, "files", newFileName));
-                img.SetAttributeValue("src", "/posts/files/" + newFileName);
+                var downloadPath = Path.Combine(postsPath, "files", newFileName);
+                if (!File.Exists(downloadPath))
+                {
+                    Console.WriteLine("Downloading {0} to {1}", imageSource, newFileName);
+                    DownloadImage(imageSource, downloadPath);
+                }
+                srcAttribute.Value = "/posts/files/" + newFileName;
             }
         }
 
