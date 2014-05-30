@@ -1,4 +1,5 @@
-﻿<article class="post" data-id="@Model.ID" itemscope itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
+﻿@{ var post = (Post) Model; }
+<article class="post" data-id="@Model.ID" itemscope itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
     <header class="post-header">
         <h1 itemprop="headline name">
             <a href="@Model.Url" itemprop="url">@Model.Title</a>
@@ -13,13 +14,24 @@
         </div>
     </header>
 
-    <div itemprop="articleBody">@Html.Raw(Model.Content)</div>
+    <div itemprop="articleBody">
+        @Html.Raw(Model.Content)
+        @if (post.Categories.Any(n => n == "NAudio"))
+        {
+            <div class="pluralsight-advert">
+                Want to get up to speed with the the fundamentals principles of digital audio and how
+                to got about writing audio applications with NAudio? Be sure to check out my Pluralsight courses,
+                <a href="http://pluralsight.com/training/Courses/TableOfContents/digital-audio-fundamentals">Digital Audio Fundamentals</a>
+                and <a href="http://pluralsight.com/training/Courses/TableOfContents/audio-programming-naudio">Audio Programming with NAudio</a>.
+            </div>
+        }
+    </div>
 
     @if (Blog.CurrentPost != null)
     {
         <div class="g-plusone" data-size="medium" data-annotation="none" data-width="300"></div>
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="mark_heath">Tweet</a>
-    
+        <a href="http://news.ycombinator.com/submit" class="hn-share-button">Vote on HN</a>
 
 
         <section id="comments" aria-label="Comments">
@@ -33,7 +45,7 @@
                 @RenderPage("Comment.cshtml", comment)
             }
         </section>
-        
+
         if (Model.AreCommentsOpen(Context))
         {
             @RenderPage("~/views/CommentForm.cshtml")
@@ -46,8 +58,8 @@
             var disqus_identifier = '@Blog.CurrentPost.Slug';
             var disqus_title = '@Blog.CurrentPost.Title';
             // var disqus_url = 'http://sound' - TODO: full URL
-                /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function () {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
@@ -57,6 +69,8 @@
         <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
     }
 </article>
+
+
 
 @helper Categories()
 {

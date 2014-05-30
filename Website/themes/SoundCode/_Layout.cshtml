@@ -74,7 +74,17 @@
                     <p>
                         I'm a software developer based in Southampton, England, currently working as a Software Architect for NICE Systems.
                         I create <a href="http://pluralsight.com/training/Authors/Details/mark-heath">courses for Pluralsight</a> and
-                        specialising in audio programming, and the challenges
+                        am the author of several open source libraries. I am particularly interested in audio programming, and the challenges
+                        of maintaining large legacy systems.
+                        
+                        You can find me on:
+                        <ul>
+                            <li>Twitter</li>
+                            <li>Google+</li>
+                            <li>CodePlex</li>
+                            <li>GitHub</li>
+                            <li>BitBucket</li>
+                        </ul>
                     </p>
                 </section>
 
@@ -92,7 +102,8 @@
                     <h3>My Open Source Software</h3>
                     <ul>
                         <li><a href="http://naudio.codeplex.com">NAudio</a></li>
-                        <li><a href="http://naudio.codeplex.com">NAudio</a></li>
+                        <li><a href="http://nlayer.codeplex.com">NLayer</a></li>
+                        <li><a href="http://skypefx.codeplex.com">Skype Voice Changer</a></li>
                     </ul>
                 </section>
 
@@ -136,18 +147,52 @@
     }
     
     <!-- Place this tag after the last +1 button tag. -->
-    <script type="text/javascript">
+    @GooglePlusOneButton()
+    
+    @TwitterButton()
+    
+    @HackerNewsButton()
+
+</body>
+</html>
+
+@helper GooglePlusOneButton()
+{
+    if (Blog.CurrentPost != null)
+    {
+        <script type="text/javascript">
         (function () {
             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
             po.src = 'https://apis.google.com/js/platform.js';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         })();
     </script>
-    
-    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+    }
+}
 
-</body>
-</html>
+@helper TwitterButton()
+{
+    if (Blog.CurrentPost != null)
+    {
+        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+    }
+}
+
+@helper HackerNewsButton()
+{
+    // https://github.com/igrigorik/hackernews-button
+    if (Blog.CurrentPost != null)
+    {
+        <script>
+            (function(d, t) {
+                var g = d.createElement(t),
+                    s = d.getElementsByTagName(t)[0];
+                g.src = '//hnbutton.appspot.com/static/hn.min.js';
+                s.parentNode.insertBefore(g, s);
+            }(document, 'script'));
+        </script>
+    }
+}
 
 @helper AdminCss()
 {

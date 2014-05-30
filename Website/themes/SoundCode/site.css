@@ -68,6 +68,12 @@ input[type], button, textarea {
     text-decoration: none;
 }
 
+.post .pluralsight-advert {
+    border-left: 3px solid #ff8456;
+    background: lightyellow;
+    padding: 3px 3px 3px 10px ;
+}
+
 .post .post-header {
     border-left: 3px solid brown;
     background: #ffefda;
