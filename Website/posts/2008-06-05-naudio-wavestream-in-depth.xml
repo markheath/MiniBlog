@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="6b2f2531-5351-4d86-bca9-8a54e82ecd7f">
+    <comment isAdmin="false" isApproved="true" id="fc5902cf-7002-48d1-8b0f-297e7424e790">
       <author>jibin</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09121424418898855997</website>
@@ -20,7 +20,7 @@
       <date>2010-11-03 06:41:33</date>
       <content>HI,&lt;br /&gt;HOw we can use this waestream class for reading data from networkstream and the play it to the speakers directly using NAudio..&lt;br /&gt;Need to implement a VOIP sample.&lt;br /&gt;Any examples or links helpful to do this&lt;br /&gt;Thanks&lt;br /&gt;jibin&lt;br /&gt;jibin.mn@gmail.com</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="68ad8ab0-90b9-473b-b785-b83ad206b620">
+    <comment isAdmin="false" isApproved="true" id="a61df846-ad4e-44a4-8287-6cb7edec263a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2010-11-08 08:07:03</date>
       <content>you need to create a custom wavestream or WaveProvider that supplies the data you read from the network from the Read method. You&amp;#39;ll need to report the correct WaveFormat, and implement buffering. See the BufferedWaveProvider in the latest code for a good starting point.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="18ed5cc0-39dd-4c2a-9ac5-c49336c119fa">
+    <comment isAdmin="false" isApproved="true" id="991c1c33-95a3-4b8a-b474-faa1efef7f52">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

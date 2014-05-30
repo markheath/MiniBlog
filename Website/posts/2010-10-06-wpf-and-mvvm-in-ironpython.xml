@@ -110,7 +110,7 @@ app.Run(xaml.Root)&lt;/pre&gt;Now we run it and see:
     <category>IronPython</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="43f7259e-c21d-4867-87ee-2d077cdb6a42">
+    <comment isAdmin="false" isApproved="true" id="0c835cb8-a994-4fd6-9bba-d0f76d0455fd">
       <author>indang-farmer</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02038396637341302709</website>

@@ -49,7 +49,7 @@
     <category>LINQ</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="ee59fcd8-7689-4b03-a2b6-a6c1736219b1">
+    <comment isAdmin="false" isApproved="true" id="2ab51cf8-9ff6-45b8-b80b-8b3a0c07072c">
       <author>vzdesic</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08304551958163504319</website>
@@ -58,7 +58,7 @@
       <date>2009-09-11 22:08:40</date>
       <content>Is xraw variable contain loaded xml document?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1a931017-fdd1-40c3-ae6c-fbece05be55a">
+    <comment isAdmin="false" isApproved="true" id="cf39a643-4fbf-471e-824e-e1847b56d391">
       <author>vzdesic</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08304551958163504319</website>
@@ -67,7 +67,7 @@
       <date>2009-09-11 22:11:15</date>
       <content>Class behind this object should implement IEnumerable? Is this true?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bf94bde5-4ec7-404a-933b-d78da326979a">
+    <comment isAdmin="false" isApproved="true" id="aec2bce7-86c1-45db-a885-5572e8833454">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -76,7 +76,7 @@
       <date>2009-09-11 22:14:06</date>
       <content>Hi vzdesic, the code to load xraw is simply:&lt;br /&gt;var xraw = XElement.Load(&amp;quot;KeyWords.xml&amp;quot;);</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f2079572-5184-4016-9162-e35fa06e6ed8">
+    <comment isAdmin="false" isApproved="true" id="67eb21f6-89dc-4321-8087-7fbffe93d57c">
       <author>James Wilson</author>
       <email>noreply@blogger.com</email>
       <website />

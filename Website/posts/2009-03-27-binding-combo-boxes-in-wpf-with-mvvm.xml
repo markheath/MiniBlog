@@ -38,7 +38,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
     <category>Data Binding</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="2911a892-5c88-4fa7-9d5d-5ba6af9f564b">
+    <comment isAdmin="false" isApproved="true" id="77601148-20c1-4f8e-84ec-0d52baccf842">
       <author>Michael Schlegel</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -47,7 +47,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2010-01-06 20:53:02</date>
       <content>Even if some month were gone since you published your article it provides exactly what I was looking for. To answer your question: from my point of view your suggestion is almost an imperative if one applies the MVVM pattern on comboboxes. Thanks a lot!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5956d606-784c-48f4-ad24-2e4fda9cebc5">
+    <comment isAdmin="false" isApproved="true" id="40063ee1-21a1-4b0e-aa53-b7c2d5b6dc27">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -56,7 +56,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2010-02-04 14:16:05</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Great posts,&lt;br /&gt;&lt;br /&gt;I read your post about MVVM ListBox filtering, what i´m looking for is something in between. &lt;br /&gt;&lt;br /&gt;If i for instance have an application with a number of Combo boxes bound with a CollectionView and i want the selected item in one of them to affect a filter in another ComboBox. &lt;br /&gt;&lt;br /&gt;How would you go about doing that? I´ve added a filter by just using myCollectionView.Filter = methodname, in the CurrentChanged eventhandler of the CollectionView. It runs the filter method allright but the View wont update even with myCollectionView.Refresh(). &lt;br /&gt;&lt;br /&gt;Any thoughts on this? Do i need to use a ObeservableCollection instead of CollectionView?&lt;br /&gt;&lt;br /&gt;I really liked CollectionView approach so would be nice i could stick to that.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="779d1cc1-9b7e-4e9c-b5ff-cdc0b79b6d98">
+    <comment isAdmin="false" isApproved="true" id="bad0111f-7a1d-421f-a132-2ff1dd9892d1">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -65,7 +65,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2010-02-05 14:18:16</date>
       <content>hmm, not sure anonymous, I haven&amp;#39;t done much WPF recently. You should ask on StackOverflow</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e03b60ca-f10f-4885-a0eb-7915989addca">
+    <comment isAdmin="false" isApproved="true" id="7abbeb16-3968-486f-8f09-3bfd46c8139a">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -74,7 +74,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2010-02-08 13:05:59</date>
       <content>Thanks for answering atleast :)&lt;br /&gt;&lt;br /&gt;Got it working with this approach : http://www.wpftutorial.net/DataViews.html&lt;br /&gt;&lt;br /&gt;Very simular to your post..</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1f4ab014-4dbb-42f3-8600-2517c93b0273">
+    <comment isAdmin="false" isApproved="true" id="426863e4-8e58-4cb0-8b76-8a65675a7273">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -83,7 +83,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2011-06-09 12:10:32</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;good idea, but what is to do, when&lt;br /&gt;you want validate with &amp;#39;DataErrorValidationRule&amp;#39;, i.e. you have to set ValidateOnDataError=True&amp;#39; in your XAML?&lt;br /&gt;&lt;br /&gt;Felix</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="573bc979-030e-440b-882c-4b57e46d6405">
+    <comment isAdmin="false" isApproved="true" id="8962b8f4-af5b-4ddc-9581-f13017bca048">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -92,7 +92,7 @@ void queries_CurrentChanged(object sender, EventArgs e)
       <date>2011-06-09 13:30:07</date>
       <content>@Anonymous, I&amp;#39;d recommend asking that on StackOverflow. I haven&amp;#39;t done much with Data Validation in WPF</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ee5a459e-1a83-4c54-ada2-1f91db4010a0">
+    <comment isAdmin="false" isApproved="true" id="4159e6fc-222a-47ed-8441-b817d660f399">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

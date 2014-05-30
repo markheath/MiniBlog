@@ -57,7 +57,7 @@ public class Lazy&amp;lt;T&amp;gt; : ILazy&amp;lt;T&amp;gt;
     <category>IoC</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="62f50e11-27f4-4adb-806a-293ed9b8c37a">
+    <comment isAdmin="false" isApproved="true" id="6cbd4407-d30f-4487-8cb3-1b42e11b2fa8">
       <author>Piotr Włodek</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16128908255082039702</website>
@@ -66,7 +66,7 @@ public class Lazy&amp;lt;T&amp;gt; : ILazy&amp;lt;T&amp;gt;
       <date>2010-05-13 22:34:35</date>
       <content>There&amp;#39;s even better solution - native support for Lazy&amp;lt;T&amp;gt; and IEnumerable&amp;lt;Lazy&amp;lt;T&amp;gt;&amp;gt; in the Unity 2.0. Check it out at http://bit.ly/bNUOdG</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="702c7004-ec66-45b3-a39e-ae331b426657">
+    <comment isAdmin="false" isApproved="true" id="a85d3e0d-cbd2-4290-a18c-a327506eb51a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

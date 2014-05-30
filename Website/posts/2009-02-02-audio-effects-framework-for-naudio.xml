@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="9085dad0-b4de-485e-bdb1-f618cff536d8">
+    <comment isAdmin="false" isApproved="true" id="4a8d2d3e-672d-4d08-a7f7-5599fffc386c">
       <author>m.pniuVxsfy_Lj_CO7veuiwwttzMKEbOUXaUQA--</author>
       <email>noreply@blogger.com</email>
       <website>https://me.yahoo.com/a/m.pniuVxsfy_Lj_CO7veuiwwttzMKEbOUXaUQA--#5858e</website>
@@ -20,7 +20,7 @@
       <date>2009-02-04 22:50:00</date>
       <content>Hi Mark!&lt;BR/&gt;Nice article about using NAudio! I'm so busy right now by other non computer stuff that i can't no longer work on NAudio until several months... but i'm really pleased to see that you are still working on it!&lt;BR/&gt;See you&lt;BR/&gt;Alexandre Mutel</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a12e7469-262c-469b-9468-40fc370ed1c9">
+    <comment isAdmin="false" isApproved="true" id="3917a6be-8682-4bad-887d-df2d4ecb29fc">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2009-02-05 14:37:00</date>
       <content>hey Alexandre, good to hear from you again. I'd be interested to hear your thoughts on the IEffect interface. I am thinking that there may be two ways to use NAudio - one dealing primarily with byte arrays and repositionable WaveStreams, and one dealing primarily with an effects chain, and may not even make use of WaveStream at all.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="39109c2d-090c-4ad7-bfef-e3cbdefa68f4">
+    <comment isAdmin="false" isApproved="true" id="37954665-65a5-49b0-b93c-db57d1c3a618">
       <author>Alexandre Mutel</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -38,7 +38,7 @@
       <date>2009-02-06 21:28:00</date>
       <content>Well, about the Effect interface, i would probably prefer a property based declaration for sliders, with a special attribute containing additionnal information (min, max, default, text...etc.) and precompute sliders at initialization with runtime info. I'm a huge fan of this kind of design! ;)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="937994de-8092-45c5-baea-59505611f78e">
+    <comment isAdmin="false" isApproved="true" id="3b22e575-5153-4e0e-b795-c5fc3f19f48a">
       <author>Ringo</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14830185612972030881</website>
@@ -47,7 +47,7 @@
       <date>2009-02-25 18:53:00</date>
       <content>How difficult would it be to modify this app so that you don't have to use skype, just mic in and speaker out?&lt;BR/&gt;&lt;BR/&gt;I have a robot that is tele-operated and uses a wireless Voice transceiver so that the operator can talk through the robot. It would be neat to be able to change the voice on the fly.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="10438ac4-feae-49a6-a6f7-97eef51f302c">
+    <comment isAdmin="false" isApproved="true" id="75731874-ccfa-4c3c-b58b-4a94c1115595">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -56,7 +56,7 @@
       <date>2009-02-25 19:08:00</date>
       <content>Hi Ringo, it wouldn't be too hard at all. NAudio includes a WaveIn class to use for this purpose. You would simply need to adapt it to a WaveStream which the EffectStream can use as a source.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="350e7332-8d54-4989-ba49-8d32737f617c">
+    <comment isAdmin="false" isApproved="true" id="7aa9188d-4e62-460d-8c0b-492d814a14ea">
       <author>Alexandre Mutel</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -65,7 +65,7 @@
       <date>2009-02-27 21:46:00</date>
       <content>Oh, by the way Mark, you should check the last version of vstnet on codeplex. It seems that a basic host is available... could be interesting for applying effects through a VST chain.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f20d18d1-4f9d-4a41-b50e-00e643e1c4ef">
+    <comment isAdmin="false" isApproved="true" id="85f389b2-d63d-4c1a-b1a3-6a2a6aef2d64">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -74,7 +74,7 @@
       <date>2009-02-28 07:28:00</date>
       <content>Hi Alexandre,&lt;BR/&gt;yes I saw that. I would like to create a VstWaveStream or a VST hosting IEffect and get it in to NAudio at some point.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="022a2b8c-4851-4e35-a6c3-90de7fb8993b">
+    <comment isAdmin="false" isApproved="true" id="028afd89-faa4-47b6-85c6-552704002376">
       <author>Phil Wolff</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15110326400364932565</website>
@@ -83,7 +83,7 @@
       <date>2009-03-08 22:46:00</date>
       <content>Hi, Mark. May we reblog this post as a guest column on Skype Journal? It's a great read and perfect for our audience. &lt;BR/&gt;&lt;BR/&gt;http://SkypeJournal.com &lt;BR/&gt;&lt;BR/&gt;Thanks. &lt;BR/&gt;&lt;BR/&gt;Phil Wolff, editor</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a7658160-79e0-4466-a0eb-d4e89c7c734d">
+    <comment isAdmin="false" isApproved="true" id="98e704f0-b800-4fe3-8219-6a01457ca986">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -92,7 +92,7 @@
       <date>2009-03-09 09:48:00</date>
       <content>Hi Phil,&lt;BR/&gt;Sure feel free. &lt;BR/&gt;Mark</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="09194de0-b718-46e2-8f1e-8a1defc4fa64">
+    <comment isAdmin="false" isApproved="true" id="4d388aa6-1b5d-4e13-8875-612a5ce5e9a4">
       <author>Diego Frata</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -101,7 +101,7 @@
       <date>2009-03-13 04:51:00</date>
       <content>Hey Mark, nice article. I've started to study this library and it amazes me. I've struggled a lot to understande the mess around Windows Audio SDKs and this library simply takes all the mess alway.&lt;BR/&gt;&lt;BR/&gt;This library gives me hope that someday the middle east will live in peace, and Microsoft's API's will work just like NAudio. :-)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="69a0a554-fbac-4c8b-9ced-5e2f1ceacc8e">
+    <comment isAdmin="false" isApproved="true" id="2b38c1e5-7488-452f-bacf-52a9e9e08de6">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

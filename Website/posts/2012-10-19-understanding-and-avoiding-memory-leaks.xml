@@ -235,7 +235,7 @@ button.Clicked –= new EventHandler(OnButtonClicked)
     <category>C#</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="b3f29fe7-d7f5-4487-9d72-87ca6b1dd524">
+    <comment isAdmin="false" isApproved="true" id="bf95cc37-e2b5-4430-821b-46f20d4d61d6">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -244,7 +244,7 @@ button.Clicked –= new EventHandler(OnButtonClicked)
       <date>2013-01-14 20:43:44</date>
       <content>Which VS version your sln and csproj files belong to? I am trying to open it with VS 2010 and getting compatibility errors. &lt;br /&gt;- John</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="82b52c47-bb11-4df4-90db-d40104f74d89">
+    <comment isAdmin="false" isApproved="true" id="7becc8f1-c689-4ef9-b4a1-92dd337302e3">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

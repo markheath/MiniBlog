@@ -53,7 +53,7 @@ public void BlogControllerCanCallCreatePost()
     <category>ASP.NET MVC</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="73ffa9f3-d5e1-4538-8af8-8b294dbf3ff8">
+    <comment isAdmin="false" isApproved="true" id="219db7f8-e1b3-47c9-b8f8-79c04df261ad">
       <author>kamini</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03737980010730690498</website>
@@ -62,7 +62,7 @@ public void BlogControllerCanCallCreatePost()
       <date>2008-05-16 11:47:00</date>
       <content>nice post...&lt;BR/&gt;&lt;BR/&gt;just tell me what is ActionResult&lt;BR/&gt;and what is blogservice?&lt;BR/&gt;&lt;BR/&gt;can u explain me....&lt;BR/&gt;&lt;BR/&gt;and i am doing r&amp;d on MVC..and if possible send me a some document about MVC.....</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="39679a10-274a-4bfb-b38f-742198ce3fd8">
+    <comment isAdmin="false" isApproved="true" id="9e04252b-72a8-4a71-bed5-56c151e1bb4c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -71,7 +71,7 @@ public void BlogControllerCanCallCreatePost()
       <date>2008-05-16 11:54:00</date>
       <content>Hi kamini, go to &lt;A HREF="http://weblogs.asp.net/scottgu/" REL="nofollow"&gt;Scott Gu's blog&lt;/A&gt;, and the &lt;A HREF="http://www.asp.net/mvc/" REL="nofollow"&gt;official ASP.NET MVC site&lt;/A&gt; to find out more.&lt;BR/&gt;&lt;BR/&gt;blogservice is just my class that allows me to access my blog database.&lt;BR/&gt;&lt;BR/&gt;ActionResult is what is returned by MVC controller methods.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9b6d65dd-fd2a-4539-a304-4e42d59fbe75">
+    <comment isAdmin="false" isApproved="true" id="07371998-b8c9-4a99-82c7-895e481e0a60">
       <author>Grande</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07522793168375306409</website>
@@ -80,7 +80,7 @@ public void BlogControllerCanCallCreatePost()
       <date>2008-08-19 19:10:00</date>
       <content>Hi,&lt;BR/&gt;&lt;BR/&gt;I&amp;#39;m using pretty much the same thing as you, but I&amp;#39;m getting a NullReferenceException.  It seems Html is coming back as null.  Any idea why?&lt;BR/&gt;&lt;BR/&gt;&amp;lt;% using (Html.Form&amp;lt;UsersController&amp;gt;(action =&amp;gt; action.Create())) { %&amp;gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e6d2a0d6-3e92-4612-8128-22992a6be603">
+    <comment isAdmin="false" isApproved="true" id="8128092f-842d-46d8-b3ae-149ff854b646">
       <author>Erik Porter</author>
       <email>noreply@blogger.com</email>
       <website>http://weblogs.asp.net/eporter</website>
@@ -89,7 +89,7 @@ public void BlogControllerCanCallCreatePost()
       <date>2008-11-01 07:19:00</date>
       <content>Best pattern we've found for writing tests like you have shown is by using fake classes.  Stephen Walther has many great posts on these.&lt;BR/&gt;&lt;BR/&gt;http://weblogs.asp.net/stephenwalther/archive/2008/08/03/asp-net-mvc-tip-29-build-a-controller-to-debug-your-custom-routes.aspx</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="45deaa80-14f7-41d3-9c50-1159f8b4bed6">
+    <comment isAdmin="false" isApproved="true" id="77338a9e-6d02-4d5a-9311-c3ff3ad7aa7d">
       <author>Leo H.</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -98,7 +98,7 @@ public void BlogControllerCanCallCreatePost()
       <date>2008-11-20 21:41:00</date>
       <content>Where do I get Html.SubmitButton("submitButton","Save")? My HtmlHelper class does not contain this method.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a3974d70-5f98-4e59-9c00-07cf8e7d97bf">
+    <comment isAdmin="false" isApproved="true" id="ef32582c-8463-4bbc-be33-c79351212416">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

@@ -11,7 +11,7 @@
     <category>ASP.NET</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="a09c55a2-4a3f-4372-8f07-c06fef70d387">
+    <comment isAdmin="false" isApproved="true" id="137d6af5-3b8e-4065-a285-2bf0c918de14">
       <author>Jax</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -20,7 +20,7 @@
       <date>2008-01-08 17:00:00</date>
       <content>Any chance you can inform us of which of the choices you made after seeing the code?&lt;BR/&gt;&lt;BR/&gt;I'm always particularly interested to hear how you thought the code bases looked depending on the Data / Business objects approach.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6250553f-2ba5-4246-b542-d21529552d8a">
+    <comment isAdmin="false" isApproved="true" id="a8b274ef-d972-4510-8895-0ca30ad29f17">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2008-01-11 11:46:00</date>
       <content>hi jax,&lt;BR/&gt;I'm still keeping an eye on Subsonic, although I want to check out the new LINQ to entities stuff as well now. I've also been looking into the ASP.NET MVC framework, so there has been a lot to take in. I don't think the provider model is that important unless you are writing an application that will need to support multiple providers. An open source blog platform would but most business applications are pretty much tied down to one database format.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="21bdd381-ab55-4377-8a2b-6383cd64bed2">
+    <comment isAdmin="false" isApproved="true" id="9922ed5a-f35e-46c9-85b2-e8ed3e3fa47e">
       <author>Jax</author>
       <email>noreply@blogger.com</email>
       <website />

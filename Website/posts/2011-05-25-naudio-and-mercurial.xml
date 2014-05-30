@@ -11,7 +11,7 @@
     <category>Mercurial</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="03113687-5308-4b99-8ef1-2d4a2f6fab19">
+    <comment isAdmin="false" isApproved="true" id="4c44b4a8-426f-484b-a37f-c9746a6d43e3">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -20,7 +20,7 @@
       <date>2011-05-25 21:48:26</date>
       <content>Why not git? Most opensource developers already use git. I really hate to have both Mercurial and Git installed on my system.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ff620e07-4ba4-4210-9dca-a37c650ab3f5">
+    <comment isAdmin="false" isApproved="true" id="135d94c5-5c50-469a-83ab-e7eb164f6660">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2011-05-25 22:02:37</date>
       <content>Well CodePlex doesn&amp;#39;t support git which is why I picked Mercurial as my first DVCS to learn. I&amp;#39;ve really grown to like it &amp;amp; know what I&amp;#39;m doing with it. I&amp;#39;ve tried git a few times, but I&amp;#39;m not at a point where I could be productive with it yet. I am pretty sure there are git extensions that will allow you to clone from a Mercurial repo though, so you shouldn&amp;#39;t need to install hg if you don&amp;#39;t want to.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="fa01f042-9649-4a48-b535-5ac33e095836">
+    <comment isAdmin="false" isApproved="true" id="dc20baf1-5922-4cae-8c76-db8abe067d9a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

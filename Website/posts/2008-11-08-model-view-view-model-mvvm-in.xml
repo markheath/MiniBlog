@@ -378,7 +378,7 @@ scoreboard.DataContext = scoreData;&lt;/pre&gt;
     <category>Data Binding</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="3fcb1fca-e242-4507-a1fa-58da7cfb4b0c">
+    <comment isAdmin="false" isApproved="true" id="f48f2de1-df9b-4595-9043-cff500249d03">
       <author>DFELK</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/18414549451193816329</website>
@@ -387,7 +387,7 @@ scoreboard.DataContext = scoreData;&lt;/pre&gt;
       <date>2008-11-14 15:15:00</date>
       <content>I do agree, the explanations of MVVM are overly complicated for no reason. Its a very very simple pattern when you get down to it.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a9c8ec4e-f538-4ca9-ba8a-b38a6288320a">
+    <comment isAdmin="false" isApproved="true" id="b8d7d665-e6ce-499c-8feb-9ee84347f3fa">
       <author>vfdvgf</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00659026086148563221</website>
@@ -396,7 +396,7 @@ scoreboard.DataContext = scoreData;&lt;/pre&gt;
       <date>2009-07-08 04:45:04</date>
       <content>This comment has been removed by a blog administrator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="206a546d-53bb-4d5c-af7a-46d3fc8626e3">
+    <comment isAdmin="false" isApproved="true" id="ab12303b-c31e-4c55-8850-f369615fb938">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -405,7 +405,7 @@ scoreboard.DataContext = scoreData;&lt;/pre&gt;
       <date>2010-02-22 12:35:19</date>
       <content>I have read many articles about MVVM, written systems incorporating it, and fully agree that to make it a code reviewable pattern that x:name should not be needed in the view or used in the code behind.&lt;br /&gt;&lt;br /&gt;AlaskanRogue</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0cd6d580-4653-4be0-8286-0ca6b479c570">
+    <comment isAdmin="false" isApproved="true" id="4e87cf80-bca8-4323-919f-2d22aef5e71e">
       <author>nandarsync</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09121208476001470593</website>

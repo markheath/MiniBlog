@@ -154,7 +154,7 @@
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="9c925b68-d72d-43e2-95ba-5d01a3ad1dad">
+    <comment isAdmin="false" isApproved="true" id="de4e1a1d-75f8-4972-b3ee-dda20cc18803">
       <author>Keoz</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -163,7 +163,7 @@
       <date>2009-02-21 01:26:00</date>
       <content>Great post! thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f9b0f3f0-3d4e-4d5e-bb6c-77e75ab60998">
+    <comment isAdmin="false" isApproved="true" id="82a82cb3-a8c7-4234-b642-30d0ba2612fc">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -172,7 +172,7 @@
       <date>2009-03-05 13:40:00</date>
       <content>Dear Mark,&lt;BR/&gt;I got an error at &lt;BR/&gt; ContentPresenter HorizontalAlignment="Center"                                Margin="4,0,4,0"                                   Foreground="{TemplateBinding Foreground}"                                 Content="{TemplateBinding Content}"                                  VerticalAlignment="Center" &lt;BR/&gt;&lt;BR/&gt;saying:&lt;BR/&gt;The property 'Foreground' does not exist on the type 'ContentPresenter' in the XML namespace 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'. C:\sources\silverlightsdemos\button2\button2\button1\App.xaml &lt;BR/&gt;&lt;BR/&gt;Alex</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="39678d88-5a49-4040-9efe-eb477f9e44ec">
+    <comment isAdmin="false" isApproved="true" id="af456622-7520-4334-9faa-5c1a0c13b68d">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

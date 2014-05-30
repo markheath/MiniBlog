@@ -47,7 +47,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
   <ispublished>true</ispublished>
   <categories />
   <comments>
-    <comment isAdmin="false" isApproved="true" id="533f8516-38ec-4236-9dc7-42d52a6e45d5">
+    <comment isAdmin="false" isApproved="true" id="559663fc-5db9-4f35-b3c4-50ae9a716fd4">
       <author>Andrew</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13632400519774640095</website>
@@ -56,7 +56,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2007-07-11 06:39:00</date>
       <content>Thanks for your explanatory post.  I'm sorry my instructions weren't that good, but I see you've made up for that.  &lt;BR/&gt;&lt;BR/&gt;The LoggingIn event gives your site a chance to reject a particular URL &lt;I&gt;before&lt;/I&gt; the user is redirected to his OpenID provider.  You might do this if you only allowed, say, a given set of administrators with known OpenIDs to log into your site.&lt;BR/&gt;&lt;BR/&gt;The unhandled exception isn't good.  There should be a validation control to handle that, but I'll have to check.&lt;BR/&gt;&lt;BR/&gt;In the meantime, you and your readers should know that the NerdBank.Tools version of my ASP.NET OpenID control is now deprecated.  The controls were merged into the &lt;A HREF="http://code.google.com/p/dotnetopenid" REL="nofollow"&gt;dotnetopenid project&lt;/A&gt; and have been worked on there.  You should give that library a try and see if you find it better.  I welcome comments. Just post to the &lt;A HREF="http://groups.google.com/group/dotnetopenid" REL="nofollow"&gt;dotnetopenid Google Group&lt;/A&gt;.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1dc08867-bd80-4ea4-a1d0-ccf365b5ac87">
+    <comment isAdmin="false" isApproved="true" id="6bb013af-eaca-4187-9ab8-1a26896578dc">
       <author>aaballboy</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10470452782370431525</website>
@@ -65,7 +65,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2008-02-08 14:00:00</date>
       <content>hi~ Mark!&lt;BR/&gt;I can't download dll from the url.&lt;BR/&gt;Do u know where I can find these dll?&lt;BR/&gt;Thank you!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5886589d-58dc-4d55-94e2-a5c87d7c8e99">
+    <comment isAdmin="false" isApproved="true" id="4ccfd1f4-2cc8-4de6-b5cd-ca5b4fff57fe">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -74,7 +74,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2008-02-08 14:49:00</date>
       <content>hi aaballboy,&lt;BR/&gt;have you tried from the google project link? ...&lt;BR/&gt;http://code.google.com/p/dotnetopenid/</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dccfc349-12aa-47f8-86a5-055625fdebbd">
+    <comment isAdmin="false" isApproved="true" id="dfd3c549-6770-4088-b2af-bc63354f1055">
       <author>aaballboy</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10470452782370431525</website>
@@ -83,7 +83,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2008-02-14 07:45:00</date>
       <content>Thanks for ur reply!&lt;BR/&gt;I have found dll.&lt;BR/&gt;But now I have another problem.&lt;BR/&gt;where can I download source code?&lt;BR/&gt;Because I can't change the OpenID control.&lt;BR/&gt;For example,I want to change the OpenID provider from myopenid to yahoo.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ffeb0e03-e182-4deb-af8b-1f0ab614aaf5">
+    <comment isAdmin="false" isApproved="true" id="6552682d-027b-4f1a-be5b-80fcfd47f960">
       <author>Andrew</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13632400519774640095</website>
@@ -92,7 +92,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2008-04-06 05:22:00</date>
       <content>aaballboy,&lt;BR/&gt;The source code is also available from the googlecode site that Mark pointed out.  But FWIW, you don't need the source to change the OpenId Provider that is suggested in the OpenIdLogin control.  You can change that through a property on the control itself.  Much easier.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="048cb470-fa07-4f7d-8833-18978366d5b5">
+    <comment isAdmin="false" isApproved="true" id="37da554f-2255-464b-8c73-2eb17e58eb2e">
       <author>judekblog</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02230430409636198387</website>
@@ -101,7 +101,7 @@ void openIdLogin_LoggedIn(object sender, NerdBank.Tools.WebControls.OpenIdTextBo
       <date>2009-01-25 21:05:00</date>
       <content>Thanks your code works great. But now I am trying to break it down indivigual users and allow only certain users in. For example, what would I set my xxx to in allow users="xxx"  in the web.config file?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7391828b-a886-49b8-9c44-6f546d8160f6">
+    <comment isAdmin="false" isApproved="true" id="fcf51070-935c-4999-a82d-596d4293f511">
       <author>Andrew</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13632400519774640095</website>

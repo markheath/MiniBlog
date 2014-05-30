@@ -11,7 +11,7 @@
     <category>Media Foundation</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="1a476644-41fd-4be3-869e-32db290e8b3b">
+    <comment isAdmin="false" isApproved="true" id="878e52ca-36e2-432b-9f67-3ef00d3c6042">
       <author>Lucian Wischik</author>
       <email>noreply@blogger.com</email>
       <website>http://blogs.msdn.com/lucian</website>
@@ -20,7 +20,7 @@
       <date>2014-04-09 15:29:37</date>
       <content>How did this work out?&lt;br /&gt;&lt;br /&gt;I&amp;#39;m curious, does sharpdx have any additional dependencies that naudio doesn&amp;#39;t? Eg. would this move prevent naudio working on PhoneSilverlight or some other platforms?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5fdfdacd-987c-4ac6-becc-901c26f25ed3">
+    <comment isAdmin="false" isApproved="true" id="99eff4c1-8083-4676-ac36-d43e160ca7b2">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2014-04-09 15:36:31</date>
       <content>no that I know of. You can in fact use my alternative implementation alongside NAudio, so I may go with that solution. &lt;br /&gt;&lt;br /&gt;I&amp;#39;m hoping to look at getting a version of NAudio for windows phone, maybe when 8.1 comes out as that opens the door to more shared code</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="27bfb6fa-754b-487f-b9ec-9f37abaf0f96">
+    <comment isAdmin="false" isApproved="true" id="f0289249-6f4d-41dc-b06e-bcce87db3995">
       <author>Jon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09721536267629821809</website>

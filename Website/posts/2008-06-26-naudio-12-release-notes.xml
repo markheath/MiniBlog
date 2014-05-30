@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="105aae69-f75c-46b8-8612-ccc0543d3201">
+    <comment isAdmin="false" isApproved="true" id="79898104-1930-4d66-80b1-edbf62b155bb">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -20,7 +20,7 @@
       <date>2008-07-21 07:58:00</date>
       <content>Dear Friend,&lt;BR/&gt;&lt;BR/&gt;I am a new for Audio technology. Now I have a requirement, which is difficult to me, the requirement is that I should control the line-in audio signals. playing the line-in audio signals or stopping the line-in audio signals and playing other media files. &lt;BR/&gt;I know you are the expert, could you give me a help?&lt;BR/&gt;I highly appreciate for your help. &lt;BR/&gt;I am looking forward to feedback!&lt;BR/&gt;My Email: NingDev@gmail.com&lt;BR/&gt;Thanks and best regards!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="12cc3855-7ed3-4965-8e6d-6b7e3c65b551">
+    <comment isAdmin="false" isApproved="true" id="49e82099-4380-41d9-bd5c-b97bf9b7e491">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -29,7 +29,7 @@
       <date>2008-08-31 14:41:00</date>
       <content>Hey great work. But did you test on Vista 64 bit?&lt;BR/&gt;&lt;BR/&gt;The 1.2 source release zip (not trunk) appears to have the projects set up for "Any CPU" compilation and while Wave output works, directsound didn't work until projects were compiled as x86.&lt;BR/&gt;&lt;BR/&gt;I couldn't get wasapi to work either as x86 or x64 with latest realtek hd audio drivers that afaik support wavert. Didn't look yet where the issue is.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3cfbbcbb-6c48-4a96-b6e2-8ec88c3068f5">
+    <comment isAdmin="false" isApproved="true" id="0e844e23-0f65-455c-a187-d3aa09352f15">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -38,7 +38,7 @@
       <date>2008-08-31 14:50:00</date>
       <content>Weird. I tried running again and wasapi/asio work now.&lt;BR/&gt;&lt;BR/&gt;However there is definitely some buggyness going on:&lt;BR/&gt;&lt;BR/&gt;I put a large wav file playing then flipped through the options like wave-&amp;gt;ds-&amp;gt;wasapi-&amp;gt;asio-&amp;gt;wasapi-&amp;gt;...  stopping the playback before changing of course but at some point the playback might not start (wasapi-&amp;gt;asio) .. on my first attempt going ds-&amp;gt;wasapi didn&amp;#39;t work.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a3a551eb-82e4-494d-8aed-5676503342d9">
+    <comment isAdmin="false" isApproved="true" id="b302b129-4ff4-4b88-8b5f-c5fb6f4e9999">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -47,7 +47,7 @@
       <date>2008-08-31 14:58:00</date>
       <content>DirectSound now works under Any CPU compile after these changes:&lt;BR/&gt;&lt;BR/&gt;internal struct DirectSoundBufferPositionNotify&lt;BR/&gt;{&lt;BR/&gt;public UInt32 dwOffset;&lt;BR/&gt;public IntPtr hEventNotify;&lt;BR/&gt;}&lt;BR/&gt;&lt;BR/&gt;/// IDirectSoundNotify interface&lt;BR/&gt;....&lt;BR/&gt;....&lt;BR/&gt;{&lt;BR/&gt;void SetNotificationPositions(UInt32 dwPositionNotifies, [In, MarshalAs(UnmanagedType.LPArray)] DirectSoundBufferPositionNotify[] pcPositionNotifies);&lt;BR/&gt;}</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="fdb24ad6-e4de-483f-805c-613b11601216">
+    <comment isAdmin="false" isApproved="true" id="ebc36e2e-b7c1-499c-a1ca-9fa4ee19530b">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -56,7 +56,7 @@
       <date>2008-11-16 18:12:00</date>
       <content>First of all, thanks - this is exactly what I've been looking for in the last 2 years!&lt;BR/&gt;&lt;BR/&gt;But I migth have found a bug. When playing a mp3 or wav, I get a choppy playback when some other application (winamp, mplayer2 etc.) is playing at the same time.&lt;BR/&gt;(naudio-18536)&lt;BR/&gt;&lt;BR/&gt;Regards Michael</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f95d897e-c382-4ead-87a3-b6b5f23d64b5">
+    <comment isAdmin="false" isApproved="true" id="b9191632-debb-4340-997c-098f47520b89">
       <author>Grubbrother</author>
       <email>noreply@blogger.com</email>
       <website>http://blog.grubbrother.com</website>

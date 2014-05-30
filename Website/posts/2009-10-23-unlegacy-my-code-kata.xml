@@ -43,7 +43,7 @@
     <category>TDD</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="055ffa86-0d0d-4bde-974d-c98be225ac84">
+    <comment isAdmin="false" isApproved="true" id="a897a3ea-bb47-4573-afeb-0dc53881e6fa">
       <author>Rob The Geek</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04578932741770127659</website>
@@ -52,7 +52,7 @@
       <date>2009-10-23 14:55:24</date>
       <content>Nice post - I too have been thinking of coming up with some Kata for daily practice. It seems like every time I feel like I make progress with TDD, I learn something new that makes me feel like a n00b again :)&lt;br /&gt;&lt;br /&gt;I like the idea of the &amp;quot;unlegacy my code&amp;quot; most of my (and I expect most other developers) time is spent doing maintenance. I think you have accurately picked two of the worst problems with legacy code.&lt;br /&gt;&lt;br /&gt;I would perhaps also suggest refactoring out code duplication. Often in (crappy) legacy code, other people have run into the same testability problems and rather than fix, they have just duped the code. As to how you would want to implement in a kata (e.g. code copied verbatim or &lt;i&gt;very&lt;/i&gt; similar code) but I think it would be important to include in any code used as the &amp;quot;template&amp;quot; for the kata.&lt;br /&gt;&lt;br /&gt;What are your thoughts on this? Any ideas on how you would like to see it in a kata (if at all)?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0f68e4a5-f2e7-4801-88d0-36f60a1ec680">
+    <comment isAdmin="false" isApproved="true" id="5580ee53-a35f-4e14-ab57-bec07afea4c5">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

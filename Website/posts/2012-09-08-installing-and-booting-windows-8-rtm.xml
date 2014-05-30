@@ -45,7 +45,7 @@ From beginning to end, the process of setting up my laptop to boot to Win 8 from
     <category>Windows 8</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="c11efdd8-fd31-42ab-a91c-cd9897ad29dd">
+    <comment isAdmin="false" isApproved="true" id="2f7ae478-df06-4a4f-ba59-6f56400bc353">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -54,7 +54,7 @@ From beginning to end, the process of setting up my laptop to boot to Win 8 from
       <date>2012-09-08 19:41:42</date>
       <content>To remove your VHD from the boot path, use bcdedit or EasyBCD to remove the boot entry, then delete the vhd file.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4b6cc90e-cb0c-4566-a6c8-1432c7fe6f44">
+    <comment isAdmin="false" isApproved="true" id="19d36e5c-6cce-4d21-a5b3-65244a6158ae">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

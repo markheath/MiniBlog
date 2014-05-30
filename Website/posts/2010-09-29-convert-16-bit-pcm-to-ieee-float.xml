@@ -94,7 +94,7 @@ public class Wave16toIeeeProvider : IWaveProvider
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="55e48d98-0315-4c43-a23e-0e791a215d32">
+    <comment isAdmin="false" isApproved="true" id="91cb1390-900d-46b1-b4dc-30192817d398">
       <author>cckerr</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -103,7 +103,7 @@ public class Wave16toIeeeProvider : IWaveProvider
       <date>2012-03-15 05:52:28</date>
       <content>Can&amp;#39;t you just use struct.unpack to do this in Python?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dfe14b8b-febd-4c29-84c8-99b0e2730ad4">
+    <comment isAdmin="false" isApproved="true" id="fb0bf1fa-3d67-4c00-a347-ee2a65b40ef7">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

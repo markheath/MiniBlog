@@ -37,7 +37,7 @@ public class MyConstantsTests
     <category>C#</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="be9ea2d5-a133-4d42-b02c-62fe0b1fb59f">
+    <comment isAdmin="false" isApproved="true" id="bfc43fe3-4bea-4a29-8648-1d439b4d6005">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -46,7 +46,7 @@ public class MyConstantsTests
       <date>2009-11-17 14:24:06</date>
       <content>Why are you even using the partial keyword? Only use it for (partial) generated code. If you need the partial keyword you probably need to refactor to several classes.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="891e0498-000a-47ed-bc5e-924a74070a94">
+    <comment isAdmin="false" isApproved="true" id="96721dfa-726b-4e57-b996-500eba83a02f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

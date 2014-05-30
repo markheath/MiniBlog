@@ -12,7 +12,7 @@
     <category>Single Responsibility Principle</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="6a84779f-fba2-4ac3-b070-12b9c4341675">
+    <comment isAdmin="false" isApproved="true" id="aede10d9-d811-4299-9fa0-146c9456311d">
       <author>Matt</author>
       <email>noreply@blogger.com</email>
       <website>http://www.softwareproductdev.com</website>
@@ -21,7 +21,7 @@
       <date>2009-10-16 20:57:44</date>
       <content>Really good points.&lt;br /&gt;&lt;br /&gt;Two of my colleagues recently ended up at work at 10 o&amp;#39;clock at night trying to complete a merge - unfortunately there was absolutely no need for them to have done what they were doing - merging check-ins out of sequence!&lt;br /&gt;&lt;br /&gt;Here are some of my thoughts:&lt;br /&gt;1) Totally agree. We follow a scrum-like process so we have break everything down into tasks that are generally less than two days in length - there could be a number of tasks in a user story but there are probably 4 or so user stories in an iteration (2 weeks) - I personally don&amp;#39;t think we&amp;#39;ve got the balance quite right - smaller user stories would allow us to get into the 5-10 user story per iteration range and allow much more frequent check-ins.&lt;br /&gt;&lt;br /&gt;2) For this we have a &amp;quot;king&amp;quot; user story - only this story can check-in until it is &amp;quot;done-done&amp;quot; at which point the next feature becomes king. This seems to work well for small stories and a small team. As we&amp;#39;ve gone from 4 to 8 people it has become more difficult to share work on features that are not the king (shelvesets in TFS are a pain for sharing code). We haven&amp;#39;t solved this problem yet and may have to move to branches for each user story (our user stories tend to be reasonably large).&lt;br /&gt;&lt;br /&gt;3) I&amp;#39;m not entirely convinced by this - I think it depends on how long it has been since the merge happened - often it is important to be able to move things around and rename them as time goes by otherwise the code can rot. Also good merge tools help (I use Beyond Compare)&lt;br /&gt;&lt;br /&gt;4 &amp;amp; 5) I find it worrying that a lot of software developers don&amp;#39;t even seem to think about this stuff - good developers generally end up at these patterns even if they don&amp;#39;t know the &amp;quot;official&amp;quot; terminology.&lt;br /&gt;&lt;br /&gt;6) I very much agree. Unit testing is SO vital - my colleagues who made such a hash of their merge were saved by the unit tests otherwise there would have been a disaster.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4e735842-92f0-4d3d-b59f-35ce3803ff7a">
+    <comment isAdmin="false" isApproved="true" id="0b9dfdab-6858-480c-8672-9da4181da5c3">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

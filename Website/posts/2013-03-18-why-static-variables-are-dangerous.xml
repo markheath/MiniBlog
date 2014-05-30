@@ -45,7 +45,7 @@ public static int DataSizeToSkip
   <ispublished>true</ispublished>
   <categories />
   <comments>
-    <comment isAdmin="false" isApproved="true" id="28840215-b13c-40a9-a064-87fbfed65aca">
+    <comment isAdmin="false" isApproved="true" id="3e3a2af1-739d-4943-ab4c-592f4b605e75">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -54,7 +54,7 @@ public static int DataSizeToSkip
       <date>2013-03-19 21:55:56</date>
       <content>How about using the ThreadStatic-Attribute instead?&lt;br /&gt;http://msdn.microsoft.com/en-us/library/system.threadstaticattribute.aspx</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b68a26df-32ce-4e50-9999-9213b51b5f0b">
+    <comment isAdmin="false" isApproved="true" id="a1dac540-3eeb-496b-a950-265855c2b673">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -63,7 +63,7 @@ public static int DataSizeToSkip
       <date>2013-03-19 21:59:27</date>
       <content>hi @Anonymous. ThreadStatic probably does have cases when it is useful, but it would not be a good solution here. Consider the following scenario, all played out on a single thread. Create an XyzFileReader, start reading a version 1 file. Then create another XyzFileReader and start reading a version 2 file. Now, on the same thread, read a bit more from the first XyzFileReader. The same bug will occur. The only correct solution here is for each XyzFileReader to maintain knowledge of what version it is reading.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9ae9e4ff-cf84-4c24-b41d-2507078780c6">
+    <comment isAdmin="false" isApproved="true" id="377c7b5e-e6aa-4df2-837d-0d7758c970f2">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="91680e5b-70d4-4284-b773-f4a654ad6291">
+    <comment isAdmin="false" isApproved="true" id="8b44ba28-4844-41d1-8684-b2b163e3812e">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -20,7 +20,7 @@
       <date>2009-03-20 15:52:00</date>
       <content>Great application! &lt;BR/&gt;&lt;BR/&gt;Can you display the complete waveform of the audio track in a control?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6a0b1b22-23d0-4418-89bc-e2bfe70d5c2b">
+    <comment isAdmin="false" isApproved="true" id="2f595bd0-5429-4ebb-be07-2e1fc5481a68">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2009-03-20 16:18:00</date>
       <content>that's not a specific feature, although the code wouldn't be too hard to change to do it.&lt;BR/&gt;I'm hoping to add some better waveform drawing support in the future including some WPF rendering</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="eae77d74-244e-4ce1-a700-4f0276635390">
+    <comment isAdmin="false" isApproved="true" id="c22dc736-30d9-4ff7-8605-5179e3984ce1">
       <author>Iron Yuppie</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10807988020305423467</website>
@@ -38,7 +38,7 @@
       <date>2009-05-13 22:58:00</date>
       <content>this really is cool... did you ever get the waveform working in SL?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="32453a81-efcd-45b6-9fd1-aee1a78cb2cf">
+    <comment isAdmin="false" isApproved="true" id="a93edf7f-a4a5-4edd-9c51-4f6bb0278e12">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -47,7 +47,7 @@
       <date>2009-05-14 17:49:00</date>
       <content>I have WaveForm display working in WPF. We need to wait for Silverlight 3 before there is any point doing waveform display, as only in SL3 do we get access to the samples during playback.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f06ef020-b529-41eb-af4a-5f80456607ac">
+    <comment isAdmin="false" isApproved="true" id="0c0ec701-d541-44cd-9873-17dad87e177e">
       <author>splaxtek</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00511152499028713418</website>
@@ -56,7 +56,7 @@
       <date>2009-12-26 22:01:37</date>
       <content>Hi Mark been looking to use your Volume meter but i can&amp;#39;t get them working. Tried also doing the ones with kaxaml but without success. Yours seems to be easier to use. But the thing is i need them to preview the input level before i start recording. can you please help me how i&amp;#39;m going to do it pls &lt;br /&gt;&lt;br /&gt;thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="781ca31b-73b1-4c55-846a-b04770e50382">
+    <comment isAdmin="false" isApproved="true" id="16a6cc57-7d98-4393-8b66-400cc334201f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -65,7 +65,7 @@
       <date>2009-12-27 08:06:19</date>
       <content>hi Splaxtek,&lt;br /&gt;have a look at my &lt;a href="http://voicerecorder.codeplex.com" rel="nofollow"&gt;.NET Voice Recorder project&lt;/a&gt; to see how you preview volume with NAudio. It&amp;#39;s quite simple really, just start &amp;#39;recording&amp;#39; but only use the data you get to update the meter, don&amp;#39;t write it to a file.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d8c721c8-2904-461b-a567-7f3adf315f6d">
+    <comment isAdmin="false" isApproved="true" id="457e40b0-5848-4bdc-893f-330aa1b3740c">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -74,7 +74,7 @@
       <date>2011-02-09 06:48:58</date>
       <content>Hi Mark!&lt;br /&gt;&lt;br /&gt;May I clarify that what you mean for your waveform painter is that the amplitude (I assume thats what it is painting) will never become negative? Because for waveforms, their shape when zoomed in on is usually an &amp;#39;up-down&amp;#39; shape from the middle (which when looked at normally will result in your waveform shape).&lt;br /&gt;&lt;br /&gt;So basically, what it does is, you read data from the WAV file, get a block from the data, and get and display the maximum amplitude or peak for that block. Is this right?&lt;br /&gt;&lt;br /&gt;Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="05f35970-9b20-4bdd-a936-22f1ea06b4e7">
+    <comment isAdmin="false" isApproved="true" id="d831c4d9-4ec2-4967-a3b5-20f2bfdfc42a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -83,7 +83,7 @@
       <date>2011-02-21 10:11:50</date>
       <content>@anonymous, yes this makes a symetric waveform based on the absolute peak over the period aggregated.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f260c13b-56fd-41f5-9972-b09c078208e9">
+    <comment isAdmin="false" isApproved="true" id="d3a79e6e-ad59-45f1-b8c9-07cc42613b2d">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -92,7 +92,7 @@
       <date>2011-03-07 10:03:11</date>
       <content>hi mark,&lt;br /&gt;may i ask, &amp;#39;have a look at my .NET Voice Recorder project to see how you preview volume with NAudio&amp;#39; as u stated above, i&amp;#39;ve seen them but i cant really get it. can u pls pinpoint out the functions for me? thanks a lot.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3a935a5e-1255-4aec-be26-3d9cb3c5e2cf">
+    <comment isAdmin="false" isApproved="true" id="e0c97b16-ff20-4680-8f78-5137850e2a5d">
       <author>ben</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -101,7 +101,7 @@
       <date>2011-03-07 14:29:28</date>
       <content>private float lastPeak;&lt;br /&gt;&lt;br /&gt;void recorder_MaximumCalculated(object sender, MaxSampleEventArgs e)&lt;br /&gt;        {&lt;br /&gt;            lastPeak = Math.Max(e.MaxSample, Math.Abs(e.MinSample));&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        public float CurrentInputLevel { get { return lastPeak * 100; } }&lt;br /&gt;&lt;br /&gt;void waveIn_DataAvailable(object sender, WaveInEventArgs e)&lt;br /&gt;        {&lt;br /&gt;            if (this.InvokeRequired)&lt;br /&gt;            {&lt;br /&gt;                this.BeginInvoke(new EventHandler(waveIn_DataAvailable), sender, e);&lt;br /&gt;            }&lt;br /&gt;            else&lt;br /&gt;            {&lt;br /&gt;                writer.WriteData(e.Buffer, 0, e.BytesRecorded);&lt;br /&gt;                int secondsRecorded = (int)(writer.Length / writer.WaveFormat.AverageBytesPerSecond);&lt;br /&gt;                waveformPainter2.AddMax(CurrentInputLevel);&lt;br /&gt;                if (secondsRecorded &amp;gt;= 30)&lt;br /&gt;                {&lt;br /&gt;                    StopRecording();&lt;br /&gt;                }&lt;br /&gt;            }&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;I&amp;#39;m wondering y this does not work?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1e36b683-895b-4fe2-af75-7b15dd088e33">
+    <comment isAdmin="false" isApproved="true" id="45d1eab4-8f0b-437a-b002-fc9845d89d52">
       <author>ben</author>
       <email>noreply@blogger.com</email>
       <website />

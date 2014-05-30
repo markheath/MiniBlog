@@ -13,7 +13,7 @@
     <category>MSBuild</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="8bab23da-891e-4f6c-ab3a-6f050e5afb82">
+    <comment isAdmin="false" isApproved="true" id="741e0930-30f6-4ce0-b2ed-ed2ce715e778">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -22,7 +22,7 @@
       <date>2011-06-15 09:42:47</date>
       <content>Hi,&lt;br /&gt;&lt;br /&gt;You won&amp;#39;t need it for NuGet as you can pass the versionnumber as an argument, which overrides the version in the nuspec file.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5d9ccd63-bc1e-4925-8b2c-33581aaa39db">
+    <comment isAdmin="false" isApproved="true" id="bddb40fd-7108-494b-8b35-cf79eaac3aa3">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

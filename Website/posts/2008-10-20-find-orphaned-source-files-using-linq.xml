@@ -60,7 +60,7 @@ namespace SolutionChecker
     <category>LINQ</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="3d473b1f-f229-452d-8e09-1242b02811f0">
+    <comment isAdmin="false" isApproved="true" id="b8c6c510-9af1-4891-be09-f205ef200b59">
       <author>Joel</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00114208437559916422</website>
@@ -69,7 +69,7 @@ namespace SolutionChecker
       <date>2009-11-13 18:35:58</date>
       <content>Using a Hashset as the result of FindCSharpFiles() provides a significant speed improvement. Our 1000+ file project is analyzed much much faster.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9a592dfb-4175-4278-bc7d-2e05805b69d3">
+    <comment isAdmin="false" isApproved="true" id="f20786fd-63b8-4dce-bdd8-1e984d99145d">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

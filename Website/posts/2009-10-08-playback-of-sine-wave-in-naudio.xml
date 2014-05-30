@@ -106,7 +106,7 @@ Please note, that you will need to be using the latest NAudio code from source c
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="a12725c4-2bf8-4f57-81c0-1cdc1556b30d">
+    <comment isAdmin="false" isApproved="true" id="1e274c5f-161f-463d-a50a-89a164f0a2e7">
       <author>Andri</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01195287621789741339</website>
@@ -115,7 +115,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-10-22 17:46:18</date>
       <content>Great post Mark.&lt;br /&gt;&lt;br /&gt;do you happen to know if this would be possible for mpeg2 audio?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="53457b82-2fcb-449b-a003-17401092d919">
+    <comment isAdmin="false" isApproved="true" id="79fb9e27-f064-4a42-be99-e465d1b91008">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -124,7 +124,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-10-22 22:44:43</date>
       <content>hi Andri, I&amp;#39;m not sure what you mean. Do you want to convert the sine wave to mpeg2?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b501f844-9666-48ea-87a3-f54b61a31c29">
+    <comment isAdmin="false" isApproved="true" id="dec5a62d-18bb-4fd6-894d-9f5de42f4c43">
       <author>Andri</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01195287621789741339</website>
@@ -133,7 +133,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-10-23 14:15:44</date>
       <content>no to display a cine wave of mpeg2 audio file (actually a mplayer audiodump of a mpeg2-ts file)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8a79991d-5b83-4bec-ab7b-104416fdb077">
+    <comment isAdmin="false" isApproved="true" id="db948055-7fd3-4b2a-aac7-84fefc625006">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -142,7 +142,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-10-23 14:28:51</date>
       <content>this code doesn&amp;#39;t display anything. It creates an audio sine wave.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a49fdd78-0216-44ab-877d-e94f2d8613e8">
+    <comment isAdmin="false" isApproved="true" id="40f54435-85c9-4226-94a2-685c0313497d">
       <author>tom</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03928846801810598275</website>
@@ -151,7 +151,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-03 15:31:50</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Thanks for the run down, it&amp;#39;s really helpful.&lt;br /&gt;&lt;br /&gt;My problem is that I need to be able to create complex noises comprised of many waves.&lt;br /&gt;&lt;br /&gt;Any idea how I could achieve this?&lt;br /&gt;&lt;br /&gt;Thanks,&lt;br /&gt;&lt;br /&gt;Tom</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9585a275-6c94-4419-a285-2b74cf05654a">
+    <comment isAdmin="false" isApproved="true" id="426e7612-42a8-4a76-9bd4-ae451e43b08c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -160,7 +160,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-03 16:47:53</date>
       <content>Hi Tom, you would make one WaveProvider for each simple waveform, and then another WaveProvider that read out of each one and summed them together.&lt;br /&gt;&lt;br /&gt;Have a look at the WaveMixerStream in NAudio for an example</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bd7567d4-edff-4ed1-9b67-4a0db0350ac5">
+    <comment isAdmin="false" isApproved="true" id="bfd1822e-a096-4f32-9e2d-b10a8185d25e">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -169,7 +169,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 04:41:31</date>
       <content>Hello Mark, &lt;br /&gt;  I&amp;#39;m really excited about this source, but I haven&amp;#39;t used a third party library in a very long time and am not sure how to set your library up in Visual Stuido, without just altering the provided solution. Do you think you could show me how to do this?&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;Malik</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5c6bfa28-4305-4cda-9eb5-55f9a3854b24">
+    <comment isAdmin="false" isApproved="true" id="a885be0f-31e0-48d6-8929-83cf3cf3078c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -178,7 +178,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 10:00:23</date>
       <content>Hi Malik,&lt;br /&gt;Simply do an add reference to your project in Visual Studio and browse to the NAudio dll (downloaded from Codeplex).</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d875308e-7c2b-49b0-9cae-8372105efdec">
+    <comment isAdmin="false" isApproved="true" id="c85bdf23-9692-44b3-898d-6e75709b4b0e">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -187,7 +187,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 12:04:35</date>
       <content>This comment has been removed by the author.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="db32c61d-1c38-4c28-9d4a-caae9a4296de">
+    <comment isAdmin="false" isApproved="true" id="524a15a3-397e-40c9-a868-dacb26514c59">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -196,7 +196,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 14:10:16</date>
       <content>Hello Mark,&lt;br /&gt;That was great, thanks! I&amp;#39;ve added a slider to  the form in an attempt to update the frequency in realtime, realizing that the sine wave&amp;#39;s settings are set when the startStop button is toggled on. &lt;br /&gt;Is there a way to update things in realtime?&lt;br /&gt;------------added-------------&lt;br /&gt;  private int Frequency;&lt;br /&gt;private void trackBar1_Scroll(object sender, EventArgs e)&lt;br /&gt;        {&lt;br /&gt;            Frequency = trackBar1.Value;&lt;br /&gt;        }&lt;br /&gt;------------------------------</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1a4d5bfc-db29-4e6f-9957-4d430caddb1b">
+    <comment isAdmin="false" isApproved="true" id="a614d7c1-f136-4b0b-8c35-d4ecf72154e6">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -205,7 +205,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 14:16:01</date>
       <content>you just need to keep a reference to the sine wave provider and set the Frequency property on that when your slider moves</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3a0d3709-db6f-4e2c-9c79-e7b3b4e70bd6">
+    <comment isAdmin="false" isApproved="true" id="ac91d7a3-2200-4d35-9ac5-32e221f6923e">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -214,7 +214,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-11 20:05:04</date>
       <content>VERY COOL! i just made the SineWaveProvider object viewable to whole class and updated it in the slider&amp;#39;s scroll method. It works great, but is there a way to update it faster? seems to change values kind of choppy? would that be the fact that i&amp;#39;m no using Soundcard settings made for low latency response?&lt;br /&gt;&lt;br /&gt;Thanks!!&lt;br /&gt;Malik</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0216247c-7c9b-4e0b-87bd-b2ce4ea8b14d">
+    <comment isAdmin="false" isApproved="true" id="70af05dc-e0de-4e30-ba08-1cb157862122">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -223,7 +223,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2009-11-12 10:58:44</date>
       <content>the chopiness is most likely because you are not transitioning smoothly between frequencies, as well as due to latency settings (the Read method will run quickly and fill an entire buffer of say 100ms), so your changing Frequency will not kick in until the next buffer is processed.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="47574bd5-1386-4d69-ab4f-7922911cf7c1">
+    <comment isAdmin="false" isApproved="true" id="ad8eb572-7049-4dbd-9837-74e6baef4768">
       <author>Frank</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -232,7 +232,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-18 19:46:35</date>
       <content>I have the example working in a form.  Clicking the button starts the tone, and clicking it again stops it.  However, when I try to get it to run from Main() itself, the sound only lasts a fraction of a second, then stops.  If I put a breakpoint in the Read() routine, I see it only gets called 3 times.&lt;br /&gt;&lt;br /&gt;Here is my code in Main:&lt;br /&gt;&lt;br /&gt;            Worker worker = new Worker();&lt;br /&gt;            worker.StartStopSineWave();&lt;br /&gt;            System.Threading.Thread.Sleep(5000);&lt;br /&gt;            worker.StartStopSineWave();&lt;br /&gt;            worker = null;&lt;br /&gt;&lt;br /&gt;And here is the class:&lt;br /&gt;&lt;br /&gt;    public class Worker&lt;br /&gt;    {&lt;br /&gt;        WaveOut waveOut;&lt;br /&gt;&lt;br /&gt;        public void StartStopSineWave()&lt;br /&gt;        {&lt;br /&gt;&lt;br /&gt;            if (waveOut == null)&lt;br /&gt;            {&lt;br /&gt;                SineWaveProvider32 sineWaveProvider = new SineWaveProvider32();&lt;br /&gt;                sineWaveProvider.SetWaveFormat(16000, 1); // 16kHz mono&lt;br /&gt;                sineWaveProvider.Frequency = 1000;&lt;br /&gt;                sineWaveProvider.Amplitude = 0.10f;&lt;br /&gt;                waveOut = new WaveOut();&lt;br /&gt;                waveOut.Init(sineWaveProvider);&lt;br /&gt;                waveOut.DesiredLatency = 1000;&lt;br /&gt;                waveOut.Play();&lt;br /&gt;            }&lt;br /&gt;            else&lt;br /&gt;            {&lt;br /&gt;                waveOut.Stop();&lt;br /&gt;                waveOut.Dispose();&lt;br /&gt;                waveOut = null;&lt;br /&gt;            }&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;    }&lt;br /&gt;&lt;br /&gt;I suspect this problem has something to do with threading.  Any ideas on how to solve it?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a871f636-2574-482f-8c6b-8cac521d2319">
+    <comment isAdmin="false" isApproved="true" id="39a2d3e9-0cdd-4c48-9ac4-9bb242134be0">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -241,7 +241,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-18 20:08:12</date>
       <content>hi Frank,&lt;br /&gt;you don&amp;#39;t need to run WaveOut on a background thread. Try it on the GUI thread. Don&amp;#39;t worry about blocking the GUI - things will still be responsive.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f3f58fd9-b998-4c96-acb6-84e5e03dd747">
+    <comment isAdmin="false" isApproved="true" id="1d20bdb9-b219-4c17-a60d-544ebef6e057">
       <author>Frank</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -250,7 +250,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-18 20:56:06</date>
       <content>Thanks Mark for the reply.&lt;br /&gt;&lt;br /&gt;Actually I need it in a batch/console process.  The override I am doing (in place of the sine generator) will  continually get input from an external device, process it, and pass the resulting audio to the sound card for the user to hear.  I guess I could create a dummy form but would prefer this to work in the background instead.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7b31a229-ee5a-4d3f-9e68-28ea2cd748e1">
+    <comment isAdmin="false" isApproved="true" id="d4e6027b-dbaf-48bb-b89c-ac6077a7d8b7">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -259,7 +259,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-18 21:10:15</date>
       <content>ok then, you need to create WaveOut with the Function callback (see the WaveOut constructor). Only be warned that certain laptop drivers seem to have problems with hanging in calls to WaveOutReset</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="44e74725-b1bf-4e4f-b937-b0d79e4e8e13">
+    <comment isAdmin="false" isApproved="true" id="7309e362-3fbe-4c5e-a5e7-35c19730008b">
       <author>Frankl</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -268,7 +268,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-19 00:40:06</date>
       <content>That works.  Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="81442e33-9e28-4cf3-8d2a-6741b83c6236">
+    <comment isAdmin="false" isApproved="true" id="09c70dba-ec5d-44cb-961b-0a6fb123b072">
       <author>Coach</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07066496393063880498</website>
@@ -277,7 +277,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-20 20:52:09</date>
       <content>Hi Mark!&lt;br /&gt;I have implemented the sine wave generator. I would like it to play for a certain time so I added a timer. During that time I would like all other activites to stop, how do I manage that?&lt;br /&gt;What I am after is:&lt;br /&gt;Call StartSine&lt;br /&gt;&amp;quot;While playing do nothing&amp;quot;&lt;br /&gt;Call next action</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ed73fddc-2363-4e4b-96b5-310ef0f793f1">
+    <comment isAdmin="false" isApproved="true" id="0e6d4b43-c599-4c78-9877-6960f7fe905d">
       <author>Frank</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -286,7 +286,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-01-21 14:59:05</date>
       <content>Coach, can&amp;#39;t you just set some type of flag when the timer starts, clear it when the timer is done, and then check for the flag in the other activities and don&amp;#39;t proceed (say sleep and then check again) as long as its set?&lt;br /&gt;&lt;br /&gt;Frank</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7e6392f9-43a0-4d4a-bdee-ba7c65b79e98">
+    <comment isAdmin="false" isApproved="true" id="b39956fd-44fd-41ae-9e1e-7c97f429ec1b">
       <author>Scott</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/12788489847472723854</website>
@@ -295,7 +295,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-02-17 03:55:49</date>
       <content>Hi Mark!&lt;br /&gt;&lt;br /&gt;Fantastic API - I&amp;#39;ve been struggling with the old Managed DirectX and this is much better.&lt;br /&gt;&lt;br /&gt;I created the SineWaveProvider example you have.  I&amp;#39;m using Windows 7 (64-bit) and Visual Studio C# Express.  When I try to run the app, I get a &amp;quot;BadImageFormatException&amp;quot; error trying to load NAudio.  The exception message is:&lt;br /&gt;&lt;br /&gt;Could not load file or assembly &amp;#39;NAudio, Version=1.3.8.0, Culture=neutral, PublicKeyToken=null&amp;#39; or one of its dependencies. An attempt was made to load a program with an incorrect format.&lt;br /&gt;&lt;br /&gt;Is this a Windows 7 thing?  Or a 64-bit thing?  Or something else?  Just wondering - I&amp;#39;ll give it a go on my XP machine and see how that works out...&lt;br /&gt;&lt;br /&gt;-Scott</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="abd813e0-339f-4069-a9b6-ca3b655ffad0">
+    <comment isAdmin="false" isApproved="true" id="5bc215d7-cc34-4329-824e-5828a44b3935">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -304,7 +304,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-02-22 10:49:47</date>
       <content>Hi Scott, &lt;br /&gt;NAudio is marked as x86 only due to the fact that the interop signatures have not been updated to work on x64 in all cases. When I eventually get myself an x64 system then I will be able to fix NAudio up. I suspect this is the problem you are running into</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6a49328f-6548-4267-89b4-e4ee1ba88684">
+    <comment isAdmin="false" isApproved="true" id="ad3996e7-8abd-4a70-99c0-a8ab2bf7b8eb">
       <author>Richard Allen</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -313,7 +313,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-02-25 02:15:48</date>
       <content>I can&amp;#39;t get this to work, i&amp;#39;m not familiar with C#.  How do you structure this code, in separate classes? Is there an example I can look at?&lt;br /&gt;&lt;br /&gt;Thanks&lt;br /&gt;&lt;br /&gt;Richard</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="65ae1578-a4c0-4fc5-9ed7-839cb9b2c03a">
+    <comment isAdmin="false" isApproved="true" id="f5de3b91-1790-4851-aee1-7591d628bf2a">
       <author>Scott</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/12788489847472723854</website>
@@ -322,7 +322,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-02-28 02:19:26</date>
       <content>Interestingly enough, when I built the project in SharpDevelop 3.2, with the build options set to &amp;quot;Build for 32-bit Intel&amp;quot;, it worked fine on my 64-bit system.  Go figure. :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3bbbf030-54d2-4727-ac77-9a227d12e3e8">
+    <comment isAdmin="false" isApproved="true" id="0a71c1d9-a674-4e16-a8be-cff734f8e771">
       <author>sdecorme</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -331,7 +331,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-03-09 12:00:01</date>
       <content>Hi Mark&lt;br /&gt;I try to use the naudio lib in c# with VS2005 . &lt;br /&gt;Is there a way to select which channel (Left or right) with the Wavein Function.&lt;br /&gt;I don&amp;#39;t information about that.&lt;br /&gt;Thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8604f35c-b676-45d3-a3d6-6c2a6d11fa8f">
+    <comment isAdmin="false" isApproved="true" id="a820c37c-8d9f-4951-a524-fb9705a7d7dc">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -340,7 +340,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-03-11 14:26:06</date>
       <content>@sdecorme you should record in stereo and then just throw away every other sample (usually it is left right left right)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7fea7643-acfa-4fc0-b265-acc20840aa5d">
+    <comment isAdmin="false" isApproved="true" id="885a9549-b088-4b4b-8c1d-008ab12a77ee">
       <author>d.j.z.</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08927620548559080281</website>
@@ -349,7 +349,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-06-09 04:53:13</date>
       <content>What would be the best way to do this in stereo? I&amp;#39;m currently using this for a soft-synth and have been struggling trying to get this to work with the mixer; i can&amp;#39;t create a channel like this&lt;br /&gt;&lt;br /&gt;WaveChannel32 = new WaveChannel32( new MyWaveProvider32) because MyWaveProvider32 cannot be cast to WaveStream and I can&amp;#39;t figure out why this is the case...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="03220165-8c73-41c4-8f69-8b65fbccc984">
+    <comment isAdmin="false" isApproved="true" id="13fb64b3-4138-4839-9661-2acf19629833">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -358,7 +358,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-06-18 15:37:56</date>
       <content>hi djz. NAudio doens&amp;#39;t have a mixer that works with IWaveProvider yet. I hope to add one very soon</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b7a03be3-c4dc-46e7-9162-e87895fa53a0">
+    <comment isAdmin="false" isApproved="true" id="b0120d34-59d1-4593-b623-c8c7b5931e81">
       <author>d.j.z.</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08927620548559080281</website>
@@ -367,7 +367,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-06-26 01:25:11</date>
       <content>Thanks for responding! I am so thankful for the time you&amp;#39;ve spent on this project. Kudos!!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0319fb86-e0fa-41a6-817f-a8338838b9ec">
+    <comment isAdmin="false" isApproved="true" id="420d4c82-11e0-4496-bc47-f4c50a8a38c5">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -376,7 +376,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-07-11 08:17:36</date>
       <content>Hello Mark,&lt;br /&gt;I was just wondering, How fast could i use this example if I separate the start and stop code and put them in KeyDown and KeyUp methods?&lt;br /&gt;If I press the keys too fast, the debugger says that waveOut.Stop(); is referencing an object that doesn&amp;#39;t exist anymore. &amp;quot;Object reference not set to an instance of an object.&amp;quot;&lt;br /&gt;&lt;br /&gt;My code is below, do you have any Ideas why this might happen?&lt;br /&gt;&lt;br /&gt;Thanks for your library :)&lt;br /&gt;&lt;br /&gt;  private void Button_KeyDown(object sender, KeyEventArgs e)&lt;br /&gt;        {&lt;br /&gt;...&lt;br /&gt;                startSine(1000, amp);&lt;br /&gt;...&lt;br /&gt;        }&lt;br /&gt;&lt;br /&gt;        private void startSine(int freq, float amp)&lt;br /&gt;        {&lt;br /&gt;            if (waveOut == null)&lt;br /&gt;            {&lt;br /&gt;                sineWaveProvider = new SineWaveProvider32();&lt;br /&gt;                waveOut = new WaveOut();&lt;br /&gt;                sineWaveProvider.SetWaveFormat(16000, 1);&lt;br /&gt;                sineWaveProvider.Frequency = freq;&lt;br /&gt;                sineWaveProvider.Amplitude = amp;&lt;br /&gt;                waveOut.Init(sineWaveProvider);&lt;br /&gt;                waveOut.Play();&lt;br /&gt;            }&lt;br /&gt;        &lt;br /&gt;        #endregion&lt;br /&gt;&lt;br /&gt;        #region Key Up  Event Handler&lt;br /&gt;        private void Button_KeyUp(object sender, KeyEventArgs e)&lt;br /&gt;        {&lt;br /&gt;...&lt;br /&gt;                stopSine();&lt;br /&gt;...&lt;br /&gt;}&lt;br /&gt;        private void stopSine()&lt;br /&gt;        {&lt;br /&gt;            waveOut.Stop();&lt;br /&gt;            waveOut.Dispose();&lt;br /&gt;            waveOut = null;&lt;br /&gt;        }&lt;br /&gt;        #endregion</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dc73dff2-6bd2-48f4-8ecf-476d582f43a1">
+    <comment isAdmin="false" isApproved="true" id="04e092fe-c5f4-4be8-8321-76958c82f6c2">
       <author>Laserbeak43</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/15423022758505174926</website>
@@ -385,7 +385,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2010-07-11 08:21:02</date>
       <content>Oh, it seems that my problem is multiple key presses. I&amp;#39;ll have to write code to fix this. Please delete my last post, if you see it fit to do so.&lt;br /&gt;Thanks!!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="926bf63f-4da0-42f7-9df4-f0339ebbb550">
+    <comment isAdmin="false" isApproved="true" id="0c8c4699-4c0b-410e-8367-0c4a019f03d9">
       <author>Anzar</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16012413538191309672</website>
@@ -394,7 +394,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-03-21 19:38:37</date>
       <content>Thats really wonderful lib but I want to know is there any option available to know the frequency and amplitude of the laoded wave file ultimately to modify it???</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1c460708-f399-4e4d-b75f-66c0ea35fac5">
+    <comment isAdmin="false" isApproved="true" id="78b9f96d-5a94-4bf2-b426-8339c819a1fc">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -403,7 +403,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-07-22 03:24:31</date>
       <content>Hi Guys,How i can read the stereo channel using NAudio(Left Speaker and Right Speaker) values of a video while it&amp;#39;s playing.Please reply for this.I need to use this for a project.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ed441ef6-61eb-41bf-8d6d-c48e5ac45db8">
+    <comment isAdmin="false" isApproved="true" id="6e8f9652-7f91-4843-9342-9906a9aa92a4">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -412,7 +412,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-07-26 11:00:15</date>
       <content>@Anonymous, I&amp;#39;m afraid NAudio can&amp;#39;t access the audio channels of video files.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="581da608-c463-46b2-b89a-881aebdcbeda">
+    <comment isAdmin="false" isApproved="true" id="00f230d5-4876-452d-9f4d-76c34619e184">
       <author>Matt</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -421,7 +421,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-08-05 15:21:09</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I was wondering, will the above code still work with the latest beta version of NAudio that is on codeplex, or have you included some of the functionality that you suggested you would in the update?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9cf97f2a-ac56-46e7-bb71-26f4f6c22cc0">
+    <comment isAdmin="false" isApproved="true" id="1f0e5ab2-06ea-45bd-8112-061f026ab768">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -430,7 +430,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-08-09 15:47:57</date>
       <content>@Matt, I can&amp;#39;t see any reason why this wouldn&amp;#39;t work with the latest NAudio code</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9d197017-c9ff-4df2-9376-225a10165e19">
+    <comment isAdmin="false" isApproved="true" id="d0948363-8f3a-48e4-829f-cb4a423cac2b">
       <author>Steve</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14088652155699026580</website>
@@ -439,7 +439,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-10-14 22:57:20</date>
       <content>Hey Mark-&lt;br /&gt;&lt;br /&gt;I have been playing with the NAudio library for a couple days.  I got the sine wave to play.  Very cool.  But now I want to play back my own arbitrary float data.  What&amp;#39;s the best way to stuff in float data to a WaveOut object?  My guess is to use BufferedWaveProvider.  I&amp;#39;m a little uncertain how to get that class to handle float data though.&lt;br /&gt;&lt;br /&gt;I tried instantiating  BufferedWaveProvider a couple of ways.  My first shot was using WaveForm(fs,1).  I also tried WaveFormat.CreateIeeeFloatWaveFormat(fs,1).&lt;br /&gt;&lt;br /&gt;But then I was shaky on how to pack my float data into a byte array to be used by the AddSamples() method of BufferedWaveProvider.&lt;br /&gt;&lt;br /&gt;What do you recommend?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3f9690fe-caa9-416f-9560-95b15806f619">
+    <comment isAdmin="false" isApproved="true" id="ac917b2a-a28d-4118-821c-a1e52164c275">
       <author>Kyle</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -448,7 +448,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-10-15 17:24:27</date>
       <content>HI Mark&lt;br /&gt;&lt;br /&gt;I was wondering maybe if there was a way to save the data directly to a .wav file ?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="21cff4d3-21d0-4734-9602-0d3c1cfc03f0">
+    <comment isAdmin="false" isApproved="true" id="e26287ca-dbe8-4439-a9c2-3df32d06ef02">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -457,7 +457,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-10-17 10:28:26</date>
       <content>@Kyle, you can use the WaveFileWriter class from NAudio to do this</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2098703d-0a79-4eeb-94d1-dcf3abcf4f55">
+    <comment isAdmin="false" isApproved="true" id="78271a1c-c5fc-4665-b067-ed7f115f5324">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -466,7 +466,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2011-10-18 16:02:02</date>
       <content>@Steve,&lt;br /&gt;inherit from WaveProvider32 and provide your own float samples in the Read method</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="75065fb6-640a-47f7-9d16-ed7bd9abc914">
+    <comment isAdmin="false" isApproved="true" id="2556ad2e-4a60-4bba-aee4-f3dbc4bc51d7">
       <author>Murat</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -475,7 +475,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-01-05 13:45:53</date>
       <content>thanks a lot  Mark&lt;br /&gt;great work</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bdaa3e12-b7cb-4988-bc83-3dff80905054">
+    <comment isAdmin="false" isApproved="true" id="f3955216-9ec2-414a-8c94-3e2d8ad60bcc">
       <author>John Dixon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03662155230454542039</website>
@@ -484,7 +484,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-03-05 17:39:43</date>
       <content>Hi there Mark,&lt;br /&gt;&lt;br /&gt;I&amp;#39;ve converted this into a derived WaveStream to allow mixing using WaveMixerStream.&lt;br /&gt;&lt;br /&gt;I&amp;#39;ve added:&lt;br /&gt;&lt;br /&gt;public override long Length&lt;br /&gt;{&lt;br /&gt;    get { return long.MaxValue; }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;However, I&amp;#39;m not sure how to get/set position.&lt;br /&gt;&lt;br /&gt;Could you help me out?&lt;br /&gt;&lt;br /&gt;Thanks.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="94b04633-7b51-4275-ae59-961e4786a163">
+    <comment isAdmin="false" isApproved="true" id="f666252c-f5da-47d4-b94a-550e46c9a746">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -493,7 +493,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-03-05 18:59:06</date>
       <content>@John, For position, just return the number of bytes read. For a sine generator there is no point allowing position to be set, so either throw an exception or just ignore the position value.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7d5539c9-fd56-4db0-8835-40873861bf9e">
+    <comment isAdmin="false" isApproved="true" id="804f2273-2fef-4db7-b3aa-320059e00096">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -502,7 +502,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-07-09 23:39:48</date>
       <content>Hello,&lt;br /&gt;&lt;br /&gt;How could I use this to create other waveform types such as a triangle or sawtooth?&lt;br /&gt;&lt;br /&gt;Also is there any way to avoid a click when changing frequencies during playback?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="730c83ed-1324-4544-8572-b1359d57cfa2">
+    <comment isAdmin="false" isApproved="true" id="bcf71bfe-deff-408d-a6de-3e6ad77b6760">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -511,7 +511,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-07-10 09:46:05</date>
       <content>creating other waveforms is easy, especially sawtooth/triangle/square, as they can be easily calcualted. You can also use a wavetable.&lt;br /&gt;&lt;br /&gt;To eliminate clicks, either fade out and back in over a short period (a few ms), or implement portamento. I hope to blog about that at smoe point.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="cecc1f1e-2ed1-4f72-bd46-baa890010a43">
+    <comment isAdmin="false" isApproved="true" id="8f5fdc98-abbc-471b-ba8e-2deef43928c4">
       <author>Saeed Shariati</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04791836548630284580</website>
@@ -520,7 +520,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-08-22 10:02:44</date>
       <content>If I want to Stop the Play automatically, after finishing the buffer, what can I do?&lt;br /&gt;&lt;br /&gt;It seems that the read method will be executed by offset=0 each time!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d358def6-1fba-4ee2-acd5-de03d065c915">
+    <comment isAdmin="false" isApproved="true" id="c79d490c-0a32-4beb-96ae-c3d1fa7db631">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -529,7 +529,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2012-09-05 17:27:13</date>
       <content>offset is just the offset into the buffer that you should write to so this will normally be zero. You maintain state outside the Read method to know where you were up to.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="91461a40-b6fa-4593-972c-27b9d0d99714">
+    <comment isAdmin="false" isApproved="true" id="0f405aaf-ab35-4477-b172-227d669120e3">
       <author>Alain Bressers</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10596944525847562324</website>
@@ -538,7 +538,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-03-12 14:25:56</date>
       <content>Hey Mark,&lt;br /&gt;&lt;br /&gt;I&amp;#39;m a student and have the assignment to create a recording application which then records microphone input and has to determine the frequency and then display which note it is related to said frequency.&lt;br /&gt;&lt;br /&gt;Will this article be the good way to follow in order to achieve this (retrieval of frequency)?&lt;br /&gt;&lt;br /&gt;Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="256a3b12-b47c-47bd-90c5-1f7ec2d4d480">
+    <comment isAdmin="false" isApproved="true" id="47cb6792-9006-4053-846a-621a0dea5987">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -547,7 +547,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-03-12 14:54:27</date>
       <content>hi Alain, this article is about how to generate sine waves, rather than how to detect frequency. To do that, I&amp;#39;d recommend researching FFT or autocorrelation algorithms.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="27ada89a-4c69-4933-a1f1-f581c4ee8f88">
+    <comment isAdmin="false" isApproved="true" id="534681dd-b060-41e4-9549-c70af1467f67">
       <author>Rudi</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01434571279457456307</website>
@@ -556,7 +556,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-07-25 18:41:53</date>
       <content>Thanks for the Post. I have noticed that it work wrong with Stereo....&lt;br /&gt;To fix it i add a line in the SineWaveProviderClass to proof if byte is even Number.&lt;br /&gt;&lt;br /&gt; for (int n = 0; n &amp;lt; sampleCount; n++)&lt;br /&gt;                {&lt;br /&gt;                    buffer[n + offset] = (float)(Amplitude * Math.Sin((2 * Math.PI * sample * Frequency) / sampleRate));&lt;br /&gt;                    if (this.WaveFormat.Channels == 1 || (n + offset) % 2 == 0)&lt;br /&gt;                    sample++;&lt;br /&gt;                    if (sample &amp;gt;= sampleRate) sample = 0;&lt;br /&gt;                }&lt;br /&gt;&lt;br /&gt;I&amp;#39;m sorry for my bad english and hope it ist helpflull.&lt;br /&gt;&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d8592da9-328e-4877-b9e8-65c0f2e56a98">
+    <comment isAdmin="false" isApproved="true" id="7010b741-30e7-4835-8d7b-77838dee9c96">
       <author>Rudi</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01434571279457456307</website>
@@ -565,7 +565,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-07-25 18:44:47</date>
       <content>Tahnk you for this great Post. I have noticed that it is working wrong in stereo-mode. To fix it i have added a line to proof if floatarray is even number:&lt;br /&gt;&lt;br /&gt; for (int n = 0; n &amp;lt; sampleCount; n++)&lt;br /&gt;                {&lt;br /&gt;                    buffer[n + offset] = (float)(Amplitude * Math.Sin((2 * Math.PI * sample * Frequency) / sampleRate));&lt;br /&gt;                    if (this.WaveFormat.Channels == 1 || (n + offset) % 2 == 0)&lt;br /&gt;                    sample++;&lt;br /&gt;                    if (sample &amp;gt;= sampleRate) sample = 0;&lt;br /&gt;                }&lt;br /&gt;&lt;br /&gt;I&amp;#39;m sorry for my bad English and hope my Coment ist helpfully.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="569ae7e0-5405-402b-bc7f-02bdc954c926">
+    <comment isAdmin="false" isApproved="true" id="d46f3843-81cd-4a8c-97dd-c7e68041ff1a">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03160927907722433196</website>
@@ -574,7 +574,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-12-31 12:43:26</date>
       <content>Hi!&lt;br /&gt;&lt;br /&gt;Thanks a lot for your work on NAudio, it&amp;#39;s much appreciated!&lt;br /&gt;&lt;br /&gt;The last few days I have been working with additive synthesis based on this example. At first I used WaveOut (as in your code), but then I started moving my code to a Windows Store App. I know that NAudio isn&amp;#39;t officially available for such apps, but I found some post stating how to use NuGet to get a pre-release. I changed WaveOut to WasapiOutRT like this: &lt;br /&gt;&lt;br /&gt;            _sampleMixer = new MixingSampleProvider(_voices[0].SampleProviders);&lt;br /&gt;            _sampleToWaveProvider = new SampleToWaveProvider(_sampleMixer);&lt;br /&gt;            _waveOut = new WasapiOutRT(AudioClientShareMode.Shared, 100);&lt;br /&gt;            await _waveOut.Init(_sampleToWaveProvider);&lt;br /&gt;            _waveOut.Play();&lt;br /&gt;&lt;br /&gt;It works, but there&amp;#39;s a horrible latency. I&amp;#39;m not sure, but I don&amp;#39;t think it lagged as much when using WaveOut. I am a total beginner in programming audio like this, but when I stepped through the code I realized that the Read() method is called just once every second when using WasapiOutRT, with a buffer size of 44100, as opposed to every ~150ms or so on WaveOut (buffer size 6615), and to me that sounds like a source of latency. Or do I miss something? &lt;br /&gt;&lt;br /&gt;Best regards, &lt;br /&gt;Håkan Eriksson</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ef18b330-35d9-496f-bb1b-ca3bcde95f9a">
+    <comment isAdmin="false" isApproved="true" id="7e9539b6-108f-4116-91f3-7e693964b286">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -583,7 +583,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-12-31 14:16:45</date>
       <content>I think in shared mode, sometimes your requested latency can be ignored. If you can debug the NAudio code, look in the Init method of WasapiOutRT</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1bc9de78-69dc-48ea-bf53-57304c9c300f">
+    <comment isAdmin="false" isApproved="true" id="6bd00249-ca28-48fe-919c-ab1789f20398">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03160927907722433196</website>
@@ -592,7 +592,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2013-12-31 19:42:12</date>
       <content>Hi!&lt;br /&gt;&lt;br /&gt;Thanks for your swift reply!&lt;br /&gt;&lt;br /&gt;I stepped through the NAudio code. The reported latency from the AudioClient is 11 ms. &lt;br /&gt;&lt;br /&gt;However, when stepping through the code I noticed that in MediaFoundationTransform you explicitly read one second from the provider: &lt;br /&gt;&lt;br /&gt;        private IMFSample ReadFromSource()&lt;br /&gt;        {&lt;br /&gt;            // we always read a full second&lt;br /&gt;            int bytesRead = sourceProvider.Read(sourceBuffer, 0, sourceBuffer.Length);&lt;br /&gt;&lt;br /&gt;Maybe there&amp;#39;s something I don&amp;#39;t understand well enough, but by reading once a second, doesn&amp;#39;t that imply that changes I make in the audio generation can be delayed up to one second until they are heard? &lt;br /&gt;&lt;br /&gt;Thanks a lot for your help, and a happy New Year as well! :-)&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1f827179-9532-4898-9997-aa1ec5efff82">
+    <comment isAdmin="false" isApproved="true" id="ffabe623-5d95-4c8b-8b03-49272ea77c4f">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03160927907722433196</website>
@@ -601,7 +601,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2014-01-01 22:26:00</date>
       <content>Hi!&lt;br /&gt;&lt;br /&gt;Thanks for your swift reply!&lt;br /&gt;&lt;br /&gt;I stepped through the NAudio code. The reported latency from the AudioClient is 11 ms. &lt;br /&gt;&lt;br /&gt;However, when stepping through the code I noticed that in MediaFoundationTransform you explicitly read one second from the provider: &lt;br /&gt;&lt;br /&gt;        private IMFSample ReadFromSource()&lt;br /&gt;        {&lt;br /&gt;            // we always read a full second&lt;br /&gt;            int bytesRead = sourceProvider.Read(sourceBuffer, 0, sourceBuffer.Length);&lt;br /&gt;&lt;br /&gt;Maybe there&amp;#39;s something I don&amp;#39;t understand well enough, but by reading once a second, doesn&amp;#39;t that imply that changes I make in the audio generation can be delayed up to one second until they are heard? &lt;br /&gt;&lt;br /&gt;Thanks a lot for your help, and I wish you a happy New Year! :-)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b67876f3-9fd7-407d-8ac0-91670f908fb4">
+    <comment isAdmin="false" isApproved="true" id="f5092a84-1635-416b-8f38-9e7350c89e2d">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -610,7 +610,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2014-01-01 22:31:21</date>
       <content>why is an MFT involved? Are you resampling? If possible work at the sample rate of the soundcard. But I probably should do something a bit cleverer with that MFT read size code.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8521e53d-d4e9-4a92-a867-c08701eff798">
+    <comment isAdmin="false" isApproved="true" id="b131c95a-814f-4894-a019-a9d596dce698">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03160927907722433196</website>
@@ -619,7 +619,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2014-01-02 00:32:05</date>
       <content>I haven&amp;#39;t given much thought to where the sampling rate comes from, so I might be resampling without intending to. You&amp;#39;ve seen my initialization code (in my first post), and the code producing the sine wave is pretty much as your example. If I understand your code correctly, that would imply that the sampling frequency is set by the default constructor of WaveProvider32, i.e. 44100 Hz in mono?&lt;br /&gt;&lt;br /&gt;And I see that it is possible to use other constructors to set other sample rates, but how would I know what sample rate the soundcard has? &lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2b52b2c4-7123-4aeb-bb4e-d9ab29c047d5">
+    <comment isAdmin="false" isApproved="true" id="8afa694b-ec17-4607-8ca2-323d67840a1f">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03160927907722433196</website>
@@ -628,7 +628,7 @@ Please note, that you will need to be using the latest NAudio code from source c
       <date>2014-01-02 21:50:02</date>
       <content>Actually, by stepping through the NAudio initialization, I learned that my sound card&amp;#39;s sample rate indeed is different from the one I got from the default constructor. When setting the sample rate correctly there&amp;#39;s no lag (an no glitches, which also occurred before). &lt;br /&gt;&lt;br /&gt;Is there a way to get the sound card&amp;#39;s sample rate from NAudio? &lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="01c66bee-f9e9-4822-b753-43d7b6ca8932">
+    <comment isAdmin="false" isApproved="true" id="720039c0-de37-4bb2-8caa-ad0a02c8b8f8">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

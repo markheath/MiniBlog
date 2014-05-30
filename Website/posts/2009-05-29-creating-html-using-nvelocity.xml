@@ -66,7 +66,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="a63ee773-d763-4b6f-af6b-74ad826e3c98">
+    <comment isAdmin="false" isApproved="true" id="e6c8aaad-8d57-469e-8c84-afeb511bb008">
       <author>DFELK</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/18414549451193816329</website>
@@ -75,7 +75,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
       <date>2009-06-02 19:25:52</date>
       <content>Mark, &lt;br /&gt;&lt;br /&gt;If you really want some super fluid syntax, check out the Spark View Engine. It can also be used as a template engine as well. &lt;br /&gt;&lt;br /&gt;www.sparkviewengine.com&lt;br /&gt;&lt;br /&gt;Donn</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="46b1ecb9-cd4e-40bd-bfea-ab735e9c728c">
+    <comment isAdmin="false" isApproved="true" id="5c92dd00-fc41-4b29-b9f7-0fad1c910140">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -84,7 +84,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
       <date>2009-06-02 19:31:56</date>
       <content>It's one of the ones I had a brief look at. I'd like to try it out properly. I needed the syntax to be friendly to people who were just modifying existing templates, without knowing anything about the templating engine. I thought the NVelocity syntax was nice for that.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3d909181-21e8-4ae6-97a6-38e1db349c5a">
+    <comment isAdmin="false" isApproved="true" id="da72655a-364b-43f6-b029-a322e853cac0">
       <author>Vipin Cherukara</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17184458303089989459</website>
@@ -93,7 +93,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
       <date>2009-06-08 07:52:16</date>
       <content>For more Dot net tutorials visit&lt;br /&gt;http://dot-net-factory.blogspot.com/</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c8a60738-4cf2-451d-978b-a4be513fc743">
+    <comment isAdmin="false" isApproved="true" id="a2f236cb-2c7a-49dc-9b7f-0bcdfd435c4d">
       <author>rich</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09465921105068376055</website>
@@ -102,7 +102,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
       <date>2009-07-19 15:35:43</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;Did you manage to build Castle OK using Nant and VS2008 by any chance? Just wondering if you had any problems with not being able to use the .NET v3.5 framework? Trying in vain to extract NVelocity out of the Castle framework but failing miserably!&lt;br /&gt;&lt;br /&gt;Cheers :-)&lt;br /&gt;&lt;br /&gt;Rich</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d463a321-9652-4c68-bf96-409f95eb22f9">
+    <comment isAdmin="false" isApproved="true" id="181bd815-bf36-4516-ad35-0969185964e7">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -111,7 +111,7 @@ public static string ApplyTemplate(Stream templateStream, VelocityContext contex
       <date>2009-07-19 20:49:56</date>
       <content>hi rich, I had to download the entire huge repository of code from subversion, but I found a batch file that built everything in the end. I was using a machine with VS2008 installed.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="275b002f-cbde-4af8-8a75-36811fbfba48">
+    <comment isAdmin="false" isApproved="true" id="7d216ec9-bfe0-47c3-8c08-85f13fa65072">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

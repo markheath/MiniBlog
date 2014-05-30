@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="b14bcefd-460b-4c64-bfc6-1252739f8b9d">
+    <comment isAdmin="false" isApproved="true" id="bbdd7702-66d2-4a61-bdab-70b2ad1a37c0">
       <author>chris</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -20,7 +20,7 @@
       <date>2011-12-12 11:18:02</date>
       <content>Hello, Mark! Interesting article! I have troubles setting my sound on my Windows 7 x64bit. I have a Asus Xonar DS soundcard and I&amp;#39;m using AIMP3 audio player (as I read it&amp;#39;s the best audio pc player regarding design and sound quality, though foobar might be better at sound quality, but so poor in design).&lt;br /&gt;&lt;br /&gt;The problem is that sound quality can be set from the audio player, from the soundcard program and from the Windows 7 Sound section. Which settings are, let&amp;#39;s say, the master for all others?&lt;br /&gt;&lt;br /&gt;Another problem is that I&amp;#39;ve found the tab containg Shared Mode and Exclusive Mode. If Exclusive Mode is better, how do I disable Shared Mode?&lt;br /&gt;&lt;br /&gt;The most important issue is that my AIMP3 player has 3 ways of playing the sound: through ASIO, DirectSound and WASAPI. What should I choose and at what quality? I&amp;#39;ve been playing with them a while and I&amp;#39;ve let the player on WASAPI as I can&amp;#39;t tell any audible difference between WASAPI and DirectSound. ASIO hasn&amp;#39;t the output power as the others, but I guess it provides better quality at low db?&lt;br /&gt;&lt;br /&gt;Please, help me! I&amp;#39;ve searched a lot, but I really can&amp;#39;t find a sound guide to solve all these issues. And you seem very good with sound.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="aaaf9c58-e989-4d75-869e-a804a117858b">
+    <comment isAdmin="false" isApproved="true" id="a892efd9-99ff-43bc-8b4d-2be44b5c1ef4">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2011-12-12 11:22:00</date>
       <content>Hi chris, the driver model shouldn&amp;#39;t really affect sound quality. ASIO is targetted at recording software that needs to work at low latencies. It is not worth using for general playback of media. WASAPI is the same - more aimed at low latency. Exclusive mode gives one application exclusive access to the soundcard. I would just use DirectSound if I were you.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="717f0803-3839-41d2-ae0c-03397aa81c1a">
+    <comment isAdmin="false" isApproved="true" id="da75c93e-7a2c-42c5-be81-8c263af40157">
       <author>Stephen</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -38,7 +38,7 @@
       <date>2013-05-24 06:15:51</date>
       <content>You hit the head right on the nail.  We are a military audio simulation company that uses Windows 7 and yes, we found out right away that a SRC was not present.  We needed the other aspects of WASAPI ad had tried to use ASIO and have 64 separate input streams going at once as well as the need for multiple applications doing this as well.  So we had no choice but to write a sample rate converter and use WASAPI.  Even though it has been a long trudge, I am glad we went this way.  Our luck will be that Microsoft will add an SRC and ship it in a service pack next week.  </content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0e187b64-420e-4f12-9269-b820381abd11">
+    <comment isAdmin="false" isApproved="true" id="3f6c6528-0bbf-4b06-bbf7-7b3a964c5f31">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -47,7 +47,7 @@
       <date>2013-08-11 21:16:29</date>
       <content>I just ran across something interesting, a DSP DLL that is part of Win 7. Apparently, this is a DLL that has the capability to perform SRC that I had been asking about earlier.  It makes sense as their must be SRC code somewhere in the OS to do this. I have not tried it yet, but the Microsoft link below seems to have all of the capability to do so.  I will try it and get back to this posting…&lt;br /&gt;&lt;br /&gt;http://msdn.microsoft.com/en-us/library/windows/desktop/ff819070(v=vs.85).aspx</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ea15b8e3-9c8b-4f08-ba8b-2ebd224f60e3">
+    <comment isAdmin="false" isApproved="true" id="9e0e5c74-0f08-4685-8a92-d928eaf43d78">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

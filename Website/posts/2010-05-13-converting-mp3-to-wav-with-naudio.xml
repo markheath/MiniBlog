@@ -32,7 +32,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="741ab5a8-9ffb-4a91-9849-8a159cb2bdd8">
+    <comment isAdmin="false" isApproved="true" id="48fc6bf9-2a9d-42cb-abb8-a843bb23ffd8">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -41,7 +41,7 @@
       <date>2010-05-13 12:48:37</date>
       <content>Hi ! Have you tested Mp3-Sharp to see if some errors are reproducible at the same stream offset ? I often come across MP3 files with a few weird frames, so I tend to just skip them instead of failing the entire conversion.&lt;br /&gt;&lt;br /&gt;http://robburke.net/mle/mp3sharp/&lt;br /&gt;&lt;br /&gt;Cheers, Dan</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="53be6e62-2493-47b5-b68e-ca7a852b1a26">
+    <comment isAdmin="false" isApproved="true" id="08d9225a-a4b7-4747-a727-051272d5327b">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -50,7 +50,7 @@
       <date>2010-05-13 12:54:15</date>
       <content>I might have a go loading them with MP3Sharp, but I can&amp;#39;t use any of their code unfortunately since it is GPL</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e12e41e1-e6f5-4e63-a283-22f27b31118a">
+    <comment isAdmin="false" isApproved="true" id="1245a08a-be7c-41c4-bbd8-051a0eef7716">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -59,7 +59,7 @@
       <date>2010-05-13 17:57:06</date>
       <content>The Windows 7 MP3 music clips fail because they have a wrong layer code in some headers. However you can safely skip them.&lt;br /&gt;&lt;br /&gt;Take a look at:&lt;br /&gt;&lt;br /&gt;Bitstream.cs&lt;br /&gt;nextFrame()&lt;br /&gt;read_header()&lt;br /&gt;isSyncMark()&lt;br /&gt;&amp;quot;INVALID LAYER DETECTED&amp;quot;&lt;br /&gt;==&amp;gt; SKIP :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b19dff96-0a41-4b64-ae77-f3761e21e2dd">
+    <comment isAdmin="false" isApproved="true" id="0f669ab7-a9ec-436b-bdf2-d21b367c1e92">
       <author>Joymon | ജോയ് മോന്‍ | जोय मोन | ஜோய் மோன்</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/12014569049635491702</website>
@@ -68,7 +68,7 @@
       <date>2010-05-17 16:40:15</date>
       <content>Do you have any idea to convert WAV to Mp3 in Silverlight?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a1dc7741-c412-4edf-a15d-fdaf7ff68f4c">
+    <comment isAdmin="false" isApproved="true" id="5292ca0c-a6bc-4ad4-b80b-1b2bd7b40775">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -77,7 +77,7 @@
       <date>2010-05-17 16:53:53</date>
       <content>@joymon - do you mean MP3 to WAV?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4834280a-a1c0-42ab-af69-afdb8e0444c7">
+    <comment isAdmin="false" isApproved="true" id="f4a070c6-e54d-4874-bf6c-b2b540589d11">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -86,7 +86,7 @@
       <date>2010-06-09 23:12:58</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I&amp;#39;d like to convert WAV to MP3. I&amp;#39;ve downloaded NAudio from codeplex but I can only find an MP3FileReader - is there an equivalent of an MP3FileWriter?&lt;br /&gt;&lt;br /&gt;To make matters more complicated I&amp;#39;d like to perform the conversion on the fly. I have some recordings in WAV (from a phone system) and would like to convert them in realtime as they are downloaded. I have a solution working which automates lame, but because I need to convert the whole file before streaming it gives me an appreciable delay.&lt;br /&gt;&lt;br /&gt;Any advice you have would be much appreciated.&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;&lt;br /&gt;Daniel</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3a5f50e0-fa2a-4f33-be5e-23be2c16cbdb">
+    <comment isAdmin="false" isApproved="true" id="e2101bc8-cf82-440c-8e03-74da26c8bb9b">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -95,7 +95,7 @@
       <date>2010-06-18 15:35:08</date>
       <content>I&amp;#39;m afraid NAudio cannot convert to MP3. Your best bet is to use LAME.exe</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="aeba7932-8ba4-4f09-935d-bb8de05694b4">
+    <comment isAdmin="false" isApproved="true" id="e0b05b34-63d8-4a72-b9f0-518e5834e26d">
       <author>Anton</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01870348781368284888</website>
@@ -104,7 +104,7 @@
       <date>2010-07-15 13:49:34</date>
       <content>Hi Mark....&lt;br /&gt;&lt;br /&gt;I have been unable to find an email address to contact you directly, so I thought I would post my question here...&lt;br /&gt;&lt;br /&gt;I am looking for an audio component and was wondering if nAudio was able to acheive what I require.&lt;br /&gt;My requirements are as follows:&lt;br /&gt;&lt;br /&gt;    I have multiple audio tracks with nothing but music.&lt;br /&gt;    I have multiple recorded voice tracks no longer than 2-3 seconds each.&lt;br /&gt;    What I would like to do is &amp;quot;overlay&amp;quot; a voice track onto an audio&lt;br /&gt;track at a specified time and output the results to a single file.&lt;br /&gt;    E.g. Audio track is 2 minutes long, and I would like to insert&lt;br /&gt;the voice track at 23 seconds as well 1m 05 seconds and at 1m 40&lt;br /&gt;seconds.&lt;br /&gt;&lt;br /&gt;Can nAudio achieve this sort of task for me??&lt;br /&gt;I am using VB.Net and I would need to accomplish this through code (API)...&lt;br /&gt;&lt;br /&gt;Your assistance would be greatly appreciated.&lt;br /&gt;&lt;br /&gt;Anton</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2741f420-faa5-4995-b0f4-a340bd8dee6c">
+    <comment isAdmin="false" isApproved="true" id="116356d1-de96-486f-afca-0c26a764473a">
       <author>ah</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04784173564155635891</website>
@@ -113,7 +113,7 @@
       <date>2011-08-02 20:32:24</date>
       <content>Sorry I am late on this, I am new to NAudio (looks wicked btw).  When calling WaveFileWriter.CreateWaveFile, is there a way to get the progress of the decoding?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c3d5fb67-ae99-442f-b1be-7e0d83e23e53">
+    <comment isAdmin="false" isApproved="true" id="f931f2ac-8808-4400-81c4-d46245dea47e">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

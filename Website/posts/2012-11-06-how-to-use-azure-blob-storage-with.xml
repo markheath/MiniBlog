@@ -103,7 +103,7 @@ var blobs = imagesContainer.ListBlobs();
     <category>Azure</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="28bf1762-fccf-4360-a729-ea33afcf0c1c">
+    <comment isAdmin="false" isApproved="true" id="e0c6d498-36ab-43f6-84de-a434ccc4a845">
       <author>Paul Apostolos</author>
       <email>noreply@blogger.com</email>
       <website>http://www.allpaul.com</website>
@@ -112,7 +112,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-02-22 04:09:27</date>
       <content>Great write up. Really easy to follow and I&amp;#39;m up and running in no time. I was prototyping a new website feature to allow users to upload files and I wanted to host it on Azure websites just to demo it to a client. But, uploading files to Azure websites was a bit of a black hole to me. Seriously, your article was perfect...Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="da7dbfd4-b070-46af-83b8-a84026b50378">
+    <comment isAdmin="false" isApproved="true" id="a74269b5-a388-4ac3-867c-8c913920721e">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -121,7 +121,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-02-22 07:33:27</date>
       <content>thanks Paul, this is one of those &amp;quot;note to self&amp;quot; posts - wanted to be sure I&amp;#39;d remember what I&amp;#39;d done.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="485fabad-d9c0-4bef-9500-ec38f6e56308">
+    <comment isAdmin="false" isApproved="true" id="025eb25e-442e-4858-97a8-f51361d72a2d">
       <author>Mark Gray</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17261651841965260460</website>
@@ -130,7 +130,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-04-20 08:39:55</date>
       <content>Thanks for this &amp;#39;note to self&amp;#39;, it helped me out because I forgot to set permissions on my container to public. Now I can stop repeatedly banging my head against the wall.&lt;br /&gt;&lt;br /&gt;Good job mate.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="69d7d825-c8a6-42cf-89db-38562711e921">
+    <comment isAdmin="false" isApproved="true" id="7d00394d-4cd0-477f-a6b0-ff651fdbac98">
       <author>Mark Gray</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17261651841965260460</website>
@@ -139,7 +139,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-04-20 08:40:37</date>
       <content>Thanks for this &amp;#39;note to self&amp;#39;, it helped me out because I forgot to set permissions on my container to public. Now I can stop repeatedly banging my head against the wall.&lt;br /&gt;&lt;br /&gt;Good job mate.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c3bdac43-33a4-4fd2-a2a2-b1f3b9a9292c">
+    <comment isAdmin="false" isApproved="true" id="a9d06c06-485b-4e33-90ff-e2d87347442b">
       <author>Joel</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04677525833787422528</website>
@@ -148,7 +148,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-06-08 02:05:25</date>
       <content>This is just what I was looking for, thanks. </content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="754973c2-cafc-457a-a3ec-ed9b6940e078">
+    <comment isAdmin="false" isApproved="true" id="b90465bb-584d-45e2-bf51-e42269690d6e">
       <author>Naveed Ahmad</author>
       <email>noreply@blogger.com</email>
       <website>http://www.naveedcs.com</website>
@@ -157,7 +157,7 @@ var blobs = imagesContainer.ListBlobs();
       <date>2013-08-23 16:47:45</date>
       <content>Very good to find your blog i am going to follow it, very nice article</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="433af49f-8d00-41be-b7a6-94d98d10d14d">
+    <comment isAdmin="false" isApproved="true" id="8785b016-3f9e-43f0-b1e5-4814630953d6">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

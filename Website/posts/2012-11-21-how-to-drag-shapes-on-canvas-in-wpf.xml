@@ -54,7 +54,7 @@ w.ShowDialog();
     <category>WPF</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="f45cdb82-94ef-4b37-8724-e08422081e31">
+    <comment isAdmin="false" isApproved="true" id="d68748c0-d4c1-4f37-956f-b1c7ec5b9a9a">
       <author>blorq</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16308269163452150701</website>
@@ -63,7 +63,7 @@ w.ShowDialog();
       <date>2012-11-21 17:58:09</date>
       <content>You also have to deal with losing the mouse outside of the window and capture loss. &lt;br /&gt;&lt;br /&gt;I have also found this method to be poorly performing, as those properties effect layout. I might suggest trying with a render transform. </content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="46a4d3b2-8053-40da-83e0-599c7f27048a">
+    <comment isAdmin="false" isApproved="true" id="a26a63e6-9067-40df-89da-ad72c7c303df">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -72,7 +72,7 @@ w.ShowDialog();
       <date>2012-11-21 18:12:38</date>
       <content>Yes, this method lets you move things out of visible space. In what situations are you getting capture loss?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="437535de-6563-4f3d-b3b5-d4063d8fab4e">
+    <comment isAdmin="false" isApproved="true" id="38cb1b50-16dc-4255-b471-930b0d802caf">
       <author>Cortran</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -81,7 +81,7 @@ w.ShowDialog();
       <date>2013-03-21 23:59:32</date>
       <content>Great!!!!!!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3a4d620f-e6ba-4976-87c9-3a7564c51969">
+    <comment isAdmin="false" isApproved="true" id="5f381fae-0ce2-415b-979b-80ed5b87a9c2">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01649683732217694480</website>

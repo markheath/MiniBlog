@@ -68,7 +68,7 @@ foreach(var fixturesTable in doc.DocumentNode.SelectNodes("//table[@class='fixtu
     <category>HTML</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="fd68c4cd-b580-4c4c-8948-d011b833a280">
+    <comment isAdmin="false" isApproved="true" id="8faf085d-583f-44f3-bb05-fe571dc71a82">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -77,7 +77,7 @@ foreach(var fixturesTable in doc.DocumentNode.SelectNodes("//table[@class='fixtu
       <date>2013-01-29 14:17:18</date>
       <content>Hey, can u help me with your example? Im trying to repeat your project, but i have a problem with:&lt;br /&gt;&lt;br /&gt;ar doc = web.Load &lt;br /&gt;&lt;br /&gt;Error 1 &amp;#39;HtmlAgilityPack.HtmlWeb&amp;#39; does not contain a definition for &amp;#39;Load&amp;#39; and no extension method &amp;#39;Load&amp;#39; accepting a first argument of type &amp;#39;HtmlAgilityPack.HtmlWeb&amp;#39; could be found (are you missing a using directive or an assembly reference?)&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Can your help me with this?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="091b8687-7cab-4398-9012-be9fb0002815">
+    <comment isAdmin="false" isApproved="true" id="d1de0e3f-1be1-4ff2-8e93-55e7b0907255">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

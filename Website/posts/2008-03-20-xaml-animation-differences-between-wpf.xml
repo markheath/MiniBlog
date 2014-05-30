@@ -40,7 +40,7 @@
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="36ad8e16-ca5e-447c-b1e0-2069107c6b4b">
+    <comment isAdmin="false" isApproved="true" id="4727dc5f-7b5b-4b90-a18e-f67485ecd0ff">
       <author>Sam</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -49,7 +49,7 @@
       <date>2008-03-28 21:02:00</date>
       <content>I came upon your page while searching for tutorials on creating buttons with the glass look. &lt;BR/&gt;&lt;BR/&gt;The TryFindResource method searches up the visual tree, not down. For example, let's say you had a button on the page named "Button1" that was a child of the Page. In the code-behind, if you called Button1.TryFindResource("storyboardWrong"), you will be able to find the Storyboard that was placed in the Button's ResourceDictionary or in any of its parent's ResourceDictionaries.&lt;BR/&gt;&lt;BR/&gt;Other than this small fact, I don't think there is an easier way to do animations in WPF.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="99d21aed-22c6-4fe1-8cc3-b4f87b6ad7f4">
+    <comment isAdmin="false" isApproved="true" id="484cba23-8f21-4a9a-b284-c9e47ed1f825">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

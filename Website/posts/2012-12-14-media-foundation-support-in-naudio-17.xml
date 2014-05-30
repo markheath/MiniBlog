@@ -11,7 +11,7 @@
     <category>Media Foundation</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="d5135592-f8f1-4ac7-84be-01f78ca017ac">
+    <comment isAdmin="false" isApproved="true" id="11aae29e-e6f9-4119-b57b-c7a347c6a40b">
       <author>Unknown</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14351149563070832932</website>
@@ -20,7 +20,7 @@
       <date>2012-12-27 01:34:56</date>
       <content>Brilliant- I can&amp;#39;t wait for this.  I&amp;#39;ve found using MF in .Net a complete PITB, although I&amp;#39;m sure that&amp;#39;s more my ignorance than anything else.&lt;br /&gt;You da &lt;i&gt;Man&lt;/i&gt; Mr Heath.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5d426fdd-4ea7-4806-b5df-abbb00d3eded">
+    <comment isAdmin="false" isApproved="true" id="519facb0-ddf0-4d2a-b97b-c163515683d8">
       <author>Jonx</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02834446680849610263</website>
@@ -29,7 +29,7 @@
       <date>2012-12-29 05:43:48</date>
       <content>That looks very promising... Is there also a chance that this will also works on Windows Phone 8? That would be great...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1d542276-9c01-4e13-9eda-a17d1dd1ab8a">
+    <comment isAdmin="false" isApproved="true" id="e1ece79a-47f4-4f45-adbc-6f79a4f77e4a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -38,7 +38,7 @@
       <date>2012-12-29 08:02:24</date>
       <content>Possibly although I don&amp;#39;t have a Windows Phone 8 myself. Getting Windows Store support released is the first priority.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="09cbf984-997e-418c-a95b-bb3f05713ed0">
+    <comment isAdmin="false" isApproved="true" id="1eb65d26-38ba-459b-ad8b-c058ad9451ae">
       <author>Tom Spilman</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10769312491487874162</website>
@@ -47,7 +47,7 @@
       <date>2013-01-24 18:01:27</date>
       <content>Have you considered using SharpDX (http://sharpdx.org/)?  They have a pretty good Media Foundation wrapper already.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8c94b95e-76f2-4fae-b0bf-afc1979f5323">
+    <comment isAdmin="false" isApproved="true" id="3347c361-032f-4b23-9fd9-e3d3645527ee">
       <author>Tom Spilman</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10769312491487874162</website>
@@ -56,7 +56,7 @@
       <date>2013-01-24 18:03:22</date>
       <content>Did you consider using SharpDX (http://sharpdx.org/)?  He has a good Media Foundation wrapper that is procedurally generated from the C++ headers.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="946d9cc9-7545-4252-9df8-92bce919376f">
+    <comment isAdmin="false" isApproved="true" id="c07e07fb-a561-4196-b99f-92884822c77a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -65,7 +65,7 @@
       <date>2013-01-24 18:21:08</date>
       <content>hi Tom, yes SharpDX is excellent and its author was a contributor to NAudio a while ago. It takes a slightly different approach in that it auto-generates P/Invoke for the whole API. My approach is to hand-craft the P/Invoke wrappers I need to supply the main features I want to support in NAudio. I&amp;#39;ve benefitted from looking at various people&amp;#39;s Media Foundation interop while adding the NAudio support. I&amp;#39;ve got most of what I want in there now, and the focus is shifting more the the Windows 8 support.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7ec533ea-1b5f-46d0-a040-3af698a84fea">
+    <comment isAdmin="false" isApproved="true" id="60717542-436a-40f2-908a-a788ab8c7506">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -74,7 +74,7 @@
       <date>2013-04-04 20:43:09</date>
       <content>I am very happy to hear NAudio will support Media Foundation.  My project works mostly with FLAC audio files and I found this project that will help:&lt;br /&gt;Media Foundation FLAC Codec&lt;br /&gt;http://sourceforge.net/projects/mfflac/?source=dlp&lt;br /&gt;&lt;br /&gt;Windforce</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2cbc210f-9290-49a6-aa4c-0ce1e0acf194">
+    <comment isAdmin="false" isApproved="true" id="bd2a157d-14a2-45ea-83fd-a2a7712a1215">
       <author>urs</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -83,7 +83,7 @@
       <date>2013-05-15 19:00:13</date>
       <content>I recognize that MFTEnumEx you use for Transcoding is not allowed in Win8 Store. &lt;br /&gt;Is the ResamplerComObject from MS allowed to use or is it forbidden and is it allowed to use with PCM format?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a6d02a32-e0da-4691-98d1-13a76b2f40ac">
+    <comment isAdmin="false" isApproved="true" id="b0bccfac-1602-4be0-92bb-f668c5768491">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -92,7 +92,7 @@
       <date>2013-05-17 19:03:17</date>
       <content>Hi urs, you can certainly use the MF decoders in Windows Store apps so I don&amp;#39;t see why not the encoders too. I&amp;#39;ll hopefully get some time to work on the Windows Store app demo to show this in action.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="11c5c5ca-637e-4dad-bac0-ed5273482303">
+    <comment isAdmin="false" isApproved="true" id="ef46f350-83e1-4d42-b85a-c67d434448f4">
       <author>urs</author>
       <email>noreply@blogger.com</email>
       <website />

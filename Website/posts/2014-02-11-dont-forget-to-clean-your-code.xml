@@ -10,7 +10,7 @@
     <category>clean code</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="348fac12-c2c5-46de-8e43-94e200789362">
+    <comment isAdmin="false" isApproved="true" id="40216e0b-fda6-4fa6-b21b-fb980cb986a3">
       <author>DAve</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07524890697045473232</website>
@@ -19,7 +19,7 @@
       <date>2014-02-12 13:31:08</date>
       <content>Good post.&lt;br /&gt;&lt;br /&gt;I find the best opportunity for cleaning code is at the point of checking into source control, since at that point you can run a diff to see your changes in isolation. &lt;br /&gt;&lt;br /&gt;In fact I tend to diff to see the changes, check this in, and then tidy and checkin again, in case my tidying breaks anything.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="77b1031f-301e-44cb-aa49-7a2b92987166">
+    <comment isAdmin="false" isApproved="true" id="96a0452d-7cc3-4755-a2bb-6cb8fd037892">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

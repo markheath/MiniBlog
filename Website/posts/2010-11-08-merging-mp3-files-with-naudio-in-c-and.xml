@@ -63,7 +63,7 @@ if __name__ == '__main__':
     <category>IronPython</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="06c9ee44-b0ae-456b-a657-d82aeb237f09">
+    <comment isAdmin="false" isApproved="true" id="cb38458c-df57-4110-9cad-43e984662d67">
       <author>KOS_MOS</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/18226243996821539549</website>
@@ -72,7 +72,7 @@ if __name__ == '__main__':
       <date>2011-05-27 20:43:07</date>
       <content>I install Python for .Net, put NAudio.dll to script directory, but when i run script - i have error:&lt;br /&gt;&lt;br /&gt;c:\Temp\pmerge&amp;gt;C:\Python.Net\python.exe mp3merge.py&lt;br /&gt;Traceback (most recent call last):&lt;br /&gt;  File &amp;quot;mp3merge.py&amp;quot;, line 2, in &lt;br /&gt;    clr.AddReference(&amp;#39;NAudio.dll&amp;#39;)&lt;br /&gt;System.IO.FileNotFoundException&lt;br /&gt;&lt;br /&gt;Please help!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4e1b88f4-79c5-4a08-952c-cc423e972d81">
+    <comment isAdmin="false" isApproved="true" id="7a07feea-0ad4-40f4-8ebb-18b44f8a005e">
       <author>KOS_MOS</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/18226243996821539549</website>
@@ -81,7 +81,7 @@ if __name__ == '__main__':
       <date>2011-05-27 20:44:32</date>
       <content>I&amp;#39;we installed Python for .Net, put NAudio.dll to script directory, but when i run script - i have error:&lt;br /&gt;&lt;br /&gt;c:\Temp\pmerge&amp;gt;C:\Python.Net\python.exe mp3merge.py&lt;br /&gt;Traceback (most recent call last):&lt;br /&gt;  File &amp;quot;mp3merge.py&amp;quot;, line 2, in &lt;br /&gt;    clr.AddReference(&amp;#39;NAudio.dll&amp;#39;)&lt;br /&gt;System.IO.FileNotFoundException&lt;br /&gt;&lt;br /&gt;Please help me!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7c14058f-4009-4f7b-a16e-e2ad683f69ac">
+    <comment isAdmin="false" isApproved="true" id="a9cc5f28-19bd-4d8d-bd31-9a8cc691b706">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -90,7 +90,7 @@ if __name__ == '__main__':
       <date>2011-05-27 20:53:32</date>
       <content>I always run IronPython with ipy.exe. Not sure if that is your issue though.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1189e567-a8c4-48da-80cf-4acd4085d2d8">
+    <comment isAdmin="false" isApproved="true" id="a35f70b5-2c27-46fe-b9d5-2b1d56e9c8e3">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -99,7 +99,7 @@ if __name__ == '__main__':
       <date>2013-03-05 06:45:48</date>
       <content>I want to merger multiple mp3 files- say 3 files. So i&amp;#39;ve array of 3 mp3 files path. Secong one of these files is Blank file of 20 sec. when i merge these blank file doesnt merge. Any suggestion?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8bccbd2c-933e-4dcb-8d43-39c1c33b4916">
+    <comment isAdmin="false" isApproved="true" id="f9d2abba-9d92-4a18-a707-b7e07f7f90bd">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -108,7 +108,7 @@ if __name__ == '__main__':
       <date>2013-09-24 16:42:13</date>
       <content>Using the above code I have merged around 80 files. I have also created an audio marker using following code.&lt;br /&gt;&lt;br /&gt;oStringBuilder.AppendFormat(&amp;quot;&amp;quot;,&lt;br /&gt;                Path.GetFileNameWithoutExtension(file), Math.Round(oCurrentTime,3), Math.Round(oCurrentTime + reader.TotalTime.TotalSeconds,3));&lt;br /&gt;&lt;br /&gt;And then I use these markers to play specific section of the merged MP3 in various browsers.&lt;br /&gt;&lt;br /&gt;The audio markers work alright in chrome but in Safari and IE the markers are inaccurate, any idea?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d4584ac7-9625-4b40-bad2-f6a8a53a0987">
+    <comment isAdmin="false" isApproved="true" id="d189651f-1909-4254-8259-a51ef8c8924f">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

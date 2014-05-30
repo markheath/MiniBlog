@@ -218,7 +218,7 @@
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="4eb64931-f700-48f6-b2f5-a176fdd51ff8">
+    <comment isAdmin="false" isApproved="true" id="f9b9bf8e-810f-4a13-8cf9-5a3ddd2594b5">
       <author>Valerie</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -227,7 +227,7 @@
       <date>2008-05-07 23:36:00</date>
       <content>Great tutorial, it helped me make a beautiful listbox.  I did figure out why the horizontal element was not being collapsed for vertical scrollbars, but was for horizontal...  You need to set Visibility="Collapsed" for &lt;B&gt;both&lt;/B&gt; the HorizontalRootElement and VerticalRootElement Grids in the style.  Then everything works great.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a599bb55-1691-4a61-884d-9f1ff064ea98">
+    <comment isAdmin="false" isApproved="true" id="168b90b5-5071-47aa-8108-a66ba3f262a5">
       <author>Valerie</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -236,7 +236,7 @@
       <date>2008-05-07 23:43:00</date>
       <content>Hrm...  seems as soon as I posted I realized that makes the horizontal scroll bar disappear (but not the vertical).</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="37b3dfdb-0f5d-4332-aa2d-66e683e43d2f">
+    <comment isAdmin="false" isApproved="true" id="0a15ed9a-d0c2-43c2-8db7-8e835d82501c">
       <author>Valerie</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -245,7 +245,7 @@
       <date>2008-05-08 16:03:00</date>
       <content>The only way I was able to get the horizontal scrollbar artifact to go away was to copy the entire ScrollBarStyle1 and rename the copied style, then in one of them set the HorizontalRootElement's Visibility="Collapsed" (leaving the VerticalRootElement visible) and in the other style do the opposite.  Then I tell the scrollbars in the ScrollViewerStyle which style they should use, accordingly.&lt;BR/&gt;&lt;BR/&gt;I tried to "clean up" the styles by removing some unnecessary stuff (but leaving both the horizontal and vertical parts in both styles, just emptying out the parts that weren't being used), and it was throwing nasty Null pointer errors.  &lt;BR/&gt;&lt;BR/&gt;Do you have any insight on how to remove some of the redundancy in the styles, to get around this bug and not have so much duplication?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5c8776c4-8128-4ba6-9d0f-2625aefa6124">
+    <comment isAdmin="false" isApproved="true" id="2eed0578-b6dc-468f-8feb-bbcd5d6f3082">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -254,7 +254,7 @@
       <date>2008-05-08 16:12:00</date>
       <content>Hi Valerie,&lt;BR/&gt;the scrollbar bug is annoying, but it is claimed that it will be fixed in the next beta of Silverlight, so I am just hanging on for the moment. I'm hoping we'll see another beta in the next month or so</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="812b1aa2-5cc8-46b6-957d-b29e6d61ea4a">
+    <comment isAdmin="false" isApproved="true" id="f5bcc561-f636-4869-993f-1fdf9126b629">
       <author>Nuno Santos</author>
       <email>noreply@blogger.com</email>
       <website>http://www.nunosantos.net</website>
@@ -263,7 +263,7 @@
       <date>2008-05-29 11:43:00</date>
       <content>Hi Mark,&lt;BR/&gt;&lt;BR/&gt;Great tutorial.&lt;BR/&gt;&lt;BR/&gt;One question. The vertical scroolbar bug. Do you have any workaround for it while the next beta is not available?&lt;BR/&gt;&lt;BR/&gt;Thx,&lt;BR/&gt;&lt;BR/&gt;Nuno</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9e203935-bc48-4f2c-bc68-65a8d6b2ebf3">
+    <comment isAdmin="false" isApproved="true" id="d297e71b-4a91-4d3d-8704-e0b18b28db9a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -272,7 +272,7 @@
       <date>2008-05-29 11:51:00</date>
       <content>hi nuno, the workaround would be to create two identical styles - one for the vertical scrollbar, and one for the horizontal scrollbar. Then in the vertical scrollbar template, simply remove any visible elements from the (unused) horizontal scrollbar's template.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="688cf003-f594-4728-a725-aadb55f987ad">
+    <comment isAdmin="false" isApproved="true" id="a65f48f2-2fe3-4a7a-9082-b640de82a339">
       <author>Pankaj K S</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -281,7 +281,7 @@
       <date>2009-12-24 06:49:44</date>
       <content>Thanks!&lt;br /&gt;&lt;br /&gt;It has given me a breakthrough I was looking for to get my list box a custom scroll bar.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Thanks again!&lt;br /&gt;&lt;br /&gt;Nice Article.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="65f19786-194f-4b25-9724-591b4009658a">
+    <comment isAdmin="false" isApproved="true" id="165d5ce9-0713-4852-a913-3ff4cfe4f129">
       <author>spam-dev</author>
       <email>noreply@blogger.com</email>
       <website>http://www.devsolution.net</website>
@@ -290,7 +290,7 @@
       <date>2010-06-11 05:17:01</date>
       <content>Hi Valeris, can i use in Siverlight4?&lt;br /&gt;&lt;br /&gt;thank you.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="41e403da-0d77-4deb-b6e5-c1512846e8c5">
+    <comment isAdmin="false" isApproved="true" id="b02c383a-b77c-49f0-9d23-7635607454c2">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -299,7 +299,7 @@
       <date>2013-09-25 07:10:42</date>
       <content>How to make the vertical scrollbar shorter than the content.&lt;br /&gt;I tried using Margin=&amp;quot;0,15,0,15&amp;quot; for the &amp;quot;VerticalRoot&amp;quot; Grid. By the side-effect is he thumb actually pushes and scrolls the bottom arrow ??</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="653e17e0-2333-4e24-a39c-c93e607c6f25">
+    <comment isAdmin="false" isApproved="true" id="8e156043-5df0-496d-b1d8-fbbbe7a3d030">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

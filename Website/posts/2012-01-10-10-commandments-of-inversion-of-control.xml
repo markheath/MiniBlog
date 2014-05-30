@@ -78,7 +78,7 @@ void Process(int mode);
     <category>Dependency Inversion Principle</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="c5af0a8e-9abf-4ec0-9b83-32e31be74dc0">
+    <comment isAdmin="false" isApproved="true" id="10365033-9d73-40e8-a813-f8d76c2898e3">
       <author>Thorsten Lorenz</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/11869165877618370852</website>
@@ -87,7 +87,7 @@ void Process(int mode);
       <date>2012-01-10 20:05:01</date>
       <content>Concerning 5. (Constructor Bloat), another option is to pass in a Verbs instead of dependencies, as illustrated here: http://thorstenlorenz.wordpress.com/2011/07/23/dependency-injection-is-dead-long-live-verbs/&lt;br /&gt;&lt;br /&gt;This way you only have to mock out the methods themselves instead of the whole dependency. It would also possible to pass all the verbs in as properties of a Config class. That way the constructor is simplified and it is easy to see what the class actually uses (e.g. exactly what methods).</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b023d8d9-677b-4be2-8e12-6c3b7bfb7a30">
+    <comment isAdmin="false" isApproved="true" id="5f771e0f-e1bc-481f-acf7-001a3ba57ae4">
       <author>blorq</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16308269163452150701</website>
@@ -96,7 +96,7 @@ void Process(int mode);
       <date>2012-01-10 23:15:52</date>
       <content>Good list, with the exception of #7.  That &amp;quot;documentation&amp;quot; adds nothing but noise, with the exception of describing the use of an int which should be a self-documenting enum.  Remove that and the doc just restates the presumed classname and its properties.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b2dbb71a-3711-4da7-bde4-1075116f3ee7">
+    <comment isAdmin="false" isApproved="true" id="60b5d698-9188-4ca5-b0f3-10fb4d6c2e41">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -105,7 +105,7 @@ void Process(int mode);
       <date>2012-01-11 07:36:50</date>
       <content>@Thorsten - thanks for the link, it is an interesting article, and have experimented a bit in the past with just passing functions in rather than interfaces as dependencies. However, it doesn&amp;#39;t work great with an IoC container.&lt;br /&gt;&lt;br /&gt;@blorq - I am a big fan of the idea of self-documenting code, and agree that many comments would be unneccessary if we named functions better. However, that one was aimed at very large systems with dozens of developers and hundreds of interfaces where you do need ways of finding out how you are intended to use a component. Often you have no power to change the way an interface has been defined due to dependencies outside your control, but you do need the caller to understand how your method should be called. Comments on the interface (instead of on the concrete class where developers usually put them) are very helpful in this scenario.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ffdeb17f-7c9d-4c2e-a99d-3766693faa6c">
+    <comment isAdmin="false" isApproved="true" id="e707f434-2b7e-4e2b-92d5-26ebb62a592b">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -114,7 +114,7 @@ void Process(int mode);
       <date>2012-01-12 21:10:35</date>
       <content>Rules 5 and 6 conflict. You either use contructor or property injection. Rules usually are that required dependancies are passed via the constructor.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2e1ce995-1eee-4bb8-8393-c7c746f7ebb6">
+    <comment isAdmin="false" isApproved="true" id="e85b438f-6207-4ec2-9784-96590cf889d7">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -123,7 +123,7 @@ void Process(int mode);
       <date>2012-01-12 21:14:16</date>
       <content>Rule #8: When you did not use &amp;#39;new&amp;#39; then don&amp;#39;t call dispose and never have an interface inherit from IDisposable. Problem is that not all code bases follow these simple rules.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="66f9ec2e-a804-4aa2-8f0e-7dd3c9550762">
+    <comment isAdmin="false" isApproved="true" id="a06e2059-46a9-4eed-870f-35e1356573df">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -132,7 +132,7 @@ void Process(int mode);
       <date>2012-01-12 21:16:56</date>
       <content>Having too many constructor dependancies probably violates seperation of concern and indicates a design error. Just refactor those classes and split that god class in several classes.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d4062c94-72ab-4977-a023-2f477cba7e7f">
+    <comment isAdmin="false" isApproved="true" id="4dcc22bb-1589-4fa1-b424-411b2760295c">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -141,7 +141,7 @@ void Process(int mode);
       <date>2012-01-12 21:20:39</date>
       <content>By the way, I have seen lots of code that only use interface dependancies but when classes are internal you can just as well use class dependancies. This works very well when you have lots of command classes.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8c10ecc0-83cd-4375-adf0-5f0cce5c8c10">
+    <comment isAdmin="false" isApproved="true" id="cb70a444-fb55-4253-bd9e-ef703b2cd673">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -150,7 +150,7 @@ void Process(int mode);
       <date>2012-01-13 11:31:23</date>
       <content>@Ramon - I&amp;#39;m not sure why you think rules 5 &amp;amp; 6 conflict - I&amp;#39;m not advocating using both.&lt;br /&gt;&lt;br /&gt;Your thoughts on rule 8 are interesting. There would need to be a way to dispose long-running services that the container has created. Do you have a pattern that you follow on this?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="63429a8b-811d-40b4-b819-d297914e0986">
+    <comment isAdmin="false" isApproved="true" id="ae47ea8d-78c1-4b41-b25f-ddcc86a1888e">
       <author>ploeh</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08123428416238770895</website>
@@ -159,7 +159,7 @@ void Process(int mode);
       <date>2012-01-15 16:26:12</date>
       <content>This is a good list. It&amp;#39;s always good to see other people arrive at basically the same patterns as the ones I describe in &lt;a href="http://affiliate.manning.com/idevaffiliate.php?id=1150_236" rel="nofollow"&gt;my book&lt;/a&gt;, as this reinforces that they are really &lt;i&gt;patterns&lt;/i&gt; - i.e. solutions that lots of people have arrived at independently of each other.&lt;br /&gt;&lt;br /&gt;The only item on the list where I disagree is #9. Both exposing IDisposable on an interface and/or injecting a factory with the sole purpose of managing lifetime are signs of leaky abstractions.&lt;br /&gt;&lt;br /&gt;A much better way to deal with the decommissioning concern is to employ the &lt;a href="http://blog.ploeh.dk/2010/09/29/TheRegisterResolveReleasePattern.aspx" rel="nofollow"&gt;Register Resolve Release&lt;/a&gt; pattern.&lt;br /&gt;&lt;br /&gt;However, Unity&amp;#39;s Release functionality is broken, so RRR doesn&amp;#39;t work out of the box with it. Still, it&amp;#39;s possible to tweak Unity to make it work, but that&amp;#39;s another story ;)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e2c65249-f0a6-46ef-b7c5-26dbd3a433af">
+    <comment isAdmin="false" isApproved="true" id="cf2ca922-c502-4d9a-b6e9-67e95e137425">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -168,7 +168,7 @@ void Process(int mode);
       <date>2012-01-15 17:05:36</date>
       <content>@ploeh, thanks for the feedback. I&amp;#39;ll look into the RRR pattern - sounds like it could be useful.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="af4da99a-b7fe-4ad0-83b9-53768f8a565e">
+    <comment isAdmin="false" isApproved="true" id="1a32662f-6682-4358-864f-2fd4de26cc67">
       <author>Simon Guindon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17381760680251956190</website>
@@ -177,7 +177,7 @@ void Process(int mode);
       <date>2012-01-15 18:43:34</date>
       <content>#6. Another negative side effect of property injection is temporal coupling. You have to create the instance and inject the property before using the method that depends on it.&lt;br /&gt;&lt;br /&gt;It&amp;#39;s not clear from the outside that this class has nuances that have to happen just right for things to work properly.&lt;br /&gt;&lt;br /&gt;I&amp;#39;d like to introduce an 11th commandment ;)&lt;br /&gt;&lt;br /&gt;#11. The IoC container shouldn&amp;#39;t dictate the code base.&lt;br /&gt;&lt;br /&gt;The IoC container is used to compose the application but it shouldn&amp;#39;t infect the code base by dictating how classes are defined.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="75f8c6ba-06a4-4211-bd5f-ba9663d46535">
+    <comment isAdmin="false" isApproved="true" id="4851a206-39f9-467a-bacb-9751a3c32aff">
       <author>Torbjörn Kalin</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -186,7 +186,7 @@ void Process(int mode);
       <date>2012-01-17 07:01:37</date>
       <content>#3 (Service Locators) might be good for web. There you setup your IoC for every request and can (theoretically) predict the whole flow.&lt;br /&gt;&lt;br /&gt;In desktop applications you typically setup the IoC at app start which means you need something in the places that correspond to requests (button clicks). Here I break your rule #3.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4d19ed7b-2693-4895-bd5b-3d30c66c91a9">
+    <comment isAdmin="false" isApproved="true" id="6c7de86e-2bb7-45ea-9520-dfb6dc77f583">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -195,7 +195,7 @@ void Process(int mode);
       <date>2012-01-17 09:35:29</date>
       <content>@Torbjörn, there is no requirement that you need access to the service locator to achieve that. There are plenty of approaches allowing your button click handlers to action a command without them needing root level access to everything in the container.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9c8444ff-9817-47f4-9041-f40b9442d6f5">
+    <comment isAdmin="false" isApproved="true" id="96a55279-7678-4388-a6a4-b74395d9581d">
       <author>Torbjörn Kalin</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -204,7 +204,7 @@ void Process(int mode);
       <date>2012-01-17 12:24:20</date>
       <content>@Mark H: The button click handler shouldn&amp;#39;t have direct access to the container (rule #2). But it needs access to something that can explicitly resolve a type (where that type must implement a certain interface). I call that something a Service Locator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="09da0477-180c-4584-bc98-40c6d0b78cb6">
+    <comment isAdmin="false" isApproved="true" id="024597d2-4151-4683-86a9-27e03d4a2cf8">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -213,7 +213,7 @@ void Process(int mode);
       <date>2012-01-17 12:27:47</date>
       <content>@Torbjörn why can&amp;#39;t you inject the necessary interface into the the form that contains the button?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="00f52a04-bc54-4222-8c43-6181457ce590">
+    <comment isAdmin="false" isApproved="true" id="1c292d73-cb37-4a33-aee9-4d560bdd7d9c">
       <author>Torbjörn Kalin</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -222,7 +222,7 @@ void Process(int mode);
       <date>2012-01-17 15:23:59</date>
       <content>@Mark H: We might be talking past each other here...&lt;br /&gt;&lt;br /&gt;When I click the button I would like to create a new instance of a view. I want the instantiation to happen when I click the button, not at application start up.&lt;br /&gt;&lt;br /&gt;That is, somewhere in the button click handler I need to call resolve. I don&amp;#39;t want the button to have direct access to the container, but want to restrict what it can resolved. The class that handles this restriction (and that has access to the container) is what I call Service Locator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ea3576a8-09fa-449a-873a-d49f22fc9512">
+    <comment isAdmin="false" isApproved="true" id="3c36dc54-1738-4bcd-8a88-00ea16f1c45f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -231,7 +231,7 @@ void Process(int mode);
       <date>2012-01-17 20:12:43</date>
       <content>@Torbjörn, OK I see. I wouldn&amp;#39;t call that a ServiceLocator. A service locator has a Resolve() or Resolve(Type t) method, allowing you to get any type from the container. Sounds like you have a simple Func that returns a given type.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c3a4c798-9036-498f-94fe-bf8297b73a4d">
+    <comment isAdmin="false" isApproved="true" id="7f42d4b1-ed24-417b-837c-32e6d25fcdc5">
       <author>Torbjörn Kalin</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -240,7 +240,7 @@ void Process(int mode);
       <date>2012-01-18 08:01:27</date>
       <content>@Mark H: So your Service Locator is a read-only abstraction of the container (which isn&amp;#39;t really a Service Locator either :) Now I agree with your rule #3!&lt;br /&gt;&lt;br /&gt;But what is your opinion about my example (where what I called Service Locator is actually more of a View Factory)? Is it ok to have such class?&lt;br /&gt;&lt;br /&gt;The reason I ask is that I&amp;#39;ve heard some people argue that it&amp;#39;s not ok...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dfb9d5fc-748e-482c-89f4-b5c3df72e9bf">
+    <comment isAdmin="false" isApproved="true" id="d7dac392-480e-4e8f-a368-ad18bc52c040">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -249,7 +249,7 @@ void Process(int mode);
       <date>2012-01-18 11:07:55</date>
       <content>@Torbjörn, one of the main goals of dependency injection is loose coupling. Does your view factory end up tightly coupling you to a specific view implementation? Can you change what view you actually get from the outside? Can you unit test without the real view getting created? Assuming those issues are dealt with in some way, I don&amp;#39;t see a problem with injecting a view factory.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1b791de7-6a10-451e-9bdc-ec4591cd76dc">
+    <comment isAdmin="false" isApproved="true" id="794db825-757f-423a-a424-434c1987d5d0">
       <author>Torbjörn Kalin</author>
       <email>noreply@blogger.com</email>
       <website />

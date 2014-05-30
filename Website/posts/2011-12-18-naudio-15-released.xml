@@ -10,7 +10,7 @@
     <category>NAudio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="24b18304-d957-43de-b5ed-d8930bcc8172">
+    <comment isAdmin="false" isApproved="true" id="c2b9b09a-245f-4913-ae08-ae800c1275a8">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -19,7 +19,7 @@
       <date>2011-12-19 08:52:06</date>
       <content>Great! Thank you and please keep up your good work.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d1ed9e65-c250-4deb-b04a-223a087e949e">
+    <comment isAdmin="false" isApproved="true" id="93d1d90f-de02-48d8-a536-cdc35c08efef">
       <author>Mdwf</author>
       <email>noreply@blogger.com</email>
       <website>http://sharpmod.codeplex.com</website>
@@ -28,7 +28,7 @@
       <date>2011-12-20 14:55:41</date>
       <content>Great job again ! I&amp;#39;ll make a new version of SharpMod with this release to make a full AnyCPU release too :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f62c0b26-4ad1-4041-b8d2-9fdddd2e842c">
+    <comment isAdmin="false" isApproved="true" id="24669c47-fa02-4e9d-8997-c0fcb901f7cd">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -37,7 +37,7 @@
       <date>2011-12-20 15:11:25</date>
       <content>@mdwf awesome, email me when you&amp;#39;ve done it</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b22e0914-8f59-48c0-9916-0f451ae06cd3">
+    <comment isAdmin="false" isApproved="true" id="980f94bf-2691-4492-8c96-693897bc9933">
       <author>David</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -46,7 +46,7 @@
       <date>2011-12-23 17:42:17</date>
       <content>Great work Mark!&lt;br /&gt;Does NAudio currently have capabilities to provide audio onset detection (beat) or conversion of audio to midi?&lt;br /&gt;thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="003e87de-7b44-4f54-82cf-57becd58c0a3">
+    <comment isAdmin="false" isApproved="true" id="977c8dc1-5cb2-4989-8964-d5ffbb8d69d4">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -55,7 +55,7 @@
       <date>2011-12-25 00:40:16</date>
       <content>Does the NAudio can play multiple mp3 file simultaneously to multiple channels of a sound card</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="78932ca4-8569-45eb-8cc2-cd76905a9093">
+    <comment isAdmin="false" isApproved="true" id="f820aaa0-e36d-426a-aae4-6242a2730d8a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -64,7 +64,7 @@
       <date>2011-12-27 15:27:53</date>
       <content>@David - I&amp;#39;m afraid not&lt;br /&gt;@Anonymous - NAudio can open as many channels as the sound card driver allows. You will need to write your own multi-channel waveprovider though.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="48afb863-63b2-471a-aed8-c1e1b21899c9">
+    <comment isAdmin="false" isApproved="true" id="13c7e169-0965-4f97-96ec-4492037a5c5a">
       <author>suntzu</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04728602132982395173</website>
@@ -73,7 +73,7 @@
       <date>2012-01-18 05:36:08</date>
       <content>+1 for DotNet 2.0 compatibilty. Please keep the compatibilty with DotNet 2.0.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e516395e-209d-4ce5-8cbe-e1463ca8e3a2">
+    <comment isAdmin="false" isApproved="true" id="595c2f1e-6a59-4621-813e-a2d3b6627d56">
       <author>suntzu</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04728602132982395173</website>
@@ -82,7 +82,7 @@
       <date>2012-01-18 05:38:24</date>
       <content>NAudio library life is a life saver for our product.&lt;br /&gt;+1 for keeping compatibility with DotNet 2.0.&lt;br /&gt;Please retain NAudio compatibility with DotNet 2.0</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="60c879d5-8a77-4afa-8fdd-f032b5cb6100">
+    <comment isAdmin="false" isApproved="true" id="a0406e79-b05c-4916-869a-7056c7bbb7fa">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -91,7 +91,7 @@
       <date>2012-09-13 05:43:04</date>
       <content>hi guys.,i have tried using Naudio 1.5 in WinRT(.NetFrameWork 4.5)when i ran my application at very first time i got the output..thereafter i couldn&amp;#39;t get output..&lt;br /&gt; Getting the following error&lt;br /&gt;&lt;br /&gt;Error 1 Cannot resolve Assembly or Windows Metadata file &amp;#39;System.Windows.Forms.dll&amp;#39; C:\Users\umapathi.a\Documents\Visual Studio 2012\Projects\SampleMp3\SampleMp3\SampleMp3.csproj SampleMp3&lt;br /&gt;Error 2 Type universe cannot resolve assembly: System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089. SampleMp3&lt;br /&gt;&lt;br /&gt;Anyhelp would be appreciated..</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="570f4c7e-8e70-427d-8b51-46658841873b">
+    <comment isAdmin="false" isApproved="true" id="bf4ee53c-4e61-4b80-90f4-d8e8b11ca4ef">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

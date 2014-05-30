@@ -147,7 +147,7 @@ writer.Dispose();
     <category>C#</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="677cf140-4f77-4e36-bfc0-ed9574fa9cd2">
+    <comment isAdmin="false" isApproved="true" id="3d17f071-6bf5-4736-858a-283102f665b1">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -156,7 +156,7 @@ writer.Dispose();
       <date>2011-11-19 14:26:59</date>
       <content>Nice blog.&lt;br /&gt;&lt;br /&gt;I&amp;#39;m wondering - is there a special reason why in the readonly example you declared the fields as private and created public-get properties? wouldn&amp;#39;t it be easier to declare public readonly fields instead? or is there a reason why it is a good idea to do that...?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="340beb04-6e09-4b12-a5e4-eabe5ce8ed5d">
+    <comment isAdmin="false" isApproved="true" id="7854d618-f8d4-4bbe-89bc-13238041efe5">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

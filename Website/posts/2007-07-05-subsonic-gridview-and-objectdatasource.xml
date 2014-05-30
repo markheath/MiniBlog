@@ -24,7 +24,7 @@ SelectMethod="FetchAll" /&amp;gt;&lt;/pre&gt;
     <category>SubSonic</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="cc866063-aeeb-465f-a043-db4fa4dbcae8">
+    <comment isAdmin="false" isApproved="true" id="eb42b156-974a-4ed0-ac48-9f82e61abce7">
       <author>Robert</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10956634230991860058</website>
@@ -33,7 +33,7 @@ SelectMethod="FetchAll" /&amp;gt;&lt;/pre&gt;
       <date>2007-12-30 14:05:00</date>
       <content>Hi Mark, Xmas is traditionally my learning time, I got started with asp.net thanks to VWD Express in Xmas 2005 and this year I'm desperate to find a way thru the DAL/BLL, ORM, Table adapter, classes maze and just downloaded SubSonic. I have my gridview paging, editing and deleting thanks to SubSonic controller classes and objectdatasource but not sorting and wondered if you found a solution to sorting with SubSonic? The other thing I'm working on is simple joins as I use lookup tables with int key and text lookup value and like to show the text value in a label control in item template but show a dropdown list in edit template so I need to join my main table to lookup tables. How do you do that in SubSonic?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1f3e7f20-9de9-4944-a899-ffea6e35a1fc">
+    <comment isAdmin="false" isApproved="true" id="ad1ea9b6-f2ff-4f9f-bd31-abc630290253">
       <author>Matt</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00476442760334476087</website>
@@ -42,7 +42,7 @@ SelectMethod="FetchAll" /&amp;gt;&lt;/pre&gt;
       <date>2008-03-10 20:56:00</date>
       <content>Could you explain your code a little more, specifically TypeName="CommentariesDB.CommentaryController"&lt;BR/&gt;SubSonic uses the connectionstring to connect to the DB so what does the syntax of TypeName point to? I hope I haven't been to vague.&lt;BR/&gt;Thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="38680d74-bfe9-4f23-a8a0-812f23cb2b1c">
+    <comment isAdmin="false" isApproved="true" id="49aa7b81-2dc6-4491-a54e-055150fc141b">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -51,7 +51,7 @@ SelectMethod="FetchAll" /&amp;gt;&lt;/pre&gt;
       <date>2008-03-11 07:15:00</date>
       <content>Hi Matt,&lt;BR/&gt;CommentariesDB.CommentaryController is one of the automatically generated objects that SubSonic creates for you. CommenantariesDB is the namespace and CommentaryController is the type name. It has a FetchAll member function that the object data source can use to get all its data.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9f82de32-e484-49c1-ad72-afd90f9b9ce6">
+    <comment isAdmin="false" isApproved="true" id="84c8f476-4927-4020-adeb-82f7549524db">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

@@ -124,7 +124,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
     <category>Data Binding</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="4238c977-f8f5-47bf-8b04-db0369c5d62c">
+    <comment isAdmin="false" isApproved="true" id="3578ce6d-1c6f-4ebc-a55c-1caaf5c7d649">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -133,7 +133,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-16 08:35:46</date>
       <content>Agreed, knockout is great. Add Durandal to the mix and you have a great foundation for frontend apps.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d1e47892-0fb1-4395-b42a-977d00a24bc4">
+    <comment isAdmin="false" isApproved="true" id="1210238c-c240-4474-844f-4d121b81a5de">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -142,7 +142,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-16 08:41:08</date>
       <content>And for wpf/wp development you could also try out another project of Durandal author (clever guy) - Caliburn.Micro - it&amp;#39;s make xaml more readable.&lt;br /&gt;&lt;br /&gt;cheers,&lt;br /&gt;nilphilus</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c783be68-6fbb-4f8f-919d-cb296d33ef46">
+    <comment isAdmin="false" isApproved="true" id="b80922e0-b162-403f-b5f2-9fcb8dab1636">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -151,7 +151,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-16 09:19:24</date>
       <content>thanks nilphilus. I&amp;#39;ll add Durandal to my (long) list of javascript frameworks to investigate. I haven&amp;#39;t tried Caliburn yet - I&amp;#39;ve tended to use MVVMLight or roll my own for WPF apps.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="12bb5768-5356-41c9-a486-8b3a21a68573">
+    <comment isAdmin="false" isApproved="true" id="af9e07b0-0798-4584-8fc9-0400124e977b">
       <author>Slodge</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17827379022934338119</website>
@@ -160,7 +160,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-19 07:48:28</date>
       <content>Well said. XAML DataBinding is fabulous, but it was invented 8 years and hasn&amp;#39;t evolved since. That simpler binding expression format is exactly what we&amp;#39;ve tried to do in MvvmCross - we&amp;#39;ve got &lt;a href="http://bit.ly/ZXOXFh" rel="nofollow"&gt;really clear simple binding expressions&lt;/a&gt; for Android and iOS ... and we&amp;#39;re toying with the idea of porting these back to Xaml as well :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4da9e215-4a88-4b98-9b54-80db0eba530c">
+    <comment isAdmin="false" isApproved="true" id="e167f87b-0be5-4f5d-bda3-87e7b456b45e">
       <author>Hamilton Sellers</author>
       <email>noreply@blogger.com</email>
       <website>http://amoskramer.wordpress.com/2013/05/16/net-developers-must-be-proficient-with-object-oriented-programing-and-the-net-platform/</website>
@@ -169,7 +169,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-21 07:25:39</date>
       <content>The main benefits is that you can divided the overall look of your program away from the rule, By getting the rule by use of control bindings and activities it allows the business reasoning to be absolutely individual to the GUI.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2e7c1e68-4870-4a15-b371-9a74d306d386">
+    <comment isAdmin="false" isApproved="true" id="4ec68b1a-b095-49d8-a69e-20d3857def03">
       <author>blorq</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16308269163452150701</website>
@@ -178,7 +178,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-05-30 18:55:44</date>
       <content>&amp;quot;But you can&amp;#39;t call into a method on your ViewModel, or write expressions like this&amp;quot;&lt;br /&gt;&lt;br /&gt;GOOD!  You should not be doing that in random places in the view!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="898aeb66-b7c5-4aad-8d05-70079c0ef25d">
+    <comment isAdmin="false" isApproved="true" id="3c6c8a4d-bb1c-403a-94f8-2171f90370aa">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -187,7 +187,7 @@ Finally, the killer feature. If only we could add custom binding expressions to 
       <date>2013-06-03 17:33:54</date>
       <content>@blorq - not sure I agree. Yes if your binding expressions are complex. But if you look at my very simple knockout example, you&amp;#39;ll see how this saves creating trivial helper functions on the viewmodel. Not much different from using a &amp;quot;converter&amp;quot; with XAML in effect, and certainly much more readable.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="04160afa-ba2d-4c75-9720-3bf3b39341d7">
+    <comment isAdmin="false" isApproved="true" id="72369fb5-c901-4b50-81c2-c075aa282d19">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

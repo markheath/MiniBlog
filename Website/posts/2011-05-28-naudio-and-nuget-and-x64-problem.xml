@@ -11,7 +11,7 @@
     <category>NuGet</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="83799062-cbf2-4032-b46d-157b10aeafa9">
+    <comment isAdmin="false" isApproved="true" id="11908833-9188-4c8a-ab08-8c76ea83453d">
       <author>Ramon</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00751856858346108012</website>
@@ -20,7 +20,7 @@
       <date>2011-05-30 08:28:04</date>
       <content>Just use symentic versioning for your package: http://semver.org/&lt;br /&gt;&lt;br /&gt;In short, first digit means breaking api change, second means non breaking api change and third means bug fixes. This third revision is only useful if you also work with branches. If not then just put the code repository trunk version there</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8b266612-8c9f-4631-b211-32cadbae63ca">
+    <comment isAdmin="false" isApproved="true" id="8b9bdfa7-bc5b-4ab6-9aa2-97af681d178f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -29,7 +29,7 @@
       <date>2011-05-30 08:37:18</date>
       <content>@Ramon, that&amp;#39;s a useful article, thanks. My minor releases do typically have a few breaking API changes though so I won&amp;#39;t be following it exactly.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1d253ddf-93f2-4b27-ad21-9eb707563e5f">
+    <comment isAdmin="false" isApproved="true" id="87663d00-09c0-4173-94e2-23c603d39f2c">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -38,7 +38,7 @@
       <date>2011-06-16 16:35:43</date>
       <content>This comment has been removed by a blog administrator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="18facd30-0779-4e78-b842-4741f1d4e582">
+    <comment isAdmin="false" isApproved="true" id="b7416d1b-9cea-4d96-b6c8-784b1cbd3621">
       <author>sporn</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09825667100727442634</website>
@@ -47,7 +47,7 @@
       <date>2011-08-12 10:55:55</date>
       <content>Hi Mark, I use your excellent  library on my open source project ispy - &lt;br /&gt;&lt;br /&gt;https://sourceforge.net/projects/ispysoftware/&lt;br /&gt;&lt;br /&gt;any chance of adding a link to my website from your project page?&lt;br /&gt;&lt;br /&gt;http://www.ispyconnect.com&lt;br /&gt;&lt;br /&gt;Thanks and great work!&lt;br /&gt;&lt;br /&gt;I went to Southampton Uni at the same time as you by the way - studied Aero/Astro Eng.&lt;br /&gt;&lt;br /&gt;Sean</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6b57364c-e456-460c-881b-ce32b47a52d0">
+    <comment isAdmin="false" isApproved="true" id="303271a1-d058-45d3-8303-b2ebf630349a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -56,7 +56,7 @@
       <date>2011-08-12 11:13:00</date>
       <content>hi Sean, the link is already up on the NAudio home page.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="272a805c-ca18-467c-9b6e-7ca2f82ca68b">
+    <comment isAdmin="false" isApproved="true" id="57476236-e93c-43b5-8892-9c2ef5a1b8e9">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -65,7 +65,7 @@
       <date>2013-06-04 14:30:58</date>
       <content>Have you had success with the x86 to x64 conversion?&lt;br /&gt;Thanks and good work!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4a66aa6a-a77d-496b-8e23-f45d4f1a334b">
+    <comment isAdmin="false" isApproved="true" id="7fdf718b-20c5-4894-ae0a-09ef24f36459">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -74,7 +74,7 @@
       <date>2013-06-04 14:32:56</date>
       <content>Hello,&lt;br /&gt;Have you been successful with the conversion from x86 to x64?&lt;br /&gt;Great work BTW!&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="24cfaedf-9499-4ecd-8342-1a00222bed71">
+    <comment isAdmin="false" isApproved="true" id="d767e79d-9a5e-4deb-b76b-ebdfc74f71d1">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -83,7 +83,7 @@
       <date>2013-06-04 14:36:23</date>
       <content>yes, latest NAudio should work just fine in x64. However, there are reasons why you might want to run as a 32 bit process, such as if you want to make use of 32 bit ACM codecs.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7f6b0df1-c33a-4974-8c5c-729b33d40add">
+    <comment isAdmin="false" isApproved="true" id="5196d8a2-f681-4873-82c6-d9d3280d8ce1">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -92,7 +92,7 @@
       <date>2013-06-04 18:57:11</date>
       <content>You are correct! I got the NAudioDemo demo, ran it in 64 bit mode.  All I did was change the FW to 4.5 and the platform target:anyCPU, and it ran flawlessly.&lt;br /&gt;&lt;br /&gt;I tried running the WPF Demo, but there is no recorder on it.  Cool drum sample though.&lt;br /&gt;&lt;br /&gt;You have another WPF sample on https://voicerecorder.codeplex.com/&lt;br /&gt;&lt;br /&gt;I will try to get this one  working on 64 bit.&lt;br /&gt;&lt;br /&gt;Thanks for your help!  :) </content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="31c2da9d-3ddd-4a62-9478-eb36b48a7d1e">
+    <comment isAdmin="false" isApproved="true" id="ce5d5f62-f503-4ede-a07c-7e58ed19b529">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -101,7 +101,7 @@
       <date>2013-06-05 16:10:14</date>
       <content>I am getting all sorts of issues when trying to run the .net voicerecorder WPF 64 bit.&lt;br /&gt;Do you have a working demo of the voice recorder running on 64 bit?&lt;br /&gt;Thanks!&lt;br /&gt;&lt;br /&gt;BTW when is Microsoft going to purchase your NAudio work?  This is terrific what you have here!!!&lt;br /&gt;&lt;br /&gt;MICROSOFT DID YOU HEARD THIS!!!!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="54719c0b-ea82-4eef-ae39-527cf9d51418">
+    <comment isAdmin="false" isApproved="true" id="c40e295f-b500-4da2-b765-ba18bbdb8363">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -110,7 +110,7 @@
       <date>2013-06-05 16:12:53</date>
       <content>for a 64 bit voice recorder, you&amp;#39;d need to upgrade it to use a newer version of NAudio.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7d40544e-e86c-4b30-8ee4-cbdd58d764da">
+    <comment isAdmin="false" isApproved="true" id="ad0a92be-ce8c-41f1-a6d5-10ccfa8f8e7a">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -119,7 +119,7 @@
       <date>2013-06-05 20:41:10</date>
       <content>I replaced the NAudio.dll, like you suggested and I got a number of errors.&lt;br /&gt;I am a bit lost, I can&amp;#39;t figure out how to resolve these errors.  Nothing I do works.&lt;br /&gt;I picked up the sample code from the codeplex -.NET AudioRecorder project. &lt;br /&gt;I got the latest NAudio.dll and replaced in the dependencies folder: &lt;br /&gt;current running version 1.7.0.11&lt;br /&gt;previous version 1.3.15.0.&lt;br /&gt;&lt;br /&gt;Thanks :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b332b6e6-8def-49a3-a3a4-dcd2418bd911">
+    <comment isAdmin="false" isApproved="true" id="1d4b6f33-4566-4c6a-b16d-e8a4b4f35cb5">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -128,7 +128,7 @@
       <date>2013-06-06 09:43:12</date>
       <content>well you&amp;#39;ll have to fix the errors one by one. Without seeing the error messages I can&amp;#39;t help you.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="406e906f-749b-40d0-b225-a06628ced3d1">
+    <comment isAdmin="false" isApproved="true" id="36abaead-e27d-498e-b041-bae804e672cc">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>
@@ -137,7 +137,7 @@
       <date>2013-06-06 16:23:51</date>
       <content>RE: .NET AudioRecorder CodePlex – 64 bit Here are the errors I get:&lt;br /&gt;1- &lt;br /&gt;***Error 4 Metadata file &amp;#39;C:\NAudio\NAudio WPF voicerecorder_f652f98eb1ff\VoiceRecorder.Audio\bin\Debug\VoiceRecorder.Audio.dll&amp;#39; could not be found C:\NAudio\NAudio WPF voicerecorder_f652f98eb1ff\VoiceRecorder.Core\CSC VoiceRecorder.Core&lt;br /&gt;&lt;br /&gt;2-RecorderView.XAML&lt;br /&gt; &lt;br /&gt;**Error 5 The tag &amp;#39;PolygonWaveFormControl&amp;#39; does not exist in XML namespace &amp;#39;clr-namespace:VoiceRecorder.Core;assembly=VoiceRecorder.Core&amp;#39;. Line 45 Position 10. C:\NAudio\NAudio WPF voicerecorder_f652f98eb1ff\VoiceRecorder\RecorderView.xaml &lt;br /&gt;3-SaveView.XAML&lt;br /&gt;        &lt;br /&gt;Error 6 The tag &amp;#39;WaveFileTrimmerControl&amp;#39; does not exist in XML namespace &amp;#39;clr-namespace:VoiceRecorder.Core;assembly=VoiceRecorder.Core&amp;#39;. Line 9 Position 10. C:\NAuduio\NAudio WPF voicerecorder_f652f98eb1ff\VoiceRecorder\SaveView.xaml</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7a19fbc6-f292-4c1f-94bc-2bf6ec9476ed">
+    <comment isAdmin="false" isApproved="true" id="4775bfbb-f199-4c3e-8f18-523896220333">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -146,7 +146,7 @@
       <date>2013-06-07 10:54:42</date>
       <content>those are strange errors, and not really related to the NAudio dll changing. Could you build successfully before swapping out NAudio? </content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="25f5c4cd-a85a-4743-b8ab-aefc0388602e">
+    <comment isAdmin="false" isApproved="true" id="5ff51705-c059-4d8e-8762-11666e6e5c4f">
       <author>Sciclops</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09430296687174406681</website>

@@ -292,7 +292,7 @@ bool ProgressCallback(BinarySearchResult result, int count)
     <category>Refactoring</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="6c5ebbaf-cd7e-4525-89c8-bd1064a2fedb">
+    <comment isAdmin="false" isApproved="true" id="dc5b1926-7536-4ffc-bc57-fa7e8784c98d">
       <author>Arian</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/05229597156082993185</website>
@@ -301,7 +301,7 @@ bool ProgressCallback(BinarySearchResult result, int count)
       <date>2008-10-06 18:12:00</date>
       <content>This is some good looking code, but I'm wondering why you didn't go with the BackgroundWorker class?  This seems to encompass what you need, and even supports progress notifications.  Nice work either way though!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="695cd43a-c201-493e-b489-12efb8e38485">
+    <comment isAdmin="false" isApproved="true" id="5fb9587c-52b4-4154-be1a-ababee6dc176">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -310,7 +310,7 @@ bool ProgressCallback(BinarySearchResult result, int count)
       <date>2008-10-06 18:21:00</date>
       <content>Hi arian, I guess I dismissed the BackgroundWorker quite quickly because it seems to encourage putting all the code right there in the code behind of the GUI. I want to separate out the concerns - the GUI, the threading code, and the actual work to be done. But I did just have a fresh look in MSDN at the BackgroundWorker code and you are right, it is quite full featured. I guess it might give the separation I want if I can use it as a base class.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d26a9983-f8f3-4c1f-899f-9085aa77ee52">
+    <comment isAdmin="false" isApproved="true" id="22a573e3-ec95-4bd6-b6c4-0718498bd0a5">
       <author>Arian</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/05229597156082993185</website>

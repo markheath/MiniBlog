@@ -50,7 +50,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  Width="400" Height="200"
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="74678d81-6593-4ab8-9800-78dd4cb166df">
+    <comment isAdmin="false" isApproved="true" id="b7ed360e-a9c6-4768-b2bd-d22e32351e2a">
       <author>Seema Ramchandani [msft]</author>
       <email>noreply@blogger.com</email>
       <website>http://blogs.msdn.com/seema</website>
@@ -59,7 +59,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  Width="400" Height="200"
       <date>2007-07-12 00:59:00</date>
       <content>Hi Mark,&lt;BR/&gt;thank you for reporting, I filed this bug.&lt;BR/&gt;-Seema</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0810602b-88aa-48da-a98e-03dffbe4abb3">
+    <comment isAdmin="false" isApproved="true" id="78b2d38f-6a0c-4820-be03-5ece456aeb4c">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -68,7 +68,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  Width="400" Height="200"
       <date>2007-07-12 12:16:00</date>
       <content>Thanks for posting about this rendering difference.  I've raised this issue to the WPF 2d and Silverlight teams...&lt;BR/&gt;&lt;BR/&gt;Thanks, &lt;BR/&gt;Rob Relyea, Program Manager, WPF Team&lt;BR/&gt;&lt;A HREF="http://robrelyea.com" REL="nofollow"&gt;http://robrelyea.com&lt;/A&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="85bb27c1-6e02-4a07-a48c-99ce9be4bb48">
+    <comment isAdmin="false" isApproved="true" id="3a27f12a-3ec6-4aa0-9340-6c297128a9c9">
       <author>&lt;a href="http://courses.cvcc.vccs.edu/ENG112_GROSS/_Chat_Room/000008fd.htm"&gt;Anonimous&lt;/a&gt;</author>
       <email>noreply@blogger.com</email>
       <website />

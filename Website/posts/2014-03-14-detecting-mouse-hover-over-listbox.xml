@@ -77,7 +77,7 @@
     <category>WPF</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="2bf6c5e9-e630-41b3-93e8-0a5576b7e9f2">
+    <comment isAdmin="false" isApproved="true" id="fea66f2c-16be-4301-9886-403ede3cef12">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -86,7 +86,7 @@
       <date>2014-03-21 10:04:50</date>
       <content>Hi,&lt;br /&gt;I think that You can also use triggers changing EventName.&lt;br /&gt;&lt;br /&gt;In Silverlight I use in ListBox.ItemTemplate.DataTemplate:&lt;br /&gt;&lt;br /&gt;                                &lt;br /&gt;                                                                            &lt;br /&gt;                                        &lt;br /&gt;                                    &lt;br /&gt;                                &lt;br /&gt;&lt;br /&gt;where &lt;br /&gt;xmlns:i=&amp;quot;http://schemas.microsoft.com/expression/2010/interactivity&amp;quot;&lt;br /&gt;&lt;br /&gt;I think that caliburn micro is also usful in doing this in easy way.&lt;br /&gt;&lt;br /&gt;Regards,&lt;br /&gt;MW</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6664471a-4635-422f-9b27-c5550c76793a">
+    <comment isAdmin="false" isApproved="true" id="e6df28a1-d5f4-4f80-a09e-92764efd3d91">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

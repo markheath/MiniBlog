@@ -212,7 +212,7 @@
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="d8fcdcfc-8d80-4489-b57f-483335f50e0d">
+    <comment isAdmin="false" isApproved="true" id="e97c9926-6d95-477a-ad53-9507fbcefe83">
       <author>Richard Binnington</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -221,7 +221,7 @@
       <date>2008-06-24 21:15:00</date>
       <content>Thank you for these tutorials.  I really appreciate it!  I am looking forward to your next post!&lt;BR/&gt;&lt;BR/&gt;Richard</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="817636ae-42bb-40f5-9c14-091bded5bdd8">
+    <comment isAdmin="false" isApproved="true" id="744084e9-c2cd-4a15-9c4b-45fd3d5284b7">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -230,7 +230,7 @@
       <date>2008-07-11 00:31:00</date>
       <content>This is a great resource. Is the 3rd article ready yet? Great job and THANK YOU!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="223c4e62-e7a0-4c66-9da5-468c9aefde5d">
+    <comment isAdmin="false" isApproved="true" id="08821b8a-7237-483a-80e9-7f2ea7c9bb1c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -239,7 +239,7 @@
       <date>2008-07-11 11:31:00</date>
       <content>Sorry for the delay. I have been a little busy recently, and changes to the VisualStateManager meant that the third part needed more rework than I expected. I've finished updating the code now, so the post should be able to follow some time this coming week.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="50b8349c-bf88-4e03-ba73-194dfe0680a9">
+    <comment isAdmin="false" isApproved="true" id="1c075377-9c66-42b0-9972-56678c596b2d">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -248,7 +248,7 @@
       <date>2008-07-22 17:19:00</date>
       <content>thanks a lot for your post.i'm a begenner, i tried some parts and i appreciate them. But for the last one, i meet a problem. Could you tell me where i have to put the HorizontalIncrementTemplate?&lt;BR/&gt;thanks in advance and sorry for my bad english</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="081bd080-eced-4b27-b3d4-18da8debb124">
+    <comment isAdmin="false" isApproved="true" id="4e8a9519-6263-4ffb-a02b-0b7f68f4a804">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -257,7 +257,7 @@
       <date>2008-07-23 09:52:00</date>
       <content>if you look at Part 3 in this series, you can download a sample project and see where to put all the pieces</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c44c1db1-bdc9-4834-9592-5a61fc354a70">
+    <comment isAdmin="false" isApproved="true" id="985576e4-cb77-4e45-907d-d786bdc8d061">
       <author>Indy</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/05886067426944334064</website>
@@ -266,7 +266,7 @@
       <date>2008-08-09 12:10:00</date>
       <content>Mark,&lt;BR/&gt;&lt;BR/&gt;Your articles are perhaps the only resource for people trying to skin the ScrollViewer! Really, it is very nice of you to take the time and share with the rest of the world your knowledge.&lt;BR/&gt;&lt;BR/&gt;I have a question about the three parts you have written. Is it possible to layout the listbox such that the width of the listbox equals (or, it is a bit more than) the width the widest Listboxitem? I am working on skinning the listbox in WPF and fighting an issue where the width of the listbox varies with the width of the listboxitems as I scroll down, after the first scroll, the listbox width is fixed. I have a post in the WPF MSDN Forums at the moment - http://forums.msdn.microsoft.com/en-US/wpf/thread/9ac9da13-cb53-47cd-acbe-226b8a8064ba/&lt;BR/&gt;&lt;BR/&gt;Cheers,&lt;BR/&gt;indyfromoz</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4f035561-f686-4b8c-bc4f-b1fcf2fe84a2">
+    <comment isAdmin="false" isApproved="true" id="393bd89b-17ec-4a2e-bf80-b804fb6200f8">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -275,7 +275,7 @@
       <date>2008-08-10 14:58:00</date>
       <content>Hi indyfromoz,&lt;BR/&gt;Its not something I have tried. I am sure that there is a way you could do this. It might be worth asking around on the silverlight forums for ideas.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="08158ad0-d2bc-4b69-b379-2fc031177c67">
+    <comment isAdmin="false" isApproved="true" id="93f4789a-7e71-4600-92e8-f1fa43a85a84">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -284,7 +284,7 @@
       <date>2009-03-16 11:51:00</date>
       <content>I'm a little bit confused about this part "(n.b. To see the changes we have also had to modify our ScrollViewer style so that the two scrollbars it creates use the new ScrollBar style)". How we modify the scrollviewer style with the style of the scrollbar???</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4ed770c8-a930-4ca7-a3c7-91b9481352f7">
+    <comment isAdmin="false" isApproved="true" id="8526904b-cd6f-4372-88ed-241f88c1ed6f">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

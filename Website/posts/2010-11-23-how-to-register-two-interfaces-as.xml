@@ -34,7 +34,7 @@ Assert.AreSame(container.Resolve&amp;lt;IFoo&amp;gt;(), container.Resolve&amp;lt
     <category>IoC</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="4cab942d-1a4e-4809-aeb0-f218cc651f16">
+    <comment isAdmin="false" isApproved="true" id="b9fc77e1-7b22-4f17-b028-b629d9aee742">
       <author>Herit Shah</author>
       <email>noreply@blogger.com</email>
       <website>http://www.herit.co</website>

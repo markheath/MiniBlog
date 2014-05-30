@@ -34,7 +34,7 @@ using (VistaDBConnection connection = new VistaDBConnection(connectionString))
     <category>VistaDB</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="6a0750be-7503-4d52-b638-03609c7a8f88">
+    <comment isAdmin="false" isApproved="true" id="c9b25a66-b028-48d8-95ec-29fb252d0b09">
       <author>skii779</author>
       <email>noreply@blogger.com</email>
       <website>http://openid.aol.com/skii779</website>

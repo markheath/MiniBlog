@@ -59,7 +59,7 @@
     <category>Data Binding</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="29fd8ec6-1d33-45ce-998a-2d7e970e2dda">
+    <comment isAdmin="false" isApproved="true" id="257ee801-a628-4e41-a081-20d07a2eaa52">
       <author>blorq</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16308269163452150701</website>
@@ -68,7 +68,7 @@
       <date>2010-11-11 08:02:47</date>
       <content>Be careful using that inside ItemsControls as that will be a memory leak.  The += on the KeyDown event is never cleaned up.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7811b1c4-bf8d-42e3-981d-1e6fc36ea32a">
+    <comment isAdmin="false" isApproved="true" id="449c1e53-efee-43f6-ad5f-14eda636e5b8">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -77,7 +77,7 @@
       <date>2010-11-11 08:09:45</date>
       <content>thanks blorq. Would be interested if you have an idea for what would be a safer way.&lt;br /&gt;&lt;br /&gt;I think I need to update it with unsubscription because I got a strange case recently where OnEnterKeyCommandChanged seemed to get called twice on the same object, meaning I double-subscribed to the key-down event.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="fc5b8553-04fd-4f9a-ae9a-3fdf368a5aa5">
+    <comment isAdmin="false" isApproved="true" id="8851b4e3-a117-4469-9b4f-243d3eeec377">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

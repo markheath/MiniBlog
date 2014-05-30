@@ -70,7 +70,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="df1e16a3-7498-472e-b263-e4ac1f859548">
+    <comment isAdmin="false" isApproved="true" id="643e10f5-2ca0-4a16-8c4d-9a990fdebad8">
       <author>Scott</author>
       <email>noreply@blogger.com</email>
       <website>http://www.hanselman.com/blog/</website>
@@ -79,7 +79,7 @@
       <date>2008-11-01 06:12:00</date>
       <content>Fantastic! I'll get the CodePlex code up this week. I love what you've done with it.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ab7659f9-d753-4f15-83de-781f968abc87">
+    <comment isAdmin="false" isApproved="true" id="6964029b-e8ea-4feb-9525-ae8f0c99a334">
       <author>Sergey</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -88,7 +88,7 @@
       <date>2009-11-23 11:57:53</date>
       <content>Can you post full source in archive. I&amp;#39;m beginner... trying to connect naudio and XNA.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="36c2a74d-7205-44b1-a0bc-70f82f74827d">
+    <comment isAdmin="false" isApproved="true" id="5dafcf20-9aa6-4a3d-8cfc-29c6f0fad51a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -97,7 +97,7 @@
       <date>2009-11-23 15:48:01</date>
       <content>Hi Sergy, I&amp;#39;m afraid there is no more code than that (I no longer have the source available). Get the latest BabySmash code from CodePlex, and you should be able to add my code quite easily.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="395293e0-c8c0-4c10-a2c5-050bf690adbd">
+    <comment isAdmin="false" isApproved="true" id="972ed0a9-0f6e-411e-ac85-bfb838cdb285">
       <author>Sergey</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -106,7 +106,7 @@
       <date>2009-11-23 16:06:05</date>
       <content>Thx, buh I have a questions not in BabySmash.&lt;br /&gt;In XNA no GUIForms. I wanna connect dll only to catch MidiInput. Can&amp;#39;t understand Dispatcher, and how to connect Thread.&lt;br /&gt;If you have a time, make an example naudio + XNA (just like this - Letters on display).&lt;br /&gt;Biggy biggy thx.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="94febaf0-8355-439c-84eb-2850b2582898">
+    <comment isAdmin="false" isApproved="true" id="e2830129-23b0-4571-9441-06356b05e792">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -115,7 +115,7 @@
       <date>2009-11-24 09:44:51</date>
       <content>Hi Sergey,&lt;br /&gt;I haven&amp;#39;t used NAudio with XNA before. You don&amp;#39;t need to use a Dispatcher though - that is just for WPF. You will need a window handle to process the message queue. Don&amp;#39;t know if that is possible with XNA?&lt;br /&gt;&lt;br /&gt;Mark</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="75cd1012-1687-4beb-8bc0-549d51c8121a">
+    <comment isAdmin="false" isApproved="true" id="01ce8687-d4f0-4abe-bd15-0cab5a550f92">
       <author>Wouter</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10868589970989174810</website>
@@ -124,7 +124,7 @@
       <date>2010-08-02 12:52:45</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;is it possible to use the midi interface to map certain buttons in your app to the incoming midi?&lt;br /&gt;&lt;br /&gt;So let,s say I hit a button on my interface and then it runs the code of a button in my app.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f9d38f05-ac46-42c7-88d5-ca336da637ed">
+    <comment isAdmin="false" isApproved="true" id="f0a6887e-7c57-402b-acb8-9a07333e155f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

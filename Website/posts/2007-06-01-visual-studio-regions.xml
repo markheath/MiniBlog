@@ -21,7 +21,7 @@
     <category>Visual Studio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="5409fd5c-a1c4-437e-a701-1b0cd1389be9">
+    <comment isAdmin="false" isApproved="true" id="af2e18e8-7d18-4e0f-8c7b-7ecda279275e">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -30,7 +30,7 @@
       <date>2007-08-03 16:25:00</date>
       <content>&gt; Say I'm looking at some code and I see a call to a CalculateOffsets function. How should I know whether I will find it in the public, private or protected methods region?&lt;BR/&gt;&lt;BR/&gt;Er, right click -&gt; Go to definition?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="df8b1901-d70e-4ab4-b2d9-ac93abb608ec">
+    <comment isAdmin="false" isApproved="true" id="bebb5ee5-eec8-4cb3-8738-38a0020fa4c6">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -39,7 +39,7 @@
       <date>2007-08-03 16:38:00</date>
       <content>true enough. "Go to definition" is one of my favourite VS features. It's even better if you know that control and minus key will get you back to where you were (I was too lazy to find that out until recently).&lt;BR/&gt;&lt;BR/&gt;My point was though, that the regions don't help me at all in that case. As I see it, regions should make it easy to find what I am looking for.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="261c6607-e7e2-4c23-b260-312c3e46479f">
+    <comment isAdmin="false" isApproved="true" id="4a18929c-086e-4fc0-89c7-2b8243a698ef">
       <author>Darin</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -48,7 +48,7 @@
       <date>2008-11-01 18:53:00</date>
       <content>I was wondering if I was about the only person to see regions this way. Thanks for writing this.&lt;BR/&gt;I completely agree. Seems to me that in a +very+ few circumstances, regions might help, but in the general case, I think things like Goto Def, Navigate Back, and a sorted function list are much more effective.&lt;BR/&gt;&lt;BR/&gt;The only thing I might add is that I've always found that prefixing my Private members with "p" (or something) makes it MUCH easier for me to quickly see the "public" footprint of a class, and filter out the non-public stuff.&lt;BR/&gt;&lt;BR/&gt;This new tack of just naming every member a normal name seems to be more confusing that helpful.&lt;BR/&gt;&lt;BR/&gt;Thanks again for the article.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="20135a90-f090-441d-b882-5676853bde43">
+    <comment isAdmin="false" isApproved="true" id="82745db1-18e6-4043-b10c-94945bddf1e1">
       <author>Jeff</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01116019391048198721</website>

@@ -139,7 +139,7 @@ Annie
     <category>LINQ</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="22c1d3e6-be1a-4801-b01f-1c08e791df1e">
+    <comment isAdmin="false" isApproved="true" id="b0324881-3e57-476a-9cd0-337d04a40d15">
       <author>Dan</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -148,7 +148,7 @@ Annie
       <date>2014-03-06 17:30:57</date>
       <content>One thing missing from .Net that Python has is a generator&amp;#39;s &lt;a href="http://docs.python.org/2/reference/expressions.html#generator.send" rel="nofollow"&gt;send&lt;/a&gt; method. It allows you to write values back into the method at the point you yielded. It&amp;#39;s a bit less useful in statically typed languages since you have to decide between being able to send in one type or losing out on some compile time checking.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="805bcfe0-2b2f-4355-b142-007c3f9485fc">
+    <comment isAdmin="false" isApproved="true" id="7f983eb5-190f-44f3-a6f2-a710289ed504">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

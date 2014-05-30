@@ -100,7 +100,7 @@ select String.Format("{0}, {1}", i, j);
     <category>LINQ</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="e498aea6-65fd-41ac-9951-f1107175b8ea">
+    <comment isAdmin="false" isApproved="true" id="953d1565-27a7-4b53-83cf-cb102e5d4953">
       <author>Shimmy</author>
       <email>noreply@blogger.com</email>
       <website>http://blogs.microsoft.co.il/blogs/shimmy</website>

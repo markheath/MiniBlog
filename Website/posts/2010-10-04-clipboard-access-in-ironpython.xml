@@ -28,7 +28,7 @@ def getText():
     <category>IronPython</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="872fded9-11ce-45e6-b06f-1458b7baf310">
+    <comment isAdmin="false" isApproved="true" id="70f0e5e1-b3c0-4ffb-a942-ccb1a7ced01b">
       <author>Carl Trachte</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/12363048245012413049</website>
@@ -37,7 +37,7 @@ def getText():
       <date>2010-10-04 23:49:41</date>
       <content>You should post this to the IronPython Cookbook at www.IronPython.info.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8b1ce497-a7d8-4157-ad91-9e1b0ba6f2e8">
+    <comment isAdmin="false" isApproved="true" id="1666e1b2-6db6-4f63-95c8-a70253da21a3">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

@@ -103,7 +103,7 @@
     <category>XAML</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="6cc0f820-fe32-4549-973a-bd71882b2a97">
+    <comment isAdmin="false" isApproved="true" id="979897bd-8b72-4213-b4d3-796c033079ce">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -112,7 +112,7 @@
       <date>2009-02-18 15:39:00</date>
       <content>the source code would have been nice.&lt;BR/&gt;I kind a new at wpf, so I have trouble implementing your sample.&lt;BR/&gt;&lt;BR/&gt;Thanks.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8c4853d8-20e2-445d-9070-7f01b356753b">
+    <comment isAdmin="false" isApproved="true" id="37a3eaf9-f668-40e2-aee0-f4227e576ba2">
       <author>Andrew</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03212646054546793283</website>
@@ -121,7 +121,7 @@
       <date>2010-04-12 02:27:44</date>
       <content>Yeah, this was difficult to follow for several reasons:&lt;br /&gt;1. I&amp;#39;m trying to use FMOD and not NAudio (so I had to closely study what parts to leave out and what parts to leave in).&lt;br /&gt;2. I was trying to make this piano roll *in addition* to my form, NOT by starting out as a WPF project.&lt;br /&gt;3. In the second XAML coding listed in this tutorial, the &amp;quot;    &lt;br /&gt;&amp;quot; is very confusing... Basically, this is what you want to do:&lt;br /&gt;  - Add a new item (WPF User Control) to your *form* project&lt;br /&gt;  - Change the XAML coding to this: &amp;quot;&lt;br /&gt;  &lt;br /&gt;    &lt;br /&gt;    &lt;br /&gt;  &lt;br /&gt;&amp;quot;&lt;br /&gt;  - Go to your form&amp;#39;s design, scroll all the way up in the *Toolbox* window, and insert a &amp;quot;Piano_Roll&amp;quot; (or whatever you called it) onto the form where you would like the piano roll to be&lt;br /&gt;  - Everything after that is self-explanatory.&lt;br /&gt;&lt;br /&gt;Good luck! =)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bd046409-7a84-4481-980f-75597789c97b">
+    <comment isAdmin="false" isApproved="true" id="933ee413-16b5-4017-b255-47bcc977c801">
       <author>makoto314</author>
       <email>noreply@blogger.com</email>
       <website>http://makoto314.myopenid.com/</website>

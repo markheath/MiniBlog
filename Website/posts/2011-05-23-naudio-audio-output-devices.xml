@@ -10,7 +10,7 @@
     <category>NAudio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="7723d9a8-dd96-46b1-a4cd-bc458039f961">
+    <comment isAdmin="false" isApproved="true" id="37daa967-532b-4bc8-8e81-4c9dc0f1d22b">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -19,7 +19,7 @@
       <date>2014-03-04 14:01:54</date>
       <content>Hi mark !&lt;br /&gt;Kudos on the great post !! I am trying to use Naudio to play sound in both speakers and headsets (when plugged in) at the same time, by giving the same wave file to different output devices. Do you think that will work ? Appreciate your help !</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f85aff4a-ad7d-4cc8-a8f0-9037577747d2">
+    <comment isAdmin="false" isApproved="true" id="5dae2e64-f232-404c-b1ad-946ed4bc64e7">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -28,7 +28,7 @@
       <date>2014-03-04 14:03:44</date>
       <content>Hi Mark ! Kudos on the great post !&lt;br /&gt;I am trying to use Naudio to play sound on both speakers and headset (when plugged). Do you think that will work ? Appreciate your comment.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="888b5b48-e108-42eb-81e5-0f5d78fbf9f8">
+    <comment isAdmin="false" isApproved="true" id="5a5a1e9a-06c8-40df-ab3a-49d9a8bf5084">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -37,7 +37,7 @@
       <date>2014-03-04 14:37:09</date>
       <content>yes, but create a separate file reader for each device, otherwise the sound will end up being sliced up and played partly out of each device</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d097aba7-b68b-46f5-bbc2-0f370aeb5131">
+    <comment isAdmin="false" isApproved="true" id="e661857b-8f38-472f-8b1d-cdeb23d7f032">
       <author>JasonB</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -46,7 +46,7 @@
       <date>2014-03-25 13:57:24</date>
       <content>I&amp;#39;ve used NAudio on several projects and it&amp;#39;s awesome. I&amp;#39;m currently struggling with a requirement that I use the default WPF mediaelement control to play a video, but allow the user to choose the playback device from any active device. Most of the examples I see assume NAudio will be handling both device selection and playback. &lt;br /&gt;&lt;br /&gt;It seems from most of my research that mediaelement only wants to play on the default device, and that setting the default device programmatically is kept intentionally difficult (understandably so). &lt;br /&gt;&lt;br /&gt;Is it possible to use NAudio to select the device and have the mediaelement do the playback?&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3d3f9b87-a5bb-42b1-8e35-2f443ef8982b">
+    <comment isAdmin="false" isApproved="true" id="8e702874-0f65-463c-b22b-1c9fc3e1d05b">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

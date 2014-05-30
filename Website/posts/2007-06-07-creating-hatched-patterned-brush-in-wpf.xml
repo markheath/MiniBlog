@@ -61,7 +61,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="82a83be4-6b2a-4f53-a397-a2022b3f9fbe">
+    <comment isAdmin="false" isApproved="true" id="3bce9ec5-ea74-4b64-aff9-d21c5254b711">
       <author>Steve w</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -70,7 +70,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2008-08-09 15:59:00</date>
       <content>Unfortunately, Silverlight doesn't have the DrawingBrush or the VisualBrush, which means that so far I have been unable to figure out how to fill in a rectangle with the simplest of patterns instead of a solid color.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1fcb06a8-5f3f-4032-9632-c15a852c86e1">
+    <comment isAdmin="false" isApproved="true" id="4660f9f8-aa28-4b76-ba26-ea35e13782d1">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -79,7 +79,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2008-08-10 14:56:00</date>
       <content>Hi Steve, yes it is a shame that Silverlight doesn't have all the features of WPF. Hopefully this will be rectified in future version</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6ff3578d-35eb-4f0d-8918-842a218baac5">
+    <comment isAdmin="false" isApproved="true" id="729bf998-98aa-472c-ade4-1fbf1382a8ff">
       <author>Jeff Bailey</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -88,7 +88,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2008-10-09 23:51:00</date>
       <content>When creating diagonal hashes, you are stuck with empty pixels at the corners with this approach.  It is more evident if you change your visualbrush to use just a single path at a diagonal (0,10 to 10,-10).  You will see what appears to be small gaps at the corners.  An alternative way would be to always create the lines vertical or horizontal and set the transform on the brush to be rotate the entire brush.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3c415534-eb04-490f-87bf-90bf8a814a8d">
+    <comment isAdmin="false" isApproved="true" id="61a746a5-a926-4c19-b244-f73264af9228">
       <author>Mark</author>
       <email>noreply@blogger.com</email>
       <website>http://www.sharkadder.com</website>
@@ -97,7 +97,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2008-11-24 12:19:00</date>
       <content>Hi Mark,&lt;BR/&gt;&lt;BR/&gt;Thanks for this tutorial but unfortunately i couldn't get it working.  Maybe i have missed some functions but things like GetNoteYPosition or NoteSeperateBrush variable don't seem to be recognized.  You never specified where these were meant to go.&lt;BR/&gt;&lt;BR/&gt;Since i am currently doing some research into how midi works within C#, do you think that it would be possible to put a compressed solution version of the tutorials underneath the tutorial names?  If this isn't possible then will you be able to paste the whole xaml and the window code?&lt;BR/&gt;&lt;BR/&gt;Thanks, i would of dropped you an e-mail but it appears that your website doesn't have it on.&lt;BR/&gt;&lt;BR/&gt;Mark</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2f296958-9b1c-400a-ad5c-056d58b3242c">
+    <comment isAdmin="false" isApproved="true" id="36d73f2b-d4d3-4b5c-a5b2-2456c2696bd0">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -106,7 +106,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2009-02-25 08:29:00</date>
       <content>Hi, I was able to do a dot pattern starting from your example and it worked perfectly :D.&lt;BR/&gt;&lt;BR/&gt;VisualBrush vb = new VisualBrush();&lt;BR/&gt;&lt;BR/&gt;vb.TileMode = TileMode.Tile;&lt;BR/&gt;&lt;BR/&gt;vb.Viewport = new Rect(0, 0, 10, 10);&lt;BR/&gt;vb.ViewportUnits = BrushMappingMode.Absolute;&lt;BR/&gt;&lt;BR/&gt;vb.Viewbox = new Rect(0, 0, 12, 12);&lt;BR/&gt;vb.ViewboxUnits = BrushMappingMode.Absolute;&lt;BR/&gt;&lt;BR/&gt;Ellipse ellipse = new Ellipse();&lt;BR/&gt;ellipse.Fill = Brushes.Black;&lt;BR/&gt;ellipse.Width = 10;&lt;BR/&gt;ellipse.Height = 10;&lt;BR/&gt;vb.Visual = ellipse;&lt;BR/&gt;&lt;BR/&gt;return vb;&lt;BR/&gt;&lt;BR/&gt;&lt;BR/&gt;Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f7659cc0-377d-40b1-b92d-d2cf51ad505f">
+    <comment isAdmin="false" isApproved="true" id="cd48eb93-9453-4986-9d75-0d2269d8657f">
       <author>Neal</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04907300837613315465</website>
@@ -115,7 +115,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2009-05-12 21:03:00</date>
       <content>Thanks Mark - I was looking for a crosshatch and came across your article - it helped a lot!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0e39da94-5878-4d30-a270-a85a07a9baa7">
+    <comment isAdmin="false" isApproved="true" id="73a7aa22-7793-47b2-a0b2-1285b6342a4d">
       <author>geFrank</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13266468890172076878</website>
@@ -124,7 +124,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2011-01-12 20:18:38</date>
       <content>I was looking for a hatched example to &amp;quot;hatch&amp;quot; a datagrid row based on a DataTrigger and this worked great!!&lt;br /&gt;&lt;br /&gt;Thanks...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a65732dd-589c-494b-a441-b0cf74b3e2a2">
+    <comment isAdmin="false" isApproved="true" id="87d4fb41-80dc-4fd9-8e7f-6c2499ee6929">
       <author>Fernando</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03870008744409943339</website>
@@ -133,7 +133,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"&amp;gt;
       <date>2011-06-13 19:18:22</date>
       <content>Also in VB.NET we have it:&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Dim MyBrush As New VisualBrush With {.TileMode = TileMode.Tile, .Viewport = New Rect(0, 0, 10, 10), .ViewportUnits = BrushMappingMode.Absolute, .Viewbox = New Rect(0, 0, 12, 12), .ViewboxUnits = BrushMappingMode.Absolute}&lt;br /&gt;        MyBrush.Visual = New Ellipse With {.Fill = Brushes.Black, .Width = 10, .Height = 10}</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="64653d5e-5f38-481c-8ed2-20ada8c0e561">
+    <comment isAdmin="false" isApproved="true" id="3cd83aed-90e0-4d21-b17a-e8c92caed74e">
       <author>JD Bell</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13276545622205929576</website>

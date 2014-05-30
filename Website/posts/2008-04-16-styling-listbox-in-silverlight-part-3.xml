@@ -462,7 +462,7 @@
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="68d85681-cd73-44b0-829c-c14cd7940002">
+    <comment isAdmin="false" isApproved="true" id="b40ec97e-aa29-4f08-aff2-8c2e9fe0498f">
       <author>James</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -471,7 +471,7 @@
       <date>2008-06-20 02:02:00</date>
       <content>The mouseover / selected etc events as explained above don't seem to work on silverlight 2 Beta 2. I'm guessing now they are using the visual state manager, but how does it hook in to the ListBoxItem...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="01cc09a0-c759-40b7-9f85-5ae62143b919">
+    <comment isAdmin="false" isApproved="true" id="57edb791-e6d9-4f9e-a85f-fdc171a656d7">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

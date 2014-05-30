@@ -12,7 +12,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="b907379a-ea14-46e9-a522-ac1918f1bfe1">
+    <comment isAdmin="false" isApproved="true" id="2130fba8-aa72-4c0c-81d0-500ab536cde2">
       <author>obiwanjacobi</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01951957163189273412</website>
@@ -21,7 +21,7 @@
       <date>2008-04-08 07:32:00</date>
       <content>I hear you. I'm a bit into midi and the only managed VST project I know of is Noise. But its bean nonactive for quite some time now.&lt;BR/&gt;http://gforge.public.thoughtworks.org/projects/noise/&lt;BR/&gt;&lt;BR/&gt;I once did a quick tour on the VST SDK and came up with a design for it (some parts I would do different now ;-).&lt;BR/&gt;http://obiwanjacobi.blogspot.com/2007/09/redesigning-steinberg-vst-sdk.html&lt;BR/&gt;&lt;BR/&gt;Anyway, I am thinking of doing a VST.NET project (someday) - I still have to analyze if the  functionality I want to build will fit in VST. &lt;BR/&gt;&lt;BR/&gt;Perhaps we could join forces?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2503adf4-2065-4f3e-818d-18a3a6a1aa95">
+    <comment isAdmin="false" isApproved="true" id="529af271-ee62-45b7-95e0-1cbe018f2a2e">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -30,7 +30,7 @@
       <date>2008-04-09 15:09:00</date>
       <content>I have created many audio projects for managed code, I just choose not to share them with everyone. I have a completely managed audio codec for low bandwidth speech and I also have wrappers to the waveIn/waveOut APIs (not painful at all) plus a whole load of other managed classes for FFT, DSP etc.&lt;BR/&gt;&lt;BR/&gt;Complaining that Microsoft haven't given you everything on a platter is not what a dynamic programmer would do - they would go ahead and develop these things    ;)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4281f22c-3542-4a88-b3ef-5b33aeb27f0a">
+    <comment isAdmin="false" isApproved="true" id="1f428927-a0e7-4cf8-8cc5-373efbda160c">
       <author>h3-r3</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/00281414866324502512</website>
@@ -39,7 +39,7 @@
       <date>2008-04-13 13:47:00</date>
       <content>Here is my PortAudio wrapper:&lt;BR/&gt;http://code.google.com/p/portaudiosharp/&lt;BR/&gt;:)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8c04bb76-8c1a-4d90-ac5e-eb47657e1b71">
+    <comment isAdmin="false" isApproved="true" id="45241642-950a-46f6-9d0a-e5d9b60a746c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -48,7 +48,7 @@
       <date>2008-04-13 13:57:00</date>
       <content>obiwanjacobi - I had a go at doing a managed VST wrapper a while ago, but it is a lot of work. I also have looked at the Noise project. It may be easiest to do a VST interop layer in managed C++.&lt;BR/&gt;&lt;BR/&gt;anonymous - I have actually implemented a lot more .NET audio code than just what I have shared in NAudio, including some voice compression codecs, variable playback speed and AGC codecs. So I'm not moaning that it is not already "on a plate". But come on, games developers don't want to write their own 3D rendering engine, but simply get on with what is specific to their application. I don't think that it is unreasonable to wish for the same for audio. As for pain with WaveOut wrappers, this has mainly been due to driver issues as my code has been deployed on thousands of machines worldwide, and some of them will randomly hang in calls waveOutReset.&lt;BR/&gt;&lt;BR/&gt;h3-r3 - I came across your wrapper for PortAudio a while ago and it looks very promising. I need to find some time to really try it out properly.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d92c5d67-0c2c-436a-b52b-4a1ea1703b0d">
+    <comment isAdmin="false" isApproved="true" id="7f503fbc-6880-4a1e-8239-e793c1055229">
       <author>Ian Jones</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -57,7 +57,7 @@
       <date>2008-05-13 10:18:00</date>
       <content>I would have at least expected equivalent functionality to the Java sound API in the .Net framework.  What would be really nice for me is to be able to modify PCM streams on the fly and pass them to Silverlight.&lt;BR/&gt;&lt;BR/&gt;All I want is to do some interpolation, some simple effects and mixing (a la JMod).  I want to code it in C# and I want it to run in a browser (ok, I want a Silverlight JMod!).&lt;BR/&gt;&lt;BR/&gt;The problem with MS here is that they are going for the sales pitch (look, you can play streamed video in a rotating cube in just 5 lines of code!).  This impresses the kids who salivate over the idea of creating the next YouPube or something.  The rest of us?  I dunno.  We just have to wait and see...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1d4286b5-042c-4e96-886d-829e78167d07">
+    <comment isAdmin="false" isApproved="true" id="380eb95a-fdff-48c8-b51c-10d1afa9d89f">
       <author>Ben Althauser</author>
       <email>noreply@blogger.com</email>
       <website>http://www.diblab.com</website>

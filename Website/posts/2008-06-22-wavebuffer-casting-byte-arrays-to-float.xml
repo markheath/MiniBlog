@@ -54,7 +54,7 @@ public class WaveBuffer : IWaveBuffer
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="7ba9df51-a4d1-4389-be96-454028dbc9dc">
+    <comment isAdmin="false" isApproved="true" id="4f0a0735-0a80-419b-9bca-4fa507fe53a6">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -63,7 +63,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2008-11-30 21:13:00</date>
       <content>At least in C# Express Edition this does not work.&lt;BR/&gt;I just tried it in the following manner:&lt;BR/&gt;&lt;BR/&gt;  [StructLayout(LayoutKind.Explicit, Pack=2)]&lt;BR/&gt;  public struct TGridModelDataBlock&lt;BR/&gt;  {&lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private byte[] byteData;&lt;BR/&gt;&lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private int[,] intData;&lt;BR/&gt;    &lt;BR/&gt;    [FieldOffset(0)]&lt;BR/&gt;    private float[,] floatData;&lt;BR/&gt;&lt;BR/&gt;    public TGridModelDataBlock(uint cbBlocksize)&lt;BR/&gt;    {&lt;BR/&gt;      Debug.Assert(cbBlocksize == GriddedElevationModel.cbGridBlockSize);&lt;BR/&gt;&lt;BR/&gt;      intData   = null;&lt;BR/&gt;      floatData = null;&lt;BR/&gt;      byteData  = new byte[cbBlocksize];&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public int[,] IntData&lt;BR/&gt;    {&lt;BR/&gt;      get&lt;BR/&gt;      {&lt;BR/&gt;        return intData;&lt;BR/&gt;      }&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public float[,] FloatData&lt;BR/&gt;    {&lt;BR/&gt;      get&lt;BR/&gt;      {&lt;BR/&gt;        return floatData;&lt;BR/&gt;      }&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public bool Read(BinaryReader reader)&lt;BR/&gt;    {&lt;BR/&gt;      try&lt;BR/&gt;      {&lt;BR/&gt;        reader.Read(byteData, 0, byteData.Length);&lt;BR/&gt;        &lt;BR/&gt;        return true;&lt;BR/&gt;      }&lt;BR/&gt;      catch(Exception)&lt;BR/&gt;      {&lt;BR/&gt;      }&lt;BR/&gt;      &lt;BR/&gt;      return false;&lt;BR/&gt;    }&lt;BR/&gt;    &lt;BR/&gt;    public bool Write(BinaryWriter writer)&lt;BR/&gt;    {&lt;BR/&gt;      try&lt;BR/&gt;      {&lt;BR/&gt;        writer.Write(byteData, 0, byteData.Length);&lt;BR/&gt;        &lt;BR/&gt;        return true;&lt;BR/&gt;      }&lt;BR/&gt;      catch(Exception)&lt;BR/&gt;      {&lt;BR/&gt;      }&lt;BR/&gt;      &lt;BR/&gt;      return false;&lt;BR/&gt;    }&lt;BR/&gt;  }&lt;BR/&gt;&lt;BR/&gt;and when I try to access the&lt;BR/&gt;float data, I get an exception.&lt;BR/&gt;&lt;BR/&gt;I am trying to overlay a &lt;BR/&gt;matrix of 4-byte signed&lt;BR/&gt;intergers with an array&lt;BR/&gt;of 4-byte floats without&lt;BR/&gt;using a fixed buffer and&lt;BR/&gt;so far I have failed...&lt;BR/&gt;&lt;BR/&gt;In C/C++ this easy of course ;-)&lt;BR/&gt;&lt;BR/&gt;Kinds regards,&lt;BR/&gt;&lt;BR/&gt;Jeroen Posch&lt;BR/&gt;jeroen.posch@hetnet.nl</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0f983766-3cf3-4f65-b103-5a3fbedd3fac">
+    <comment isAdmin="false" isApproved="true" id="ccb98df2-f536-44ed-b1fa-c97f595fbe1f">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -72,7 +72,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2008-11-30 21:20:00</date>
       <content>I suspect it is your use of multi-dimensional arrays that is causing the problem. We just use single dimensional arrays.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3720b518-7b09-4f5a-8189-ffdf44762051">
+    <comment isAdmin="false" isApproved="true" id="31134520-b694-4afc-9bc5-2562b6e53e36">
       <author>Q</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02404558641825312767</website>
@@ -81,7 +81,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-07-07 21:54:11</date>
       <content>Just curious, why &amp;quot;Pack=2&amp;quot;?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9b26241c-673a-402c-b15b-a6ca3bbe4af3">
+    <comment isAdmin="false" isApproved="true" id="cf109de8-9554-4398-b18d-93f040f15721">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -90,7 +90,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-07-07 22:23:33</date>
       <content>I think it is just that when you do a StructLayout.Explicit, it is a good idea to specify the pack, so you know it will do the same thing every time. I can&amp;#39;t remember that there was a specific problem that this setting solved. We want to know that each array will reside in exactly the same place.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8e2dc455-37b1-4085-97e3-19c9b220b00b">
+    <comment isAdmin="false" isApproved="true" id="6732ffa1-12ae-4d63-a4f7-7f433ec36073">
       <author>Q</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02404558641825312767</website>
@@ -99,7 +99,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-07-07 23:10:06</date>
       <content>That&amp;#39;s cool, I understand the value of setting the Packing in general, just didn&amp;#39;t know why you chose &amp;quot;2&amp;quot; in particular.  I&amp;#39;ve tried it with &amp;quot;1&amp;quot; and it seems to work just as well.  Just curious so that I could avoid any problems that I may not have yet seen.&lt;br /&gt;&lt;br /&gt;Very cool idea though.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b6743fc5-ce90-483f-9858-36a177b3e1fa">
+    <comment isAdmin="false" isApproved="true" id="4aa76d29-aa19-47cf-b178-c855cc28be7f">
       <author>Rob Westgeest</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10209125927294659332</website>
@@ -108,7 +108,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-10-28 08:08:36</date>
       <content>I like the idea a lot however: this code does not work for me. &lt;br /&gt;&lt;br /&gt;public interface ISampleBuffer&lt;br /&gt;{&lt;br /&gt;    byte[] Bytes { get; set; }&lt;br /&gt;    float[] Floats { get; set; }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;[StructLayout(LayoutKind.Explicit, Pack=2)]&lt;br /&gt;public struct SampleBuffer : ISampleBuffer&lt;br /&gt;{&lt;br /&gt;    [FieldOffset(0)]&lt;br /&gt;    private float[] floatBuffer;&lt;br /&gt;    [FieldOffset(0)]&lt;br /&gt;    private byte[] byteBuffer;&lt;br /&gt;    public byte[] Bytes { get { return byteBuffer; } set { byteBuffer = value; } }&lt;br /&gt;    public float[] Floats { get { return floatBuffer; } set { floatBuffer = value; } }&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;For some reason &amp;#39;Bytes&amp;#39; is shown as a float[] in the debugger and (quite consistently) the following test throws an exception in the call to BitConverter.ToSingle():&lt;br /&gt;&lt;br /&gt;[Test]&lt;br /&gt;public void CastAFloatArrayToByteArray()&lt;br /&gt;{&lt;br /&gt;    ISampleBuffer buffer = new SampleBuffer();&lt;br /&gt;    buffer.Floats = new float[] { 1.3f, -3.999f };&lt;br /&gt;    Assert.AreEqual(1.3f, BitConverter.ToSingle(buffer.Bytes, 0));&lt;br /&gt;}&lt;br /&gt;&lt;br /&gt;failed: System.ArgumentException : Destination array is not long enough to copy all the items in the collection. Check array index and length.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7bff7d84-79e0-4244-abf9-79d524902635">
+    <comment isAdmin="false" isApproved="true" id="a922c4b5-16c3-4791-b099-67e28cf91b00">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -117,7 +117,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-10-28 09:29:27</date>
       <content>Hi Rob,&lt;br /&gt;your problem is because you initialised the float first, making it think that they byte array has only two elements (this is just a weird side-effect of this hack). Initialise the byte array to a blank array of 8 elements. Then write over the float values. Then your test should pass:&lt;br /&gt;&lt;br /&gt;ISampleBuffer buffer = new SampleBuffer();&lt;br /&gt;buffer.Bytes = new byte[8];&lt;br /&gt;buffer.Floats[0] = 1.3f;&lt;br /&gt;buffer.Floats[1] = -3.999f;&lt;br /&gt;Assert.AreEqual(1.3f, BitConverter.ToSingle(buffer.Bytes, 0));</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f4f024a7-cf3f-4ebc-9f94-94eb3e2de8fa">
+    <comment isAdmin="false" isApproved="true" id="90ac61c2-1d38-4f2f-a8b8-5c3266076662">
       <author>Rob Westgeest</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10209125927294659332</website>
@@ -126,7 +126,7 @@ public class WaveBuffer : IWaveBuffer
       <date>2009-10-28 10:09:08</date>
       <content>It does!.. You&amp;#39;re a genius Mark,&lt;br /&gt;&lt;br /&gt;I am not sure it solves my problem though. This, works provided that I copy my float values one by one to my pre allocated buffer. &lt;br /&gt;&lt;br /&gt;The problem I am trying to solve is: I have a buffer of float (sample data) and i want to write it to a stream as fast as possible. I suspect that one by one is not the fastest way to do that and kind of hoped that your neat little trick would enable me to just assign the float array and get it&amp;#39;s the byte[] representation.&lt;br /&gt;&lt;br /&gt;Would the only advantage of this approach be that I don&amp;#39;t need pinning?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="419fcf1a-1913-4cd7-bf14-a631660343b5">
+    <comment isAdmin="false" isApproved="true" id="6fdb4055-781f-4867-8cf6-e52f739708be">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

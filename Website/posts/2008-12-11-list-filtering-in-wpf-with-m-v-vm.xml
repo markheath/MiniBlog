@@ -47,7 +47,7 @@ public string Filter
     <category>XAML</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="0609e5fc-cd6f-4295-a866-9d5df8e99bec">
+    <comment isAdmin="false" isApproved="true" id="ddcc3932-f331-4c0b-b597-2e13b54b0473">
       <author>Faye</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/05168761358573346927</website>
@@ -56,7 +56,7 @@ public string Filter
       <date>2010-07-29 22:01:54</date>
       <content>How do you get the listbox to refresh?  I put the code in like you have and I see that it is filtering but doesnt show the new data?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="73823d30-7fd3-4ef7-95da-c5f9f274e42f">
+    <comment isAdmin="false" isApproved="true" id="49778508-896e-4ba0-b747-cb8a91317278">
       <author>Faye</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/05168761358573346927</website>
@@ -65,7 +65,7 @@ public string Filter
       <date>2010-07-29 22:02:44</date>
       <content>How does the listbox get refreshed. I have it where I see that the data is filtered but it doesnt display the new filtered data?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="29f07f36-b79a-45f4-aae3-f3f0c2cf1c1d">
+    <comment isAdmin="false" isApproved="true" id="aa658da8-b061-4112-943e-f793def6225b">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -74,7 +74,7 @@ public string Filter
       <date>2010-08-11 13:43:01</date>
       <content>see the code fragment above: phrasesView.Refresh</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8584e9c1-4271-40f1-aeef-79d64f31bdd4">
+    <comment isAdmin="false" isApproved="true" id="f66a82b8-ac82-4a29-9413-83ea41646f44">
       <author>Sander</author>
       <email>noreply@blogger.com</email>
       <website />

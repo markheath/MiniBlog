@@ -43,7 +43,7 @@
     <category>WPF</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="d334c3ca-372b-4223-97ac-38add8e2cf63">
+    <comment isAdmin="false" isApproved="true" id="e6486028-383a-4f93-acf2-5301cf4a86d1">
       <author>Lieven Maes</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17157749087614079164</website>
@@ -52,7 +52,7 @@
       <date>2008-04-24 09:03:00</date>
       <content>Hi Mark,&lt;BR/&gt;&lt;BR/&gt;Thank you very much for this information. I'm a beginning C# programmer and I'm trying to get some sensors (they communicate through serial port) to trigger some cool graphic animations in wpf.&lt;BR/&gt;&lt;BR/&gt;The first thing I wanted to do was to get the sensordata in a constantly updating textbox in a xaml form. I couldn't understand why the invoke method didn't work as it did in a normal form, but know I do!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="566ac09c-e833-4b22-b0f3-0b256e9b9572">
+    <comment isAdmin="false" isApproved="true" id="fb0df540-5e94-4ad8-9d83-16df95a343b0">
       <author>Ade</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -61,7 +61,7 @@
       <date>2008-08-26 11:41:00</date>
       <content>I know you wrote this ages ago, but you don't actually need to create an object array when the method signature specifies &lt;I&gt;params object[]&lt;/I&gt;.  You can just pass a list of objects.  I have no idea why they felt the need to create two method definitions when they could have just defined &lt;B&gt;BeginInvoke(DispatcherPriority, Delegate, params object[])&lt;/B&gt;, but who am I to argue?&lt;BR/&gt;&lt;BR/&gt;See &lt;A HREF="http://msdn.microsoft.com/en-us/library/w5zay9db.aspx" REL="nofollow"&gt;http://msdn.microsoft.com/en-us/library/w5zay9db.aspx&lt;/A&gt; for details.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="36a51132-ac93-4ae4-9379-3ba121143911">
+    <comment isAdmin="false" isApproved="true" id="7f63442b-9d0e-46de-9b92-666e318861fb">
       <author>Steve Westbrook</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -70,7 +70,7 @@
       <date>2010-07-12 14:33:48</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;You can actually use Dispatcher.CheckAccess() as a direct equivalent of InvokeRequired.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d3329adb-72b3-4f02-a17b-0ce7f40ecb07">
+    <comment isAdmin="false" isApproved="true" id="0c075642-c998-42fa-aa8c-5b4852190577">
       <author>amivenus</author>
       <email>noreply@blogger.com</email>
       <website>http://amivenus.wordpress.com/</website>
@@ -79,7 +79,7 @@
       <date>2010-09-01 11:59:53</date>
       <content>Thanks for this, it helped.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9acd297b-e899-4178-ba00-6194cfa0b6fe">
+    <comment isAdmin="false" isApproved="true" id="9264ac7e-3264-412a-a713-b5e93d45b2f7">
       <author>Alan Macdonald</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10758187297770358183</website>

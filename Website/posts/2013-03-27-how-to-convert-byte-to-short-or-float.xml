@@ -91,7 +91,7 @@ unsafe
     <category>NAudio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="285eecbf-5555-4318-b629-78849804e5dd">
+    <comment isAdmin="false" isApproved="true" id="41fea136-89ca-4612-b247-fd11cf1becc3">
       <author>javO</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09545564898993057954</website>
@@ -100,7 +100,7 @@ unsafe
       <date>2013-04-29 19:58:18</date>
       <content>Nice post. Is there any way for the WaveBuffer aproach to work with a 32bit sample?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e9bd80e5-aec8-44b6-a50e-3a4ad4374a44">
+    <comment isAdmin="false" isApproved="true" id="000a5689-47bc-48e1-8441-3b5671d07941">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -109,7 +109,7 @@ unsafe
       <date>2013-04-29 20:06:29</date>
       <content>@javO, yes, WaveBuffer deals with int and float, both of which are 32 bit</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="96194c90-e8e3-4882-b96b-07a822b0d3f3">
+    <comment isAdmin="false" isApproved="true" id="26deb9e7-e728-4571-a503-3dc6db7f8b7d">
       <author>Riley L</author>
       <email>noreply@blogger.com</email>
       <website />

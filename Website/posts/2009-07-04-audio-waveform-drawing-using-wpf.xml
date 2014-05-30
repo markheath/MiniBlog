@@ -95,7 +95,7 @@ private void CreatePoint(float topValue, float bottomValue)
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="99d0eac2-342c-40a5-b34e-43d321320d9d">
+    <comment isAdmin="false" isApproved="true" id="1bfc0864-8896-463a-9364-539b60551df2">
       <author>Roland Tomczak</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09424693277534586358</website>
@@ -104,7 +104,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-07-04 18:05:08</date>
       <content>Hi ! I&amp;#39;m not sur that using the high-level geometry figures is the best approach in this particular case. I think that you should have define your custom Visual (Say, WaveformVisual), and override its Render method. This is the &amp;quot;lightweight&amp;quot; approach for drawing in WPF, and often recommanded for dynamic curves &amp;amp; so on ( eg : financial graphs,... ).</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="eb9064e2-8378-4c5f-9c82-6f8f7e0b77f1">
+    <comment isAdmin="false" isApproved="true" id="3447284b-546c-4782-8799-f66e51cd4119">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -113,7 +113,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-07-04 18:22:56</date>
       <content>hi Roland. thanks, that is useful information. Anything that improves performance will be useful. Will need to check that it works for Silverlight too though.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9b2a33bb-fe87-453d-8937-eb3cf35cebf2">
+    <comment isAdmin="false" isApproved="true" id="f9069588-2f12-43ee-b550-ebe35dbbf03a">
       <author>Chad</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/18404970248928799834</website>
@@ -122,7 +122,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-08-09 10:31:38</date>
       <content>Wow- thanks so much for sharing your efforts! You make it all so clear. Consider me a new loyal viewer</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="412f8146-eca9-4dbc-bceb-c0e384cdd5e1">
+    <comment isAdmin="false" isApproved="true" id="075d8de1-57c1-438a-9e63-38e682ff0d19">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -131,7 +131,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-10-01 09:03:26</date>
       <content>When will you release this Code?&lt;br /&gt;&lt;br /&gt;I&amp;#39;m looking for a Control to draw the Waveform of 8,16 and 24bit mono/stereo wave files.&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t know where to start in WPF.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="56b82143-1466-4c3c-9ef5-ebf7050ac262">
+    <comment isAdmin="false" isApproved="true" id="a56dcd77-fd57-4001-ae2c-eb47a6883936">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -140,7 +140,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-10-01 09:32:47</date>
       <content>hi Anonymous, have a look in the WPFDemo of NAudio.&lt;br /&gt;&lt;br /&gt;Visualisation of entire WAV files is something that I am still working on. You can see a solution that works for short files at my new VoiceRecorder project on CodePlex (voicerecorder.codeplex.com)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d3e45853-7c3d-4426-8f7d-3808fb22da6b">
+    <comment isAdmin="false" isApproved="true" id="5b851651-2fd6-4499-a5f4-b64cfbb19d64">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -149,7 +149,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2009-10-01 12:29:53</date>
       <content>wow, thank you very much!&lt;br /&gt;this is so much of a help for me :D</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="475be986-03e7-41f3-b187-864a70ec2182">
+    <comment isAdmin="false" isApproved="true" id="2a6f4df9-314d-4137-bff0-765b9fca3a96">
       <author>Helmut Obertanner</author>
       <email>noreply@blogger.com</email>
       <website>http://www.jinglejim.de</website>
@@ -158,7 +158,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2010-10-12 07:04:27</date>
       <content>Hello Mark,&lt;br /&gt;Nice Post!&lt;br /&gt;In JingleJim we use another approach for displaying waveforms.&lt;br /&gt;We get the numsamples of the canvas. Then we can calculate the numSamples required for onbe pixel. For the num samples we calculate the avg-value. We split the view into let&amp;#39;s say 10 Blocks and we convert the audiodata to a 8 bit waveform in a memory bitmap using a backgroundthread. Then we blitting the bitmap into the display - not drawing directly.&lt;br /&gt;Much faster then drawing into canvas. Currently we are using Winforms, but should work the same for WPF. &lt;br /&gt;NAudio is great!&lt;br /&gt;Greets - Helmut</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bbf9980c-14f5-4503-b891-279f02a4851e">
+    <comment isAdmin="false" isApproved="true" id="09373f1a-de42-4a9f-9057-ded5549eabe5">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -167,7 +167,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2010-10-12 19:06:51</date>
       <content>hi Helmut, &lt;br /&gt;yes, in some ways WaveForm drawing is easier in WinForms than WPF. I am wondering whether to try using a writeable bitmap at some point</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4493057b-4d2e-47e8-aa7b-f30cf1f323e9">
+    <comment isAdmin="false" isApproved="true" id="db032fa9-d754-4db2-b8ae-ba8f44ab9417">
       <author>Helmut Obertanner</author>
       <email>noreply@blogger.com</email>
       <website>http://www.jinglejim.de</website>
@@ -176,7 +176,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2010-10-13 10:54:01</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;yes - that will be our next aproach - currently we are converting our app to WPF.&lt;br /&gt;I want to try different approaches and come back to you with my solution. Would you be interessted in having an WaveView/Selection Control in the NAudio-Package?&lt;br /&gt;&lt;br /&gt;Greets - Helmut</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f18d3041-cb6f-4640-941e-2f00e634db86">
+    <comment isAdmin="false" isApproved="true" id="dae660f1-2f90-424f-bb1f-d2992eacce42">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -185,7 +185,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2010-10-13 10:56:40</date>
       <content>Hi Helmut,&lt;br /&gt;&lt;br /&gt;that would be awesome. I have a selection control I made as part of the voicerecorder project on CodePlex, but it is far from complete&lt;br /&gt;&lt;br /&gt;Mark</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="be418f33-159c-4a68-8ed6-628d34943954">
+    <comment isAdmin="false" isApproved="true" id="ed8fd7f9-0902-4879-b91f-deab065b3353">
       <author>des</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -194,7 +194,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2011-02-14 08:41:46</date>
       <content>hey mark,&lt;br /&gt;can you please provide the codes for displaying the waveform from recording(like the one you did in Voice Recorder) in WinForms?&lt;br /&gt;&lt;br /&gt;Thanks a lot.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="513173e8-4fa2-48c6-aea5-c517404f1acb">
+    <comment isAdmin="false" isApproved="true" id="b4b1a1dc-c1ed-47f9-8344-0de821e66849">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -203,7 +203,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2011-02-14 16:08:35</date>
       <content>@des - download the NAudio source code for an example of WaveForm drawing in WinForms</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2ddd526d-9b53-44dd-99be-34952e6c23a8">
+    <comment isAdmin="false" isApproved="true" id="f543558a-dd7f-4af1-a33a-5ee985b46963">
       <author>des</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -212,7 +212,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2011-03-03 08:13:39</date>
       <content>thanks for replying mark. i referred to Naudio, but there&amp;#39;s some limitation to it. Like i cannot redraw the waveform(meaning to clear it and draw again), it cant scroll left and right if it gets too long, and it cant work with recording, it only does with playing. Any help? Thanks a lot.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a0e63a96-a077-47d6-990e-150b7905ca5f">
+    <comment isAdmin="false" isApproved="true" id="46d12f5c-4b52-4028-812c-28a5a7f35853">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -221,7 +221,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2011-03-03 14:12:39</date>
       <content>@des, I&amp;#39;m afraid the NAudio winforms waveform drawing doesn&amp;#39;t have those capabilities - you&amp;#39;d have to write that yourself</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bbaa0960-cf5c-421e-8b84-3ecd1e6c2426">
+    <comment isAdmin="false" isApproved="true" id="d3bf81b9-4ef5-47e4-88f6-8b6ac07f324b">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -230,7 +230,7 @@ private void CreatePoint(float topValue, float bottomValue)
       <date>2011-03-07 10:33:48</date>
       <content>Please tell me how to do this:&lt;br /&gt;The way we achieve this is simply by starting recording and displaying the level of audio detected to the user with a volume meter. The waveIn APIs do not write anything to disk, so no audio is actually being ‘recorded&amp;#39; at this point, we are simply examining the input level and then throwing the captured audio samples away.&lt;br /&gt;I just want to know where&amp;#39;s the function for this. Thank you.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="98080d8b-5983-4e79-b97e-d8c5043e0d63">
+    <comment isAdmin="false" isApproved="true" id="d7a62a9b-108c-4f3f-a914-991e0ac57949">
       <author>free</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07718052760760740763</website>

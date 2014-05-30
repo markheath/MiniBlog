@@ -15,7 +15,7 @@ namespace BloggerImporter
     {
         static void Main(string[] args)
         {
-            var bloggerImportFile = @"C:\Users\mheath\Dropbox\soundcode-blog-05-22-2014.xml";
+            var bloggerImportFile = @"C:\Users\mheath\Dropbox (Personal)\soundcode-blog-05-30-2014.xml";
             // var bloggerImportFile = @"c:\users\mark\downloads\sound-code-02-16-2014.xml";
             var postsPath = Path.GetFullPath(@"..\..\..\Website\posts");
             if (!Directory.Exists(postsPath))

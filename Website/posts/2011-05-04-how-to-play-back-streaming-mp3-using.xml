@@ -13,7 +13,7 @@
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="564486b0-b2e5-49f9-8d3a-5a3c901b0883">
+    <comment isAdmin="false" isApproved="true" id="faf5bf97-cee3-4875-87f9-aeab0d59675c">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -22,7 +22,7 @@
       <date>2011-10-21 05:47:48</date>
       <content>I have a couple of questions about streaming mp3 audio using naudio. What is the best method of contacting you and asking you those questions.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7a952c59-628e-4a9f-8a9d-599605400e10">
+    <comment isAdmin="false" isApproved="true" id="53ae9ed0-f618-464c-ac76-547634ac01f8">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -31,7 +31,7 @@
       <date>2011-10-21 11:13:23</date>
       <content>@Anonymous, post them on this blog, or on the NAudio Codeplex discussion forum, or StackOverflow.com tagged with [naudio] if they are general questions that other NAudio users may be able to answer</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d43981ea-5fd3-4d58-bb02-e3e624bbd9a9">
+    <comment isAdmin="false" isApproved="true" id="9ad44a07-5bc5-4109-be60-cb7e6d000b7f">
       <author>1712</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14442259526968606440</website>
@@ -40,7 +40,7 @@
       <date>2011-10-26 04:13:51</date>
       <content>Hi Mark. &lt;br /&gt;&lt;br /&gt;I&amp;#39;m trying to set position of this streaming to play but I dont know how to do that. Is there anyway to do that?&lt;br /&gt;&lt;br /&gt;Thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="145d378a-94a5-48f1-97d4-39e30a9535ed">
+    <comment isAdmin="false" isApproved="true" id="4664cf2d-6c58-4ca0-8c1f-20ff06455790">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -49,7 +49,7 @@
       <date>2011-10-26 09:35:43</date>
       <content>@1712 when you play streaming audio, you just play audio as it arrives. You could buffer what you receive to reposition backwards, but to reposition forwards you would need to skip over data you were receiving.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e2ee4ac9-f230-4b6c-9db6-144ca5df9fb4">
+    <comment isAdmin="false" isApproved="true" id="72c893a9-0cf7-412f-ac47-c9f32d58806f">
       <author>1712</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14442259526968606440</website>
@@ -58,7 +58,7 @@
       <date>2011-10-27 04:36:29</date>
       <content>Can you show me which code I must change to do that? (V1.5)&lt;br /&gt;&lt;br /&gt;And one more question, when &amp;quot;fullyDownload&amp;quot;, how can I replay without reload data from server?&lt;br /&gt;&lt;br /&gt;Thanks :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d95f91e4-d4a5-408c-9aa9-f6680fc357dc">
+    <comment isAdmin="false" isApproved="true" id="7a297172-1355-4e08-bf64-2106d5949795">
       <author>Gian</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01503995763959621957</website>
@@ -67,7 +67,7 @@
       <date>2011-11-14 11:41:15</date>
       <content>Hi Mark,&lt;br /&gt;I&amp;#39;m new in audio management and in NAudio too.&lt;br /&gt;I&amp;#39;m trying to play an AAC raw audio from an IP cam using NAudio.&lt;br /&gt;Audio has a bitrate=32000, mono.&lt;br /&gt;I tried to create a custom format using Mpeg Format without success).&lt;br /&gt;Using NAudioDemo I&amp;#39;ve seen AAC ACM codec is installed.&lt;br /&gt;I always has &amp;quot;NoDriver calling acmFormatSuggest&amp;quot; exception.&lt;br /&gt;A code snippet:&lt;br /&gt;&lt;br /&gt;   WaveFormat format = WaveFormat.CreateCustomFormat(WaveFormatEncoding.Mpeg, 32000, 1, 32000, 1, 16);&lt;br /&gt;using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new RawSourceWaveStream(ms, format))))&lt;br /&gt;&lt;br /&gt;Thank you in advance for your help.&lt;br /&gt;Gianluca</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b165ab6d-7fcf-4f63-b24a-4327773f271e">
+    <comment isAdmin="false" isApproved="true" id="1284986c-caff-46ad-a361-58fccad4fb02">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -76,7 +76,7 @@
       <date>2011-11-21 15:57:09</date>
       <content>@Gianluca, AAC could only be played if an AAC ACM codec was installed on your system. Even then you would also need to know what WaveFormat structure it was expecting to be able to select it correctly. &amp;quot;Mpeg&amp;quot; is probably not right.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="767cce3b-fa4d-4494-801b-5c1a410980c6">
+    <comment isAdmin="false" isApproved="true" id="fc2331f9-6f62-47db-a8f5-02670e6473f8">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -85,7 +85,7 @@
       <date>2012-03-19 17:10:00</date>
       <content>Hi, is it possible to play a stream that isn&amp;#39;t mp3 with this library?? if it is can you point me the right direction to achieve this? Thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="271eb882-b975-49ee-a639-669c34b5896a">
+    <comment isAdmin="false" isApproved="true" id="ffce73ef-ece2-42ae-ba9f-060a54a4c7d4">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -94,7 +94,7 @@
       <date>2012-03-20 12:51:47</date>
       <content>you can only stream formats that NAudio can decompress. So this usually means you need an ACM codec installed for it.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="cb6b3561-c827-4d57-832b-89a98a675a12">
+    <comment isAdmin="false" isApproved="true" id="8ffec08b-2bff-4e78-ac5a-6cf34f0bbd4a">
       <author>Dan Cri</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -103,7 +103,7 @@
       <date>2012-03-31 01:28:09</date>
       <content>Hi Mark. Most internet streams use shoutcast/AAC, is there any chance to include an NAudio Demo module to handle this? Thanks.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="638eeca0-1f85-4bec-bdab-090fc2bf52ce">
+    <comment isAdmin="false" isApproved="true" id="81033386-af36-4302-811b-abce19e708d2">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -112,7 +112,7 @@
       <date>2012-04-02 09:43:25</date>
       <content>@Dan, NAudio can&amp;#39;t play AAC at the moment. That&amp;#39;s a feature I&amp;#39;d really like to add, but it is not available using ACM codecs, so I&amp;#39;d need to learn how to wrap the Media Foundation Transforms to do this.&lt;br /&gt;&lt;br /&gt;As for Shoutcast, I haven&amp;#39;t got any plans at the moment to support that I&amp;#39;m afraid.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b3dc67dc-08b5-465a-9915-8cacf6e4c7e6">
+    <comment isAdmin="false" isApproved="true" id="a99653a9-ae78-422a-a799-83850b6ec5c6">
       <author>Jonx</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02834446680849610263</website>
@@ -121,7 +121,7 @@
       <date>2012-04-21 12:38:57</date>
       <content>Hi Mark,&lt;br /&gt;Thank you for your hard work over all those years ;)&lt;br /&gt;&lt;br /&gt;One question about your comment about playing AAC. You say above that AAC can be played using the ACM codecs but later say the ACM codecs do not permit this. Can you please clarify?&lt;br /&gt;I would like to read from AAC files and transcode them to WAV/PCM. Can this be done with plain Naudio? When existing ACM codecs (where do I get them) or cannot be done?&lt;br /&gt;Thank you for your lights,&lt;br /&gt;John.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e44b2621-11c1-423c-88b2-0f0a3f5d6b24">
+    <comment isAdmin="false" isApproved="true" id="56e609ee-1d86-48eb-8e7b-71c3295a72db">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -130,7 +130,7 @@
       <date>2012-05-31 16:58:48</date>
       <content>I have been trying to work out how to stream radio and show a waveform. I have been playing around with your streaming demo but can&amp;#39;t get a waveform displaying correctly, the nearest I have got is showing a flat line. Any suggestions on how best to achieve this!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="aa52821f-68a3-4de8-b814-408631d69390">
+    <comment isAdmin="false" isApproved="true" id="15ab8edc-b13a-479a-b0d2-45f5b70c6a7d">
       <author>Sajjad Shadow</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16207295166032819111</website>
@@ -139,7 +139,7 @@
       <date>2012-06-04 14:48:23</date>
       <content>Thanks so much&lt;br /&gt;I have a more question.&lt;br /&gt;can I save or cache the buffered playing stream?&lt;br /&gt;&lt;br /&gt;thanks again.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2a990b78-c1a3-4092-83af-71c058da826b">
+    <comment isAdmin="false" isApproved="true" id="7148aff4-0469-4dca-8307-00618a2d7d19">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -148,7 +148,7 @@
       <date>2012-06-11 11:07:50</date>
       <content>@sajjad, you could easily also write incoming MP3 frames to a file if you want. The BufferedWaveProvider is effectively an in-memory cache. You can increase its duration if you like.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="fdbd95bc-4049-4626-a8f3-9a6d6e8e8717">
+    <comment isAdmin="false" isApproved="true" id="38d376f6-7a18-4ee0-a882-ea3eda6dc3f3">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -157,7 +157,7 @@
       <date>2012-07-19 15:15:10</date>
       <content>Hi Mark,&lt;br /&gt;Thank you very much for great library and your hard work.&lt;br /&gt;Can you also please provide some video tutorials for Demo programs which you created, it will be helpful for these who is new in .Net and audio programing to understand the examples.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3528eb46-c69a-425c-8041-d73cbcb2e79e">
+    <comment isAdmin="false" isApproved="true" id="e0d8cb8f-d9fc-4e03-b28e-986e03836a59">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -166,7 +166,7 @@
       <date>2012-11-11 17:27:01</date>
       <content>Hi,  &lt;br /&gt;&lt;br /&gt;nice post. Can I play  streaming videos using Naduio. Can I get the source code for  playing streaming mp3 audios.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="eb490a24-8e12-4acd-8cfa-773d7fcf9fd2">
+    <comment isAdmin="false" isApproved="true" id="c99cce14-3701-4087-9584-4728cff6a79c">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -175,7 +175,7 @@
       <date>2013-07-26 11:40:08</date>
       <content>i have a question:&lt;br /&gt;&lt;br /&gt;if i have a file with 50% downloaded,&lt;br /&gt;can i download/stream only the left 50% while playing it?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="44d18aa2-5eb3-42c1-96c5-5dbf7fa215c8">
+    <comment isAdmin="false" isApproved="true" id="89880da0-3cad-47a7-a2c6-5ca82be862e9">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -184,7 +184,7 @@
       <date>2013-07-26 11:42:58</date>
       <content>you&amp;#39;d need to buffer what you&amp;#39;d downloaded somewhere, and to save space, I&amp;#39;d buffer the compressed audio</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b5ad928b-d13d-413b-a4c2-dbe309df62b1">
+    <comment isAdmin="false" isApproved="true" id="69fe9bcc-2eb2-4fdf-b9b2-d9550c25bfbc">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -193,7 +193,7 @@
       <date>2013-07-31 10:48:43</date>
       <content>Hi,&lt;br /&gt;&lt;br /&gt;You mean i buffer the exising 50% mp3 to stream and play, at the same time buffer the network stream and then append it to the player?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2f55e4a9-6e96-4aae-8bb1-2478ce7658db">
+    <comment isAdmin="false" isApproved="true" id="c246418a-ec40-4b75-b9b0-0a5f534840ef">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -202,7 +202,7 @@
       <date>2013-08-01 15:44:59</date>
       <content>Thank you very much.&lt;br /&gt;Sakis</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="927b0577-e376-4448-a137-59b2a35aabac">
+    <comment isAdmin="false" isApproved="true" id="44e78084-3fe5-4f4a-9044-0d1ddee96f1d">
       <author>Muhammad Sufiyan</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14470238845654280589</website>
@@ -211,7 +211,7 @@
       <date>2013-09-29 18:37:29</date>
       <content>please Sir can you give the source code for &amp;quot;How to Play Streaming MP3 Using NAudio&amp;quot; article... atleast reply me SIR :)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="3579064d-a649-41a1-ba14-9ddce7f92ae6">
+    <comment isAdmin="false" isApproved="true" id="afe3584b-6349-48b2-a4eb-26cd39121983">
       <author>Muhammad Sufiyan</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/14470238845654280589</website>
@@ -220,7 +220,7 @@
       <date>2013-09-29 18:50:08</date>
       <content>please sir at least help me to play, pause, stop a mp3 file from web address...my email is sufiyan@engineer.com... i have used the last answer code from http://stackoverflow.com/questions/184683/play-audio-from-a-stream-using-c-sharp?lq=1 please help me sir.&lt;br /&gt;</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b024a288-16e9-498a-b787-a1b9ccc8b852">
+    <comment isAdmin="false" isApproved="true" id="e122fa63-37bf-47a6-a54b-6c7670e11ec2">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -229,7 +229,7 @@
       <date>2013-09-29 18:56:00</date>
       <content>the source code is all on CodePlex, at the NAudio site, inside the NAudioDemo project.&lt;br /&gt;&lt;br /&gt;You might actually find that it is much easier if all you want to do is stream from a URL, to simply use the MediaElement control from WPF, and set the source to point to that URL.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="88e666a5-3bee-4223-b146-9d7fb0786725">
+    <comment isAdmin="false" isApproved="true" id="98cbe8e7-fdb6-49e3-8869-c0907b46cda0">
       <author>Scully</author>
       <email>noreply@blogger.com</email>
       <website />

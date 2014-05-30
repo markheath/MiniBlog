@@ -11,7 +11,7 @@
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="d9afcbcc-a93b-44bc-a0df-fac9b0991e13">
+    <comment isAdmin="false" isApproved="true" id="5b41c611-c824-40e2-9fd6-e35710b7d6a6">
       <author>iamnotsmart</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09879288181044734250</website>
@@ -20,7 +20,7 @@
       <date>2009-11-28 16:00:52</date>
       <content>hi Mark,&lt;br /&gt;&lt;br /&gt;Im really sorry if im making comments everywhere. I just dont know how to contact you. Anyway, ive noticed that in the WaveFileWriter you have to call close so that the &amp;quot;file&amp;quot; or the stream it contains will have complete WAV file/stream. now, if i use file i have no prob with Wavout Playback. However if use IO stream such as MemoryStream to get the byte array from WaveFileWriter and use it in WAVEOUT playback without WaveFileWriter.Close it is having &amp;quot;NO RIFF header error&amp;quot;. I think because inorder for the stream to complete i have to call WaveFileWriter.Close. Well i DID call that procedure but the problem is im having the &amp;quot;STREAM already closed&amp;quot; errors or something thesame. is there work around with this? what im after is to be able to stream using bytearray over the network. &lt;br /&gt;(and hey i finally understood the READ part of IWAVEProvider) &lt;br /&gt;&lt;br /&gt;Thanks again for this really wonderful dll.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7621d5ce-799a-46c7-8f7f-ff72c9d5ed1d">
+    <comment isAdmin="false" isApproved="true" id="905513dd-4f5d-4149-bb9b-84b7a1d5f3d2">
       <author>iamnotsmart</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09879288181044734250</website>
@@ -29,7 +29,7 @@
       <date>2009-11-28 17:59:15</date>
       <content>hi mark,&lt;br /&gt;&lt;br /&gt;ive got things working already, what i did was to imitate what you did on WaveFileWriter.Close and put it inside a new procedure like writerGenerateFullSoundStream...now i am able to stream byte array to the network...and play them...thank you so much for this wonderfull DLL...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dccaa166-cd35-41d5-96f2-db2a0333f8d0">
+    <comment isAdmin="false" isApproved="true" id="933396c9-0a1f-4b09-9e78-8da211d5ab97">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -38,7 +38,7 @@
       <date>2009-11-28 19:29:12</date>
       <content>hi iamnotsmart, glad you got things working in the end. hopefully I will have the time to write some demos of this kind of thing in the future, as I get a lot of similar questions</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9e2d1861-08b1-4fe9-8073-70000264b5b2">
+    <comment isAdmin="false" isApproved="true" id="17cf308e-490e-478d-9c1c-875cb555fba5">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -47,7 +47,7 @@
       <date>2010-01-26 18:07:09</date>
       <content>Hi Mark, I was wondering what tool did you use to draw your schemas like in this post?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0a62667d-629e-40c9-a00a-ff7ce0964010">
+    <comment isAdmin="false" isApproved="true" id="8b0b6698-b22a-41fe-b496-67d1373ce9a2">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -56,7 +56,7 @@
       <date>2010-01-26 18:19:21</date>
       <content>Microsoft Word! I would love to find something better though</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="86c94879-da59-411e-a52b-42d741ad9c50">
+    <comment isAdmin="false" isApproved="true" id="c4c10424-235e-403a-8d59-e750d97bfb13">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -65,7 +65,7 @@
       <date>2010-01-27 12:46:50</date>
       <content>Haha, didn&amp;#39;t think about it ! Thanks.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="454f94c2-ad34-4ea4-ba9b-07b75ae89614">
+    <comment isAdmin="false" isApproved="true" id="d60310a2-7677-44e9-ae5e-8a91d3f37da0">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -74,7 +74,7 @@
       <date>2011-01-17 17:00:03</date>
       <content>Hi Mark and iamnotsmart,&lt;br /&gt;&lt;br /&gt;Can you share with me how did u 2 do?? I&amp;#39;m new in C# and also in NAudio.. Now I ve to play back what the user write in text box. So it will be string. I changed string to memory stream..then use NAudio...But same with iamnotsmart...I got error shown that the header is not &amp;#39;RIFF&amp;#39;.... I urgently need help..pls pls pls...</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b1e6c326-0db3-4731-9a42-3314519ec225">
+    <comment isAdmin="false" isApproved="true" id="2d8d2be9-fe35-4534-8ff1-bbe73d8508ca">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -83,7 +83,7 @@
       <date>2011-01-18 22:31:46</date>
       <content>@anonymous - NAudio cannot to text to audio. You need to use the Microsoft speech engine to do that.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ed4db0a8-e64e-4ff7-b822-42844735547f">
+    <comment isAdmin="false" isApproved="true" id="6eb33087-35ce-4cac-8140-b4cbdcb33b47">
       <author>candritzky</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/04674757146904324766</website>
@@ -92,7 +92,7 @@
       <date>2011-07-01 16:36:37</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I cannot find the WaveInStream class mentioned in this article in the most recent version of the library (1.4RC). What is the recommended replacement if I want to convert the data from a WaveIn device to a WaveStream?&lt;br /&gt;&lt;br /&gt;Thanks,&lt;br /&gt;Chris</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b432a490-1c2c-41fc-b135-449a06a664a8">
+    <comment isAdmin="false" isApproved="true" id="91873ae4-1cde-4dec-acbe-5218bf91ce9e">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -101,7 +101,7 @@
       <date>2011-07-01 16:40:43</date>
       <content>@candritzky - the recommended way is to put the recorded bytes into a BufferedWaveProvider. WaveInStream was never a proper WaveStream, so I renamed it to WaveIn.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="30bc2dd3-2919-4af5-9d45-4b7c649e30c8">
+    <comment isAdmin="false" isApproved="true" id="3e3e844c-4226-4d56-b12e-6df08d34b541">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />

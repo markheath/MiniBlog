@@ -23,7 +23,7 @@ silverlightControl.focus();&lt;/pre&gt;
     <category>Silverlight</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="77e6597e-d684-4d76-9281-34bc215d9ace">
+    <comment isAdmin="false" isApproved="true" id="3798fe7d-3c88-4fba-91a5-eb89da838484">
       <author>Daryl</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16066756037637345997</website>
@@ -32,7 +32,7 @@ silverlightControl.focus();&lt;/pre&gt;
       <date>2008-04-24 21:21:00</date>
       <content>Thanks for this blog. I couldn't figure out why my PolyLine wasn't updating on the screen until I found this blog.&lt;BR/&gt;&lt;BR/&gt;It makes a twisted sort of sense. The points property is a DependancyProperty and I imagine internally the fact that it's been updated is only recognized when you set that property. Manually modifying the contents of the collection is not seen. Very counterintuitive.&lt;BR/&gt;&lt;BR/&gt;The approach I took was to create a new PointCollection object. Add my new points to it. Then set the Points property of my PolyLine object to the new PointCollection. Seemed a little cleaner than updating the existing collection and setting it equal to itself.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0969f64a-dced-4524-815f-7fbfc9c408e5">
+    <comment isAdmin="false" isApproved="true" id="76a88875-a790-4a5d-ba7f-12727efb8c84">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>

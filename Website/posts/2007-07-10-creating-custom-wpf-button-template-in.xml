@@ -3,8 +3,8 @@
   <slug>creating-custom-wpf-button-template-in</slug>
   <author>Mark Heath</author>
   <pubDate>2007-07-10 12:27:00</pubDate>
-  <lastModified>2011-07-03 09:56:22</lastModified>
-  <content>&lt;p&gt;In this post I will demonstrate how to create a custom template for a WPF button using XAML. In particular we will look at being able to have complete control over all the visual states, including disabled, mouse over, mouse down and even the appearance of the focus rectangle. &lt;/p&gt;  &lt;h3&gt;&lt;strong&gt;Stage 1: Creating a style&lt;/strong&gt; &lt;/h3&gt; &lt;p&gt;The first thing to do is to create a Style which sets the properties of the Button that we want to customize. We will put this in the Page.Resources section of our XAML file.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="OrangeButton" TargetType="Button"&amp;gt;
+  <lastModified>2014-05-29 14:56:03</lastModified>
+  <content>&lt;p&gt;In this post I will demonstrate how to create a custom template for a WPF button using XAML. In particular we will look at being able to have complete control over all the visual states, including disabled, mouse over, mouse down and even the appearance of the focus rectangle. &lt;/p&gt;&lt;h3&gt;&lt;strong&gt;Stage 1: Creating a style&lt;/strong&gt; &lt;/h3&gt;&lt;p&gt;The first thing to do is to create a Style which sets the properties of the Button that we want to customize. We will put this in the Page.Resources section of our XAML file.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="OrangeButton" TargetType="Button"&amp;gt;
 &amp;lt;Setter Property="OverridesDefaultStyle" Value="True"/&amp;gt;
 &amp;lt;Setter Property="Margin" Value="2"/&amp;gt;
 &amp;lt;Setter Property="FontFamily" Value="Verdana"/&amp;gt;
@@ -19,8 +19,7 @@
            &amp;lt;GradientStop Color="#FFFFD190" Offset="1"/&amp;gt;
        &amp;lt;/LinearGradientBrush&amp;gt;
    &amp;lt;/Setter.Value&amp;gt;
-&amp;lt;/Setter&amp;gt;&lt;/pre&gt;
-&lt;p&gt;This is all fairly straightforward stuff - I am just setting the font and background gradient. The only complicated bit is that I am overriding the focus rectangle drawing, as I want a smaller rectangle than the one that gets drawn by default. So I need another style in my Page.Resources section:&lt;/p&gt;&lt;pre class="brush: xml"&gt;    &amp;lt;Style x:Key="MyFocusVisual"&amp;gt;
+&amp;lt;/Setter&amp;gt;&lt;/pre&gt;&lt;p&gt;This is all fairly straightforward stuff - I am just setting the font and background gradient. The only complicated bit is that I am overriding the focus rectangle drawing, as I want a smaller rectangle than the one that gets drawn by default. So I need another style in my Page.Resources section:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="MyFocusVisual"&amp;gt;
      &amp;lt;Setter Property="Control.Template"&amp;gt;
        &amp;lt;Setter.Value&amp;gt;
          &amp;lt;ControlTemplate TargetType="{x:Type Control}"&amp;gt;
@@ -31,10 +30,7 @@
          &amp;lt;/ControlTemplate&amp;gt;
        &amp;lt;/Setter.Value&amp;gt;
      &amp;lt;/Setter&amp;gt;
-   &amp;lt;/Style&amp;gt;&lt;/pre&gt;
-&lt;h3&gt;Stage 2: Creating a template &lt;/h3&gt;
-&lt;p&gt;We would already be finished if I just wanted the normal appearance of my button to be changed. But I want complete control - including the appearance in mouse over, mouse down and disabled situations. So a template allows us to completely control what visual elements constitute our control.&lt;/p&gt;
-&lt;p&gt;Again this goes in Page.Resources. The first part is shown here:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Setter Property="Template"&amp;gt;
+   &amp;lt;/Style&amp;gt;&lt;/pre&gt;&lt;h3&gt;Stage 2: Creating a template &lt;/h3&gt;&lt;p&gt;We would already be finished if I just wanted the normal appearance of my button to be changed. But I want complete control - including the appearance in mouse over, mouse down and disabled situations. So a template allows us to completely control what visual elements constitute our control.&lt;/p&gt;&lt;p&gt;Again this goes in Page.Resources. The first part is shown here:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Setter Property="Template"&amp;gt;
    &amp;lt;Setter.Value&amp;gt;
        &amp;lt;ControlTemplate TargetType="Button"&amp;gt;
            &amp;lt;Border Name="border"
@@ -54,19 +50,13 @@
                &amp;lt;ContentPresenter HorizontalAlignment="Center"
                            VerticalAlignment="Center" Name="content"/&amp;gt;
                &amp;lt;/Grid&amp;gt;
-           &amp;lt;/Border&amp;gt;&lt;/pre&gt;
-&lt;p&gt;Here you can see I have set up a simple border which gives my button rounded corners, a single pixel gray border, and uses the fill from the control's Background property. This means that by default it will use the orange gradient specified in my style, but that users can override this for their own Background.&lt;/p&gt;
-&lt;p&gt;To draw the content (usually text), we use a ContentPresenter control. I am trying to do something clever here, which is create a bevelled effect on the text by drawing it again in gray. This works fine on text, but for some reason doesn't do anything when the Content is a Shape. I'm not sure why that is. ShadowStyle is defined as follows:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ShadowStyle"&amp;gt;
+           &amp;lt;/Border&amp;gt;&lt;/pre&gt;&lt;p&gt;Here you can see I have set up a simple border which gives my button rounded corners, a single pixel gray border, and uses the fill from the control's Background property. This means that by default it will use the orange gradient specified in my style, but that users can override this for their own Background.&lt;/p&gt;&lt;p&gt;To draw the content (usually text), we use a ContentPresenter control. I am trying to do something clever here, which is create a bevelled effect on the text by drawing it again in gray. This works fine on text, but for some reason doesn't do anything when the Content is a Shape. I'm not sure why that is. ShadowStyle is defined as follows:&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Style x:Key="ShadowStyle"&amp;gt;
    &amp;lt;Setter Property="Control.Foreground" Value="LightGray" /&amp;gt;
-&amp;lt;/Style&amp;gt;&lt;/pre&gt;
-&lt;h3&gt;Stage 3: Applying some triggers &lt;/h3&gt;
-&lt;p&gt;Now we need to add some triggers to our Button template so that we can change its appearance on various events.&lt;/p&gt;
-&lt;p&gt;First is mouse over. When IsMouseOver becomes true, we change the colour of the border and the text colour to blue. Unfortunately, setting the Foreground property does nothing if the content is a shape.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ControlTemplate.Triggers&amp;gt;
+&amp;lt;/Style&amp;gt;&lt;/pre&gt;&lt;h3&gt;Stage 3: Applying some triggers &lt;/h3&gt;&lt;p&gt;Now we need to add some triggers to our Button template so that we can change its appearance on various events.&lt;/p&gt;&lt;p&gt;First is mouse over. When IsMouseOver becomes true, we change the colour of the border and the text colour to blue. Unfortunately, setting the Foreground property does nothing if the content is a shape.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;ControlTemplate.Triggers&amp;gt;
   &amp;lt;Trigger Property="IsMouseOver" Value="True"&amp;gt;
      &amp;lt;Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" /&amp;gt;
      &amp;lt;Setter Property="Foreground" Value="#FF4788c8" /&amp;gt;
-  &amp;lt;/Trigger&amp;gt;&lt;/pre&gt;
-&lt;p&gt;Next is mouse down. When IsPressed becomes true, we modify the background gradient so it looks like the button has gone 'down'. I also move the text down one pixel.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Trigger Property="IsPressed" Value="True"&amp;gt;                   
+  &amp;lt;/Trigger&amp;gt;&lt;/pre&gt;&lt;p&gt;Next is mouse down. When IsPressed becomes true, we modify the background gradient so it looks like the button has gone 'down'. I also move the text down one pixel.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Trigger Property="IsPressed" Value="True"&amp;gt;                   
    &amp;lt;Setter Property="Background" &amp;gt;
    &amp;lt;Setter.Value&amp;gt;
        &amp;lt;LinearGradientBrush StartPoint="0,0" EndPoint="0,1" &amp;gt;
@@ -81,20 +71,16 @@
        &amp;lt;TranslateTransform Y="1.0" /&amp;gt;
    &amp;lt;/Setter.Value&amp;gt;
    &amp;lt;/Setter&amp;gt;
-&amp;lt;/Trigger&amp;gt;&lt;/pre&gt;
-&lt;p&gt;Third, we draw a dark gray border when a button is focussed or if it is the default button (the button that will be clicked when you press enter).&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Trigger Property="IsDefaulted" Value="True"&amp;gt;
+&amp;lt;/Trigger&amp;gt;&lt;/pre&gt;&lt;p&gt;Third, we draw a dark gray border when a button is focussed or if it is the default button (the button that will be clicked when you press enter).&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Trigger Property="IsDefaulted" Value="True"&amp;gt;
    &amp;lt;Setter TargetName="border" Property="BorderBrush" Value="#FF282828" /&amp;gt;
 &amp;lt;/Trigger&amp;gt;
 &amp;lt;Trigger Property="IsFocused" Value="True"&amp;gt;
    &amp;lt;Setter TargetName="border" Property="BorderBrush" Value="#FF282828" /&amp;gt;
-&amp;lt;/Trigger&amp;gt;&lt;/pre&gt;
-&lt;p&gt;Finally, the when the button is disabled, we gray out the text and wash out the background a little by reducing its opacity.&lt;/p&gt;&lt;pre class="brush: xml"&gt;    &amp;lt;Trigger Property="IsEnabled" Value="False"&amp;gt;
+&amp;lt;/Trigger&amp;gt;&lt;/pre&gt;&lt;p&gt;Finally, the when the button is disabled, we gray out the text and wash out the background a little by reducing its opacity.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;Trigger Property="IsEnabled" Value="False"&amp;gt;
        &amp;lt;Setter TargetName="border" Property="Opacity" Value="0.7" /&amp;gt;
        &amp;lt;Setter Property="Foreground" Value="Gray" /&amp;gt;
    &amp;lt;/Trigger&amp;gt;
-&amp;lt;/ControlTemplate.Triggers&amp;gt;&lt;/pre&gt;
-&lt;h3&gt;Stage 4: Using the control&lt;/h3&gt;
-&lt;p&gt;Now we are ready to use our control. All we have to do is set the Style property of our button. We can override any of the settings such as font size if we like. The button will automatically resize itself to fit the content.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;StackPanel HorizontalAlignment="Center"&amp;gt;
+&amp;lt;/ControlTemplate.Triggers&amp;gt;&lt;/pre&gt;&lt;h3&gt;Stage 4: Using the control&lt;/h3&gt;&lt;p&gt;Now we are ready to use our control. All we have to do is set the Style property of our button. We can override any of the settings such as font size if we like. The button will automatically resize itself to fit the content.&lt;/p&gt;&lt;pre class="brush: xml"&gt;&amp;lt;StackPanel HorizontalAlignment="Center"&amp;gt;
 &amp;lt;Button Style="{StaticResource OrangeButton}"&amp;gt;Hello&amp;lt;/Button&amp;gt;
 &amp;lt;Button Style="{StaticResource OrangeButton}"&amp;gt;World&amp;lt;/Button&amp;gt;
 &amp;lt;Button Style="{StaticResource OrangeButton}" FontSize="20"&amp;gt;Big Button&amp;lt;/Button&amp;gt;
@@ -105,10 +91,7 @@
 &amp;lt;Button Style="{StaticResource OrangeButton}" Width="30" Height="30"&amp;gt;
 &amp;lt;Path Fill="Black" Data="M 3,3 l 9,9 l -9,9 Z" /&amp;gt;
 &amp;lt;/Button&amp;gt;
-&amp;lt;/StackPanel&amp;gt;&lt;/pre&gt;
-&lt;p&gt;Here's what it looks like:&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/files/creating-custom-wpf-button-template-in-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/creating-custom-wpf-button-template-in-1.png" width="143" height="225"&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Download an example XAML file &lt;a href="http://www.wordandspirit.co.uk/software/ButtonStackPanel.xaml"&gt;here.&lt;/a&gt;&lt;/p&gt;  </content>
+&amp;lt;/StackPanel&amp;gt;&lt;/pre&gt;&lt;p&gt;Here's what it looks like:&lt;/p&gt;&lt;p&gt;&lt;a href="/posts/files/creating-custom-wpf-button-template-in-1.png"&gt;&lt;img style="background-image: none; border-bottom: 0px; border-left: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top: 0px; border-right: 0px; padding-top: 0px" title="image" border="0" alt="image" src="/posts/files/creating-custom-wpf-button-template-in-1.png" width="143" height="225"&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Download an example XAML file &lt;a href="https://gist.github.com/markheath/c8189790270b8615625d"&gt;here.&lt;/a&gt;&lt;/p&gt;</content>
   <ispublished>true</ispublished>
   <categories>
     <category>WPF</category>
@@ -116,7 +99,7 @@
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="751b4da9-e05e-42c2-9c62-7abfdd78a688">
+    <comment isAdmin="false" isApproved="true" id="0538f33d-8795-4f34-a10c-4e480d396201">
       <author>F Quednau</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/13457422819694563512</website>
@@ -125,7 +108,7 @@
       <date>2007-08-12 11:43:00</date>
       <content>Nice work...only nag is that I have trouble seeing your code (this is firefox 2.0.0.6): It gets clipped by its container at the point where the right-hand side starts.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c3955ee6-3fa0-43e9-80a8-9ea111fc0d32">
+    <comment isAdmin="false" isApproved="true" id="fe2688ca-506a-417a-bf89-7c9bfc52871a">
       <author>Peregrinati</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02374470336264822930</website>
@@ -134,7 +117,7 @@
       <date>2007-12-31 23:29:00</date>
       <content>Me too - I've noticed this code clipping on a lot of sites (including code project!), it's quite aggrevating.&lt;BR/&gt;&lt;BR/&gt;Good code otherwise!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b4be87da-5066-451b-b2e8-620b473f8166">
+    <comment isAdmin="false" isApproved="true" id="d8967015-afff-4060-b7a1-c2c41a9ceb7c">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -143,7 +126,7 @@
       <date>2008-01-01 11:17:00</date>
       <content>sorry about the clipping. hopefully you can get at the code by viewing the page source. I'm hoping to migrate to another blog platform sometime this year</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="baf89b3b-ecf9-427e-b6e7-be546ef1ed98">
+    <comment isAdmin="false" isApproved="true" id="36fcc852-c032-4485-85a0-88fdbc884274">
       <author>Linda Rawson</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/03224632771855156125</website>
@@ -152,7 +135,7 @@
       <date>2008-04-24 22:35:00</date>
       <content>It looks like great work.  Is there anyway to get the entire code piece?  Like exactly what I would put in the resource section?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7a8e80a7-7c96-49c0-a3c6-71c8549ffce6">
+    <comment isAdmin="false" isApproved="true" id="129ddf45-3571-4b96-bd65-7d8e51271006">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -161,7 +144,7 @@
       <date>2008-05-30 14:59:00</date>
       <content>very well explained. this was the best explaination after reading three books on WPF.&lt;BR/&gt;&lt;BR/&gt;thanks!!!!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8e77a57b-e8d0-4c8d-834d-bb1dec677e82">
+    <comment isAdmin="false" isApproved="true" id="8ee58436-b8b0-4497-b031-de3585ea8a0d">
       <author>Steve</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09853908113795645474</website>
@@ -170,7 +153,7 @@
       <date>2008-08-21 22:29:00</date>
       <content>why don't you just type gibberish on the internet. Oh wait, you have! Complete code snippet please.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="6cf40399-165e-4fec-836a-32c27e472846">
+    <comment isAdmin="false" isApproved="true" id="82ca896c-0d1c-4815-8c1f-cfbff0dc88e7">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -179,7 +162,7 @@
       <date>2008-09-03 10:10:00</date>
       <content>To all the people who'se panties are in a knot over the clipping issue (yes, you Steve) appreciate the fact that you have a code snippet that works. It's obviously not the authors fault. Go click view source you fool.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e2e51771-00ea-49c8-8ab2-8463684abf2c">
+    <comment isAdmin="false" isApproved="true" id="f1ab0cde-8ba6-476c-970e-736e477eb69b">
       <author>¡El Perro!</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01959602054025541292</website>
@@ -188,7 +171,7 @@
       <date>2008-09-15 07:07:00</date>
       <content>Where is the download link to get a visual studio project with this example????</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="856ea2c1-ce82-4cd6-a123-b9879424430f">
+    <comment isAdmin="false" isApproved="true" id="a038e2e7-ad8a-43dd-9edf-2042d201fa87">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -197,7 +180,7 @@
       <date>2008-09-19 09:43:00</date>
       <content>hi el perro,&lt;BR/&gt;I'm afraid there isn't a download link. I did this in XAML Pad.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4bd8889b-c748-45c3-893f-c786016ac634">
+    <comment isAdmin="false" isApproved="true" id="96440912-b322-4d27-96df-0b993a37a86c">
       <author>Evan</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -206,7 +189,7 @@
       <date>2008-11-26 20:14:00</date>
       <content>This is wonderful, useful, and better still, I now know how to do it myself. Thanks!&lt;BR/&gt;&lt;BR/&gt;For kicks, I added a trigger for when the button is disabled.&lt;BR/&gt;&lt;BR/&gt;(To the complainers - the code is usable as-is. All you need to do is &amp;lt;/end&amp;gt; a few tags, bung it into a resource dictionary, and tell App.xaml about the dictionary.)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1ebb004a-6932-4294-add1-97604cef6daa">
+    <comment isAdmin="false" isApproved="true" id="55365d97-30b9-4787-9686-0117fd60c3e0">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -215,7 +198,7 @@
       <date>2008-12-22 12:19:00</date>
       <content>It is not at all working. It was just a time weast from some fool.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a2ab52be-e007-4d45-b62b-1428610597d8">
+    <comment isAdmin="false" isApproved="true" id="5a88435f-256b-4477-a8a0-2c3c310f70fb">
       <author>ghkj</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09132300810330379086</website>
@@ -224,7 +207,7 @@
       <date>2009-02-06 01:24:00</date>
       <content>This comment has been removed by a blog administrator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="e6fed9ef-8619-466b-b025-befaaf390d7b">
+    <comment isAdmin="false" isApproved="true" id="00e66ceb-8c01-4ec6-bfcf-4fbd6612a92c">
       <author>wducklow</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09942914660134789232</website>
@@ -233,7 +216,7 @@
       <date>2009-02-13 20:46:00</date>
       <content>Hey, great example.&lt;BR/&gt;&lt;BR/&gt;The one thing that is giving me problems is the mnemonics.&lt;BR/&gt;&lt;BR/&gt;When I add "_Hello" to the content of the button the alt-H functionality is neither drawn or works. Any ideas why?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="091ef0ae-f090-4717-8d2a-e6ad548136a8">
+    <comment isAdmin="false" isApproved="true" id="e535dbe4-1ffc-4c42-b6ef-74c92c3a9af8">
       <author>Nick</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -242,7 +225,7 @@
       <date>2009-02-26 09:54:00</date>
       <content>Thanks for the post. I am changing few colors now and put it to work in real life. Good job.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="84137829-4de4-4b57-b43c-6ffe71417138">
+    <comment isAdmin="false" isApproved="true" id="97d5f8cb-3093-4677-9f76-26ad0243da6c">
       <author>Amar Syafiq</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/06646104465579165935</website>
@@ -251,7 +234,7 @@
       <date>2009-05-07 02:34:00</date>
       <content>Hi mark,&lt;br /&gt;instead of creating the custom button in a page can i create it in window as well? or use it in window?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5a2c4f13-41c4-4fc4-8c43-9ea327faf0d7">
+    <comment isAdmin="false" isApproved="true" id="1d7bb9ed-e27d-4ab2-aee5-363329858c27">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -260,7 +243,7 @@
       <date>2009-05-07 19:10:00</date>
       <content>Hi Amar, of course, you can use it wherever you like</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="9c8c3ed5-c8c9-4781-b33f-9ce450525e64">
+    <comment isAdmin="false" isApproved="true" id="1a58c84a-d248-4a55-8fc6-326836ed1602">
       <author>RRave</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02162942492813501463</website>
@@ -269,7 +252,7 @@
       <date>2009-06-12 16:22:06</date>
       <content>Dear Sir,&lt;br /&gt;&lt;br /&gt;I hope you are doing well. I got this email address from one of your contribution web site. I have launched a web site www.codegain.com and it is basically aimed C#,JAVA,VB.NET,ASP.NET,AJAX,Sql Server,Oracle,WPF,WCF and etc resources, programming help, articles, code snippet, video demonstrations and problems solving support. I would like to invite you as an author and a supporter.&lt;br /&gt;Looking forward to hearing from you and hope you will join with us soon.&lt;br /&gt;&lt;br /&gt;Thank you&lt;br /&gt;RRaveen&lt;br /&gt;Founder CodeGain.com</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="246f952c-1703-4525-a239-812dfe40ca93">
+    <comment isAdmin="false" isApproved="true" id="a64ef486-9e78-439c-96af-b56c6d05998b">
       <author>Bernd</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10786098892890098904</website>
@@ -278,7 +261,7 @@
       <date>2009-06-26 09:54:49</date>
       <content>Thanks for sharing this. Regarding the style for the FocusVisual I was wondering why you put a Rectangle and a Border inside the Grid... removing the Border does not seem to change anything.&lt;br /&gt;Cheers,&lt;br /&gt; Bernd</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="337634b4-1ddf-4cb4-95d9-e6d2f3081130">
+    <comment isAdmin="false" isApproved="true" id="20cc80bd-d87f-496f-b264-9f445c1f1903">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -287,7 +270,7 @@
       <date>2009-07-02 16:51:08</date>
       <content>Hi Bernd,&lt;br /&gt;I can&amp;#39;t quite remember why I put it in. It was a long time ago! I think it was to do with making sure the focus rectangle was an appropriate size, but from what you are saying, perhaps it is no longer needed.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="78a2af04-288e-4f9b-a750-25b4717be929">
+    <comment isAdmin="false" isApproved="true" id="7c512c99-a772-4f0f-b992-2589a6b6c729">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -296,7 +279,7 @@
       <date>2009-09-14 10:04:11</date>
       <content>Hi,&lt;br /&gt;what do i have to do if i want the button to be round? I tried to change the rectangle to ellipse in the &amp;quot;MyFocusVisual&amp;quot;-Style but that doesnt work. any ideas?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b71b6fce-a549-47b1-854e-c817349178f3">
+    <comment isAdmin="false" isApproved="true" id="f00e696e-e8d0-4a85-a717-5a24d673b4c2">
       <author>Timo</author>
       <email>noreply@blogger.com</email>
       <website>http://www.complified.com/</website>
@@ -305,7 +288,7 @@
       <date>2009-09-17 20:05:51</date>
       <content>Hey,&lt;br /&gt;&lt;br /&gt;good and easy to understand tutorial on creating and styling a control template in WPF. If you would like to take the design to another level see my &lt;a href="http://www.complified.com/?p=28" rel="nofollow"&gt;Button Styling Tutorial&lt;/a&gt; (www.complified.com) ;-)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c242fa0e-98d7-4f4b-b814-a919f52c4ea9">
+    <comment isAdmin="false" isApproved="true" id="de3560eb-e3b8-4044-a8ba-134a4bf47958">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -314,7 +297,7 @@
       <date>2009-09-26 13:30:31</date>
       <content>Hi anonymous,&lt;br /&gt;check out my post&lt;br /&gt;&lt;a href="http://mark-dot-net.blogspot.com/2009/09/circular-wpf-button-template.html" rel="nofollow"&gt;here&lt;/a&gt; for a circular button template.&lt;br /&gt;&lt;br /&gt;Timo, that&amp;#39;s a really nice WPF styling tutorial, thanks for the link</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="ac66579f-ebe7-4a8e-bc8a-c71bbcef53e0">
+    <comment isAdmin="false" isApproved="true" id="dea61d7b-2ee8-4d52-a619-d2492338d1c0">
       <author>Sheshu Panga</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01147439493558620972</website>
@@ -323,7 +306,7 @@
       <date>2009-10-27 06:35:52</date>
       <content>Hi Mark,&lt;br /&gt;It&amp;#39;s indeed a nice article, though very old but still applicable. I live in Bournemouth, UK and in my spare time I try to write some applications for my every day use. This article has helped me a lot - Thanks a lot. How do I follow your blog? I don&amp;#39;t see any option!&lt;br /&gt;Regards,&lt;br /&gt;Sheshu -</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="0b5978f8-884a-4f71-9132-3cccd4ab5953">
+    <comment isAdmin="false" isApproved="true" id="8d4ed06c-eb6b-4b68-af00-af297f56b974">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -332,7 +315,7 @@
       <date>2009-10-28 11:36:34</date>
       <content>hi Sheshu,&lt;br /&gt;I&amp;#39;ve added a subscribe link to the right, although your feed reader should be able to determine the RSS URL if you just give it the main site feed.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="fdd24f7b-eaf7-4298-8633-7d9186dd6b0c">
+    <comment isAdmin="false" isApproved="true" id="4f57e873-85b8-4bb2-b253-dc3b7581776a">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -341,7 +324,7 @@
       <date>2009-11-11 16:50:30</date>
       <content>In your last button example you use&lt;br /&gt;Path Fill=&amp;quot;Black&amp;quot;&lt;br /&gt;&lt;br /&gt;How can I change color from black to white on IsMouseOver trigger?&lt;br /&gt;&lt;br /&gt;Thank you.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="050d544c-130f-46ea-8d82-233f9a49a47b">
+    <comment isAdmin="false" isApproved="true" id="267e71c7-85de-4b57-909c-f264b34dfdb3">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -350,7 +333,7 @@
       <date>2009-11-13 14:44:15</date>
       <content>hi anonymous,&lt;br /&gt;I haven&amp;#39;t worked out a way to make that happen. If I ever find out I&amp;#39;ll update this post.&lt;br /&gt;Mark</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c24f96f6-7cef-437f-8340-1ba8230d68b1">
+    <comment isAdmin="false" isApproved="true" id="18d28702-4fe9-4c9c-8801-8a0471020af0">
       <author>pawels blog</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17050687778188961352</website>
@@ -359,7 +342,7 @@
       <date>2010-02-24 09:12:28</date>
       <content>Hi! Thank your for this example! It&amp;#39;s very nice.&lt;br /&gt;I adopted your xaml-code to my &lt;br /&gt;Application.Recources.&lt;br /&gt;If I add the Buttons, as you described, in my MainWindow.xaml, i can used ist -&amp;gt; no problem.&lt;br /&gt;My Problem is that I want to add the Button dynamically in my C# code.&lt;br /&gt;E.G.: Button myButton = new Button();&lt;br /&gt;But how can I add the Style of your Button to myButton? &lt;br /&gt;Can you, or anyone else, give me a hint? :) &lt;br /&gt;&lt;br /&gt;Thx!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="90c72cbb-8d96-4a38-91e1-0b793b507d6f">
+    <comment isAdmin="false" isApproved="true" id="8e129d61-123c-41ec-b59a-a01705b04ff4">
       <author>celil aydin</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/02278281841527545795</website>
@@ -368,7 +351,7 @@
       <date>2010-06-27 22:53:16</date>
       <content>Hi&lt;br /&gt;Thank you for this very helpfull tutoroial. I have a questions regarding to templates in XAML.Let&amp;#39;s assume that I created one button templated in Templates.xaml file and I would like to use that button in MyButtons.xaml file in the same project. How it should be referred in the second XAML file? In other words, is it possible to use templates in another XAML files?&lt;br /&gt;Best regards.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="df4ec184-6fb2-4c79-8375-c69ddef1c347">
+    <comment isAdmin="false" isApproved="true" id="ff4e372f-ed80-409c-8f3f-a986d3377b02">
       <author>Brad</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07161653484239593477</website>
@@ -377,7 +360,7 @@
       <date>2010-06-30 18:55:22</date>
       <content>Nice work.  Do you know how to make a accelerator character work with this?  I loose this feature when specify the button style.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Thanks,&lt;br /&gt;Brad</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="d0e75fde-d794-4dc5-aae5-9a34fbdc8664">
+    <comment isAdmin="false" isApproved="true" id="10b2925f-193e-4324-87c2-e045a08f2ac1">
       <author>victor cassel</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -386,7 +369,7 @@
       <date>2011-01-12 10:45:11</date>
       <content>Thank you! I used this to create a button with both image and text. It works great!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="666c007e-405f-4902-8fea-d5f3c80896b2">
+    <comment isAdmin="false" isApproved="true" id="543de5a8-a4b1-4600-9ab4-c152af9ec0ab">
       <author>Clark Kent</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -395,7 +378,7 @@
       <date>2011-06-15 09:58:42</date>
       <content>This comment has been removed by a blog administrator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="20131895-6891-4f68-98db-cd99caad090c">
+    <comment isAdmin="false" isApproved="true" id="c501aba9-ceb3-464e-a7fd-f39defecc269">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -404,7 +387,7 @@
       <date>2011-08-09 14:40:07</date>
       <content>How do you use a hotkey with these buttons, like Alt+H for the Hello button?&lt;br /&gt;Thanks.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="047dd3e9-4061-4f31-864b-46326afee9ad">
+    <comment isAdmin="false" isApproved="true" id="adda0c0c-9ae9-4f93-8697-3fb59fa1441a">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -413,7 +396,7 @@
       <date>2011-08-11 16:01:09</date>
       <content>@anonymous, try looking here:&lt;br /&gt;http://stackoverflow.com/questions/2186738/wpf-button-mnemonic-does-not-work-if-placing-the-button-in-a-toolbar</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="485af132-3281-4b45-8808-e7b063e99a54">
+    <comment isAdmin="false" isApproved="true" id="c4ccdfd3-5238-408b-a2e8-f2308dde1989">
       <author>LePanther</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -422,7 +405,7 @@
       <date>2011-12-14 14:51:56</date>
       <content>This is a great code! Thanks for sharing! :-)</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b9bde37f-85e8-41c2-8a5b-e082bc0cf60e">
+    <comment isAdmin="false" isApproved="true" id="4504e26a-caa3-4454-b960-a7206bda372e">
       <author>Mel</author>
       <email>noreply@blogger.com</email>
       <website>http://mel-green.com</website>
@@ -431,7 +414,7 @@
       <date>2012-01-20 03:16:25</date>
       <content>If you&amp;#39;re interested in enabling the AccessKey functionality in this template, meaning a Button with &amp;quot;_Cancel&amp;quot; as its content will display as &amp;quot;Cancel&amp;quot; and accept &lt;b&gt;Alt+C&lt;/b&gt; as an activation event, then you simply need to add &lt;i&gt;RecognizeAccessKey=&amp;quot;True&amp;quot;&lt;/i&gt; to the &lt;b&gt;ContentPresenter&lt;/b&gt; with &lt;i&gt;Name=&amp;quot;content&amp;quot;&lt;/i&gt;.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2ccadae8-eb0b-47f9-b4b2-d464604e19a0">
+    <comment isAdmin="false" isApproved="true" id="ef073bf0-85db-43a9-b40b-8c4b44c48627">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -440,7 +423,7 @@
       <date>2012-01-24 13:22:00</date>
       <content>thanks Mel, that&amp;#39;s a useful tip</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a8c7c6a5-9da3-4ff7-a4d1-d742f2389071">
+    <comment isAdmin="false" isApproved="true" id="35f4d54a-2570-44e7-95a8-53e11cd53fe3">
       <author>Wolfgang U.</author>
       <email>noreply@blogger.com</email>
       <website />

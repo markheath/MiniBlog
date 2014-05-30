@@ -86,7 +86,7 @@
     <category>HOWTO</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="1a1298d3-c1a7-404a-9cc0-3d6b6398a73e">
+    <comment isAdmin="false" isApproved="true" id="ac50d0ab-608d-441b-98e4-4311f8e33483">
       <author>Charles</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/06102972521212987224</website>
@@ -95,7 +95,7 @@
       <date>2008-07-25 14:36:00</date>
       <content>Hello,&lt;BR/&gt;&lt;BR/&gt;Your article is really interesting. I have needed to know how customize my Listbox (and specially the scrollbar), and with your help i can do it!&lt;BR/&gt;&lt;BR/&gt;However I have a problem with your solution. In fact, if I open it with Visual Studio 2008, it works (Designer and Test Page). But, when I open it with Blend, I can't view the design result, the exception is :&lt;BR/&gt;&lt;BR/&gt;Error HRESULT E_FAIL has been returned from a call to a COM component.&lt;BR/&gt;&lt;BR/&gt;After some search, I find the line which raise the problem :&lt;BR/&gt;&lt;BR/&gt; ScrollBar     &lt;BR/&gt;x:Name="HorizontalScrollBar"       &lt;B&gt;Style="{StaticResource ScrollBarStyle1}"&lt;/B&gt;&lt;BR/&gt;{...}&lt;BR/&gt;/&amp;gt;&lt;BR/&gt;&lt;BR/&gt;If I delete the Style propertie&lt;BR/&gt;ScrollBar     &lt;BR/&gt;x:Name=&amp;quot;HorizontalScrollBar&amp;quot;       &lt;BR/&gt;{...}&lt;BR/&gt;/&amp;gt;&lt;BR/&gt;It works but I lost the bar style ...!! I don&amp;#39;t understand because the VerticalScrollbar Works fine while it uses the same style !!&lt;BR/&gt;&lt;BR/&gt;I want to know if you are the same problem.&lt;BR/&gt;&lt;BR/&gt;Thanks</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="556916e6-1c32-4409-89e9-9f14307e1c22">
+    <comment isAdmin="false" isApproved="true" id="c0ea112f-0994-4da0-be9f-82f47dcf6e6d">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -104,7 +104,7 @@
       <date>2008-07-25 14:49:00</date>
       <content>Hi Charles,&lt;BR/&gt;yes I have the same issue in Blend. Hopefully Microsoft will address this in a future preview release.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="17e2d0fd-53e6-4ff9-8e47-363e071d0675">
+    <comment isAdmin="false" isApproved="true" id="185b8761-84f2-49fe-9ffd-8e91692e2012">
       <author>Charles</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/06102972521212987224</website>
@@ -113,7 +113,7 @@
       <date>2008-07-25 15:00:00</date>
       <content>Thanks for your answer. I hope too that the next Blend's version will fix some bugs.&lt;BR/&gt;&lt;BR/&gt;However this bug is strange because we can change the Vertical Style but not the Horizontal without bug!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a37a67ec-239b-4d39-bc71-0577556c0229">
+    <comment isAdmin="false" isApproved="true" id="7cd227a4-78f5-4c17-9dc7-ce5295dc0d2a">
       <author>Charles</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/06102972521212987224</website>
@@ -122,7 +122,7 @@
       <date>2008-07-25 15:28:00</date>
       <content>I find a solution to bypass the problem :&lt;BR/&gt;&lt;BR/&gt;We must create 2 style for the 2 scrollbar (even if the style must be the same)&lt;BR/&gt;&lt;BR/&gt;In this case, Blend can draw your control.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="f8105fc1-a1c4-4f1f-9e48-364215f76dfd">
+    <comment isAdmin="false" isApproved="true" id="ed2d6efb-c0d1-4d4c-af5a-14b3097bb084">
       <author>Rick</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/01182455933991473741</website>
@@ -131,7 +131,7 @@
       <date>2008-09-05 20:30:00</date>
       <content>Mark,&lt;BR/&gt;&lt;BR/&gt;Thanks for your articles about styling a Silverlight ListBox.  I am trying to incorporate your code into a demo that I am preparing.  I took your styles from app.xaml and copied them into mine, and copied the ListBox from your app into mine.  Everything works except that the list item foreground text is black, instead of the color that is specified in the style (NoodleLove, I believe).  I've been beating my head on this for a couple of hours without success...Any thoughts?&lt;BR/&gt;&lt;BR/&gt;Thanks,&lt;BR/&gt;Rick</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dae72682-3a09-4be6-910c-c8336a93fd1e">
+    <comment isAdmin="false" isApproved="true" id="7870e517-e1bc-41d7-a318-95c20c2a633c">
       <author>tanios</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/16590543782050816901</website>
@@ -140,7 +140,7 @@
       <date>2008-12-16 08:24:00</date>
       <content>Hello,&lt;BR/&gt;Very interesting article!&lt;BR/&gt;The sample "TestListBoxStyle.zip" is not available anymore for download. Could you re-post it?&lt;BR/&gt;Thank you,</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="4c1f7049-9ad1-4eef-bdec-36abc7d16a15">
+    <comment isAdmin="false" isApproved="true" id="5ecadc47-92f4-44ff-93db-13bdfc2413d4">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -149,7 +149,7 @@
       <date>2008-12-16 21:16:00</date>
       <content>hi tanios,&lt;BR/&gt;I have posted a new link</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c294a5d4-ab1f-4fd7-aa5b-63fe2f96a02e">
+    <comment isAdmin="false" isApproved="true" id="56c69224-43cc-4c64-bdba-214e6cbd9a7f">
       <author>ghkj</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09132300810330379086</website>
@@ -158,7 +158,7 @@
       <date>2009-02-06 01:25:00</date>
       <content>This comment has been removed by a blog administrator.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1e0e765c-4843-4221-a8a9-3d5ebab66bc0">
+    <comment isAdmin="false" isApproved="true" id="e76a9f15-7e1d-4da0-add2-4fd385575a07">
       <author>Jason Grigely</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10634061365549977853</website>
@@ -167,7 +167,7 @@
       <date>2009-03-25 18:20:00</date>
       <content>I was wondering if you could help me. I'm trying specifically to isolate the color that appears as the result of mousing over a selectable item. I want it to be selectable, but I'd like for the color to not be displayed, Thanks!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="7ae75d37-2948-4002-905a-6e3435d30f41">
+    <comment isAdmin="false" isApproved="true" id="805db48e-8d11-4230-8d56-d9b0fa4f28f0">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -176,7 +176,7 @@
       <date>2009-03-26 12:46:00</date>
       <content>Hi Jason,&lt;BR/&gt;that's the HoverBorderBackgroundBrush. Simply get rid of the animation</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="b58f6738-d3c7-451a-9b3b-2b6d0a4549a2">
+    <comment isAdmin="false" isApproved="true" id="3054d261-b6ac-4707-b825-8005dca68681">
       <author>Jason Grigely</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10634061365549977853</website>
@@ -185,7 +185,7 @@
       <date>2009-03-26 13:07:00</date>
       <content>Thanks Mark, so how would I go about applying this to every element in my page? Sorry I'm somewhat new to Silverlight.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8c3aa94b-2e93-4f01-aa37-c72c4ba28fce">
+    <comment isAdmin="false" isApproved="true" id="a830b31c-3606-42c6-a968-baafbec711a2">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -194,7 +194,7 @@
       <date>2009-03-26 13:09:00</date>
       <content>The style should be put in app.xaml&lt;BR/&gt;Then you can reference it as a StaticResource to set the Style on any ListBoxes you use</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="761d53e7-eda0-4397-92fc-73544c4e0084">
+    <comment isAdmin="false" isApproved="true" id="2a16ee63-24c9-4723-a675-2f8c51513781">
       <author>Jason Grigely</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10634061365549977853</website>
@@ -203,7 +203,7 @@
       <date>2009-04-24 16:11:00</date>
       <content>This comment has been removed by the author.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5416256a-fae3-426d-b732-1f13576bf2a5">
+    <comment isAdmin="false" isApproved="true" id="e96f0475-3874-42d0-9889-6a2d2216003e">
       <author>Jason Grigely</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/10634061365549977853</website>
@@ -212,7 +212,7 @@
       <date>2009-04-24 16:38:00</date>
       <content>nevermind!</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="979f259d-e38e-4e3e-871f-1c3e81af4deb">
+    <comment isAdmin="false" isApproved="true" id="90888dc2-d9af-4264-a0f1-9f949fd46e13">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -221,7 +221,7 @@
       <date>2009-10-26 18:36:45</date>
       <content>Hello &lt;br /&gt; This link is not working i mean the download link</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c54e0048-9434-4c13-858f-e4c3799f2d10">
+    <comment isAdmin="false" isApproved="true" id="2c97e17d-5419-4524-a156-3d587adb7248">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -230,7 +230,7 @@
       <date>2009-10-28 14:19:55</date>
       <content>Hi Anonymous, I&amp;#39;ve updated the download link</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="602909de-63b8-4a43-938c-4bc9c5965ae0">
+    <comment isAdmin="false" isApproved="true" id="c6dcc9ca-9c77-4b3c-bb28-5d2f1005af31">
       <author>Ondrej</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08784981473108127012</website>

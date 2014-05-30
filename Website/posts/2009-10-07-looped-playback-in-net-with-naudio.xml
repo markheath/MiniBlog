@@ -102,7 +102,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
     <category>audio</category>
   </categories>
   <comments>
-    <comment isAdmin="false" isApproved="true" id="a933ceb1-e92d-4cc1-aeef-bbf4b38a6bbb">
+    <comment isAdmin="false" isApproved="true" id="57c56cb5-a7ee-4a36-a1e8-b32c0ac43eee">
       <author>Purohit D</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/07259067305769918232</website>
@@ -111,7 +111,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-10-08 12:21:35</date>
       <content>Nice post man, Just let me know how to handle a sound file which has been zipped and transferred via LAN. &lt;a href="http://www.aegisisc.com/" rel="nofollow"&gt;.net Developers&lt;/a&gt; or some other suit I think there which can help with this.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c15c9efd-f7ab-4a0c-ad21-bf9d53c4f9a8">
+    <comment isAdmin="false" isApproved="true" id="da3d4594-1b2c-4391-8ce6-510f6840f0da">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -120,7 +120,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-10-08 12:48:39</date>
       <content>I&amp;#39;m planning a post on how to play back audio that is streaming over a network in the future, as it is a commonly asked question, and quite easy to do. Zipping audio would not be a good idea though. Better to use MP3.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2f8007e5-8cf5-4eb1-89a5-33c2a078805d">
+    <comment isAdmin="false" isApproved="true" id="5eab4775-807b-4898-a658-014a485443d5">
       <author>Neverbith</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08029563849523765194</website>
@@ -129,7 +129,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-03 18:08:45</date>
       <content>Since this post is a month old my comment may be left unseen, but just saw it today.&lt;br /&gt;&lt;br /&gt;Read has a small error on it:&lt;br /&gt;&lt;br /&gt;if (bytesRead == 0)&lt;br /&gt;&lt;br /&gt;It should be:&lt;br /&gt;&lt;br /&gt;if (bytesRead == 0 || sourceStream.Position &amp;gt; sourceStream.Length)&lt;br /&gt;&lt;br /&gt;For the cases where the stream size is smaller than the initial bytesRequired [on the first iteration].</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="bd716b7b-239c-4ad0-87cb-d77068a50bd7">
+    <comment isAdmin="false" isApproved="true" id="995d1257-4fe3-46ab-8f23-e33ead051920">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -138,7 +138,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-03 19:18:20</date>
       <content>hi neverbith, I do mention this issue at the top of my post. this code assumes that your source stream stops returning data. Sometimes source streams do not have meaningful position / length information. But you are absolutely right, in some cases you will need that check.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="dd90561c-b3fb-4ca6-95a3-b796f94c48c5">
+    <comment isAdmin="false" isApproved="true" id="71f8fed9-2ea1-4895-a8af-19cc6c39d90e">
       <author>Neverbith</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/08029563849523765194</website>
@@ -147,7 +147,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-04 11:31:42</date>
       <content>But I don&amp;#39;t think we talked about the same thing (or at least not from what I understand reading the article). The problem I&amp;#39;m describing is with small files.&lt;br /&gt;&lt;br /&gt;When using them you already read the whole data on the first try, because of it, the offset never changes, but the position of the source stream changes, so bytes are always got, but they are empty.&lt;br /&gt;&lt;br /&gt;I don&amp;#39;t know if I&amp;#39;m explained myself well.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="2f90cbf7-00c6-4787-8df7-461d6c1838e5">
+    <comment isAdmin="false" isApproved="true" id="981affcb-7609-4b37-93b2-ff917452d182">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -156,7 +156,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-04 11:36:06</date>
       <content>ok I see what you mean. the code needs to update the offset with the total number of bytes read so far.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="8db2fc18-5bae-495b-8bbc-96254cf7a95c">
+    <comment isAdmin="false" isApproved="true" id="24b84482-d882-463f-9566-9a5b0140026f">
       <author>iamnotsmart</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09879288181044734250</website>
@@ -165,7 +165,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-27 11:59:46</date>
       <content>Hi Mark, this is really neat stuff...&lt;br /&gt;id like to know how i can play sound from mic using wavestream_dataavailable EVENT to sound card without output file...my purpose is to send this buffer to network and client receives that buffer and plays using it.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="65384e76-c945-4b46-83bf-5dc8c232e91c">
+    <comment isAdmin="false" isApproved="true" id="32ebf84c-9294-43f1-aab1-6dd9eaae9955">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -174,7 +174,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-27 12:24:50</date>
       <content>hi iamnotsmart,&lt;br /&gt;You need to create a WaveStream (or IWaveProvider) derived class that buffers up the data recieved, and sends it out of its Read method. Then that WaveStream can be used for playback. You should be aware that latency is unlikely to be good</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="a4b744fe-22be-48c2-bff3-22b809b9593c">
+    <comment isAdmin="false" isApproved="true" id="29843032-b565-4a5f-a92f-c873f205aaa1">
       <author>iamnotsmart</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/09879288181044734250</website>
@@ -183,7 +183,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-28 10:26:26</date>
       <content>Hi Mark,&lt;br /&gt;Thanks for the reply mark. But Im really new to NAudio, id like to know how i can play sound using WAVEOUT from  BUFFER property of &amp;quot;e&amp;quot; on the DataAvailable Event. How do i push that Buffer inside the IWaveProvider derived class  so that i can play that stream on WAVEOUT...or may be what i think is wrong...or should i make IWaveProvider with constructor that accepts buffer? and last what do i have to return from the Read implementation of IWaveProvider..hope im not disturbing you alot...thanks again.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c2e1ad82-7a63-40c2-b8b6-5a3e24951b64">
+    <comment isAdmin="false" isApproved="true" id="7577ec5c-71c6-4a68-9799-c8f60df4ac41">
       <author>Peter</author>
       <email>noreply@blogger.com</email>
       <website>http://mailto_spectrumzz_at_hotmail.com</website>
@@ -192,7 +192,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-30 07:03:59</date>
       <content>Hi Mark,&lt;br /&gt;&lt;br /&gt;I found a design problem with the LoopStream wrapper.  The problem appears when using it with a Mixer output.  The LoopStream Read() method looks for end of stream to be hit (0 bytes read), and then seeks to the beginning, but with a Mixer, the WaveChannel32 base stream never returns 0 bytes Read() because it is designed to pad the resulting read to always return data. &lt;br /&gt;&lt;br /&gt;The result is that LoopStream can&amp;#39;t loop, because it will not see the end of stream (sourceStream will never Read() and return 0 bytes).  I think the fix is to have LoopStream detect when the Read will pass the end of stream boundary and then cobble together the proper result, but I haven&amp;#39;t coded it up yet.&lt;br /&gt;&lt;br /&gt;Any chance of you fixing this?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="1652c413-1d86-4942-a1e2-b6ed4805aaeb">
+    <comment isAdmin="false" isApproved="true" id="ef99fbf2-8807-4803-a9a8-f794b8bebba4">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -201,7 +201,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-11-30 07:51:39</date>
       <content>hi Peter,&lt;br /&gt;yes, this is a limitation of this approach, and is why I said that the source stream needs to stop returning data. The WaveChannel32 is designed as a mixer input and so should always return data even when past the end of its input (might reconsider this decision for a future version of NAudio). Looping should therefore be done before going into a WaveChannel32.&lt;br /&gt;&lt;br /&gt;I do have another implementation of the loopstream that uses the Source stream&amp;#39;s length and position to perform looping which I&amp;#39;ll perhaps post at some point, although this approach would not work with an IWaveProvider.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c23be268-4424-40da-aa55-02d9d2dd7eb7">
+    <comment isAdmin="false" isApproved="true" id="b1a9d046-da20-4f04-adf3-2c8cb7f28f1e">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -210,7 +210,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2009-12-27 09:48:41</date>
       <content>The following code for Read in LoopStream together with WaveChannel32 and WaveMixer works, almost, because there&amp;#39;s a strange behaviour:&lt;br /&gt; a sample (duration ca. 4 seconds)  gets looped 4-5 times correctly, but then the Read method is never called again.&lt;br /&gt; &lt;br /&gt; int bytesRequired = (int)Math.Min(count, Length - Position);&lt;br /&gt; int bytesRead = channelStream32.Read(buffer, offset, bytesRequired);&lt;br /&gt; &lt;br /&gt; if (bytesRequired &amp;lt; count)&lt;br /&gt; {&lt;br /&gt;   channelStream32.Position = 0;&lt;br /&gt;   channelStream32.Read(buffer, offset + bytesRead, count - bytesRequired);&lt;br /&gt;  }&lt;br /&gt;  return count;&lt;br /&gt;  &lt;br /&gt;  &lt;br /&gt;  Any idea ?&lt;br /&gt;  fritz</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="524825e4-e557-4c56-887e-2e386326f3b7">
+    <comment isAdmin="false" isApproved="true" id="9174c459-2a0b-4e65-a300-9bd80b77ae58">
       <author>Alex</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -219,7 +219,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2011-03-17 14:09:34</date>
       <content>Can I change the pitch while playing back?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="011e2f8b-bc51-4c24-93b3-c0659767e982">
+    <comment isAdmin="false" isApproved="true" id="a5d118c0-a5ce-430e-b623-85627163cc28">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -228,7 +228,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2011-03-21 17:15:15</date>
       <content>there is no built-in pitch shifting support in NAudio I am afraid. Look at the Skype Voice Changer project for an example of how to do pitch shifting with NAudio</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5e6a57b1-bcf2-478c-8d3f-768acd862283">
+    <comment isAdmin="false" isApproved="true" id="c21536bb-2dd6-4237-bff0-88924009e018">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
@@ -237,7 +237,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2012-03-09 10:45:53</date>
       <content>i think we might need to override the dispose method so we can call dispose on sourcestream as well?</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="5d131669-cb43-4e67-a226-38965fa5f871">
+    <comment isAdmin="false" isApproved="true" id="f0cf511e-487e-4d44-8416-80ffa851916b">
       <author>Mark H</author>
       <email>noreply@blogger.com</email>
       <website>http://www.blogger.com/profile/17900587357903273800</website>
@@ -246,7 +246,7 @@ private void buttonStartStop_Click(object sender, EventArgs e)
       <date>2012-03-09 10:48:08</date>
       <content>@Anonymous, yes you are right. That&amp;#39;s one reason I typically prefer to make IWaveProvider to stop the need to pass through Position and Dispose all the way through the audio playback graph.</content>
     </comment>
-    <comment isAdmin="false" isApproved="true" id="c755ecfd-45c1-4e5f-b48b-d51fd31daa62">
+    <comment isAdmin="false" isApproved="true" id="f159df98-725a-402a-9338-2144196f5a1a">
       <author>Anonymous</author>
       <email>noreply@blogger.com</email>
       <website />
