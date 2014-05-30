@@ -15,7 +15,7 @@ html, body{
 }
 
 body {
-    font: 1.8em/1.5 'Century Gothic', Verdana, Geneva, 'DejaVu Sans', sans-serif;
+    font: 1.8em/1.5 'Open Sans', Verdana, Geneva, 'DejaVu Sans', sans-serif;
     margin: 0;
 }
 
@@ -60,10 +60,18 @@ input[type], button, textarea {
 
 .post header h1 {
     margin: 0 0 3px 0;
+    font-size: 28px;
 }
 
 .post header a {
     color: #000;
+    text-decoration: none;
+}
+
+.post .post-header {
+    border-left: 3px solid brown;
+    background: #ffefda;
+    padding: 3px 3px 3px 10px ;
 }
 
 .post header div {
